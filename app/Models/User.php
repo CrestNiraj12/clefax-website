@@ -6,10 +6,12 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Auth;
+use Laravel\Fortify\TwoFactorAuthenticatable;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, TwoFactorAuthenticatable;
 
     /**
      * The attributes that are mass assignable.
@@ -20,6 +22,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role_id'
     ];
 
     /**
@@ -40,4 +43,14 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function adminlte_image()
+    {
+        return Auth::user()->avatar ? asset('storage/avatars/'.Auth::user()->avatar) : 'https://api.proxeuse.com/avatars/api/?name='.urlencode(Auth::user()->name).'&color=fff&background='.substr(md5(Auth::user()->name), 0, 6).'&size=300';
+    }
+
+    public function adminlte_profile_url()
+    {
+        return '/admin/profile';
+    }
 }
