@@ -6,12 +6,13 @@ import ScrollToTop from "./components/ScrollToTop";
 import Main from "./Main";
 import store from "./store";
 import { ChakraProvider } from "@chakra-ui/react";
+import theme from "./theme";
 
 if (document.getElementById("content")) {
     ReactDOM.render(
         //<Provider store={store}>
         <Router>
-            <ChakraProvider>
+            <ChakraProvider theme={theme}>
                 <ScrollToTop>
                     <Main />
                 </ScrollToTop>

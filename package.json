@@ -27,11 +27,17 @@
         "tailwindcss": "^2.1.2"
     },
     "dependencies": {
+        "@chakra-ui/icons": "^1.0.13",
         "@chakra-ui/react": "^1.6.1",
         "@emotion/react": "^11.4.0",
         "@emotion/styled": "^11.3.0",
+        "@fontsource/lato": "^4.3.0",
+        "@fontsource/rubik": "^4.3.0",
         "framer-motion": "^4.1.16",
+        "react-icons": "^4.2.0",
+        "react-multi-carousel": "^2.6.2",
         "react-redux": "^7.2.4",
-        "react-router-dom": "^5.2.0"
+        "react-router-dom": "^5.2.0",
+        "react-transition-group": "^4.4.1"
     }
 }

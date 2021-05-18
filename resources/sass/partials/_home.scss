@@ -1,0 +1,143 @@
+.carousel {
+    height: 46vw;
+}
+
+@media screen and (max-width: 30em) {
+    .carousel {
+        height: 100vh;
+    }
+}
+
+.arrowContainer {
+    position: absolute;
+    top: 50%;
+    width: 44px;
+    height: 44px;
+    cursor: pointer;
+    color: #fff;
+    font-size: 40px;
+    border: 1px solid #666;
+    transition: border 0.2s ease-in;
+    &:hover {
+        border: 1px solid var(--chakra-colors-secondary);
+    }
+
+    &:hover .arrow {
+        color: var(--chakra-colors-secondary) !important;
+    }
+
+    &:hover .leftArrow {
+        transform: translate(10px, -12px);
+    }
+
+    &:hover .rightArrow {
+        transform: translate(10px, -12px);
+    }
+}
+
+.leftArrowContainer {
+    z-index: 2;
+    left: 0;
+    transform: translate(30px, -22px);
+}
+
+.rightArrowContainer {
+    right: 0;
+    transform: translate(-30px, -22px);
+}
+
+.arrow {
+    width: 20px !important;
+    color: #666 !important;
+    transition: color 0.2s ease-in;
+}
+
+.leftArrow {
+    transform: translate(31px, -12px);
+    transition: transform 0.2s ease-in;
+}
+
+.rightArrow {
+    transform: translate(-8px, -12px);
+    transition: transform 0.2s ease-in;
+}
+
+@mixin customTransition(
+    $time: 1s,
+    $delay: 0s,
+    $transitionEffect: ease-in-out,
+    $property: transform,
+    $initalValue: translateX(-500px),
+    $finalValue: translateX(0)
+) {
+    opacity: 0;
+
+    &-appear {
+        opacity: 0;
+        #{$property}: $initalValue;
+    }
+    &-appear-active {
+        opacity: 1;
+        #{$property}: $finalValue;
+        transition: opacity $time $transitionEffect,
+            $property $time $transitionEffect;
+        transition-delay: $delay;
+    }
+    &-appear-done {
+        opacity: 1;
+        #{$property}: $finalValue;
+    }
+    &-enter {
+        opacity: 0;
+        #{$property}: $initalValue;
+    }
+    &-enter-active {
+        opacity: 1;
+        #{$property}: $finalValue;
+        transition: opacity $time $transitionEffect,
+            $property $time $transitionEffect;
+        transition-delay: $delay;
+    }
+    &-enter-done {
+        opacity: 1;
+    }
+}
+
+.subtitle {
+    @include customTransition(0.5s, 0s, ease-in-out, height, 0, 28px);
+}
+
+.title {
+    @include customTransition(0.8s, 0.5s);
+}
+
+.header {
+    @include customTransition(
+        0.5s,
+        0s,
+        ease-in,
+        background-color,
+        #fff,
+        var(--chakra-colors-primary)
+    );
+}
+
+@keyframes float {
+    0% {
+        transform: translate(0, 0);
+    }
+    50% {
+        transform: translate(-30px, -30px);
+    }
+    100% {
+        transform: translate(0, 0);
+    }
+}
+
+.floatImage {
+    box-sizing: border-box;
+    box-shadow: none;
+    perspective: 600px;
+    animation: float 6s ease-in-out infinite;
+    z-index: 2;
+}
