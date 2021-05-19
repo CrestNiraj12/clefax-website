@@ -21354,21 +21354,22 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _chakra_ui_icons__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! @chakra-ui/icons */ "./node_modules/@chakra-ui/icons/dist/esm/ArrowLeft.js");
-/* harmony import */ var _chakra_ui_icons__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! @chakra-ui/icons */ "./node_modules/@chakra-ui/icons/dist/esm/ArrowRight.js");
-/* harmony import */ var _chakra_ui_react__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @chakra-ui/react */ "./node_modules/@chakra-ui/layout/dist/esm/box.js");
-/* harmony import */ var _chakra_ui_react__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @chakra-ui/react */ "./node_modules/@chakra-ui/layout/dist/esm/stack.js");
-/* harmony import */ var _chakra_ui_react__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @chakra-ui/react */ "./node_modules/@chakra-ui/layout/dist/esm/text.js");
-/* harmony import */ var _chakra_ui_react__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! @chakra-ui/react */ "./node_modules/@chakra-ui/layout/dist/esm/heading.js");
-/* harmony import */ var _chakra_ui_react__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! @chakra-ui/react */ "./node_modules/@chakra-ui/image/dist/esm/image.js");
-/* harmony import */ var _chakra_ui_react__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! @chakra-ui/react */ "./node_modules/@chakra-ui/button/dist/esm/button.js");
+/* harmony import */ var _chakra_ui_icons__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! @chakra-ui/icons */ "./node_modules/@chakra-ui/icons/dist/esm/ArrowLeft.js");
+/* harmony import */ var _chakra_ui_icons__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! @chakra-ui/icons */ "./node_modules/@chakra-ui/icons/dist/esm/ArrowRight.js");
+/* harmony import */ var _chakra_ui_react__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @chakra-ui/react */ "./node_modules/@chakra-ui/layout/dist/esm/box.js");
+/* harmony import */ var _chakra_ui_react__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @chakra-ui/react */ "./node_modules/@chakra-ui/layout/dist/esm/stack.js");
+/* harmony import */ var _chakra_ui_react__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! @chakra-ui/react */ "./node_modules/@chakra-ui/layout/dist/esm/text.js");
+/* harmony import */ var _chakra_ui_react__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! @chakra-ui/react */ "./node_modules/@chakra-ui/layout/dist/esm/heading.js");
+/* harmony import */ var _chakra_ui_react__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! @chakra-ui/react */ "./node_modules/@chakra-ui/image/dist/esm/image.js");
+/* harmony import */ var _chakra_ui_react__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! @chakra-ui/react */ "./node_modules/@chakra-ui/button/dist/esm/button.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react_multi_carousel__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-multi-carousel */ "./node_modules/react-multi-carousel/index.js");
 /* harmony import */ var react_multi_carousel_lib_styles_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-multi-carousel/lib/styles.css */ "./node_modules/react-multi-carousel/lib/styles.css");
 /* harmony import */ var _fontsource_rubik_700_css__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @fontsource/rubik/700.css */ "./node_modules/@fontsource/rubik/700.css");
 /* harmony import */ var _fontsource_lato__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @fontsource/lato */ "./node_modules/@fontsource/lato/index.css");
-/* harmony import */ var react_transition_group__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! react-transition-group */ "./node_modules/react-transition-group/esm/CSSTransition.js");
+/* harmony import */ var react_transition_group__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! react-transition-group */ "./node_modules/react-transition-group/esm/CSSTransition.js");
 /* harmony import */ var _components_Navbar__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../components/Navbar */ "./resources/js/components/Navbar/index.js");
+/* harmony import */ var react_router__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! react-router */ "./node_modules/react-router/esm/react-router.js");
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
@@ -21381,6 +21382,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 function _iterableToArrayLimit(arr, i) { var _i = arr && (typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"]); if (_i == null) return; var _arr = []; var _n = true; var _d = false; var _s, _e; try { for (_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
 
 
 
@@ -21427,32 +21429,37 @@ var responsive = {
 var carousel = [{
   title: "Headphone",
   subtitle: "Google Technology",
-  image: "https://wpbingosite.com/wordpress/dimita/wp-content/uploads/2020/01/img1.png"
+  image: "https://wpbingosite.com/wordpress/dimita/wp-content/uploads/2020/01/img1.png",
+  button_url: "#"
 }, {
   title: "Airpods",
   subtitle: "Google Technology",
-  image: "https://wpbingosite.com/wordpress/dimita/wp-content/uploads/2020/01/img2-1.png"
+  image: "https://wpbingosite.com/wordpress/dimita/wp-content/uploads/2020/01/img2-1.png",
+  button_url: "#"
 }, {
   title: "Smartphone",
   subtitle: "Apple Technology",
-  image: "https://wpbingosite.com/wordpress/dimita/wp-content/uploads/2020/01/img3-1.png"
+  image: "https://wpbingosite.com/wordpress/dimita/wp-content/uploads/2020/01/img3-1.png",
+  button_url: "#"
 }];
 
 var Header = function Header() {
+  var history = (0,react_router__WEBPACK_IMPORTED_MODULE_7__.useHistory)();
+
   var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(true),
       _useState2 = _slicedToArray(_useState, 2),
       changed = _useState2[0],
       setChanged = _useState2[1];
 
   return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.Fragment, {
-    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_components_Navbar__WEBPACK_IMPORTED_MODULE_5__.default, {}), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(react_transition_group__WEBPACK_IMPORTED_MODULE_7__.default, {
+    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_components_Navbar__WEBPACK_IMPORTED_MODULE_5__.default, {}), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(react_transition_group__WEBPACK_IMPORTED_MODULE_8__.default, {
       "in": true,
       appear: true,
       timeout: 1000,
       classNames: "header",
-      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxs)(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_8__.Box, {
+      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_9__.Box, {
         h: ["100vh", "46vw"],
-        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(react_multi_carousel__WEBPACK_IMPORTED_MODULE_1__.default, {
+        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(react_multi_carousel__WEBPACK_IMPORTED_MODULE_1__.default, {
           ssr: true,
           infinite: true,
           autoPlay: false,
@@ -21473,82 +21480,89 @@ var Header = function Header() {
           children: carousel.map(function (_ref, index) {
             var title = _ref.title,
                 subtitle = _ref.subtitle,
-                image = _ref.image;
-            return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxs)(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_8__.Box, {
-              w: "100%",
-              display: "flex",
-              justifyContent: "center",
-              pos: "relative",
-              alignItems: "center",
-              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxs)(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_9__.Stack, {
-                spacing: 2,
-                pos: "absolute",
-                overflow: "hidden",
-                mt: "-50px",
-                children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(react_transition_group__WEBPACK_IMPORTED_MODULE_7__.default, {
-                  "in": changed,
-                  appear: true,
-                  timeout: 1000,
-                  classNames: "subtitle",
-                  children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_8__.Box, {
-                    overflow: "hidden",
-                    className: "subtitle",
-                    children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_10__.Text, {
-                      color: "white",
-                      fontSize: "xl",
-                      pl: "10px",
-                      children: subtitle
+                image = _ref.image,
+                button_url = _ref.button_url;
+            return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.Fragment, {
+              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxs)(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_9__.Box, {
+                w: "100%",
+                display: "flex",
+                justifyContent: "center",
+                pos: "relative",
+                alignItems: "center",
+                children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxs)(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_10__.Stack, {
+                  spacing: 2,
+                  pos: "absolute",
+                  overflow: "hidden",
+                  mt: "-50px",
+                  children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(react_transition_group__WEBPACK_IMPORTED_MODULE_8__.default, {
+                    "in": changed,
+                    appear: true,
+                    timeout: 1000,
+                    classNames: "subtitle",
+                    children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_9__.Box, {
+                      overflow: "hidden",
+                      className: "subtitle",
+                      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_11__.Text, {
+                        color: "white",
+                        fontSize: "xl",
+                        pl: "10px",
+                        children: subtitle
+                      })
                     })
-                  })
-                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(react_transition_group__WEBPACK_IMPORTED_MODULE_7__.default, {
-                  "in": changed,
-                  appear: true,
-                  timeout: 1500,
-                  classNames: "title",
-                  children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_11__.Heading, {
-                    as: "h1",
-                    color: "white",
-                    size: "4xl",
-                    fontSize: "8vw",
-                    letterSpacing: "25px",
-                    textTransform: "uppercase",
-                    className: "title",
-                    children: title
+                  }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(react_transition_group__WEBPACK_IMPORTED_MODULE_8__.default, {
+                    "in": changed,
+                    appear: true,
+                    timeout: 1500,
+                    classNames: "title",
+                    children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_12__.Heading, {
+                      as: "h1",
+                      color: "white",
+                      size: "4xl",
+                      fontSize: "8vw",
+                      letterSpacing: "25px",
+                      textTransform: "uppercase",
+                      className: "title",
+                      children: title
+                    })
+                  })]
+                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_9__.Box, {
+                  w: "35%",
+                  className: "floatImage",
+                  children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_13__.Image, {
+                    src: image,
+                    alt: title,
+                    w: "100%",
+                    h: "100%"
                   })
                 })]
-              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_8__.Box, {
-                w: "35%",
-                className: "floatImage",
-                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_12__.Image, {
-                  src: image,
-                  alt: title,
-                  w: "100%",
-                  h: "100%"
-                })
+              }, index), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_14__.Button, {
+                bg: "white",
+                pos: "absolute",
+                textTransform: "uppercase",
+                left: "0",
+                right: "0",
+                bottom: ["-30px", "-50px", "-30px"],
+                zIndex: "2",
+                m: "0 auto",
+                fontFamily: "Lato",
+                letterSpacing: "0.5px",
+                className: "button",
+                fontWeight: "300",
+                fontSize: ["12px", "8px", "12px"],
+                p: ["10px 30px", "0px 15px", "10px 30px"],
+                borderRadius: "0",
+                _hover: {
+                  bg: "secondary",
+                  color: "#fff"
+                },
+                onClick: function onClick() {
+                  return history.push(url);
+                },
+                children: "Shop Collection"
               })]
-            }, index);
+            });
           })
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_13__.Button, {
-          bg: "white",
-          pos: "absolute",
-          textTransform: "uppercase",
-          left: "0",
-          right: "0",
-          bottom: ["50px", "20px", "50px"],
-          m: "0 auto",
-          fontFamily: "Lato",
-          letterSpacing: "0.5px",
-          className: "button",
-          fontWeight: "300",
-          fontSize: ["12px", "8px", "12px"],
-          p: ["10px 30px", "0px 15px", "10px 30px"],
-          borderRadius: "0",
-          _hover: {
-            bg: "secondary",
-            color: "#fff"
-          },
-          children: "Shop Collection"
-        })]
+        })
       })
     })]
   });
@@ -21556,10 +21570,10 @@ var Header = function Header() {
 
 var PrevArrow = function PrevArrow(props) {
   var onClick = props.onClick;
-  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_8__.Box, {
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_9__.Box, {
     onClick: onClick,
     className: "arrowContainer leftArrowContainer",
-    children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_chakra_ui_icons__WEBPACK_IMPORTED_MODULE_14__.ArrowLeftIcon, {
+    children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_chakra_ui_icons__WEBPACK_IMPORTED_MODULE_15__.ArrowLeftIcon, {
       className: "arrow leftArrow"
     })
   });
@@ -21567,10 +21581,10 @@ var PrevArrow = function PrevArrow(props) {
 
 var NextArrow = function NextArrow(props) {
   var onClick = props.onClick;
-  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_8__.Box, {
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_9__.Box, {
     onClick: onClick,
     className: "arrowContainer rightArrowContainer",
-    children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_chakra_ui_icons__WEBPACK_IMPORTED_MODULE_15__.ArrowRightIcon, {
+    children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_chakra_ui_icons__WEBPACK_IMPORTED_MODULE_16__.ArrowRightIcon, {
       className: "arrow rightArrow"
     })
   });
