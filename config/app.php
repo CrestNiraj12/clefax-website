@@ -176,7 +176,7 @@ return [
         App\Providers\RouteServiceProvider::class,
         App\Providers\FortifyServiceProvider::class,
         App\Providers\FortifyUIServiceProvider::class,
-
+        Yajra\Oci8\Oci8ServiceProvider::class,
     ],
 
     /*
