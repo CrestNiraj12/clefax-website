@@ -10144,7 +10144,7 @@ h3 {
   opacity: 1;
   height: 28px;
   transition: opacity 0.5s ease-in-out, height 0.5s ease-in-out;
-  transition-delay: 0s;
+  transition-delay: 0.2s;
 }
 .subtitle-appear-done {
   opacity: 1;
@@ -10158,10 +10158,21 @@ h3 {
   opacity: 1;
   height: 28px;
   transition: opacity 0.5s ease-in-out, height 0.5s ease-in-out;
-  transition-delay: 0s;
+  transition-delay: 0.2s;
 }
 .subtitle-enter-done {
   opacity: 1;
+}
+.subtitle-exit {
+  opacity: 1;
+}
+.subtitle-exit-active {
+  opacity: 0;
+  transition: opacity 0.25s ease-in-out;
+}
+.subtitle-exit-done {
+  opacity: 0;
+  height: 0;
 }
 
 .title {
@@ -10174,7 +10185,7 @@ h3 {
 .title-appear-active {
   opacity: 1;
   transform: translateX(0);
-  transition: opacity 0.8s ease-in-out, transform 0.8s ease-in-out;
+  transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
   transition-delay: 0.5s;
 }
 .title-appear-done {
@@ -10188,11 +10199,22 @@ h3 {
 .title-enter-active {
   opacity: 1;
   transform: translateX(0);
-  transition: opacity 0.8s ease-in-out, transform 0.8s ease-in-out;
+  transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
   transition-delay: 0.5s;
 }
 .title-enter-done {
   opacity: 1;
+}
+.title-exit {
+  opacity: 1;
+}
+.title-exit-active {
+  opacity: 0;
+  transition: opacity 0.25s ease-in-out;
+}
+.title-exit-done {
+  opacity: 0;
+  transform: translateX(-500px);
 }
 
 .header {
@@ -10205,7 +10227,7 @@ h3 {
 .header-appear-active {
   opacity: 1;
   background-color: var(--chakra-colors-primary);
-  transition: opacity 0.5s ease-in, background-color 0.5s ease-in;
+  transition: opacity 0.1s ease-in, background-color 0.1s ease-in;
   transition-delay: 0s;
 }
 .header-appear-done {
@@ -10219,11 +10241,106 @@ h3 {
 .header-enter-active {
   opacity: 1;
   background-color: var(--chakra-colors-primary);
-  transition: opacity 0.5s ease-in, background-color 0.5s ease-in;
+  transition: opacity 0.1s ease-in, background-color 0.1s ease-in;
   transition-delay: 0s;
 }
 .header-enter-done {
   opacity: 1;
+}
+.header-exit {
+  opacity: 1;
+}
+.header-exit-active {
+  opacity: 0;
+  transition: opacity 0.25s ease-in;
+}
+.header-exit-done {
+  opacity: 0;
+  background-color: #fff;
+}
+
+.headerImage {
+  opacity: 0;
+}
+.headerImage-appear {
+  opacity: 0;
+  transform: translateX(50px);
+}
+.headerImage-appear-active {
+  opacity: 1;
+  transform: translateX(0);
+  transition: opacity 0.5s ease-in, transform 0.5s ease-in;
+  transition-delay: 0s;
+}
+.headerImage-appear-done {
+  opacity: 1;
+  transform: translateX(0);
+}
+.headerImage-enter {
+  opacity: 0;
+  transform: translateX(50px);
+}
+.headerImage-enter-active {
+  opacity: 1;
+  transform: translateX(0);
+  transition: opacity 0.5s ease-in, transform 0.5s ease-in;
+  transition-delay: 0s;
+}
+.headerImage-enter-done {
+  opacity: 1;
+}
+.headerImage-exit {
+  opacity: 1;
+}
+.headerImage-exit-active {
+  opacity: 0;
+  transition: opacity 0.25s ease-in;
+}
+.headerImage-exit-done {
+  opacity: 0;
+  transform: translateX(50px);
+}
+
+.headerBtn {
+  opacity: 0;
+}
+.headerBtn-appear {
+  opacity: 0;
+  opacity: 0;
+}
+.headerBtn-appear-active {
+  opacity: 1;
+  opacity: 1;
+  transition: opacity 0.2s ease-in, opacity 0.2s ease-in;
+  transition-delay: 0s;
+}
+.headerBtn-appear-done {
+  opacity: 1;
+  opacity: 1;
+}
+.headerBtn-enter {
+  opacity: 0;
+  opacity: 0;
+}
+.headerBtn-enter-active {
+  opacity: 1;
+  opacity: 1;
+  transition: opacity 0.2s ease-in, opacity 0.2s ease-in;
+  transition-delay: 0s;
+}
+.headerBtn-enter-done {
+  opacity: 1;
+}
+.headerBtn-exit {
+  opacity: 1;
+}
+.headerBtn-exit-active {
+  opacity: 0;
+  transition: opacity 0.25s ease-in;
+}
+.headerBtn-exit-done {
+  opacity: 0;
+  opacity: 0;
 }
 
 @-webkit-keyframes float {
@@ -10258,8 +10375,61 @@ h3 {
   z-index: 2;
 }
 
+.gridItem {
+  overflow: hidden;
+}
+
+.gridItemImage {
+  background-size: cover;
+  cursor: pointer;
+  transition: transform 0.8s ease-in-out;
+}
+.gridItemImage:hover {
+  transform: scale(1.1);
+}
+
+.grid-flex {
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  height: 100%;
+  margin: 0 5%;
+}
+
+.subheading {
+  color: var(--chakra-colors-gray);
+  font-size: medium;
+  text-transform: capitalize;
+}
+
+.gridHeadingMd {
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  font-size: 28px !important;
+  margin: 10px 0;
+}
+
+.outlineButton {
+  border: 1px solid #fff;
+  color: #fff;
+  letter-spacing: 1px;
+  font-size: 14px !important;
+  width: 220px !important;
+  margin: 40px 0;
+}
+
 body {
   position: relative;
+}
+
+::-moz-selection {
+  /* Code for Firefox */
+  background: var(--chakra-colors-secondary);
+}
+
+::selection {
+  background: var(--chakra-colors-secondary);
 }
 /*! tailwindcss v2.1.2 | MIT License | https://tailwindcss.com */
 

@@ -13,3 +13,12 @@
 body {
     position: relative;
 }
+
+::-moz-selection {
+    /* Code for Firefox */
+    background: var(--chakra-colors-secondary);
+}
+
+::selection {
+    background: var(--chakra-colors-secondary);
+}

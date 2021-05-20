@@ -4,7 +4,6 @@ import React, { useState } from "react";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import "@fontsource/rubik/700.css";
-import "@fontsource/lato";
 import { CSSTransition } from "react-transition-group";
 import Navbar from "../../components/Navbar";
 import { useHistory } from "react-router";
@@ -61,10 +60,11 @@ const Header = () => {
                     <Carousel
                         ssr
                         infinite
-                        autoPlay={false}
+                        autoPlay={true}
                         autoPlaySpeed={7000}
                         beforeChange={() => setChanged(false)}
                         afterChange={() => setChanged(true)}
+                        customTransition="all 0.5s ease-in"
                         responsive={responsive}
                         draggable={false}
                         swipeable={false}
@@ -75,7 +75,7 @@ const Header = () => {
                     >
                         {carousel.map(
                             ({ title, subtitle, image, button_url }, index) => (
-                                <>
+                                <div key={index}>
                                     <Box
                                         w="100%"
                                         key={index}
@@ -129,44 +129,51 @@ const Header = () => {
                                                 </Heading>
                                             </CSSTransition>
                                         </Stack>
+
                                         <Box w="35%" className="floatImage">
-                                            <Image
-                                                src={image}
-                                                alt={title}
-                                                w="100%"
-                                                h="100%"
-                                            />
+                                            <CSSTransition
+                                                in={changed}
+                                                appear={true}
+                                                timeout={1000}
+                                                classNames="headerImage"
+                                            >
+                                                <Image
+                                                    src={image}
+                                                    alt={title}
+                                                    className="headerImage"
+                                                    w="100%"
+                                                    h="100%"
+                                                />
+                                            </CSSTransition>
                                         </Box>
                                     </Box>
-                                    <Button
-                                        bg="white"
-                                        pos="absolute"
-                                        textTransform="uppercase"
-                                        left="0"
-                                        right="0"
-                                        bottom={["-30px", "-50px", "-30px"]}
-                                        zIndex="2"
-                                        m="0 auto"
-                                        fontFamily="Lato"
-                                        letterSpacing="0.5px"
-                                        className="button"
-                                        fontWeight="300"
-                                        fontSize={["12px", "8px", "12px"]}
-                                        p={[
-                                            "10px 30px",
-                                            "0px 15px",
-                                            "10px 30px",
-                                        ]}
-                                        borderRadius="0"
-                                        _hover={{
-                                            bg: "secondary",
-                                            color: "#fff",
-                                        }}
-                                        onClick={() => history.push(url)}
+                                    <CSSTransition
+                                        in={changed}
+                                        appear={true}
+                                        timeout={1000}
+                                        classNames="headerBtn"
                                     >
-                                        Shop Collection
-                                    </Button>
-                                </>
+                                        <Button
+                                            bg="white"
+                                            pos="absolute"
+                                            left="0"
+                                            right="0"
+                                            bottom={["-30px", "-50px", "-30px"]}
+                                            zIndex="2"
+                                            m="0 auto"
+                                            className="headerBtn"
+                                            fontSize={["12px", "8px", "12px"]}
+                                            p={[
+                                                "10px 30px",
+                                                "0px 15px",
+                                                "10px 30px",
+                                            ]}
+                                            onClick={() => history.push(url)}
+                                        >
+                                            Shop Collection
+                                        </Button>
+                                    </CSSTransition>
+                                </div>
                             )
                         )}
                     </Carousel>

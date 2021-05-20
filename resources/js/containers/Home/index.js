@@ -1,8 +1,16 @@
 import React from "react";
-import Header from "./header";
+import Categories from "./Categories";
+import CollectionGrid from "./CollectionGrid";
+import Header from "./Header";
 
 const Home = () => {
-    return <Header />;
+    return (
+        <>
+            <Header />
+            <Categories />
+            <CollectionGrid />
+        </>
+    );
 };
 
 export default Home;
