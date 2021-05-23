@@ -1,6 +1,8 @@
 .link {
     &:hover {
-        color: var(--chakra-colors-secondary);
+        color: var(--chakra-colors-secondary) !important;
+        background: transparent !important;
+        border-color: transparent !important;
     }
 
     &:focus {
