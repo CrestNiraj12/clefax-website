@@ -9,10 +9,6 @@ import {
     Icon,
     Image,
     Link,
-    Menu,
-    MenuButton,
-    MenuItem,
-    MenuList,
     SimpleGrid,
     Skeleton,
     SkeletonText,
@@ -23,22 +19,16 @@ import {
 import { Range, Handle } from "rc-slider";
 import React, { useEffect, useState } from "react";
 import "rc-slider/assets/index.css";
-import { AddIcon, ChevronDownIcon } from "@chakra-ui/icons";
+import { AddIcon } from "@chakra-ui/icons";
 import { BiX, BiSliderAlt } from "react-icons/bi";
 import "@fontsource/rubik/500.css";
 import { useHistory } from "react-router";
 import { CSSTransition } from "react-transition-group";
 import { floor } from "lodash";
+import Sorter, { handleSortBy } from "../../components/Sorter";
+import { getFinalPrice } from "../../utilities";
 
 const categories = ["Audio & Home", "Camera & Photo", "Hello & mellow"];
-
-const sortingOptions = [
-    "Default sorting",
-    "Sort by average rating",
-    "Sort by newest",
-    "Sort by price: low to high",
-    "Sort by price: high to low"
-];
 
 const data = [
     {
@@ -158,8 +148,9 @@ const Featured = () => {
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
+        setLoading(true);
         setProducts(data);
-        handleSortBy(0, data);
+        handleSortBy(0, setSortBy, setFilteredProducts, data);
         const min = floor(
             getFinalPrice(
                 data.reduce((a, b) =>
@@ -170,41 +161,8 @@ const Featured = () => {
         const max = data.reduce((a, b) => (b > a ? b : a)).price;
         setRange([min, max]);
         setValue([min, max]);
-    }, []);
-
-    const getFinalPrice = product => {
-        return product.discount && product.discount > 0
-            ? product.price - (product.discount / 100) * product.price
-            : product.price;
-    };
-
-    const handleSortBy = (index, p = filteredProducts) => {
-        setLoading(true);
-        setSortBy(index);
-        if (index === 0)
-            setFilteredProducts(
-                p.sort((a, b) =>
-                    a.title.toLowerCase() < b.title.toLowerCase() ? -1 : 1
-                )
-            );
-        else if (index === 1)
-            setFilteredProducts(p.sort((a, b) => b.rating - a.rating));
-        else if (index === 2)
-            setFilteredProducts(
-                p.sort(
-                    (a, b) => new Date(b.created_at) - new Date(a.created_at)
-                )
-            );
-        else if (index === 3)
-            setFilteredProducts(
-                p.sort((a, b) => getFinalPrice(a) - getFinalPrice(b))
-            );
-        else if (index === 4)
-            setFilteredProducts(
-                p.sort((a, b) => getFinalPrice(b) - getFinalPrice(a))
-            );
         setLoading(false);
-    };
+    }, []);
 
     const handleFilter = (
         v,
@@ -220,7 +178,7 @@ const Featured = () => {
             : fp.filter(product =>
                   product.categories.some(cat => checked.includes(cat))
               );
-        handleSortBy(sortBy, fp);
+        handleSortBy(sortBy, setSortBy, setFilteredProducts, fp);
         setLoading(false);
     };
 
@@ -269,33 +227,12 @@ const Featured = () => {
                         All Products
                     </Heading>
                     <Spacer />
-                    <Menu>
-                        <MenuButton
-                            as={Button}
-                            variant="outline"
-                            aria-label="Sort"
-                            className="optionBtn"
-                            mr="20px"
-                            p="0px 10px"
-                            rightIcon={<ChevronDownIcon />}
-                        >
-                            {sortingOptions[sortBy]}
-                        </MenuButton>
-                        <MenuList>
-                            {sortingOptions.map((option, index) => (
-                                <MenuItem
-                                    key={index}
-                                    _hover={{
-                                        color:
-                                            "var(--chakra-colors-secondary) !important"
-                                    }}
-                                    onClick={() => handleSortBy(index)}
-                                >
-                                    {option}
-                                </MenuItem>
-                            ))}
-                        </MenuList>
-                    </Menu>
+                    <Sorter
+                        sortBy={sortBy}
+                        setSortBy={setSortBy}
+                        setProducts={setProducts}
+                        products={products}
+                    />
                     <Button
                         variant="outline"
                         className="optionBtn"
