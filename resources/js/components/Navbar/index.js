@@ -1,7 +1,6 @@
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import {
     Box,
-    Button,
     Divider,
     Flex,
     Heading,
@@ -17,7 +16,7 @@ import {
     Badge,
     List,
     ListItem,
-    Grid,
+    Grid
 } from "@chakra-ui/react";
 import React, { useState } from "react";
 import "@fontsource/rubik";
@@ -25,7 +24,7 @@ import {
     IoSearch,
     IoCartOutline,
     IoPersonOutline,
-    IoHeartOutline,
+    IoHeartOutline
 } from "react-icons/io5";
 import { CSSTransition } from "react-transition-group";
 import "@fontsource/lato";
@@ -37,8 +36,17 @@ const headings = [
             { title: "Product category", url: "#" },
             { title: "Product category", url: "#" },
             { title: "Product category", url: "#" },
+            { title: "Product category", url: "#" }
+        ]
+    },
+    {
+        title: "Products",
+        content: [
             { title: "Product category", url: "#" },
-        ],
+            { title: "Product category", url: "#" },
+            { title: "Product category", url: "#" },
+            { title: "Product category", url: "#" }
+        ]
     },
     {
         title: "Products",
@@ -47,7 +55,9 @@ const headings = [
             { title: "Product category", url: "#" },
             { title: "Product category", url: "#" },
             { title: "Product category", url: "#" },
-        ],
+            { title: "Product category", url: "#" },
+            { title: "Product category", url: "#" }
+        ]
     },
     {
         title: "Products",
@@ -55,20 +65,9 @@ const headings = [
             { title: "Product category", url: "#" },
             { title: "Product category", url: "#" },
             { title: "Product category", url: "#" },
-            { title: "Product category", url: "#" },
-            { title: "Product category", url: "#" },
-            { title: "Product category", url: "#" },
-        ],
-    },
-    {
-        title: "Products",
-        content: [
-            { title: "Product category", url: "#" },
-            { title: "Product category", url: "#" },
-            { title: "Product category", url: "#" },
-            { title: "Product category", url: "#" },
-        ],
-    },
+            { title: "Product category", url: "#" }
+        ]
+    }
 ];
 
 const Navbar = () => {
@@ -145,7 +144,7 @@ const Navbar = () => {
                                                         _hover={{
                                                             color: "secondary",
                                                             textDecoration:
-                                                                "none",
+                                                                "none"
                                                         }}
                                                     >
                                                         {title}

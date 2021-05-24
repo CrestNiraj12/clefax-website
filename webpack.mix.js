@@ -1,4 +1,5 @@
 const mix = require("laravel-mix");
+const tailwindcss = require("tailwindcss");
 
 /*
  |--------------------------------------------------------------------------
@@ -11,8 +12,24 @@ const mix = require("laravel-mix");
  |
  */
 
-mix.js("resources/js/app.js", "public/js")
-    .react()
+mix.react("resources/js/app.js", "public/js")
     .sass("resources/sass/app.scss", "public/css")
     .sass("resources/sass/admin.scss", "public/css")
-    .postCss("resources/css/app.css", "public/css", [require("tailwindcss")]);
+    .options({
+        postCss: [tailwindcss("./tailwind.config.js")]
+    })
+    .version();
+
+mix.browserSync("http://localhost:8080");
+
+Mix.listen("configReady", webpackConfig => {
+    webpackConfig.module.rules.forEach(rule => {
+        if (Array.isArray(rule.use)) {
+            rule.use.forEach(ruleUse => {
+                if (ruleUse.loader === "resolve-url-loader") {
+                    ruleUse.options.engine = "postcss";
+                }
+            });
+        }
+    });
+});

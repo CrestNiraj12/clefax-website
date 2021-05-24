@@ -3,7 +3,6 @@ import { Box, Button, Heading, Image, Stack, Text } from "@chakra-ui/react";
 import React, { useState } from "react";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
-import "@fontsource/rubik/700.css";
 import { CSSTransition } from "react-transition-group";
 import Navbar from "../../components/Navbar";
 import { useHistory } from "react-router";
@@ -11,41 +10,44 @@ import { useHistory } from "react-router";
 const responsive = {
     superLargeDesktop: {
         breakpoint: { max: 4000, min: 3000 },
-        items: 1,
+        items: 1
     },
     desktop: {
         breakpoint: { max: 3000, min: 1024 },
-        items: 1,
+        items: 1
     },
     tablet: {
         breakpoint: { max: 1024, min: 464 },
-        items: 1,
+        items: 1
     },
     mobile: {
         breakpoint: { max: 464, min: 0 },
-        items: 1,
-    },
+        items: 1
+    }
 };
 
 const carousel = [
     {
         title: "Headphone",
         subtitle: "Google Technology",
-        image: "https://wpbingosite.com/wordpress/dimita/wp-content/uploads/2020/01/img1.png",
-        button_url: "#",
+        image:
+            "https://wpbingosite.com/wordpress/dimita/wp-content/uploads/2020/01/img1.png",
+        button_url: "#"
     },
     {
         title: "Airpods",
         subtitle: "Google Technology",
-        image: "https://wpbingosite.com/wordpress/dimita/wp-content/uploads/2020/01/img2-1.png",
-        button_url: "#",
+        image:
+            "https://wpbingosite.com/wordpress/dimita/wp-content/uploads/2020/01/img2-1.png",
+        button_url: "#"
     },
     {
         title: "Smartphone",
         subtitle: "Apple Technology",
-        image: "https://wpbingosite.com/wordpress/dimita/wp-content/uploads/2020/01/img3-1.png",
-        button_url: "#",
-    },
+        image:
+            "https://wpbingosite.com/wordpress/dimita/wp-content/uploads/2020/01/img3-1.png",
+        button_url: "#"
+    }
 ];
 
 const Header = () => {
@@ -166,9 +168,11 @@ const Header = () => {
                                             p={[
                                                 "10px 30px",
                                                 "0px 15px",
-                                                "10px 30px",
+                                                "10px 30px"
                                             ]}
-                                            onClick={() => history.push(url)}
+                                            onClick={() =>
+                                                history.push(button_url)
+                                            }
                                         >
                                             Shop Collection
                                         </Button>
@@ -183,7 +187,7 @@ const Header = () => {
     );
 };
 
-const PrevArrow = (props) => {
+const PrevArrow = props => {
     const { onClick } = props;
     return (
         <Box onClick={onClick} className="arrowContainer leftArrowContainer">
@@ -192,7 +196,7 @@ const PrevArrow = (props) => {
     );
 };
 
-const NextArrow = (props) => {
+const NextArrow = props => {
     const { onClick } = props;
     return (
         <Box onClick={onClick} className="arrowContainer rightArrowContainer">

@@ -100,6 +100,7 @@
     }
     &-enter-done {
         opacity: 1;
+        #{$property}: $finalValue;
     }
     &-exit {
         opacity: 1;
@@ -206,8 +207,56 @@
     margin: 40px 0;
 }
 
-.activeLink {
-    background-color: var(--chakra-colors-secondary);
-    color: #fff;
-    border-color: var(--chakra-colors-secondary);
+.optionBtn {
+    font-size: small !important;
+    outline: none !important;
+}
+
+.filterHeading {
+    font-size: 14px !important;
+    text-transform: uppercase;
+    margin-bottom: 50px;
+    letter-spacing: 0.5px;
+}
+
+.rc-slider-track {
+    height: 10px !important;
+    background-color: #000 !important;
+}
+
+.rc-slider-handle-dragging {
+    box-shadow: none !important;
+}
+
+.filters {
+    $h: 400px;
+    opacity: 0;
+    height: 0;
+    overflow: hidden;
+
+    &-enter {
+        opacity: 0;
+        height: 0;
+    }
+    &-enter-active {
+        opacity: 1;
+        height: $h;
+        transition: opacity 0.1s ease-in, height 0.25s ease-in-out;
+    }
+    &-enter-done {
+        opacity: 1;
+        height: $h;
+    }
+    &-exit {
+        opacity: 1;
+        height: $h;
+    }
+    &-exit-active {
+        height: 0;
+        transition: opacity 0.1s ease-in, height 0.25s ease-in-out;
+    }
+    &-exit-done {
+        opacity: 0;
+        height: 0;
+    }
 }

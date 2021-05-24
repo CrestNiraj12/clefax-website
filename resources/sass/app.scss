@@ -22,3 +22,7 @@ body {
 ::selection {
     background: var(--chakra-colors-secondary);
 }
+
+.chakra-button__icon {
+    font-size: 15px;
+}
