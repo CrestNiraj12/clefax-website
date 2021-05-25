@@ -1,7 +1,6 @@
 import {
     Box,
     Button,
-    Checkbox,
     Flex,
     Grid,
     Heading,
@@ -9,26 +8,15 @@ import {
     Icon,
     Image,
     Link,
-    SimpleGrid,
     Skeleton,
     SkeletonText,
     Spacer,
-    Text,
+    Stack,
     VStack
 } from "@chakra-ui/react";
-import { Range, Handle } from "rc-slider";
 import React, { useEffect, useState } from "react";
-import "rc-slider/assets/index.css";
-import { AddIcon } from "@chakra-ui/icons";
-import { BiX, BiSliderAlt } from "react-icons/bi";
-import "@fontsource/rubik/500.css";
-import { useHistory } from "react-router";
-import { CSSTransition } from "react-transition-group";
-import { floor } from "lodash";
-import Sorter, { handleSortBy } from "../../components/Sorter";
-import { getFinalPrice } from "../../utilities";
-
-const categories = ["Audio & Home", "Camera & Photo", "Hello & mellow"];
+import { FaRegStar, FaStar, FaStarHalfAlt } from "react-icons/fa";
+import ReactStars from "react-rating-stars-component";
 
 const data = [
     {
@@ -63,7 +51,7 @@ const data = [
             "https://wpbingosite.com/wordpress/dimita/wp-content/uploads/2019/04/Image-11-720x720.jpg",
             "https://wpbingosite.com/wordpress/dimita/wp-content/uploads/2019/04/Image-1.jpg"
         ],
-        rating: 4,
+        rating: 2,
         url: "#",
         price: 46.0,
         discount: 13,
@@ -88,7 +76,7 @@ const data = [
             "https://wpbingosite.com/wordpress/dimita/wp-content/uploads/2019/04/Image-11-720x720.jpg",
             "https://wpbingosite.com/wordpress/dimita/wp-content/uploads/2019/04/Image-1.jpg"
         ],
-        rating: 4,
+        rating: 3.86,
         url: "#",
         price: 46.0,
         categories: ["Hello & mellow"],
@@ -134,283 +122,113 @@ const data = [
     }
 ];
 
+const filters = ["Latest Products", "Top Rating", "Best Selling", "Featured"];
+
 const Featured = () => {
-    const [range, setRange] = useState([0, 1000]);
-    const [sortBy, setSortBy] = useState(0);
-    const [value, setValue] = useState([0, 1000]);
-    const [checkedItems, setCheckedItems] = useState(
-        Array.from({ length: categories.length }, () => false)
-    );
-    const [checkedCategories, setCheckedCategories] = useState([]);
-    const [showFilters, setShowFilters] = useState(false);
-    const [filteredProducts, setFilteredProducts] = useState([]);
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [activeFilter, setActiveFilter] = useState(0);
 
     useEffect(() => {
         setLoading(true);
-        setProducts(data);
-        handleSortBy(0, setSortBy, setFilteredProducts, data);
-        const min = floor(
-            getFinalPrice(
-                data.reduce((a, b) =>
-                    getFinalPrice(a) < getFinalPrice(b) ? a : b
-                )
-            )
+        setProducts(
+            data.sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
         );
-        const max = data.reduce((a, b) => (b > a ? b : a)).price;
-        setRange([min, max]);
-        setValue([min, max]);
         setLoading(false);
     }, []);
 
-    const handleFilter = (
-        v,
-        checkedFilters = checkedItems,
-        checked = checkedCategories
-    ) => {
-        var fp = products.filter(
-            product =>
-                getFinalPrice(product) >= v[0] && getFinalPrice(product) <= v[1]
-        );
-        fp = checkedFilters.every(item => !item)
-            ? fp
-            : fp.filter(product =>
-                  product.categories.some(cat => checked.includes(cat))
-              );
-        handleSortBy(sortBy, setSortBy, setFilteredProducts, fp);
-        setLoading(false);
-    };
-
-    const handleFilterPrice = v => {
-        setLoading(true);
-        setValue(v);
-        handleFilter(v);
-    };
-
-    const handleFilterCategories = (e, index, category) => {
-        setLoading(true);
-        const checkedFilters = [
-            ...checkedItems.slice(0, index),
-            e.target.checked,
-            ...checkedItems.slice(index + 1)
-        ];
-
-        setCheckedItems(checkedFilters);
-        const checked = e.target.checked
-            ? [...checkedCategories, category]
-            : checkedCategories.filter(cat => cat !== category);
-
-        setCheckedCategories(checked);
-
-        handleFilter(value, checkedFilters, checked);
-    };
-
-    const handleReset = () => {
-        setLoading(true);
-        setValue([range[0], range[1]]);
-        setCheckedItems(Array.from({ length: categories.length }, () => false));
-        setFilteredProducts(products);
-        setLoading(false);
+    const handleApplyFilter = index => {
+        setActiveFilter(index);
     };
 
     return (
-        <Box m="50px 20px">
-            <Box mb="50px">
-                <Flex zIndex={2} pos="relative">
+        <Box bgColor="lightgray" p="100px 20px">
+            <Box bgColor="#fff" p="100px 10%">
+                <Flex zIndex={2} pos="relative" mb="50px">
                     <Heading
                         as="h2"
                         textTransform="uppercase"
                         fontSize="2em"
                         letterSpacing={1}
                     >
-                        All Products
+                        Latest Products
                     </Heading>
                     <Spacer />
-                    <Sorter
-                        sortBy={sortBy}
-                        setSortBy={setSortBy}
-                        setProducts={setProducts}
-                        products={products}
-                    />
-                    <Button
-                        variant="outline"
-                        className="optionBtn"
-                        rightIcon={
-                            <Icon as={showFilters ? BiX : BiSliderAlt} />
-                        }
-                        onClick={() => setShowFilters(!showFilters)}
-                    >
-                        Filter
-                    </Button>
+                    <HStack spacing={2}>
+                        {filters.map((filter, index) => (
+                            <Button
+                                key={index}
+                                fontSize="13px"
+                                fontWeight="bold"
+                                fontFamily="Lato"
+                                onClick={() => handleApplyFilter(index)}
+                                className={
+                                    activeFilter === index ? "activeFilter" : ""
+                                }
+                            >
+                                {filter}
+                            </Button>
+                        ))}
+                    </HStack>
                 </Flex>
-                <CSSTransition
-                    in={showFilters}
-                    timeout={250}
-                    classNames="filters"
-                >
-                    <Box className="filters">
-                        <Box
-                            marginY="30px"
-                            borderWidth="1px"
-                            borderStyle="solid"
-                            borderColor="gray.300"
-                            p="50px"
-                        >
-                            <Flex>
-                                <Box>
-                                    <Heading as="h6" className="filterHeading">
-                                        Choose Categories
-                                    </Heading>
-                                    <SimpleGrid
-                                        columns={3}
-                                        columnGap={10}
-                                        rowGap={2}
-                                    >
-                                        {categories.map((category, index) => (
-                                            <Checkbox
-                                                key={index}
-                                                size={"lg"}
-                                                isChecked={checkedItems[index]}
-                                                spacing={4}
-                                                colorScheme="red"
-                                                icon={<AddIcon />}
-                                                color="blackAlpha.700"
-                                                onChange={e =>
-                                                    handleFilterCategories(
-                                                        e,
-                                                        index,
-                                                        category
-                                                    )
-                                                }
-                                            >
-                                                {category}
-                                            </Checkbox>
-                                        ))}
-                                    </SimpleGrid>
-                                </Box>
-                                <Spacer />
-                                <Box minW="600px">
-                                    <Heading as="h6" className="filterHeading">
-                                        Choose Price
-                                    </Heading>
-                                    <Range
-                                        allowCross={false}
-                                        min={range[0]}
-                                        max={range[1]}
-                                        value={value}
-                                        handle={SliderHandle}
-                                        railStyle={{
-                                            height: 10,
-                                            margin: "0 -10px",
-                                            backgroundColor: "#e1e1e1"
-                                        }}
-                                        style={{
-                                            margin: "0 10px"
-                                        }}
-                                        onChange={handleFilterPrice}
+                {loading ? (
+                    <Grid
+                        templateRows="repeat(2, 1fr)"
+                        templateColumns="repeat(3, 1fr)"
+                        gap={10}
+                        position="relative"
+                        bg="#fff"
+                    >
+                        {Array.from({ length: 6 }, () => true).map(
+                            (_, index) => (
+                                <Box
+                                    key={index}
+                                    borderWidth="1px"
+                                    borderColor="#e6e6e6"
+                                >
+                                    <Skeleton
+                                        height="150px"
+                                        startColor="primary"
+                                        endColor="gray"
                                     />
-                                    <Text
-                                        color="blackAlpha.700"
-                                        fontSize="18px"
-                                        mt="20px"
-                                    >
-                                        Range: £{value[0]} - £{value[1]}
-                                    </Text>
+                                    <Box p="10px 20px">
+                                        <SkeletonText
+                                            mt="4"
+                                            startColor="primary"
+                                            endColor="gray"
+                                            noOfLines={3}
+                                            skeletonHeight="20px"
+                                            spacing="2"
+                                        />
+                                    </Box>
                                 </Box>
-                            </Flex>
-                        </Box>
-                        <Button
-                            bg="secondary"
-                            color="#fff"
-                            fontSize="sm"
-                            onClick={handleReset}
-                            _hover={{ background: "#000 !important" }}
-                        >
-                            Clear filters
-                        </Button>
-                    </Box>
-                </CSSTransition>
-            </Box>
-            {loading ? (
-                <Grid
-                    templateRows="repeat(2, 1fr)"
-                    templateColumns="repeat(4, 1fr)"
-                    gap={10}
-                    zIndex={1}
-                    position="relative"
-                    bg="#fff"
-                >
-                    {Array.from({ length: 8 }, () => true).map((_, index) => (
-                        <Box
-                            key={index}
-                            borderWidth="1px"
-                            borderColor="#e6e6e6"
-                        >
-                            <Skeleton
-                                height="22vw"
-                                startColor="primary"
-                                endColor="gray"
+                            )
+                        )}
+                    </Grid>
+                ) : (
+                    <Grid
+                        templateRows="repeat(2, 1fr)"
+                        templateColumns="repeat(3, 1fr)"
+                        gap={10}
+                        position="relative"
+                        bg="#fff"
+                    >
+                        {products.slice(0, 6).map((product, index) => (
+                            <ProductCard
+                                product={product}
+                                key={index + product.title}
                             />
-                            <Box p="30px 40px">
-                                <SkeletonText
-                                    mt="4"
-                                    startColor="primary"
-                                    endColor="gray"
-                                    noOfLines={3}
-                                    skeletonHeight="20px"
-                                    spacing="4"
-                                />
-                            </Box>
-                        </Box>
-                    ))}
-                </Grid>
-            ) : (
-                <Grid
-                    templateRows="repeat(2, 1fr)"
-                    templateColumns="repeat(4, 1fr)"
-                    gap={10}
-                    zIndex={1}
-                    position="relative"
-                    bg="#fff"
-                >
-                    {filteredProducts.map((product, index) => (
-                        <ProductCard
-                            product={product}
-                            key={index + product.title}
-                        />
-                    ))}
-                </Grid>
-            )}
+                        ))}
+                    </Grid>
+                )}
+            </Box>
         </Box>
-    );
-};
-
-const SliderHandle = props => {
-    return (
-        <Handle
-            {...props}
-            style={{
-                borderColor: "var(--chakra-colors-secondary)",
-                borderRadius: 0,
-                borderWidth: 5,
-                height: 20,
-                width: 20,
-                "&:active": {
-                    borderColor: "var(--chakra-colors-secondary)"
-                },
-                "&:hover": {
-                    backgroundColor: "var(--chakra-colors-secondary)"
-                }
-            }}
-        />
     );
 };
 
 const ProductCard = ({
     product: { title, url, images, rating, price, discount }
 }) => {
-    var history = useHistory();
     const [src, setSrc] = useState(images[0]);
 
     return (
@@ -421,37 +239,35 @@ const ProductCard = ({
             onMouseLeave={() => (images.length > 1 ? setSrc(images[0]) : null)}
             pos="relative"
         >
-            {discount && discount > 0 && (
-                <Box
-                    borderWidth="1px"
-                    borderColor="secondary"
-                    pos="absolute"
-                    color="secondary"
-                    w="60px"
-                    textAlign="center"
-                    top="25px"
-                    left="20px"
-                    pointerEvents="none"
-                >
-                    -{discount}%
-                </Box>
-            )}
-            <Flex direction="column">
+            <Flex>
                 <Link href={url}>
                     <Image
                         src={src}
                         alt={title}
-                        minH="22vw"
-                        outline="none"
+                        h="150px"
                         objectFit="contain"
-                        tabIndex="-1"
                         bg="#e6e6e6"
                         cursor="pointer"
-                        onClick={() => history.push(url)}
+                        tabIndex="-1"
+                        _hover={{
+                            boxShadow: "none"
+                        }}
                     />
                 </Link>
-                <VStack spacing={4} align="stretch" p="30px 40px">
-                    <p>Rating: {rating}</p>
+                <VStack
+                    spacing={2}
+                    align="stretch"
+                    p="10px 20px"
+                    justifyContent="center"
+                >
+                    <ReactStars
+                        edit={false}
+                        value={rating}
+                        size={13}
+                        emptyIcon={<Icon as={FaRegStar} />}
+                        filledIcon={<Icon as={FaStar} />}
+                        halfIcon={<Icon as={FaStarHalfAlt} />}
+                    />
                     <Link
                         href={url}
                         _hover={{
@@ -459,7 +275,7 @@ const ProductCard = ({
                             textDecoration: "none"
                         }}
                     >
-                        <Heading as="h4" fontSize="lg" fontWeight="500">
+                        <Heading as="h4" fontSize="1.1rem" fontWeight="500">
                             {title}
                         </Heading>
                     </Link>
@@ -467,14 +283,14 @@ const ProductCard = ({
                         {discount && discount > 0 && (
                             <Heading
                                 as="h2"
-                                fontSize="lg"
+                                fontSize="md"
                                 color="gray"
                                 textDecor="line-through"
                             >
                                 £{price.toFixed(2)}
                             </Heading>
                         )}
-                        <Heading as="h2" fontSize="lg" color="secondary">
+                        <Heading as="h2" fontSize="md" color="secondary">
                             £
                             {(discount && discount > 0
                                 ? price - price * (discount / 100)

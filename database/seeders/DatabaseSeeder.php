@@ -13,16 +13,5 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        \App\Models\UserRole::create([
-            'title' => 'Admin',
-        ]);
-
-        \App\Models\UserRole::create([
-            'title' => 'Trader',
-        ]);
-
-        \App\Models\UserRole::create([
-            'title' => 'User',
-        ]);
     }
 }

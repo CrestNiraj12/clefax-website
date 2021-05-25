@@ -1,8 +1,10 @@
 import React from "react";
 import Categories from "./Categories";
 import CollectionGrid from "./CollectionGrid";
-import Featured from "./featured";
+import Products from "./Products";
 import Header from "./Header";
+import Brands from "./Brands";
+import Featured from "./Featured";
 
 const Home = () => {
     return (
@@ -10,6 +12,8 @@ const Home = () => {
             <Header />
             <Categories />
             <CollectionGrid />
+            <Products />
+            <Brands />
             <Featured />
         </>
     );

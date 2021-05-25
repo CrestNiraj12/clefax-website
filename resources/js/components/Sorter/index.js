@@ -38,7 +38,7 @@ const Sorter = ({ sortBy, setSortBy, setProducts, products }) => {
                                 index,
                                 setSortBy,
                                 setProducts,
-                                filteredProducts
+                                products
                             )
                         }
                     >

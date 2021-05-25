@@ -11143,6 +11143,49 @@ h3 {
   height: 0;
 }
 
+.brandCarousel {
+  margin: 100px 20px;
+}
+
+.slideshow {
+  -webkit-animation: moveSlideshow 15s linear infinite;
+          animation: moveSlideshow 15s linear infinite;
+}
+
+.slideshow:hover {
+  -webkit-animation-play-state: paused;
+          animation-play-state: paused;
+}
+
+@-webkit-keyframes moveSlideshow {
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+@keyframes moveSlideshow {
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+.brandImg {
+  max-width: none !important;
+}
+
+.activeFilter {
+  background-color: var(--chakra-colors-secondary);
+  color: #fff;
+}
+
 body {
   position: relative;
 }
