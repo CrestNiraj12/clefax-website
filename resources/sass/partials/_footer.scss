@@ -1,0 +1,16 @@
+.footerHeading {
+    font-size: large !important;
+    color: #fff;
+    margin-bottom: 30px !important;
+}
+
+.footerContainer,
+.footerInnerContainer,
+.footerTextContainer {
+    align-items: flex-start !important;
+}
+
+.footerText {
+    font-size: 16px;
+    color: var(--chakra-colors-gray);
+}

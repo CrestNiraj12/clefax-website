@@ -11,12 +11,18 @@ import {
     Skeleton,
     SkeletonText,
     Spacer,
-    Stack,
+    StackDivider,
+    Text,
     VStack
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { FaRegStar, FaStar, FaStarHalfAlt } from "react-icons/fa";
 import ReactStars from "react-rating-stars-component";
+import { CSSTransition } from "react-transition-group";
+import Bag from "../../../images/bag.png";
+import Like from "../../../images/like.png";
+import Payment from "../../../images/payment.png";
+import Shopping from "../../../images/shopping.png";
 
 const data = [
     {
@@ -124,6 +130,29 @@ const data = [
 
 const filters = ["Latest Products", "Top Rating", "Best Selling", "Featured"];
 
+const benefits = [
+    {
+        icon: Like,
+        title: "100% Satisfaction",
+        desc: "High quality products"
+    },
+    {
+        icon: Payment,
+        title: "Flexible payment",
+        desc: "Use Paypal or Stripe"
+    },
+    {
+        icon: Shopping,
+        title: "Pickup options",
+        desc: "Pickup whenever you want"
+    },
+    {
+        icon: Bag,
+        title: "Wishlist products",
+        desc: "Buy the products you like later"
+    }
+];
+
 const Featured = () => {
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -131,14 +160,24 @@ const Featured = () => {
 
     useEffect(() => {
         setLoading(true);
-        setProducts(
-            data.sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
-        );
+        setProducts(data);
+        setProducts(sortByLatest(data));
         setLoading(false);
     }, []);
 
+    const sortByLatest = data =>
+        data.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+
     const handleApplyFilter = index => {
+        setLoading(true);
         setActiveFilter(index);
+        var fp = [];
+        if (index === 0) fp = sortByLatest(products);
+        else if (index === 1) fp = products.sort((a, b) => b.rating - a.rating);
+        else if (index === 2) fp = products.sort((a, b) => b.rating - a.rating);
+        else if (index === 3) fp = sortByLatest(products);
+        setProducts(fp);
+        setLoading(false);
     };
 
     return (
@@ -172,55 +211,145 @@ const Featured = () => {
                     </HStack>
                 </Flex>
                 {loading ? (
-                    <Grid
-                        templateRows="repeat(2, 1fr)"
-                        templateColumns="repeat(3, 1fr)"
-                        gap={10}
-                        position="relative"
-                        bg="#fff"
+                    <CSSTransition
+                        in={loading}
+                        appear={true}
+                        classNames="container-load"
+                        timeout={500}
                     >
-                        {Array.from({ length: 6 }, () => true).map(
-                            (_, index) => (
-                                <Box
-                                    key={index}
-                                    borderWidth="1px"
-                                    borderColor="#e6e6e6"
-                                >
-                                    <Skeleton
-                                        height="150px"
-                                        startColor="primary"
-                                        endColor="gray"
-                                    />
-                                    <Box p="10px 20px">
-                                        <SkeletonText
-                                            mt="4"
-                                            startColor="primary"
+                        <Grid
+                            templateRows="repeat(2, 1fr)"
+                            templateColumns="repeat(3, 1fr)"
+                            gap={10}
+                            className="container-load"
+                            position="relative"
+                            bg="#fff"
+                        >
+                            {Array.from({ length: 6 }, () => true).map(
+                                (_, index) => (
+                                    <Flex
+                                        key={index}
+                                        borderWidth="1px"
+                                        borderColor="#e6e6e6"
+                                    >
+                                        <Skeleton
+                                            width="250px"
+                                            height="150px"
+                                            startColor="lightgray"
                                             endColor="gray"
-                                            noOfLines={3}
-                                            skeletonHeight="20px"
-                                            spacing="2"
+                                            borderRadius="0"
                                         />
-                                    </Box>
-                                </Box>
-                            )
-                        )}
-                    </Grid>
+                                        <Box p="10px 20px" width="100%">
+                                            <SkeletonText
+                                                mt="7"
+                                                width="100px"
+                                                startColor="lightgray"
+                                                endColor="gray"
+                                                noOfLines={1}
+                                                skeletonHeight="18px"
+                                            />
+                                            <SkeletonText
+                                                width="100%"
+                                                startColor="lightgray"
+                                                endColor="gray"
+                                                noOfLines={2}
+                                                mt="2"
+                                                skeletonHeight="20px"
+                                                spacing="2"
+                                            />
+                                        </Box>
+                                    </Flex>
+                                )
+                            )}
+                        </Grid>
+                    </CSSTransition>
                 ) : (
-                    <Grid
-                        templateRows="repeat(2, 1fr)"
-                        templateColumns="repeat(3, 1fr)"
-                        gap={10}
-                        position="relative"
-                        bg="#fff"
+                    <CSSTransition
+                        in={!loading}
+                        appear={true}
+                        classNames="container-load"
+                        timeout={500}
                     >
-                        {products.slice(0, 6).map((product, index) => (
-                            <ProductCard
-                                product={product}
-                                key={index + product.title}
-                            />
-                        ))}
-                    </Grid>
+                        <Grid
+                            templateRows="repeat(2, 1fr)"
+                            templateColumns="repeat(3, 1fr)"
+                            gap={10}
+                            className="container-load"
+                            position="relative"
+                            bg="#fff"
+                        >
+                            {products.slice(0, 6).map((product, index) => (
+                                <ProductCard
+                                    product={product}
+                                    key={index + Date.now()}
+                                />
+                            ))}
+                        </Grid>
+                    </CSSTransition>
                 )}
+                <Box marginY="100px" w="100%" pos="relative">
+                    <Image
+                        src="https://wpbingosite.com/wordpress/dimita/wp-content/uploads/2019/12/banner2-7.jpg"
+                        w="100%"
+                        h="100%"
+                        alt="banner"
+                        objectFit="cover"
+                    />
+                    <VStack
+                        pos="absolute"
+                        w="100%"
+                        h="100%"
+                        justifyContent="center"
+                        spacing="7"
+                        textTransform="uppercase"
+                        top="0"
+                    >
+                        <Heading
+                            as="h2"
+                            color="#fff"
+                            fontSize="1.8em"
+                            letterSpacing="1px"
+                        >
+                            Latest & Special Brands
+                        </Heading>
+                        <Button
+                            variant="outline"
+                            color="#fff"
+                            fontSize="1em"
+                            borderColor="#fff"
+                        >
+                            Shop now
+                        </Button>
+                    </VStack>
+                </Box>
+                <Box>
+                    <HStack
+                        divider={<StackDivider borderColor="gray.500" />}
+                        justifyContent="space-around"
+                    >
+                        {benefits.map(({ icon, title, desc }, index) => (
+                            <Flex key={index} justifyContent="center">
+                                <Image
+                                    src={icon}
+                                    alt={title}
+                                    w="50px"
+                                    h="50px"
+                                    mr="20px"
+                                />
+                                <VStack alignItems="start">
+                                    <Heading
+                                        as="h6"
+                                        textTransform="uppercase"
+                                        fontSize="1.2em"
+                                    >
+                                        {title}
+                                    </Heading>
+                                    <Text color="gray">{desc}</Text>
+                                </VStack>
+                            </Flex>
+                        ))}
+                    </HStack>
+                </Box>
             </Box>
         </Box>
     );
@@ -230,6 +359,7 @@ const ProductCard = ({
     product: { title, url, images, rating, price, discount }
 }) => {
     const [src, setSrc] = useState(images[0]);
+    const [imageLoaded, setImageLoaded] = useState(false);
 
     return (
         <Box
@@ -239,20 +369,49 @@ const ProductCard = ({
             onMouseLeave={() => (images.length > 1 ? setSrc(images[0]) : null)}
             pos="relative"
         >
-            <Flex>
+            <Flex pos="relative">
                 <Link href={url}>
-                    <Image
-                        src={src}
-                        alt={title}
-                        h="150px"
-                        objectFit="contain"
-                        bg="#e6e6e6"
-                        cursor="pointer"
-                        tabIndex="-1"
-                        _hover={{
-                            boxShadow: "none"
-                        }}
-                    />
+                    <CSSTransition
+                        in={imageLoaded}
+                        classNames="container-load"
+                        timeout={500}
+                    >
+                        <Box h="150px" w="150px" className="container-load">
+                            <Image
+                                src={src}
+                                alt={title}
+                                w="100%"
+                                h="100%"
+                                objectFit="contain"
+                                bg="#e6e6e6"
+                                outline="none"
+                                cursor="pointer"
+                                tabIndex="-1"
+                                _hover={{
+                                    boxShadow: "none"
+                                }}
+                                onLoad={() => setImageLoaded(true)}
+                            />
+                        </Box>
+                    </CSSTransition>
+                    {!imageLoaded && (
+                        <CSSTransition
+                            in={!imageLoaded}
+                            classNames="container-load"
+                            timeout={500}
+                        >
+                            <Skeleton
+                                width="150px"
+                                height="150px"
+                                startColor="lightgray"
+                                endColor="gray"
+                                borderRadius="0"
+                                className="container-load"
+                                top={0}
+                                pos="absolute"
+                            />
+                        </CSSTransition>
+                    )}
                 </Link>
                 <VStack
                     spacing={2}

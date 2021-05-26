@@ -7,8 +7,66 @@
 // Bootstrap
 @import "~bootstrap/scss/bootstrap";
 
+@mixin customTransition(
+    $time: 1s,
+    $delay: 0s,
+    $transitionEffect: ease-in-out,
+    $property: transform,
+    $initalValue: translateX(-500px),
+    $finalValue: translateX(0)
+) {
+    opacity: 0;
+
+    &-appear {
+        opacity: 0;
+        #{$property}: $initalValue;
+    }
+    &-appear-active {
+        opacity: 1;
+        #{$property}: $finalValue;
+        transition: opacity $time $transitionEffect,
+            $property $time $transitionEffect;
+        transition-delay: $delay;
+    }
+    &-appear-done {
+        opacity: 1;
+        #{$property}: $finalValue;
+    }
+    &-enter {
+        opacity: 0;
+        #{$property}: $initalValue;
+    }
+    &-enter-active {
+        opacity: 1;
+        #{$property}: $finalValue;
+        transition: opacity $time $transitionEffect,
+            $property $time $transitionEffect;
+        transition-delay: $delay;
+    }
+    &-enter-done {
+        opacity: 1;
+        #{$property}: $finalValue;
+    }
+    &-exit {
+        opacity: 1;
+    }
+    &-exit-active {
+        opacity: 0;
+        transition: opacity 0.25s $transitionEffect;
+    }
+    &-exit-done {
+        opacity: 0;
+        #{$property}: $initalValue;
+    }
+}
+
 @import "partials/navbar";
+@import "partials/footer";
 @import "partials/home";
+
+html {
+    scroll-behavior: smooth;
+}
 
 body {
     position: relative;
@@ -25,4 +83,10 @@ body {
 
 .chakra-button__icon {
     font-size: 15px;
+}
+
+.scroll-btn {
+    opacity: 0;
+    z-index: 0;
+    @include customTransition(0.2s, 0s, ease-in-out, z-index, 0, 999);
 }

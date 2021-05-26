@@ -54,24 +54,17 @@ export default Sorter;
 
 export const handleSortBy = (index, setSortBy, setFilteredProducts, p) => {
     setSortBy(index);
+    var fp = [];
     if (index === 0)
-        setFilteredProducts(
-            p.sort((a, b) =>
-                a.title.toLowerCase() < b.title.toLowerCase() ? -1 : 1
-            )
+        fp = p.sort((a, b) =>
+            a.title.toLowerCase() < b.title.toLowerCase() ? -1 : 1
         );
-    else if (index === 1)
-        setFilteredProducts(p.sort((a, b) => b.rating - a.rating));
+    else if (index === 1) fp = p.sort((a, b) => b.rating - a.rating);
     else if (index === 2)
-        setFilteredProducts(
-            p.sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
-        );
+        fp = p.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
     else if (index === 3)
-        setFilteredProducts(
-            p.sort((a, b) => getFinalPrice(a) - getFinalPrice(b))
-        );
+        fp = p.sort((a, b) => getFinalPrice(a) - getFinalPrice(b));
     else if (index === 4)
-        setFilteredProducts(
-            p.sort((a, b) => getFinalPrice(b) - getFinalPrice(a))
-        );
+        fp = p.sort((a, b) => getFinalPrice(b) - getFinalPrice(a));
+    setFilteredProducts(fp);
 };

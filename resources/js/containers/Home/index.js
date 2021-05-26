@@ -5,7 +5,6 @@ import Products from "./Products";
 import Header from "./Header";
 import Brands from "./Brands";
 import Featured from "./Featured";
-
 const Home = () => {
     return (
         <>

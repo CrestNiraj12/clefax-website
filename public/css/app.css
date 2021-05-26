@@ -10678,6 +10678,23 @@ h3 {
   transition: opacity 0.2s ease-out, transform 0.2s ease-out;
 }
 
+.footerHeading {
+  font-size: large !important;
+  color: #fff;
+  margin-bottom: 30px !important;
+}
+
+.footerContainer,
+.footerInnerContainer,
+.footerTextContainer {
+  align-items: flex-start !important;
+}
+
+.footerText {
+  font-size: 16px;
+  color: var(--chakra-colors-gray);
+}
+
 .carousel {
   height: 46vw;
 }
@@ -11186,6 +11203,62 @@ h3 {
   color: #fff;
 }
 
+.container-load {
+  opacity: 0;
+}
+
+.container-load-appear {
+  opacity: 0;
+  opacity: 0;
+}
+
+.container-load-appear-active {
+  opacity: 1;
+  opacity: 1;
+  transition: opacity 0.2s ease-in, opacity 0.2s ease-in;
+  transition-delay: 0s;
+}
+
+.container-load-appear-done {
+  opacity: 1;
+  opacity: 1;
+}
+
+.container-load-enter {
+  opacity: 0;
+  opacity: 0;
+}
+
+.container-load-enter-active {
+  opacity: 1;
+  opacity: 1;
+  transition: opacity 0.2s ease-in, opacity 0.2s ease-in;
+  transition-delay: 0s;
+}
+
+.container-load-enter-done {
+  opacity: 1;
+  opacity: 1;
+}
+
+.container-load-exit {
+  opacity: 1;
+}
+
+.container-load-exit-active {
+  opacity: 0;
+  transition: opacity 0.25s ease-in;
+}
+
+.container-load-exit-done {
+  opacity: 0;
+  opacity: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   position: relative;
 }
@@ -11201,4 +11274,58 @@ body {
 
 .chakra-button__icon {
   font-size: 15px;
+}
+
+.scroll-btn {
+  opacity: 0;
+  z-index: 0;
+  opacity: 0;
+}
+
+.scroll-btn-appear {
+  opacity: 0;
+  z-index: 0;
+}
+
+.scroll-btn-appear-active {
+  opacity: 1;
+  z-index: 999;
+  transition: opacity 0.2s ease-in-out, z-index 0.2s ease-in-out;
+  transition-delay: 0s;
+}
+
+.scroll-btn-appear-done {
+  opacity: 1;
+  z-index: 999;
+}
+
+.scroll-btn-enter {
+  opacity: 0;
+  z-index: 0;
+}
+
+.scroll-btn-enter-active {
+  opacity: 1;
+  z-index: 999;
+  transition: opacity 0.2s ease-in-out, z-index 0.2s ease-in-out;
+  transition-delay: 0s;
+}
+
+.scroll-btn-enter-done {
+  opacity: 1;
+  z-index: 999;
+}
+
+.scroll-btn-exit {
+  opacity: 1;
+}
+
+.scroll-btn-exit-active {
+  opacity: 0;
+  transition: opacity 0.25s ease-in-out;
+}
+
+.scroll-btn-exit-done {
+  opacity: 0;
+  z-index: 0;
 }

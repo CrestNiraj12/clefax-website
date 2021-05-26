@@ -62,59 +62,6 @@
     transition: transform 0.2s ease-in;
 }
 
-@mixin customTransition(
-    $time: 1s,
-    $delay: 0s,
-    $transitionEffect: ease-in-out,
-    $property: transform,
-    $initalValue: translateX(-500px),
-    $finalValue: translateX(0)
-) {
-    opacity: 0;
-
-    &-appear {
-        opacity: 0;
-        #{$property}: $initalValue;
-    }
-    &-appear-active {
-        opacity: 1;
-        #{$property}: $finalValue;
-        transition: opacity $time $transitionEffect,
-            $property $time $transitionEffect;
-        transition-delay: $delay;
-    }
-    &-appear-done {
-        opacity: 1;
-        #{$property}: $finalValue;
-    }
-    &-enter {
-        opacity: 0;
-        #{$property}: $initalValue;
-    }
-    &-enter-active {
-        opacity: 1;
-        #{$property}: $finalValue;
-        transition: opacity $time $transitionEffect,
-            $property $time $transitionEffect;
-        transition-delay: $delay;
-    }
-    &-enter-done {
-        opacity: 1;
-        #{$property}: $finalValue;
-    }
-    &-exit {
-        opacity: 1;
-    }
-    &-exit-active {
-        opacity: 0;
-        transition: opacity 0.25s $transitionEffect;
-    }
-    &-exit-done {
-        opacity: 0;
-        #{$property}: $initalValue;
-    }
-}
-
 .subtitle {
     @include customTransition(0.5s, 0.2s, ease-in-out, height, 0, 28px);
 }
@@ -289,4 +236,8 @@
 .activeFilter {
     background-color: var(--chakra-colors-secondary);
     color: #fff;
+}
+
+.container-load {
+    @include customTransition(0.2s, 0s, ease-in, opacity, 0, 1);
 }

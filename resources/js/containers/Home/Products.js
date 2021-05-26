@@ -334,54 +334,72 @@ const Products = () => {
                 </CSSTransition>
             </Box>
             {loading ? (
-                <Grid
-                    templateRows="repeat(2, 1fr)"
-                    templateColumns="repeat(4, 1fr)"
-                    gap={10}
-                    zIndex={1}
-                    position="relative"
-                    bg="#fff"
+                <CSSTransition
+                    in={loading}
+                    appear={true}
+                    classNames="container-load"
+                    timeout={500}
                 >
-                    {Array.from({ length: 8 }, () => true).map((_, index) => (
-                        <Box
-                            key={index}
-                            borderWidth="1px"
-                            borderColor="#e6e6e6"
-                        >
-                            <Skeleton
-                                height="22vw"
-                                startColor="primary"
-                                endColor="gray"
-                            />
-                            <Box p="30px 40px">
-                                <SkeletonText
-                                    mt="4"
-                                    startColor="primary"
-                                    endColor="gray"
-                                    noOfLines={3}
-                                    skeletonHeight="20px"
-                                    spacing="4"
-                                />
-                            </Box>
-                        </Box>
-                    ))}
-                </Grid>
+                    <Grid
+                        templateRows="repeat(2, 1fr)"
+                        templateColumns="repeat(4, 1fr)"
+                        gap={10}
+                        className="container-load"
+                        zIndex={1}
+                        position="relative"
+                        bg="#fff"
+                    >
+                        {Array.from({ length: 8 }, () => true).map(
+                            (_, index) => (
+                                <Box
+                                    key={index}
+                                    borderWidth="1px"
+                                    borderColor="#e6e6e6"
+                                >
+                                    <Skeleton
+                                        height="22vw"
+                                        startColor="lightgray"
+                                        endColor="gray"
+                                    />
+                                    <Box p="30px 40px">
+                                        <SkeletonText
+                                            mt="4"
+                                            startColor="lightgray"
+                                            endColor="gray"
+                                            noOfLines={3}
+                                            skeletonHeight="20px"
+                                            spacing="4"
+                                        />
+                                    </Box>
+                                </Box>
+                            )
+                        )}
+                    </Grid>
+                </CSSTransition>
             ) : (
-                <Grid
-                    templateRows="repeat(2, 1fr)"
-                    templateColumns="repeat(4, 1fr)"
-                    gap={10}
-                    zIndex={1}
-                    position="relative"
-                    bg="#fff"
+                <CSSTransition
+                    in={!loading}
+                    appear={true}
+                    classNames="container-load"
+                    timeout={500}
                 >
-                    {filteredProducts.map((product, index) => (
-                        <ProductCard
-                            product={product}
-                            key={index + product.title}
-                        />
-                    ))}
-                </Grid>
+                    <Grid
+                        templateRows="repeat(2, 1fr)"
+                        templateColumns="repeat(4, 1fr)"
+                        gap={10}
+                        zIndex={1}
+                        className="container-load"
+                        position="relative"
+                        bg="#fff"
+                    >
+                        {filteredProducts.map((product, index) => (
+                            <ProductCard
+                                product={product}
+                                key={index + Date.now()}
+                            />
+                        ))}
+                    </Grid>
+                </CSSTransition>
             )}
         </Box>
     );
