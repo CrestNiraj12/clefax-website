@@ -35746,69 +35746,6 @@ if(false) {}
 
 /***/ }),
 
-/***/ "./node_modules/@fontsource/lato/files/lato-all-400-normal.woff":
-/*!**********************************************************************!*\
-  !*** ./node_modules/@fontsource/lato/files/lato-all-400-normal.woff ***!
-  \**********************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-module.exports = "/fonts/vendor/@fontsource/lato/files/lato-all-400-normal.woff?abe0a52a291f69ef321ae49f6f04fda9";
-
-/***/ }),
-
-/***/ "./node_modules/@fontsource/lato/files/lato-latin-400-normal.woff2":
-/*!*************************************************************************!*\
-  !*** ./node_modules/@fontsource/lato/files/lato-latin-400-normal.woff2 ***!
-  \*************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-module.exports = "/fonts/vendor/@fontsource/lato/files/lato-latin-400-normal.woff2?b4d2c4c39853ee244272c04999b230ba";
-
-/***/ }),
-
-/***/ "./node_modules/@fontsource/lato/files/lato-latin-ext-400-normal.woff2":
-/*!*****************************************************************************!*\
-  !*** ./node_modules/@fontsource/lato/files/lato-latin-ext-400-normal.woff2 ***!
-  \*****************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-module.exports = "/fonts/vendor/@fontsource/lato/files/lato-latin-ext-400-normal.woff2?3952106caf9b878ad83fc5be709d0d45";
-
-/***/ }),
-
-/***/ "./node_modules/@fontsource/lato/index.css":
-/*!*************************************************!*\
-  !*** ./node_modules/@fontsource/lato/index.css ***!
-  \*************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-
-var content = __webpack_require__(/*! !../../css-loader??ref--7-1!../../postcss-loader/src??ref--7-2!./index.css */ "./node_modules/css-loader/index.js?!./node_modules/postcss-loader/src/index.js?!./node_modules/@fontsource/lato/index.css");
-
-if(typeof content === 'string') content = [[module.i, content, '']];
-
-var transform;
-var insertInto;
-
-
-
-var options = {"hmr":true}
-
-options.transform = transform
-options.insertInto = undefined;
-
-var update = __webpack_require__(/*! ../../style-loader/lib/addStyles.js */ "./node_modules/style-loader/lib/addStyles.js")(content, options);
-
-if(content.locals) module.exports = content.locals;
-
-if(false) {}
-
-/***/ }),
-
 /***/ "./node_modules/@fontsource/rubik/500.css":
 /*!************************************************!*\
   !*** ./node_modules/@fontsource/rubik/500.css ***!
@@ -46803,26 +46740,6 @@ exports = module.exports = __webpack_require__(/*! ../../css-loader/lib/css-base
 
 // module
 exports.push([module.i, "/* archivo-vietnamese-400-normal*/\n\n@font-face {\n  font-family: 'Archivo';\n\n  font-style: normal;\n\n  font-display: swap;\n\n  font-weight: 400;\n\n  src: url(" + escape(__webpack_require__(/*! ./files/archivo-vietnamese-400-normal.woff2 */ "./node_modules/@fontsource/archivo/files/archivo-vietnamese-400-normal.woff2")) + ") format('woff2'), url(" + escape(__webpack_require__(/*! ./files/archivo-all-400-normal.woff */ "./node_modules/@fontsource/archivo/files/archivo-all-400-normal.woff")) + ") format('woff');\n\n  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+1EA0-1EF9, U+20AB;\n}\n\n/* archivo-latin-ext-400-normal*/\n\n@font-face {\n  font-family: 'Archivo';\n\n  font-style: normal;\n\n  font-display: swap;\n\n  font-weight: 400;\n\n  src: url(" + escape(__webpack_require__(/*! ./files/archivo-latin-ext-400-normal.woff2 */ "./node_modules/@fontsource/archivo/files/archivo-latin-ext-400-normal.woff2")) + ") format('woff2'), url(" + escape(__webpack_require__(/*! ./files/archivo-all-400-normal.woff */ "./node_modules/@fontsource/archivo/files/archivo-all-400-normal.woff")) + ") format('woff');\n\n  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;\n}\n\n/* archivo-latin-400-normal*/\n\n@font-face {\n  font-family: 'Archivo';\n\n  font-style: normal;\n\n  font-display: swap;\n\n  font-weight: 400;\n\n  src: url(" + escape(__webpack_require__(/*! ./files/archivo-latin-400-normal.woff2 */ "./node_modules/@fontsource/archivo/files/archivo-latin-400-normal.woff2")) + ") format('woff2'), url(" + escape(__webpack_require__(/*! ./files/archivo-all-400-normal.woff */ "./node_modules/@fontsource/archivo/files/archivo-all-400-normal.woff")) + ") format('woff');\n\n  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;\n}\n", ""]);
-
-// exports
-
-
-/***/ }),
-
-/***/ "./node_modules/css-loader/index.js?!./node_modules/postcss-loader/src/index.js?!./node_modules/@fontsource/lato/index.css":
-/*!*********************************************************************************************************************************!*\
-  !*** ./node_modules/css-loader??ref--7-1!./node_modules/postcss-loader/src??ref--7-2!./node_modules/@fontsource/lato/index.css ***!
-  \*********************************************************************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-var escape = __webpack_require__(/*! ../../css-loader/lib/url/escape.js */ "./node_modules/css-loader/lib/url/escape.js");
-exports = module.exports = __webpack_require__(/*! ../../css-loader/lib/css-base.js */ "./node_modules/css-loader/lib/css-base.js")(false);
-// imports
-
-
-// module
-exports.push([module.i, "/* lato-latin-ext-400-normal*/\n\n@font-face {\n  font-family: 'Lato';\n\n  font-style: normal;\n\n  font-display: swap;\n\n  font-weight: 400;\n\n  src: url(" + escape(__webpack_require__(/*! ./files/lato-latin-ext-400-normal.woff2 */ "./node_modules/@fontsource/lato/files/lato-latin-ext-400-normal.woff2")) + ") format('woff2'), url(" + escape(__webpack_require__(/*! ./files/lato-all-400-normal.woff */ "./node_modules/@fontsource/lato/files/lato-all-400-normal.woff")) + ") format('woff');\n\n  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;\n}\n\n/* lato-latin-400-normal*/\n\n@font-face {\n  font-family: 'Lato';\n\n  font-style: normal;\n\n  font-display: swap;\n\n  font-weight: 400;\n\n  src: url(" + escape(__webpack_require__(/*! ./files/lato-latin-400-normal.woff2 */ "./node_modules/@fontsource/lato/files/lato-latin-400-normal.woff2")) + ") format('woff2'), url(" + escape(__webpack_require__(/*! ./files/lato-all-400-normal.woff */ "./node_modules/@fontsource/lato/files/lato-all-400-normal.woff")) + ") format('woff');\n\n  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;\n}\n", ""]);
 
 // exports
 
@@ -163114,8 +163031,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _fontsource_rubik__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_fontsource_rubik__WEBPACK_IMPORTED_MODULE_3__);
 /* harmony import */ var react_icons_io5__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-icons/io5 */ "./node_modules/react-icons/io5/index.esm.js");
 /* harmony import */ var react_transition_group__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react-transition-group */ "./node_modules/react-transition-group/esm/index.js");
-/* harmony import */ var _fontsource_lato__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @fontsource/lato */ "./node_modules/@fontsource/lato/index.css");
-/* harmony import */ var _fontsource_lato__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_fontsource_lato__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var _fontsource_archivo__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @fontsource/archivo */ "./node_modules/@fontsource/archivo/index.css");
+/* harmony import */ var _fontsource_archivo__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_fontsource_archivo__WEBPACK_IMPORTED_MODULE_6__);
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }

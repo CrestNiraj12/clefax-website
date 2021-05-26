@@ -27,7 +27,7 @@ import {
     IoHeartOutline
 } from "react-icons/io5";
 import { CSSTransition } from "react-transition-group";
-import "@fontsource/lato";
+import "@fontsource/archivo";
 
 const headings = [
     {
