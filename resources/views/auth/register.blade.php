@@ -4,7 +4,7 @@
 <form method="POST" action="{{ route('register') }}" class="card card-md">
     @csrf
     <div class="card-body">
-        <input type="hidden" name="role_id" value="1" />
+        <input type="hidden" name="role" value="Admin" />
         <h2 class="mb-3 text-center">{{ __('auth.register') }}</h2>
         <div class="mb-3">
             <label class="form-label">{{ __('auth.fields.name') }}</label>
