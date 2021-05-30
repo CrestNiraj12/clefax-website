@@ -239,5 +239,19 @@
 }
 
 .container-load {
-    @include customTransition(0.2s, 0s, ease-in, opacity, 0, 1);
+    visibility: hidden;
+    @include customTransition(
+        0.2s,
+        0s,
+        ease-in,
+        visibility,
+        hidden,
+        visible,
+        0.1s
+    );
+}
+
+.search {
+    visibility: hidden;
+    @include customTransition(0.2s, 0s, ease-in, visibility, hidden, visible);
 }

@@ -70,7 +70,7 @@ const headings = [
     }
 ];
 
-const Navbar = () => {
+const Navbar = ({ setShowSearch }) => {
     const [hovered, setHovered] = useState(false);
 
     return (
@@ -170,6 +170,7 @@ const Navbar = () => {
                         aria-label="Search"
                         fontSize="25px"
                         icon={<Icon as={IoSearch} />}
+                        onClick={() => setShowSearch(true)}
                         variant="unstyled"
                         className="link"
                     />
@@ -205,7 +206,7 @@ const Navbar = () => {
                             colorScheme="red"
                             className="badge"
                         >
-                            10
+                            0
                         </Badge>
                     </Stack>
                     <Stack className="iconBadgeContainer">
@@ -221,7 +222,7 @@ const Navbar = () => {
                             colorScheme="red"
                             className="badge"
                         >
-                            10
+                            0
                         </Badge>
                     </Stack>
                 </Stack>

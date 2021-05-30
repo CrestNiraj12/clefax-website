@@ -10,15 +10,15 @@ import theme from "./theme";
 
 if (document.getElementById("content")) {
     ReactDOM.render(
-        //<Provider store={store}>
-        <Router>
-            <ChakraProvider theme={theme}>
-                <ScrollToTop>
-                    <Main />
-                </ScrollToTop>
-            </ChakraProvider>
-        </Router>,
-        //</Provider>,
+        <Provider store={store}>
+            <Router>
+                <ChakraProvider theme={theme}>
+                    <ScrollToTop>
+                        <Main />
+                    </ScrollToTop>
+                </ChakraProvider>
+            </Router>
+        </Provider>,
         document.getElementById("content")
     );
 }

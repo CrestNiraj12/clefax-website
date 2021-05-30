@@ -10,5 +10,7 @@ export const MONTHS = [
     "September",
     "October",
     "November",
-    "December",
+    "December"
 ];
+
+export const SET_PRODUCTS = "SET_PRODUCTS";

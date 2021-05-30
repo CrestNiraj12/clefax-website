@@ -4,28 +4,128 @@ import { connect } from "react-redux";
 import { Switch, Route, useLocation } from "react-router-dom";
 import Footer from "./components/Footer";
 import ScrollToTopButton from "./components/ScrollToTopButton";
-//import { setProducts } from "./actions";
+import { setProducts } from "./actions";
 import routes from "./routes";
 
-/*const mapStateToProps = (state) => ({
-    showSearch: state.showSearch,
+const mapDispatchToProps = dispatch => ({
+    setProducts: products => dispatch(setProducts(products))
 });
 
-const mapDispatchToProps = (dispatch) => ({
-    setProducts: (products) => dispatch(setProducts(products)),
-});
-*/
+const products = [
+    {
+        title: "Headphone S102",
+        images: [
+            "https://wpbingosite.com/wordpress/dimita/wp-content/uploads/2019/04/Image-11-720x720.jpg",
+            "https://wpbingosite.com/wordpress/dimita/wp-content/uploads/2019/04/Image-1.jpg"
+        ],
+        rating: 4,
+        url: "#",
+        price: 46.0,
+        discount: 25,
+        categories: ["Hello & mellow"],
+        created_at: "2021/01/01"
+    },
+    {
+        title: "Bluetooth Speaker GK1",
+        images: [
+            "https://wpbingosite.com/wordpress/dimita/wp-content/uploads/2019/04/Image-12.jpg",
+            "https://wpbingosite.com/wordpress/dimita/wp-content/uploads/2019/04/Image-23.jpg"
+        ],
+        rating: 0,
+        url: "#",
+        price: 100.0,
+        discount: 13,
+        categories: ["Audio & Home"],
+        created_at: "2022/01/01"
+    },
+    {
+        title: "Headphone S102",
+        images: [
+            "https://wpbingosite.com/wordpress/dimita/wp-content/uploads/2019/04/Image-11-720x720.jpg",
+            "https://wpbingosite.com/wordpress/dimita/wp-content/uploads/2019/04/Image-1.jpg"
+        ],
+        rating: 2,
+        url: "#",
+        price: 46.0,
+        discount: 13,
+        categories: ["Hello & mellow"],
+        created_at: "2021/01/01"
+    },
+    {
+        title: "Headphone S102",
+        images: [
+            "https://wpbingosite.com/wordpress/dimita/wp-content/uploads/2019/04/Image-11-720x720.jpg",
+            "https://wpbingosite.com/wordpress/dimita/wp-content/uploads/2019/04/Image-1.jpg"
+        ],
+        rating: 4,
+        url: "#",
+        price: 46.0,
+        categories: ["Hello & mellow"],
+        created_at: "2021/02/01"
+    },
+    {
+        title: "Headphone S102",
+        images: [
+            "https://wpbingosite.com/wordpress/dimita/wp-content/uploads/2019/04/Image-11-720x720.jpg",
+            "https://wpbingosite.com/wordpress/dimita/wp-content/uploads/2019/04/Image-1.jpg"
+        ],
+        rating: 3.86,
+        url: "#",
+        price: 46.0,
+        categories: ["Hello & mellow"],
+        created_at: "2021/01/01"
+    },
+    {
+        title: "Headphone S102",
+        images: [
+            "https://wpbingosite.com/wordpress/dimita/wp-content/uploads/2019/04/Image-11-720x720.jpg",
+            "https://wpbingosite.com/wordpress/dimita/wp-content/uploads/2019/04/Image-1.jpg"
+        ],
+        rating: 4,
+        url: "#",
+        price: 46.0,
+        discount: 13,
+        categories: ["Hello & mellow"],
+        created_at: "2021/01/01"
+    },
+    {
+        title: "Headphone S102",
+        images: [
+            "https://wpbingosite.com/wordpress/dimita/wp-content/uploads/2019/04/Image-11-720x720.jpg",
+            "https://wpbingosite.com/wordpress/dimita/wp-content/uploads/2019/04/Image-1.jpg"
+        ],
+        rating: 4,
+        url: "#",
+        price: 46.0,
+        discount: 13,
+        categories: ["Camera & Photo", "Hello & mellow"],
+        created_at: "2021/01/02"
+    },
+    {
+        title: "Headphone S102",
+        images: [
+            "https://wpbingosite.com/wordpress/dimita/wp-content/uploads/2019/04/Image-11-720x720.jpg",
+            "https://wpbingosite.com/wordpress/dimita/wp-content/uploads/2019/04/Image-1.jpg"
+        ],
+        rating: 4,
+        url: "#",
+        price: 46.0,
+        categories: ["Hello & mellow"],
+        created_at: "2021/01/01"
+    }
+];
 
-const Main = ({ showSearch, setProducts }) => {
+const Main = ({ setProducts }) => {
     const location = useLocation();
     const [showScrollBtn, setShowScrollBtn] = useState(false);
 
-    /*useEffect(() => {
-        axios
+    useEffect(() => {
+        /*axios
             .get("/api/products")
             .then((res) => setProducts(res.data))
-            .catch((err) => console.log(err));
-    }, []);*/
+            .catch((err) => console.log(err));*/
+        setProducts(products);
+    }, []);
 
     useEffect(() => {
         window.onscroll = function(e) {
@@ -39,7 +139,6 @@ const Main = ({ showSearch, setProducts }) => {
             <Fragment>
                 {<ScrollToTopButton condition={showScrollBtn} />}
             </Fragment>
-            {/*<Fragment>{showSearch && <Search />}</Fragment>*/}
             <Switch>
                 {routes.map(({ path, Component, exact }) => (
                     <Route
@@ -82,4 +181,4 @@ const Main = ({ showSearch, setProducts }) => {
     );
 };
 
-export default Main; //connect(mapStateToProps, mapDispatchToProps)(Main);
+export default connect(null, mapDispatchToProps)(Main);

@@ -12,7 +12,7 @@ const sortingOptions = [
     "Sort by price: high to low"
 ];
 
-const Sorter = ({ sortBy, setSortBy, setProducts, products }) => {
+const Sorter = ({ sortBy, setSortBy, setProducts, products, setLoading }) => {
     return (
         <Menu>
             <MenuButton
@@ -33,14 +33,17 @@ const Sorter = ({ sortBy, setSortBy, setProducts, products }) => {
                         _hover={{
                             color: "var(--chakra-colors-secondary) !important"
                         }}
-                        onClick={() =>
+                        onClick={() => {
+                            if (setLoading) setLoading(true);
                             handleSortBy(
                                 index,
                                 setSortBy,
                                 setProducts,
                                 products
-                            )
-                        }
+                            );
+                            if (setLoading)
+                                setTimeout(() => setLoading(false), 0);
+                        }}
                     >
                         {option}
                     </MenuItem>

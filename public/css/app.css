@@ -11204,41 +11204,42 @@ h3 {
 }
 
 .container-load {
+  visibility: hidden;
   opacity: 0;
 }
 
 .container-load-appear {
   opacity: 0;
-  opacity: 0;
+  visibility: hidden;
 }
 
 .container-load-appear-active {
   opacity: 1;
-  opacity: 1;
-  transition: opacity 0.2s ease-in, opacity 0.2s ease-in;
+  visibility: visible;
+  transition: opacity 0.2s ease-in, visibility 0.2s ease-in;
   transition-delay: 0s;
 }
 
 .container-load-appear-done {
   opacity: 1;
-  opacity: 1;
+  visibility: visible;
 }
 
 .container-load-enter {
   opacity: 0;
-  opacity: 0;
+  visibility: hidden;
 }
 
 .container-load-enter-active {
   opacity: 1;
-  opacity: 1;
-  transition: opacity 0.2s ease-in, opacity 0.2s ease-in;
+  visibility: visible;
+  transition: opacity 0.2s ease-in, visibility 0.2s ease-in;
   transition-delay: 0s;
 }
 
 .container-load-enter-done {
   opacity: 1;
-  opacity: 1;
+  visibility: visible;
 }
 
 .container-load-exit {
@@ -11247,12 +11248,65 @@ h3 {
 
 .container-load-exit-active {
   opacity: 0;
-  transition: opacity 0.25s ease-in;
+  transition: opacity 0.1s ease-in;
 }
 
 .container-load-exit-done {
   opacity: 0;
+  visibility: hidden;
+}
+
+.search {
+  visibility: hidden;
   opacity: 0;
+}
+
+.search-appear {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.search-appear-active {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.2s ease-in, visibility 0.2s ease-in;
+  transition-delay: 0s;
+}
+
+.search-appear-done {
+  opacity: 1;
+  visibility: visible;
+}
+
+.search-enter {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.search-enter-active {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.2s ease-in, visibility 0.2s ease-in;
+  transition-delay: 0s;
+}
+
+.search-enter-done {
+  opacity: 1;
+  visibility: visible;
+}
+
+.search-exit {
+  opacity: 1;
+}
+
+.search-exit-active {
+  opacity: 0;
+  transition: opacity 0.25s ease-in;
+}
+
+.search-exit-done {
+  opacity: 0;
+  visibility: hidden;
 }
 
 html {

@@ -13,7 +13,8 @@
     $transitionEffect: ease-in-out,
     $property: transform,
     $initalValue: translateX(-500px),
-    $finalValue: translateX(0)
+    $finalValue: translateX(0),
+    $exitTime: 0.25s
 ) {
     opacity: 0;
 
@@ -52,7 +53,7 @@
     }
     &-exit-active {
         opacity: 0;
-        transition: opacity 0.25s $transitionEffect;
+        transition: opacity $exitTime $transitionEffect;
     }
     &-exit-done {
         opacity: 0;
