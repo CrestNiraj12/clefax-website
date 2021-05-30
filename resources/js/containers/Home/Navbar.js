@@ -16,7 +16,8 @@ import {
     Badge,
     List,
     ListItem,
-    Grid
+    Grid,
+    Image
 } from "@chakra-ui/react";
 import React, { useState } from "react";
 import "@fontsource/rubik";
@@ -27,6 +28,7 @@ import {
     IoHeartOutline
 } from "react-icons/io5";
 import { CSSTransition } from "react-transition-group";
+import Logo from "../../../images/logo-2.png";
 import "@fontsource/archivo";
 
 const headings = [
@@ -76,16 +78,13 @@ const Navbar = ({ setShowSearch }) => {
     return (
         <Box pos="absolute" top="0" w="100%" color="white" zIndex="999">
             <Flex p="30px">
-                <Heading as="h1" size="xl">
-                    Logo
-                </Heading>
+                <Image src={Logo} w="230px" h="80px" objectFit="cover" />
                 <Spacer />
                 <Stack
                     spacing={20}
                     direction="row"
                     alignItems="center"
                     onMouseLeave={() => setHovered(false)}
-                    ml="100px"
                 >
                     <Link href="/" className="link textLink">
                         Home

@@ -10658,12 +10658,13 @@ h3 {
 
 .navMenu-enter-active {
   opacity: 1;
-  transform: translateY(0);
+  transform: translateY(20px);
   transition: opacity 0.2s ease-in, transform 0.2s ease-in;
 }
 
 .navMenu-enter-done {
   opacity: 1;
+  transform: translateY(20px);
   visibility: visible;
 }
 

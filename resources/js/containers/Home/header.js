@@ -140,7 +140,7 @@ const Header = () => {
                                                 src={image}
                                                 alt={title}
                                                 className="headerImage"
-                                                w="100%"
+                                                w="32vw"
                                                 h="100%"
                                             />
                                         </CSSTransition>
