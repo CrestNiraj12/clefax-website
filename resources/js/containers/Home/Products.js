@@ -137,6 +137,7 @@ const Products = ({ products }) => {
                         rightIcon={
                             <Icon as={showFilters ? BiX : BiSliderAlt} />
                         }
+                        p="0px 10px !important"
                         onClick={() => setShowFilters(!showFilters)}
                     >
                         Filter

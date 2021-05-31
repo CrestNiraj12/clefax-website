@@ -2,9 +2,15 @@ import { CloseIcon, SearchIcon } from "@chakra-ui/icons";
 import {
     Box,
     Flex,
+    Heading,
+    HStack,
+    Image,
     Input,
     InputGroup,
     InputRightElement,
+    Link,
+    Spinner,
+    StackDivider,
     VStack
 } from "@chakra-ui/react";
 import React, { useState } from "react";
@@ -20,6 +26,7 @@ const Search = ({ showSearch, setShowSearch, products }) => {
     var history = useHistory();
     const [query, setQuery] = useState("");
     const [filteredProducts, setFilteredProducts] = useState([]);
+    const [loading, setLoading] = useState(false);
 
     const handleSubmit = () => {
         if (query.length > 0) history.push("/shop/?q=" + query);
@@ -32,9 +39,24 @@ const Search = ({ showSearch, setShowSearch, products }) => {
     };
 
     const handleChange = e => {
+        setLoading(true);
         const q = e.target.value;
         setQuery(q);
-        setFilteredProducts(products.filter(p => p.title.includes(q)));
+
+        const filtered = products.filter(p =>
+            q
+                .split(" ")
+                .some(word =>
+                    p.title.toLowerCase().includes(word.toLowerCase())
+                )
+        );
+        setFilteredProducts(q.length > 0 ? filtered : []);
+        setTimeout(() => setLoading(false), 0);
+    };
+
+    const handleClose = () => {
+        setQuery("");
+        setShowSearch(false);
     };
 
     return (
@@ -60,13 +82,13 @@ const Search = ({ showSearch, setShowSearch, products }) => {
                     h="25px"
                     cursor="pointer"
                     color="#fff"
-                    onClick={() => setShowSearch(false)}
+                    onClick={handleClose}
                     pos="absolute"
                     right={10}
                     _hover={{ color: "var(--chakra-colors-secondary)" }}
                     top={10}
                 />
-                <Box w="100%">
+                <Box w="100%" pos="relative">
                     <InputGroup>
                         <Input
                             variant="flushed"
@@ -91,17 +113,99 @@ const Search = ({ showSearch, setShowSearch, products }) => {
                             }
                         />
                     </InputGroup>
-                    <VStack>
-                        {filteredProducts.map((product, index) => (
-                            <ProductCard
-                                product={product}
-                                key={index + Date.now()}
-                            />
-                        ))}
-                    </VStack>
+                    {filteredProducts && filteredProducts.length > 0 && (
+                        <VStack
+                            bgColor="#fff"
+                            pos="absolute"
+                            overflowY="scroll"
+                            w="100%"
+                            maxH="300px"
+                            p="20px 30px"
+                            spacing={5}
+                            className="scrollable"
+                            alignItems={loading ? "center" : "flex-start"}
+                            divider={<StackDivider borderColor="gray.200" />}
+                        >
+                            {loading ? (
+                                <Spinner color="secondary" />
+                            ) : (
+                                filteredProducts.map((product, index) => (
+                                    <ProductCard
+                                        product={product}
+                                        query={query}
+                                        key={index + Date.now()}
+                                    />
+                                ))
+                            )}
+                        </VStack>
+                    )}
                 </Box>
             </Flex>
         </CSSTransition>
+    );
+};
+
+const ProductCard = ({ product: { title, url, images, discount, price } }) => {
+    return (
+        <Box>
+            <Flex pos="relative">
+                <Link href={url}>
+                    <Box h="80px" w="80px">
+                        <Image
+                            src={images[0]}
+                            alt={title}
+                            w="100%"
+                            h="100%"
+                            objectFit="contain"
+                            bg="#e6e6e6"
+                            outline="none"
+                            cursor="pointer"
+                            tabIndex="-1"
+                            _hover={{
+                                boxShadow: "none"
+                            }}
+                        />
+                    </Box>
+                </Link>
+                <VStack
+                    spacing={2}
+                    align="stretch"
+                    p="5px 10px"
+                    justifyContent="center"
+                >
+                    <Link
+                        href={url}
+                        _hover={{
+                            color: "secondary",
+                            textDecoration: "none"
+                        }}
+                    >
+                        <Heading as="h6" fontSize="0.8rem" fontWeight="500">
+                            {title}
+                        </Heading>
+                    </Link>
+                    <HStack spacing={2}>
+                        {discount && discount > 0 && (
+                            <Heading
+                                as="h2"
+                                fontSize="md"
+                                color="gray"
+                                textDecor="line-through"
+                            >
+                                £{price.toFixed(2)}
+                            </Heading>
+                        )}
+                        <Heading as="h2" fontSize="md" color="secondary">
+                            £
+                            {(discount && discount > 0
+                                ? price - price * (discount / 100)
+                                : price
+                            ).toFixed(2)}
+                        </Heading>
+                    </HStack>
+                </VStack>
+            </Flex>
+        </Box>
     );
 };
 

@@ -163017,6 +163017,7 @@ var Footer = function Footer() {
     textTransform: "uppercase",
     color: "#fff",
     fontSize: "14px",
+    p: "0px 10px !important",
     _hover: {
       background: "var(--chakra-colors-primary) !important"
     }
@@ -163594,7 +163595,7 @@ var Sorter = function Sorter(_ref) {
     "aria-label": "Sort",
     className: "optionBtn",
     mr: "20px",
-    p: "0px 10px",
+    p: "0px 10px !important",
     rightIcon: /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_3___default.a.createElement(_chakra_ui_icons__WEBPACK_IMPORTED_MODULE_1__["ChevronDownIcon"], null)
   }, sortingOptions[sortBy]), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_3___default.a.createElement(_chakra_ui_menu__WEBPACK_IMPORTED_MODULE_2__["MenuList"], null, sortingOptions.map(function (option, index) {
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_3___default.a.createElement(_chakra_ui_menu__WEBPACK_IMPORTED_MODULE_2__["MenuItem"], {
@@ -164146,7 +164147,8 @@ var Featured = function Featured(_ref) {
       onClick: function onClick() {
         return handleApplyFilter(index);
       },
-      className: activeFilter === index ? "activeFilter" : ""
+      className: activeFilter === index ? "activeFilter" : "",
+      p: "0px 10px !important"
     }, filter);
   }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Grid"], {
     templateRows: "repeat(2, 1fr)",
@@ -164205,7 +164207,8 @@ var Featured = function Featured(_ref) {
     variant: "outline",
     color: "#fff",
     fontSize: "1em",
-    borderColor: "#fff"
+    borderColor: "#fff",
+    p: "0px 10px !important"
   }, "Shop now"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Box"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["HStack"], {
     divider: /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["StackDivider"], {
       borderColor: "gray.500"
@@ -164339,7 +164342,7 @@ var Header = function Header() {
     timeout: 1000,
     classNames: "header"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Box"], {
-    h: ["100vh", "46vw"]
+    h: ["100vh", "50vw"]
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(react_multi_carousel__WEBPACK_IMPORTED_MODULE_3___default.a, {
     ssr: true,
     infinite: true,
@@ -164376,8 +164379,7 @@ var Header = function Header() {
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Stack"], {
       spacing: 2,
       pos: "absolute",
-      overflow: "hidden",
-      mt: "-50px"
+      overflow: "hidden"
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(react_transition_group__WEBPACK_IMPORTED_MODULE_5__["CSSTransition"], {
       "in": changed,
       appear: true,
@@ -164405,6 +164407,8 @@ var Header = function Header() {
       className: "title"
     }, title))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Box"], {
       w: "35%",
+      display: "flex",
+      justifyContent: "center",
       className: "floatImage"
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(react_transition_group__WEBPACK_IMPORTED_MODULE_5__["CSSTransition"], {
       "in": changed,
@@ -164415,7 +164419,7 @@ var Header = function Header() {
       src: image,
       alt: title,
       className: "headerImage",
-      w: "32vw",
+      w: "30vw",
       h: "100%"
     })))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(react_transition_group__WEBPACK_IMPORTED_MODULE_5__["CSSTransition"], {
       "in": changed,
@@ -164427,12 +164431,12 @@ var Header = function Header() {
       pos: "absolute",
       left: "0",
       right: "0",
-      bottom: ["-30px", "-50px", "-30px"],
+      bottom: ["-80px", "-50px", "-80px"],
       zIndex: "2",
       m: "0 auto",
       className: "headerBtn",
       fontSize: ["12px", "8px", "12px"],
-      p: ["10px 30px", "0px 15px", "10px 30px"],
+      p: ["10px 20px !important", "0px 15px !important", "10px 20px !important"],
       onClick: function onClick() {
         return history.push(button_url);
       }
@@ -164496,6 +164500,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 function _iterableToArrayLimit(arr, i) { var _i = arr && (typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"]); if (_i == null) return; var _arr = []; var _n = true; var _d = false; var _s, _e; try { for (_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
 
 
 
@@ -164581,61 +164586,86 @@ var Navbar = function Navbar(_ref) {
       hovered = _useState2[0],
       setHovered = _useState2[1];
 
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Box"], {
-    pos: "absolute",
-    top: "0",
-    w: "100%",
-    color: "white",
-    zIndex: "999"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Flex"], {
-    p: "30px"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Image"], {
-    src: _images_logo_2_png__WEBPACK_IMPORTED_MODULE_6___default.a,
-    w: "230px",
-    h: "80px",
-    objectFit: "cover"
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Spacer"], null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Stack"], {
-    spacing: 20,
-    direction: "row",
-    alignItems: "center",
-    onMouseLeave: function onMouseLeave() {
-      return setHovered(false);
-    }
+  var _useMediaQuery = Object(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["useMediaQuery"])("(max-width: 1100px)"),
+      _useMediaQuery2 = _slicedToArray(_useMediaQuery, 1),
+      smallerThan1100 = _useMediaQuery2[0];
+
+  var _useDisclosure = Object(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["useDisclosure"])(),
+      isOpen = _useDisclosure.isOpen,
+      onOpen = _useDisclosure.onOpen,
+      onClose = _useDisclosure.onClose;
+
+  var btnRef = react__WEBPACK_IMPORTED_MODULE_2___default.a.useRef();
+
+  var _useState3 = Object(react__WEBPACK_IMPORTED_MODULE_2__["useState"])(false),
+      _useState4 = _slicedToArray(_useState3, 2),
+      changeDrawer = _useState4[0],
+      setChangeDrawer = _useState4[1];
+
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_2___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_2__["Fragment"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Drawer"], {
+    isOpen: isOpen,
+    placement: "left",
+    onClose: onClose,
+    finalFocusRef: btnRef
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["DrawerOverlay"], null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["DrawerContent"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["DrawerCloseButton"], null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["DrawerBody"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["VStack"], {
+    alignItems: "flex-start",
+    mt: "50px"
+  }, !changeDrawer ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_2___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Box"], {
+    p: "10px"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Link"], {
     href: "/",
     className: "link textLink"
-  }, "Home"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Link"], {
-    href: "/shop",
-    onMouseOver: function onMouseOver() {
-      return setHovered(true);
+  }, "Home")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Divider"], {
+    color: "gray.200"
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Flex"], {
+    w: "100%",
+    p: "10px",
+    onClick: function onClick() {
+      return setChangeDrawer(true);
     },
+    alignItems: "center"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Link"], {
+    href: "/",
     className: "link textLink"
-  }, "Shop ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_icons__WEBPACK_IMPORTED_MODULE_0__["ChevronDownIcon"], null)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(react_transition_group__WEBPACK_IMPORTED_MODULE_5__["CSSTransition"], {
-    "in": hovered,
-    timeout: 1000,
-    classNames: "navMenu"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Grid"], {
-    onMouseOver: function onMouseOver() {
-      return setHovered(true);
-    },
-    templateColumns: "repeat(4, 1fr)",
-    pos: "absolute",
-    p: "20px 50px",
-    color: "primary",
-    gap: 6,
-    bg: "#fff",
-    top: "75px",
-    left: "0",
-    w: "900px",
-    right: "0",
-    className: "navMenu",
-    zIndex: "999"
-  }, headings.map(function (_ref2, index) {
+  }, "Shop"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Spacer"], null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_icons__WEBPACK_IMPORTED_MODULE_0__["ChevronRightIcon"], {
+    w: "25px",
+    h: "25px"
+  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Divider"], {
+    color: "gray.200"
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Box"], {
+    p: "10px"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Link"], {
+    href: "/",
+    className: "link textLink"
+  }, "Contact")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Divider"], {
+    color: "gray.200"
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Box"], {
+    p: "10px"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Link"], {
+    href: "/",
+    className: "link textLink"
+  }, "Vendors"))) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_2___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Flex"], {
+    mb: "40px",
+    alignItems: "center",
+    w: "100%"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_icons__WEBPACK_IMPORTED_MODULE_0__["ChevronLeftIcon"], {
+    w: "40px",
+    h: "40px",
+    onClick: function onClick() {
+      return setChangeDrawer(false);
+    }
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Spacer"], null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Heading"], {
+    as: "h6",
+    fontSize: "2em",
+    color: "secondary",
+    textTransform: "uppercase"
+  }, "Shop"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Spacer"], null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Spacer"], null)), headings.map(function (_ref2, index) {
     var title = _ref2.title,
         content = _ref2.content;
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Box"], {
       w: "100%",
-      key: index
+      key: index,
+      mb: "30px"
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Heading"], {
       as: "h6",
       fontSize: "16px",
@@ -164662,13 +164692,110 @@ var Navbar = function Navbar(_ref) {
         }
       }, title));
     })));
-  }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Link"], {
+  }))))))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Box"], {
+    pos: smallerThan1100 ? "relative" : "absolute",
+    top: "0",
+    w: "100%",
+    background: smallerThan1100 ? "primary" : "transoarent",
+    color: "white",
+    zIndex: "999"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Flex"], {
+    p: smallerThan1100 ? "20px" : "10px 30px",
+    alignItems: "center",
+    justifyContent: "center"
+  }, smallerThan1100 && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_2___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["IconButton"], {
+    ref: btnRef,
+    "aria-label": "Drawer",
+    fontSize: "30px",
+    icon: /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_icons__WEBPACK_IMPORTED_MODULE_0__["HamburgerIcon"], {
+      color: "secondary"
+    }),
+    onClick: onOpen,
+    variant: "unstyled",
+    className: "link"
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Spacer"], null)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Image"], {
+    src: _images_logo_2_png__WEBPACK_IMPORTED_MODULE_6___default.a,
+    w: smallerThan1100 ? "200px" : "230px",
+    h: smallerThan1100 ? "100px" : "80px",
+    ml: smallerThan1100 ? "80px" : "",
+    objectFit: "cover"
+  }), !smallerThan1100 && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_2___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Spacer"], null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Stack"], {
+    spacing: 12,
+    direction: "row",
+    alignItems: "center"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Box"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Link"], {
+    href: "/",
+    className: "link textLink"
+  }, "Home")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Box"], {
+    onMouseOver: function onMouseOver() {
+      return setHovered(true);
+    },
+    onMouseLeave: function onMouseLeave() {
+      return setHovered(false);
+    },
+    py: "30px"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Link"], {
+    href: "/shop",
+    className: "link textLink",
+    _hover: {
+      textDecoration: "none"
+    }
+  }, "Shop ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_icons__WEBPACK_IMPORTED_MODULE_0__["ChevronDownIcon"], null)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(react_transition_group__WEBPACK_IMPORTED_MODULE_5__["CSSTransition"], {
+    "in": hovered,
+    timeout: 1000,
+    classNames: "navMenu"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Grid"], {
+    templateColumns: "repeat(4, 1fr)",
+    pos: "absolute",
+    p: "20px 50px",
+    color: "primary",
+    gap: 6,
+    bg: "#fff",
+    top: "75px",
+    left: "0",
+    w: "60%",
+    right: "0",
+    className: "navMenu",
+    zIndex: "999"
+  }, headings.map(function (_ref4, index) {
+    var title = _ref4.title,
+        content = _ref4.content;
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Box"], {
+      w: "100%",
+      key: index
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Heading"], {
+      as: "h6",
+      fontSize: "16px",
+      textTransform: "uppercase",
+      letterSpacing: "1",
+      m: "10px 0"
+    }, title), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement("hr", {
+      className: "line"
+    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Divider"], {
+      borderColor: "#66666663"
+    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["List"], null, content.map(function (_ref5, index) {
+      var title = _ref5.title,
+          url = _ref5.url;
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["ListItem"], {
+        key: index,
+        m: "15px 0"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Link"], {
+        href: url,
+        fontSize: "16px",
+        color: "gray.700",
+        _hover: {
+          color: "secondary",
+          textDecoration: "none"
+        }
+      }, title));
+    })));
+  })))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Box"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Link"], {
     href: "/contact",
     className: "link textLink"
-  }, "Contact"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Link"], {
+  }, "Contact")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Box"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Link"], {
     href: "/vendors",
     className: "link textLink"
-  }, "Vendors")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Spacer"], null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Stack"], {
+  }, "Vendors")))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Spacer"], null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Stack"], {
     direction: "row",
     alignItems: "center"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["IconButton"], {
@@ -164687,14 +164814,16 @@ var Navbar = function Navbar(_ref) {
     fontSize: "25px",
     className: "link",
     variant: "unstyled",
-    "aria-label": "Profile"
+    "aria-label": "Profile",
+    paddingInlineStart: "0",
+    paddingInlineEnd: "0"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Icon"], {
     as: react_icons_io5__WEBPACK_IMPORTED_MODULE_4__["IoPersonOutline"]
   })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["MenuList"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["MenuItem"], {
     minH: "48px"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement("span", null, "Fluffybuns the Destroyer")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["MenuItem"], {
     minH: "40px"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement("span", null, "Simon the pensive")))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Stack"], {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement("span", null, "Simon the pensive")))), !smallerThan1100 && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Stack"], {
     className: "iconBadgeContainer"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["IconButton"], {
     className: "link",
@@ -164724,7 +164853,7 @@ var Navbar = function Navbar(_ref) {
     className: "badge"
   }, "0")))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Divider"], {
     borderColor: "#666"
-  }));
+  })));
 };
 
 /* harmony default export */ __webpack_exports__["default"] = (Navbar);
@@ -164935,6 +165064,7 @@ var Products = function Products(_ref) {
     rightIcon: /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Icon"], {
       as: showFilters ? react_icons_bi__WEBPACK_IMPORTED_MODULE_5__["BiX"] : react_icons_bi__WEBPACK_IMPORTED_MODULE_5__["BiSliderAlt"]
     }),
+    p: "0px 10px !important",
     onClick: function onClick() {
       return setShowFilters(!showFilters);
     }
@@ -165115,6 +165245,11 @@ var Search = function Search(_ref) {
       filteredProducts = _useState4[0],
       setFilteredProducts = _useState4[1];
 
+  var _useState5 = Object(react__WEBPACK_IMPORTED_MODULE_2__["useState"])(false),
+      _useState6 = _slicedToArray(_useState5, 2),
+      loading = _useState6[0],
+      setLoading = _useState6[1];
+
   var handleSubmit = function handleSubmit() {
     if (query.length > 0) history.push("/shop/?q=" + query);
   };
@@ -165126,11 +165261,23 @@ var Search = function Search(_ref) {
   };
 
   var handleChange = function handleChange(e) {
+    setLoading(true);
     var q = e.target.value;
     setQuery(q);
-    setFilteredProducts(products.filter(function (p) {
-      return p.title.includes(q);
-    }));
+    var filtered = products.filter(function (p) {
+      return q.split(" ").some(function (word) {
+        return p.title.toLowerCase().includes(word.toLowerCase());
+      });
+    });
+    setFilteredProducts(q.length > 0 ? filtered : []);
+    setTimeout(function () {
+      return setLoading(false);
+    }, 0);
+  };
+
+  var handleClose = function handleClose() {
+    setQuery("");
+    setShowSearch(false);
   };
 
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(react_transition_group__WEBPACK_IMPORTED_MODULE_5__["CSSTransition"], {
@@ -165153,9 +165300,7 @@ var Search = function Search(_ref) {
     h: "25px",
     cursor: "pointer",
     color: "#fff",
-    onClick: function onClick() {
-      return setShowSearch(false);
-    },
+    onClick: handleClose,
     pos: "absolute",
     right: 10,
     _hover: {
@@ -165163,7 +165308,8 @@ var Search = function Search(_ref) {
     },
     top: 10
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Box"], {
-    w: "100%"
+    w: "100%",
+    pos: "relative"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["InputGroup"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Input"], {
     variant: "flushed",
     placeholder: "Search",
@@ -165182,12 +165328,84 @@ var Search = function Search(_ref) {
         color: "var(--chakra-colors-secondary)"
       }
     })
-  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["VStack"], null, filteredProducts.map(function (product, index) {
+  })), filteredProducts && filteredProducts.length > 0 && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["VStack"], {
+    bgColor: "#fff",
+    pos: "absolute",
+    overflowY: "scroll",
+    w: "100%",
+    maxH: "300px",
+    p: "20px 30px",
+    spacing: 5,
+    className: "scrollable",
+    alignItems: loading ? "center" : "flex-start",
+    divider: /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["StackDivider"], {
+      borderColor: "gray.200"
+    })
+  }, loading ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Spinner"], {
+    color: "secondary"
+  }) : filteredProducts.map(function (product, index) {
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(ProductCard, {
       product: product,
+      query: query,
       key: index + Date.now()
     });
   })))));
+};
+
+var ProductCard = function ProductCard(_ref2) {
+  var _ref2$product = _ref2.product,
+      title = _ref2$product.title,
+      url = _ref2$product.url,
+      images = _ref2$product.images,
+      discount = _ref2$product.discount,
+      price = _ref2$product.price;
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Box"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Flex"], {
+    pos: "relative"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Link"], {
+    href: url
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Box"], {
+    h: "80px",
+    w: "80px"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Image"], {
+    src: images[0],
+    alt: title,
+    w: "100%",
+    h: "100%",
+    objectFit: "contain",
+    bg: "#e6e6e6",
+    outline: "none",
+    cursor: "pointer",
+    tabIndex: "-1",
+    _hover: {
+      boxShadow: "none"
+    }
+  }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["VStack"], {
+    spacing: 2,
+    align: "stretch",
+    p: "5px 10px",
+    justifyContent: "center"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Link"], {
+    href: url,
+    _hover: {
+      color: "secondary",
+      textDecoration: "none"
+    }
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Heading"], {
+    as: "h6",
+    fontSize: "0.8rem",
+    fontWeight: "500"
+  }, title)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["HStack"], {
+    spacing: 2
+  }, discount && discount > 0 && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Heading"], {
+    as: "h2",
+    fontSize: "md",
+    color: "gray",
+    textDecor: "line-through"
+  }, "\xA3", price.toFixed(2)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Heading"], {
+    as: "h2",
+    fontSize: "md",
+    color: "secondary"
+  }, "\xA3", (discount && discount > 0 ? price - price * (discount / 100) : price).toFixed(2))))));
 };
 
 /* harmony default export */ __webpack_exports__["default"] = (Object(react_redux__WEBPACK_IMPORTED_MODULE_3__["connect"])(mapStateToProps)(Search));
@@ -165406,6 +165624,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _fontsource_archivo_300_css__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_fontsource_archivo_300_css__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _fontsource_rubik_700_css__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @fontsource/rubik/700.css */ "./node_modules/@fontsource/rubik/700.css");
 /* harmony import */ var _fontsource_rubik_700_css__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_fontsource_rubik_700_css__WEBPACK_IMPORTED_MODULE_3__);
+var _baseStyle;
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 
 
 
@@ -165433,19 +165655,18 @@ var theme = Object(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["extendTheme"])
       }
     },
     Button: {
-      baseStyle: {
+      baseStyle: (_baseStyle = {
         borderRadius: 0,
         textTransform: "uppercase",
         letterSpacing: "0.8px",
         padding: "20px 30px",
         fontFamily: "Archivo",
-        fontWeight: 300,
-        "&:hover": {
-          bg: "secondary",
-          color: "#fff",
-          borderColor: "secondary"
-        }
-      }
+        fontWeight: 300
+      }, _defineProperty(_baseStyle, "padding", 0), _defineProperty(_baseStyle, "&:hover", {
+        bg: "secondary",
+        color: "#fff",
+        borderColor: "secondary"
+      }), _baseStyle)
     }
   }
 });

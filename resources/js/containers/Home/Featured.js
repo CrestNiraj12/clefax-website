@@ -104,6 +104,7 @@ const Featured = ({ products }) => {
                                 className={
                                     activeFilter === index ? "activeFilter" : ""
                                 }
+                                p="0px 10px !important"
                             >
                                 {filter}
                             </Button>
@@ -177,6 +178,7 @@ const Featured = ({ products }) => {
                             color="#fff"
                             fontSize="1em"
                             borderColor="#fff"
+                            p="0px 10px !important"
                         >
                             Shop now
                         </Button>

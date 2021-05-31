@@ -21,7 +21,7 @@ const Sorter = ({ sortBy, setSortBy, setProducts, products, setLoading }) => {
                 aria-label="Sort"
                 className="optionBtn"
                 mr="20px"
-                p="0px 10px"
+                p="0px 10px !important"
                 rightIcon={<ChevronDownIcon />}
             >
                 {sortingOptions[sortBy]}

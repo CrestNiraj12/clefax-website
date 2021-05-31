@@ -10618,6 +10618,13 @@ h3 {
   text-decoration: none !important;
 }
 
+@media (max-width: 1100px) {
+  .textLink {
+    font-family: "Archivo", sans-serif;
+    font-weight: normal !important;
+  }
+}
+
 .iconBadgeContainer {
   position: relative;
 }
@@ -11026,8 +11033,32 @@ h3 {
     transform: translate(0, 0);
   }
 
-  50% {
-    transform: translate(-30px, -30px);
+  5% {
+    transform: translate(-5px, -5px);
+  }
+
+  15% {
+    transform: translate(-10px, -10px);
+  }
+
+  30% {
+    transform: translate(-20px, -20px);
+  }
+
+  45% {
+    transform: translate(0, -20px);
+  }
+
+  60% {
+    transform: translate(20px, -20px);
+  }
+
+  75% {
+    transform: translate(10px, -10px);
+  }
+
+  90% {
+    transform: translate(5px, -5px);
   }
 
   100% {
@@ -11040,8 +11071,32 @@ h3 {
     transform: translate(0, 0);
   }
 
-  50% {
-    transform: translate(-30px, -30px);
+  5% {
+    transform: translate(-5px, -5px);
+  }
+
+  15% {
+    transform: translate(-10px, -10px);
+  }
+
+  30% {
+    transform: translate(-20px, -20px);
+  }
+
+  45% {
+    transform: translate(0, -20px);
+  }
+
+  60% {
+    transform: translate(20px, -20px);
+  }
+
+  75% {
+    transform: translate(10px, -10px);
+  }
+
+  90% {
+    transform: translate(5px, -5px);
   }
 
   100% {
@@ -11053,8 +11108,8 @@ h3 {
   box-sizing: border-box;
   box-shadow: none;
   perspective: 600px;
-  -webkit-animation: float 6s ease-in-out infinite;
-          animation: float 6s ease-in-out infinite;
+  -webkit-animation: float 10s linear infinite;
+          animation: float 10s linear infinite;
   z-index: 2;
 }
 
@@ -11383,4 +11438,29 @@ body {
 .scroll-btn-exit-done {
   opacity: 0;
   z-index: 0;
+}
+
+.scrollable::-webkit-scrollbar {
+  width: 8px;
+}
+
+.scrollable::-webkit-scrollbar-track {
+  background: transparent;
+  /* color of the tracking area */
+}
+
+.scrollable::-webkit-scrollbar-thumb {
+  background-color: var(--chakra-colors-secondary);
+  /* color of the scroll thumb */
+  border-radius: 10px;
+  /* roundness of the scroll thumb */
+  border: none;
+  /* creates padding around scroll thumb */
+}
+
+.chakra-button {
+  padding-inline-end: 0px !important;
+  padding-inline-start: 0px !important;
+  -webkit-padding-start: 0px !important;
+  -webkit-padding-end: 0px !important;
 }

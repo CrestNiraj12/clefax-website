@@ -55,7 +55,7 @@ const Header = () => {
 
     return (
         <CSSTransition in appear={true} timeout={1000} classNames="header">
-            <Box h={["100vh", "46vw"]}>
+            <Box h={["100vh", "50vw"]}>
                 <Carousel
                     ssr
                     infinite
@@ -87,7 +87,6 @@ const Header = () => {
                                         spacing={2}
                                         pos="absolute"
                                         overflow="hidden"
-                                        mt="-50px"
                                     >
                                         <CSSTransition
                                             in={changed}
@@ -129,7 +128,12 @@ const Header = () => {
                                         </CSSTransition>
                                     </Stack>
 
-                                    <Box w="35%" className="floatImage">
+                                    <Box
+                                        w="35%"
+                                        display="flex"
+                                        justifyContent="center"
+                                        className="floatImage"
+                                    >
                                         <CSSTransition
                                             in={changed}
                                             appear={true}
@@ -140,7 +144,7 @@ const Header = () => {
                                                 src={image}
                                                 alt={title}
                                                 className="headerImage"
-                                                w="32vw"
+                                                w="30vw"
                                                 h="100%"
                                             />
                                         </CSSTransition>
@@ -157,15 +161,15 @@ const Header = () => {
                                         pos="absolute"
                                         left="0"
                                         right="0"
-                                        bottom={["-30px", "-50px", "-30px"]}
+                                        bottom={["-80px", "-50px", "-80px"]}
                                         zIndex="2"
                                         m="0 auto"
                                         className="headerBtn"
                                         fontSize={["12px", "8px", "12px"]}
                                         p={[
-                                            "10px 30px",
-                                            "0px 15px",
-                                            "10px 30px"
+                                            "10px 20px !important",
+                                            "0px 15px !important",
+                                            "10px 20px !important"
                                         ]}
                                         onClick={() => history.push(button_url)}
                                     >

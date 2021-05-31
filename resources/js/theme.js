@@ -33,6 +33,7 @@ const theme = extendTheme({
                 padding: "20px 30px",
                 fontFamily: "Archivo",
                 fontWeight: 300,
+                padding: 0,
                 "&:hover": {
                     bg: "secondary",
                     color: "#fff",

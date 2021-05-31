@@ -93,8 +93,26 @@
     0% {
         transform: translate(0, 0);
     }
-    50% {
-        transform: translate(-30px, -30px);
+    5% {
+        transform: translate(-5px, -5px);
+    }
+    15% {
+        transform: translate(-10px, -10px);
+    }
+    30% {
+        transform: translate(-20px, -20px);
+    }
+    45% {
+        transform: translate(0, -20px);
+    }
+    60% {
+        transform: translate(20px, -20px);
+    }
+    75% {
+        transform: translate(10px, -10px);
+    }
+    90% {
+        transform: translate(5px, -5px);
     }
     100% {
         transform: translate(0, 0);
@@ -105,7 +123,7 @@
     box-sizing: border-box;
     box-shadow: none;
     perspective: 600px;
-    animation: float 6s ease-in-out infinite;
+    animation: float 10s linear infinite;
     z-index: 2;
 }
 

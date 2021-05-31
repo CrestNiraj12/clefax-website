@@ -151,6 +151,7 @@ const Footer = () => {
                         textTransform="uppercase"
                         color="#fff"
                         fontSize="14px"
+                        p="0px 10px !important"
                         _hover={{
                             background:
                                 "var(--chakra-colors-primary) !important"

@@ -91,3 +91,26 @@ body {
     z-index: 0;
     @include customTransition(0.2s, 0s, ease-in-out, z-index, 0, 999);
 }
+
+.scrollable::-webkit-scrollbar {
+    width: 8px;
+}
+
+.scrollable::-webkit-scrollbar-track {
+    background: transparent; /* color of the tracking area */
+}
+
+.scrollable::-webkit-scrollbar-thumb {
+    background-color: var(
+        --chakra-colors-secondary
+    ); /* color of the scroll thumb */
+    border-radius: 10px; /* roundness of the scroll thumb */
+    border: none; /* creates padding around scroll thumb */
+}
+
+.chakra-button {
+    padding-inline-end: 0px !important;
+    padding-inline-start: 0px !important;
+    -webkit-padding-start: 0px !important;
+    -webkit-padding-end: 0px !important;
+}
