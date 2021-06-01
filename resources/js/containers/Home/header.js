@@ -55,11 +55,11 @@ const Header = () => {
 
     return (
         <CSSTransition in appear={true} timeout={1000} classNames="header">
-            <Box h={["100vh", "50vw"]}>
+            <Box h={{ base: "100vh", sm: "60vw", md: "50vw" }}>
                 <Carousel
                     ssr
                     infinite
-                    autoPlay={true}
+                    autoPlay={false}
                     autoPlaySpeed={7000}
                     beforeChange={() => setChanged(false)}
                     afterChange={() => setChanged(true)}
@@ -100,7 +100,10 @@ const Header = () => {
                                             >
                                                 <Text
                                                     color="white"
-                                                    fontSize="xl"
+                                                    fontSize={{
+                                                        base: "sm",
+                                                        sm: "xl"
+                                                    }}
                                                     pl="10px"
                                                 >
                                                     {subtitle}
@@ -118,8 +121,15 @@ const Header = () => {
                                                 as="h1"
                                                 color="white"
                                                 size="4xl"
-                                                fontSize="8vw"
-                                                letterSpacing="25px"
+                                                fontSize={{
+                                                    base: "40px",
+                                                    md: "8vw"
+                                                }}
+                                                letterSpacing={{
+                                                    base: "5px",
+                                                    sm: "15px",
+                                                    md: "25px"
+                                                }}
                                                 textTransform="uppercase"
                                                 className="title"
                                             >
@@ -129,7 +139,7 @@ const Header = () => {
                                     </Stack>
 
                                     <Box
-                                        w="35%"
+                                        w={{ base: "50%", sm: "35%" }}
                                         display="flex"
                                         justifyContent="center"
                                         className="floatImage"
@@ -144,7 +154,10 @@ const Header = () => {
                                                 src={image}
                                                 alt={title}
                                                 className="headerImage"
-                                                w="30vw"
+                                                w={{
+                                                    base: "250px",
+                                                    sm: "30vw"
+                                                }}
                                                 h="100%"
                                             />
                                         </CSSTransition>
@@ -161,16 +174,16 @@ const Header = () => {
                                         pos="absolute"
                                         left="0"
                                         right="0"
-                                        bottom={["-80px", "-50px", "-80px"]}
+                                        bottom={{ base: "-120px", sm: "-50px" }}
                                         zIndex="2"
                                         m="0 auto"
                                         className="headerBtn"
-                                        fontSize={["12px", "8px", "12px"]}
-                                        p={[
-                                            "10px 20px !important",
-                                            "0px 15px !important",
-                                            "10px 20px !important"
-                                        ]}
+                                        fontSize={{ base: "12px", md: "10px" }}
+                                        p={{
+                                            base: "10px 20px !important",
+                                            md: "0px 15px !important",
+                                            lg: "10px 20px !important"
+                                        }}
                                         onClick={() => history.push(button_url)}
                                     >
                                         Shop Collection

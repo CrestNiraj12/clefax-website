@@ -8,7 +8,7 @@
 @import "~bootstrap/scss/bootstrap";
 
 @mixin customTransition(
-    $time: 1s,
+    $time: 0.25s,
     $delay: 0s,
     $transitionEffect: ease-in-out,
     $property: transform,

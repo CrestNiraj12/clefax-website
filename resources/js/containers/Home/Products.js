@@ -114,7 +114,11 @@ const Products = ({ products }) => {
     return (
         <Box m="50px 20px">
             <Box mb="50px">
-                <Flex zIndex={2} pos="relative">
+                <Flex
+                    zIndex={2}
+                    pos="relative"
+                    direction={{ base: "column", md: "row" }}
+                >
                     <Heading
                         as="h2"
                         textTransform="uppercase"
@@ -124,24 +128,26 @@ const Products = ({ products }) => {
                         All Products
                     </Heading>
                     <Spacer />
-                    <Sorter
-                        sortBy={sortBy}
-                        setSortBy={setSortBy}
-                        setProducts={setFilteredProducts}
-                        products={filteredProducts}
-                        setLoading={setLoading}
-                    />
-                    <Button
-                        variant="outline"
-                        className="optionBtn"
-                        rightIcon={
-                            <Icon as={showFilters ? BiX : BiSliderAlt} />
-                        }
-                        p="0px 10px !important"
-                        onClick={() => setShowFilters(!showFilters)}
-                    >
-                        Filter
-                    </Button>
+                    <Flex mt={{ base: "10px", md: 0 }}>
+                        <Sorter
+                            sortBy={sortBy}
+                            setSortBy={setSortBy}
+                            setProducts={setFilteredProducts}
+                            products={filteredProducts}
+                            setLoading={setLoading}
+                        />
+                        <Button
+                            variant="outline"
+                            className="optionBtn"
+                            rightIcon={
+                                <Icon as={showFilters ? BiX : BiSliderAlt} />
+                            }
+                            p="0px 10px !important"
+                            onClick={() => setShowFilters(!showFilters)}
+                        >
+                            Filter
+                        </Button>
+                    </Flex>
                 </Flex>
                 <CSSTransition
                     in={showFilters}
@@ -156,7 +162,13 @@ const Products = ({ products }) => {
                             borderColor="gray.300"
                             p="50px"
                         >
-                            <Flex>
+                            <Flex
+                                direction={{
+                                    base: "column",
+                                    md: "column",
+                                    lg: "row"
+                                }}
+                            >
                                 <Box>
                                     <Heading as="h6" className="filterHeading">
                                         Choose Categories
@@ -169,7 +181,6 @@ const Products = ({ products }) => {
                                         {categories.map((category, index) => (
                                             <Checkbox
                                                 key={index}
-                                                size={"lg"}
                                                 isChecked={checkedItems[index]}
                                                 spacing={4}
                                                 colorScheme="red"
@@ -189,7 +200,10 @@ const Products = ({ products }) => {
                                     </SimpleGrid>
                                 </Box>
                                 <Spacer />
-                                <Box minW="600px">
+                                <Box
+                                    minW={{ lg: "600px" }}
+                                    mt={{ base: "50px", md: "50px" }}
+                                >
                                     <Heading as="h6" className="filterHeading">
                                         Choose Price
                                     </Heading>
@@ -223,6 +237,7 @@ const Products = ({ products }) => {
                             bg="secondary"
                             color="#fff"
                             fontSize="sm"
+                            p="0 10px !important"
                             onClick={handleReset}
                             _hover={{ background: "#000 !important" }}
                         >
@@ -232,14 +247,22 @@ const Products = ({ products }) => {
                 </CSSTransition>
             </Box>
             <Grid
-                templateRows="repeat(2, 1fr)"
-                templateColumns="repeat(4, 1fr)"
+                templateRows={{
+                    base: "repeat(8, 1fr)",
+                    md: "repeat(4, 1fr)",
+                    lg: "repeat(2, 1fr)"
+                }}
+                templateColumns={{
+                    base: "repeat(1, 1fr)",
+                    md: "repeat(2, 1fr)",
+                    lg: "repeat(4, 1fr)"
+                }}
                 gap={10}
                 zIndex={1}
                 position="relative"
                 bg="#fff"
                 overflow="hidden"
-                maxH="1040px"
+                maxH={{ lg: "1040px" }}
             >
                 <TransitionGroup component={null}>
                     {loading

@@ -85,7 +85,7 @@ const Brands = () => {
     var history = useHistory();
     return (
         <Box marginY="100px" overflow="hidden">
-            <SimpleGrid columns={cards.length}>
+            <SimpleGrid columns={{ md: cards.length / 2, lg: cards.length }}>
                 {cards.map(
                     (
                         { title, subtitle, colorTheme, btnStyle, link, image },

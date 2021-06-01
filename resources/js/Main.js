@@ -6,6 +6,7 @@ import Footer from "./components/Footer";
 import ScrollToTopButton from "./components/ScrollToTopButton";
 import { setProducts } from "./actions";
 import routes from "./routes";
+import { useMediaQuery } from "@chakra-ui/media-query";
 
 const mapDispatchToProps = dispatch => ({
     setProducts: products => dispatch(setProducts(products))
@@ -117,6 +118,7 @@ const products = [
 
 const Main = ({ setProducts }) => {
     const location = useLocation();
+    const [desktop] = useMediaQuery("(min-width: 1100px)");
     const [showScrollBtn, setShowScrollBtn] = useState(false);
 
     useEffect(() => {
@@ -137,7 +139,7 @@ const Main = ({ setProducts }) => {
     return (
         <>
             <Fragment>
-                {<ScrollToTopButton condition={showScrollBtn} />}
+                {desktop && <ScrollToTopButton condition={showScrollBtn} />}
             </Fragment>
             <Switch>
                 {routes.map(({ path, Component, exact }) => (

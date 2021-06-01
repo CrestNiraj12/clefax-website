@@ -7,6 +7,7 @@ import {
     HStack,
     Image,
     Spacer,
+    Stack,
     StackDivider,
     Text,
     VStack
@@ -82,24 +83,34 @@ const Featured = ({ products }) => {
 
     return (
         <Box bgColor="lightgray" p="100px 20px">
-            <Box bgColor="#fff" p="100px 10%">
-                <Flex zIndex={2} pos="relative" mb="50px">
+            <Box
+                bgColor="#fff"
+                p={{ base: "100px 5%", md: "100px 5%", lg: "100px 10%" }}
+            >
+                <Flex
+                    direction={{ base: "column", md: "column" }}
+                    zIndex={2}
+                    pos="relative"
+                    mb="50px"
+                    alignItems={{ base: "center", md: "center" }}
+                >
                     <Heading
                         as="h2"
                         textTransform="uppercase"
                         fontSize="2em"
                         letterSpacing={1}
+                        mb={{ base: "30px", md: "30px" }}
                     >
                         Latest Products
                     </Heading>
                     <Spacer />
-                    <HStack spacing={2}>
+                    <HStack spacing={2} wrap="wrap">
                         {filters.map((filter, index) => (
                             <Button
                                 key={index}
-                                fontSize="13px"
+                                fontSize={{ base: "10px", md: "13px" }}
                                 fontWeight="bold"
-                                fontFamily="Lato"
+                                fontFamily="Archivo"
                                 onClick={() => handleApplyFilter(index)}
                                 className={
                                     activeFilter === index ? "activeFilter" : ""
@@ -112,12 +123,20 @@ const Featured = ({ products }) => {
                     </HStack>
                 </Flex>
                 <Grid
-                    templateRows="repeat(2, 1fr)"
-                    templateColumns="repeat(3, 1fr)"
+                    templateRows={{
+                        base: "repeat(6, 1fr)",
+                        md: "repeat(3, 1fr)",
+                        lg: "repeat(2, 1fr)"
+                    }}
+                    templateColumns={{
+                        base: "repeat(1, 1fr)",
+                        md: "repeat(2, 1fr)",
+                        lg: "repeat(3, 1fr)"
+                    }}
                     gap={10}
                     position="relative"
                     bg="#fff"
-                    maxH="350px"
+                    maxH={{ lg: "350px" }}
                     overflow="hidden"
                 >
                     <TransitionGroup component={null}>
@@ -148,7 +167,12 @@ const Featured = ({ products }) => {
                                   ))}
                     </TransitionGroup>
                 </Grid>
-                <Box marginY="100px" w="100%" pos="relative">
+                <Box
+                    marginY="100px"
+                    w="100%"
+                    h={{ base: "200px", lg: "100%" }}
+                    pos="relative"
+                >
                     <Image
                         src="https://wpbingosite.com/wordpress/dimita/wp-content/uploads/2019/12/banner2-7.jpg"
                         w="100%"
@@ -168,7 +192,7 @@ const Featured = ({ products }) => {
                         <Heading
                             as="h2"
                             color="#fff"
-                            fontSize="1.8em"
+                            fontSize={{ base: "1.2em", sm: "1.8em" }}
                             letterSpacing="1px"
                         >
                             Latest & Special Brands
@@ -185,9 +209,11 @@ const Featured = ({ products }) => {
                     </VStack>
                 </Box>
                 <Box>
-                    <HStack
+                    <Stack
                         divider={<StackDivider borderColor="gray.500" />}
                         justifyContent="space-around"
+                        direction={{ base: "column", lg: "row" }}
+                        spacing={{ base: 10, lg: 0 }}
                     >
                         {benefits.map(({ icon, title, desc }, index) => (
                             <Flex key={index} justifyContent="center">
@@ -210,7 +236,7 @@ const Featured = ({ products }) => {
                                 </VStack>
                             </Flex>
                         ))}
-                    </HStack>
+                    </Stack>
                 </Box>
             </Box>
         </Box>

@@ -10,6 +10,7 @@ import {
     Input,
     Link,
     Spacer,
+    Stack,
     Text,
     VStack
 } from "@chakra-ui/react";
@@ -120,27 +121,34 @@ const Footer = () => {
             <Flex
                 pos="absolute"
                 bgColor="secondary"
-                p="10px 50px"
+                p={{ base: "10px 20px", lg: "10px 50px" }}
                 marginX="20px"
                 alignItems="center"
                 w="calc(100% - 40px)"
                 top={-35}
+                direction={{ base: "column", lg: "row" }}
             >
                 <Heading
                     as="h3"
                     textTransform="uppercase"
                     color="#fff"
-                    fontSize="1.5em"
+                    fontSize={{ base: "1em", lg: "1.5em" }}
                     letterSpacing="0.5px"
+                    mb={{ base: "10px", lg: 0 }}
                 >
                     Sign up for newsletter
                 </Heading>
                 <Spacer />
-                <HStack spacing={2} w="50%">
+                <HStack
+                    spacing={2}
+                    w={{ base: "100%", lg: "50%" }}
+                    my={{ base: "20px", lg: 0 }}
+                >
                     <Input
                         variant="filled"
                         placeholder="Your Email Address"
                         size="md"
+                        fontSize={{ base: "smaller", lg: "medium" }}
                         borderRadius="0"
                         _focus={{
                             bg: "#fff",
@@ -150,11 +158,14 @@ const Footer = () => {
                     <Button
                         textTransform="uppercase"
                         color="#fff"
-                        fontSize="14px"
-                        p="0px 10px !important"
+                        fontSize={{ base: "11px", md: "14px" }}
+                        p={{
+                            base: "0px 20px !important"
+                        }}
+                        bg="primary"
                         _hover={{
                             background:
-                                "var(--chakra-colors-primary) !important"
+                                "var(--chakra-colors-secondary) !important"
                         }}
                     >
                         Subscribe
@@ -187,7 +198,11 @@ const Footer = () => {
                 </HStack>
             </Flex>
             <Box marginX="20px">
-                <HStack paddingY="100px" className="footerContainer">
+                <Stack
+                    padding={{ base: "200px 0 50px", lg: "100px 0 100px" }}
+                    className="footerContainer"
+                    direction={{ base: "column", lg: "row" }}
+                >
                     <VStack className="footerInnerContainer">
                         <Heading as="h6" className="footerHeading">
                             Contact Information
@@ -215,7 +230,10 @@ const Footer = () => {
                     <Spacer />
                     {footerLinks.map(({ title, links }, index) => (
                         <>
-                            <VStack className="footerContainer">
+                            <VStack
+                                className="footerContainer"
+                                mt={{ base: "50px !important", lg: 0 }}
+                            >
                                 <Heading as="h6" className="footerHeading">
                                     {title}
                                 </Heading>
@@ -249,10 +267,15 @@ const Footer = () => {
                             />
                         </Box>
                     </VStack>
-                </HStack>
+                </Stack>
             </Box>
-            <Flex padding="20px" bgColor="#323232">
-                <Text className="footerText">
+            <Flex
+                padding="20px"
+                bgColor="#323232"
+                direction={{ base: "column", lg: "row" }}
+                alignItems={{ base: "center", lg: "initial" }}
+            >
+                <Text className="footerText" mb={{ base: "10px", lg: "0px" }}>
                     Copyright © 2020 Clefax. All rights reserved.
                 </Text>
                 <Spacer />
