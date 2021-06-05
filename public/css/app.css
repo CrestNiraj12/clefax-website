@@ -10609,7 +10609,7 @@ h3 {
   box-shadow: none !important;
 }
 
-.textLink {
+.textLink, .textLink-small {
   font-family: "Rubik", sans-serif;
   font-size: medium !important;
   font-weight: 500 !important;
@@ -10618,8 +10618,23 @@ h3 {
   text-decoration: none !important;
 }
 
+.textLink-small {
+  padding: 22px 10px;
+  font-size: small !important;
+}
+
+.textLink-small:hover {
+  color: #fff;
+  background: var(--chakra-colors-secondary) !important;
+  border-color: transparent !important;
+}
+
+.textLink-small:focus {
+  box-shadow: none !important;
+}
+
 @media (max-width: 1100px) {
-  .textLink {
+  .textLink, .textLink-small {
     font-family: "Archivo", sans-serif;
     font-weight: normal !important;
   }
@@ -10680,6 +10695,41 @@ h3 {
 }
 
 .navMenu-exit-active {
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(100px);
+  transition: opacity 0.2s ease-out, transform 0.2s ease-out;
+}
+
+.navMenu-page {
+  margin: 0 auto !important;
+  visibility: hidden;
+  opacity: 0;
+}
+
+.navMenu-page-enter {
+  opacity: 0;
+  visibility: visible;
+  transform: translateY(100px);
+}
+
+.navMenu-page-enter-active {
+  opacity: 1;
+  transform: translateY(20px);
+  transition: opacity 0.2s ease-in, transform 0.2s ease-in;
+}
+
+.navMenu-page-enter-done {
+  opacity: 1;
+  transform: translateY(20px);
+  visibility: visible;
+}
+
+.navMenu-page-exit {
+  opacity: 1;
+}
+
+.navMenu-page-exit-active {
   opacity: 0;
   visibility: hidden;
   transform: translateY(100px);
@@ -11623,7 +11673,8 @@ body {
   /* creates padding around scroll thumb */
 }
 
-.chakra-button {
+.chakra-button,
+.chakra-stack {
   padding-inline-end: 0px !important;
   padding-inline-start: 0px !important;
   -webkit-padding-start: 0px !important;

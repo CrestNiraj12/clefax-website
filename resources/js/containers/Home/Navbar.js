@@ -43,7 +43,12 @@ import {
 import { CSSTransition } from "react-transition-group";
 import Logo from "../../../images/logo-2.png";
 import "@fontsource/archivo";
-import { Fragment } from "react";
+import { showSearch } from "../../actions";
+import { connect } from "react-redux";
+
+const mapDispatchToProps = dispatch => ({
+    showSearch: show => dispatch(showSearch(show))
+});
 
 const headings = [
     {
@@ -86,7 +91,7 @@ const headings = [
     }
 ];
 
-const Navbar = ({ setShowSearch }) => {
+const Navbar = ({ showSearch }) => {
     const [hovered, setHovered] = useState(false);
     const [smallerThan1100] = useMediaQuery("(max-width: 1100px)");
     const [smallerThan475] = useMediaQuery("(max-width: 475px)");
@@ -101,197 +106,195 @@ const Navbar = ({ setShowSearch }) => {
 
     return (
         <>
-            <Fragment>
-                <Drawer
-                    isOpen={isOpen}
-                    placement="left"
-                    onClose={handleClose}
-                    finalFocusRef={btnRef}
-                >
-                    <DrawerOverlay />
-                    <DrawerContent>
-                        <DrawerCloseButton zIndex="1001" />
+            <Drawer
+                isOpen={isOpen}
+                placement="left"
+                onClose={handleClose}
+                finalFocusRef={btnRef}
+            >
+                <DrawerOverlay />
+                <DrawerContent>
+                    <DrawerCloseButton zIndex="1001" />
 
-                        <DrawerBody pos="relative">
-                            <CSSTransition
-                                in={!changeDrawer}
-                                classNames="drawer-change"
-                                unmountOnExit
-                                timeout={250}
-                            >
-                                <VStack alignItems="flex-start" mt="50px">
-                                    <Box p="10px">
-                                        <Link
-                                            href="/"
-                                            className="link textLink"
-                                        >
-                                            Home
-                                        </Link>
-                                    </Box>
-                                    <Divider color="gray.200" />
-                                    <Flex
-                                        w="100%"
-                                        p="10px"
-                                        alignItems="center"
-                                        onClick={() => setChangeDrawer(true)}
-                                    >
-                                        <Box className="link textLink">
-                                            Shop
-                                        </Box>
-                                        <Spacer />
-                                        <ChevronRightIcon w="25px" h="25px" />
-                                    </Flex>
-                                    <Divider color="gray.200" />
-                                    <Box p="10px">
-                                        <Link
-                                            href="/"
-                                            className="link textLink"
-                                        >
-                                            Contact
-                                        </Link>
-                                    </Box>
-                                    <Divider color="gray.200" />
-                                    <Box p="10px">
-                                        <Link
-                                            href="/"
-                                            className="link textLink"
-                                        >
-                                            Vendors
-                                        </Link>
-                                    </Box>
-                                    {smallerThan475 && (
-                                        <>
-                                            <Divider />
-                                            <Box p="10px">
-                                                <Link
-                                                    href="/"
-                                                    className="link textLink"
-                                                >
-                                                    My Account
-                                                </Link>
-                                            </Box>
-                                            <Divider />
-                                            <Box p="10px">
-                                                <Link
-                                                    href="/"
-                                                    className="link textLink"
-                                                >
-                                                    Checkout
-                                                </Link>
-                                            </Box>
-                                            <Divider />
-                                            <Box p="10px">
-                                                <Link
-                                                    href="/"
-                                                    className="link textLink"
-                                                >
-                                                    Wishlist
-                                                </Link>
-                                            </Box>
-                                            <Divider />
-                                        </>
-                                    )}
-                                </VStack>
-                            </CSSTransition>
-
-                            <CSSTransition
-                                in={changeDrawer}
-                                unmountOnExit
-                                classNames="drawer-change-child"
-                                timeout={250}
-                            >
-                                <VStack alignItems="flex-start" mt="50px">
-                                    <Flex
-                                        mb="40px"
-                                        alignItems="center"
-                                        w="100%"
-                                    >
-                                        <ChevronLeftIcon
-                                            w="40px"
-                                            h="40px"
-                                            onClick={() =>
-                                                setChangeDrawer(false)
-                                            }
-                                        />
-                                        <Spacer />
-                                        <Link
-                                            href="/"
-                                            _hover={{
-                                                textDecor: "none",
-                                                borderBottom:
-                                                    "3px solid var(--chakra-colors-secondary)"
-                                            }}
-                                            _focus={{
-                                                boxShadow: "none"
-                                            }}
-                                        >
-                                            <Heading
-                                                as="h6"
-                                                fontSize="2em"
-                                                color="secondary"
-                                                textTransform="uppercase"
+                    <DrawerBody pos="relative">
+                        <CSSTransition
+                            in={!changeDrawer}
+                            classNames="drawer-change"
+                            unmountOnExit
+                            timeout={250}
+                        >
+                            <VStack alignItems="flex-start" mt="50px">
+                                <Box p="10px">
+                                    <Link href="/" className="link textLink">
+                                        Home
+                                    </Link>
+                                </Box>
+                                <Divider color="gray.200" />
+                                <Flex
+                                    w="100%"
+                                    p="10px"
+                                    alignItems="center"
+                                    onClick={() => setChangeDrawer(true)}
+                                >
+                                    <Box className="link textLink">Shop</Box>
+                                    <Spacer />
+                                    <ChevronRightIcon w="25px" h="25px" />
+                                </Flex>
+                                <Divider color="gray.200" />
+                                <Box p="10px">
+                                    <Link href="/" className="link textLink">
+                                        Contact
+                                    </Link>
+                                </Box>
+                                <Divider color="gray.200" />
+                                <Box p="10px">
+                                    <Link href="/" className="link textLink">
+                                        Vendors
+                                    </Link>
+                                </Box>
+                                {smallerThan475 && (
+                                    <>
+                                        <Divider />
+                                        <Box p="10px">
+                                            <Link
+                                                href="/"
+                                                className="link textLink"
                                             >
-                                                Shop
-                                            </Heading>
-                                        </Link>
-                                        <Spacer />
-                                        <Spacer />
-                                    </Flex>
-                                    {headings.map(
-                                        ({ title, content }, index) => (
-                                            <Box w="100%" key={index} mb="30px">
-                                                <Heading
-                                                    as="h6"
-                                                    fontSize="16px"
-                                                    textTransform="uppercase"
-                                                    letterSpacing="1"
-                                                    m="10px 0"
+                                                Cart{" "}
+                                                <Badge
+                                                    variant="solid"
+                                                    colorScheme="red"
                                                 >
-                                                    {title}
-                                                </Heading>
-                                                <hr className="line" />
-                                                <Divider borderColor="#66666663" />
-                                                <List>
-                                                    {content.map(
-                                                        (
-                                                            { title, url },
-                                                            index
-                                                        ) => (
-                                                            <ListItem
-                                                                key={index}
-                                                                m="15px 0"
-                                                            >
-                                                                <Link
-                                                                    href={url}
-                                                                    fontSize="16px"
-                                                                    color="gray.700"
-                                                                    _hover={{
-                                                                        color:
-                                                                            "secondary",
-                                                                        textDecoration:
-                                                                            "none"
-                                                                    }}
-                                                                >
-                                                                    {title}
-                                                                </Link>
-                                                            </ListItem>
-                                                        )
-                                                    )}
-                                                </List>
-                                            </Box>
-                                        )
-                                    )}
-                                </VStack>
-                            </CSSTransition>
-                        </DrawerBody>
-                    </DrawerContent>
-                </Drawer>
-            </Fragment>
+                                                    0
+                                                </Badge>
+                                            </Link>
+                                        </Box>
+                                        <Divider />
+                                        <Box p="10px">
+                                            <Link
+                                                href="/"
+                                                className="link textLink"
+                                            >
+                                                My Account
+                                            </Link>
+                                        </Box>
+                                        <Divider />
+                                        <Box p="10px">
+                                            <Link
+                                                href="/"
+                                                className="link textLink"
+                                            >
+                                                Checkout
+                                            </Link>
+                                        </Box>
+                                        <Divider />
+                                        <Box p="10px">
+                                            <Link
+                                                href="/"
+                                                className="link textLink"
+                                            >
+                                                Wishlist{" "}
+                                                <Badge
+                                                    variant="solid"
+                                                    colorScheme="red"
+                                                >
+                                                    0
+                                                </Badge>
+                                            </Link>
+                                        </Box>
+                                        <Divider />
+                                    </>
+                                )}
+                            </VStack>
+                        </CSSTransition>
+
+                        <CSSTransition
+                            in={changeDrawer}
+                            unmountOnExit
+                            classNames="drawer-change-child"
+                            timeout={250}
+                        >
+                            <VStack alignItems="flex-start" mt="50px">
+                                <Flex mb="40px" alignItems="center" w="100%">
+                                    <ChevronLeftIcon
+                                        w="40px"
+                                        h="40px"
+                                        onClick={() => setChangeDrawer(false)}
+                                    />
+                                    <Spacer />
+                                    <Link
+                                        href="/"
+                                        _hover={{
+                                            textDecor: "none",
+                                            borderBottom:
+                                                "3px solid var(--chakra-colors-secondary)"
+                                        }}
+                                        _focus={{
+                                            boxShadow: "none"
+                                        }}
+                                    >
+                                        <Heading
+                                            as="h6"
+                                            fontSize="2em"
+                                            color="secondary"
+                                            textTransform="uppercase"
+                                        >
+                                            Shop
+                                        </Heading>
+                                    </Link>
+                                    <Spacer />
+                                    <Spacer />
+                                </Flex>
+                                {headings.map(({ title, content }, index) => (
+                                    <Box w="100%" key={index} mb="30px">
+                                        <Heading
+                                            as="h6"
+                                            fontSize="16px"
+                                            textTransform="uppercase"
+                                            letterSpacing="1"
+                                            m="10px 0"
+                                        >
+                                            {title}
+                                        </Heading>
+                                        <hr className="line" />
+                                        <Divider borderColor="#66666663" />
+                                        <List>
+                                            {content.map(
+                                                ({ title, url }, index) => (
+                                                    <ListItem
+                                                        key={index}
+                                                        m="15px 0"
+                                                    >
+                                                        <Link
+                                                            href={url}
+                                                            fontSize="16px"
+                                                            color="gray.700"
+                                                            _hover={{
+                                                                color:
+                                                                    "secondary",
+                                                                textDecoration:
+                                                                    "none"
+                                                            }}
+                                                        >
+                                                            {title}
+                                                        </Link>
+                                                    </ListItem>
+                                                )
+                                            )}
+                                        </List>
+                                    </Box>
+                                ))}
+                            </VStack>
+                        </CSSTransition>
+                    </DrawerBody>
+                </DrawerContent>
+            </Drawer>
+
             <Box
                 pos={smallerThan1100 ? "relative" : "absolute"}
                 top="0"
                 w="100%"
-                background={smallerThan1100 ? "primary" : "transoarent"}
+                background={smallerThan1100 ? "primary" : "transparent"}
                 color="white"
                 zIndex="999"
             >
@@ -456,7 +459,7 @@ const Navbar = ({ setShowSearch }) => {
                             aria-label="Search"
                             fontSize="25px"
                             icon={<Icon as={IoSearch} />}
-                            onClick={() => setShowSearch(true)}
+                            onClick={() => showSearch(true)}
                             variant="unstyled"
                             className="link"
                         />
@@ -530,4 +533,4 @@ const Navbar = ({ setShowSearch }) => {
     );
 };
 
-export default Navbar;
+export default connect(null, mapDispatchToProps)(Navbar);

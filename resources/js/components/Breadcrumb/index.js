@@ -1,15 +1,15 @@
-/*import React from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import { makeStyles } from "@material-ui/core";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
     lightFont: {
-        fontFamily: "Acumin Pro Light !important",
+        fontFamily: "Acumin Pro Light !important"
     },
     rightMargin: {
-        marginRight: 10,
-    },
+        marginRight: 10
+    }
 }));
 
 const Breadcrumb = ({
@@ -17,7 +17,7 @@ const Breadcrumb = ({
     customPageName = null,
     fontSize = 12,
     color = "#717273",
-    currentPageColor = "#9d9e9e",
+    currentPageColor = "#9d9e9e"
 }) => {
     const classes = useStyles();
 
@@ -47,7 +47,7 @@ const Breadcrumb = ({
                                 transform: "rotate(270deg)",
                                 fill: color,
                                 verticalAlign: "top",
-                                fontSize: fontSize + 8,
+                                fontSize: fontSize + 8
                             }}
                         />
                     </span>
@@ -57,4 +57,4 @@ const Breadcrumb = ({
     );
 };
 
-export default Breadcrumb;*/
+export default Breadcrumb;

@@ -4,12 +4,21 @@ import { connect } from "react-redux";
 import { Switch, Route, useLocation } from "react-router-dom";
 import Footer from "./components/Footer";
 import ScrollToTopButton from "./components/ScrollToTopButton";
-import { setProducts } from "./actions";
+import { setPage, setProducts } from "./actions";
 import routes from "./routes";
 import { useMediaQuery } from "@chakra-ui/media-query";
+import Navbar from "./components/Navbar";
+import { HOME_PAGE } from "./constants";
+import Search from "./components/Search";
 
 const mapDispatchToProps = dispatch => ({
-    setProducts: products => dispatch(setProducts(products))
+    setProducts: products => dispatch(setProducts(products)),
+    setPage: page => dispatch(setPage(page))
+});
+
+const mapStateToProps = state => ({
+    page: state.page,
+    showSearch: state.showSearch
 });
 
 const products = [
@@ -20,106 +29,117 @@ const products = [
             "https://wpbingosite.com/wordpress/dimita/wp-content/uploads/2019/04/Image-1.jpg"
         ],
         rating: 4,
-        url: "#",
+        url: "/products/product-title-1",
         price: 46.0,
         discount: 25,
         categories: ["Hello & mellow"],
         created_at: "2021/01/01"
     },
     {
+        id: 1,
         title: "Bluetooth Speaker GK1",
         images: [
             "https://wpbingosite.com/wordpress/dimita/wp-content/uploads/2019/04/Image-12.jpg",
             "https://wpbingosite.com/wordpress/dimita/wp-content/uploads/2019/04/Image-23.jpg"
         ],
         rating: 0,
-        url: "#",
+        url: "/products/product-title-1",
         price: 100.0,
         discount: 13,
         categories: ["Audio & Home"],
         created_at: "2022/01/01"
     },
     {
+        id: 1,
         title: "Headphone S102",
         images: [
             "https://wpbingosite.com/wordpress/dimita/wp-content/uploads/2019/04/Image-11-720x720.jpg",
             "https://wpbingosite.com/wordpress/dimita/wp-content/uploads/2019/04/Image-1.jpg"
         ],
         rating: 2,
-        url: "#",
+        url: "/products/product-title-1",
         price: 46.0,
         discount: 13,
         categories: ["Hello & mellow"],
         created_at: "2021/01/01"
     },
     {
+        id: 1,
         title: "Headphone S102",
         images: [
             "https://wpbingosite.com/wordpress/dimita/wp-content/uploads/2019/04/Image-11-720x720.jpg",
             "https://wpbingosite.com/wordpress/dimita/wp-content/uploads/2019/04/Image-1.jpg"
         ],
         rating: 4,
-        url: "#",
+        url: "/products/product-title-1",
         price: 46.0,
         categories: ["Hello & mellow"],
         created_at: "2021/02/01"
     },
     {
+        id: 1,
         title: "Headphone S102",
         images: [
             "https://wpbingosite.com/wordpress/dimita/wp-content/uploads/2019/04/Image-11-720x720.jpg",
             "https://wpbingosite.com/wordpress/dimita/wp-content/uploads/2019/04/Image-1.jpg"
         ],
         rating: 3.86,
-        url: "#",
+        url: "/products/product-title-1",
         price: 46.0,
         categories: ["Hello & mellow"],
         created_at: "2021/01/01"
     },
     {
+        id: 1,
         title: "Headphone S102",
         images: [
             "https://wpbingosite.com/wordpress/dimita/wp-content/uploads/2019/04/Image-11-720x720.jpg",
             "https://wpbingosite.com/wordpress/dimita/wp-content/uploads/2019/04/Image-1.jpg"
         ],
         rating: 4,
-        url: "#",
+        url: "/products/product-title-1",
         price: 46.0,
         discount: 13,
         categories: ["Hello & mellow"],
         created_at: "2021/01/01"
     },
     {
+        id: 1,
         title: "Headphone S102",
         images: [
             "https://wpbingosite.com/wordpress/dimita/wp-content/uploads/2019/04/Image-11-720x720.jpg",
             "https://wpbingosite.com/wordpress/dimita/wp-content/uploads/2019/04/Image-1.jpg"
         ],
         rating: 4,
-        url: "#",
+        url: "/products/product-title-1",
         price: 46.0,
         discount: 13,
         categories: ["Camera & Photo", "Hello & mellow"],
         created_at: "2021/01/02"
     },
     {
+        id: 1,
         title: "Headphone S102",
         images: [
             "https://wpbingosite.com/wordpress/dimita/wp-content/uploads/2019/04/Image-11-720x720.jpg",
             "https://wpbingosite.com/wordpress/dimita/wp-content/uploads/2019/04/Image-1.jpg"
         ],
         rating: 4,
-        url: "#",
+        url: "/products/product-title-1",
         price: 46.0,
         categories: ["Hello & mellow"],
         created_at: "2021/01/01"
     }
 ];
 
-const Main = ({ setProducts }) => {
+const Main = ({ setProducts, setPage, page, showSearch }) => {
     const location = useLocation();
     const [desktop] = useMediaQuery("(min-width: 1100px)");
     const [showScrollBtn, setShowScrollBtn] = useState(false);
+
+    useEffect(() => {
+        setPage(window.location.pathname === "/" ? HOME_PAGE : "");
+    }, [location]);
 
     useEffect(() => {
         /*axios
@@ -138,9 +158,9 @@ const Main = ({ setProducts }) => {
 
     return (
         <>
-            <Fragment>
-                {desktop && <ScrollToTopButton condition={showScrollBtn} />}
-            </Fragment>
+            {showSearch && <Search />}
+            {desktop && <ScrollToTopButton condition={showScrollBtn} />}
+
             <Switch>
                 {routes.map(({ path, Component, exact }) => (
                     <Route
@@ -170,7 +190,7 @@ const Main = ({ setProducts }) => {
 
                             return (
                                 <>
-                                    {/*<NavBar />*/}
+                                    {page !== HOME_PAGE && <Navbar />}
                                     <Component {...props} crumbs={crumbs} />
                                 </>
                             );
@@ -183,4 +203,4 @@ const Main = ({ setProducts }) => {
     );
 };
 
-export default connect(null, mapDispatchToProps)(Main);
+export default connect(mapStateToProps, mapDispatchToProps)(Main);

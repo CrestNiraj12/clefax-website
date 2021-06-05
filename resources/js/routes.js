@@ -1,7 +1,14 @@
 import Home from "./containers/Home";
+import Product from "./containers/Product";
 
 export default [
     { path: "/", Component: Home, exact: true, name: "Home" },
+    {
+        path: "/products/:title",
+        Component: Product,
+        exact: false,
+        name: "Product"
+    }
     /*{
         path: "/contact-us",
         Component: Contact,

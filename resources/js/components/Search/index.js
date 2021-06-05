@@ -2,13 +2,9 @@ import { CloseIcon, SearchIcon } from "@chakra-ui/icons";
 import {
     Box,
     Flex,
-    Heading,
-    HStack,
-    Image,
     Input,
     InputGroup,
     InputRightElement,
-    Link,
     Spinner,
     StackDivider,
     VStack
@@ -16,13 +12,20 @@ import {
 import React, { useState } from "react";
 import { connect } from "react-redux";
 import { useHistory } from "react-router";
+import { showSearch } from "../../actions";
 import { CSSTransition } from "react-transition-group";
+import ProductCardRowSmall from "../../components/ProductCardRowSmall";
 
 const mapStateToProps = state => ({
-    products: state.products
+    products: state.products,
+    search: state.showSearch
 });
 
-const Search = ({ showSearch, setShowSearch, products }) => {
+const mapDispatchToProps = dispatch => ({
+    setShowSearch: show => dispatch(showSearch(show))
+});
+
+const Search = ({ search, setShowSearch, products }) => {
     var history = useHistory();
     const [query, setQuery] = useState("");
     const [filteredProducts, setFilteredProducts] = useState([]);
@@ -61,7 +64,7 @@ const Search = ({ showSearch, setShowSearch, products }) => {
 
     return (
         <CSSTransition
-            in={showSearch}
+            in={search}
             appear={true}
             timeout={500}
             classNames="search"
@@ -130,7 +133,7 @@ const Search = ({ showSearch, setShowSearch, products }) => {
                                 <Spinner color="secondary" />
                             ) : (
                                 filteredProducts.map((product, index) => (
-                                    <ProductCard
+                                    <ProductCardRowSmall
                                         product={product}
                                         query={query}
                                         key={index + Date.now()}
@@ -145,68 +148,4 @@ const Search = ({ showSearch, setShowSearch, products }) => {
     );
 };
 
-const ProductCard = ({ product: { title, url, images, discount, price } }) => {
-    return (
-        <Box>
-            <Flex pos="relative">
-                <Link href={url}>
-                    <Box h="80px" w="80px">
-                        <Image
-                            src={images[0]}
-                            alt={title}
-                            w="100%"
-                            h="100%"
-                            objectFit="contain"
-                            bg="#e6e6e6"
-                            outline="none"
-                            cursor="pointer"
-                            tabIndex="-1"
-                            _hover={{
-                                boxShadow: "none"
-                            }}
-                        />
-                    </Box>
-                </Link>
-                <VStack
-                    spacing={2}
-                    align="stretch"
-                    p="5px 10px"
-                    justifyContent="center"
-                >
-                    <Link
-                        href={url}
-                        _hover={{
-                            color: "secondary",
-                            textDecoration: "none"
-                        }}
-                    >
-                        <Heading as="h6" fontSize="0.8rem" fontWeight="500">
-                            {title}
-                        </Heading>
-                    </Link>
-                    <HStack spacing={2}>
-                        {discount && discount > 0 && (
-                            <Heading
-                                as="h2"
-                                fontSize="md"
-                                color="gray"
-                                textDecor="line-through"
-                            >
-                                £{price.toFixed(2)}
-                            </Heading>
-                        )}
-                        <Heading as="h2" fontSize="md" color="secondary">
-                            £
-                            {(discount && discount > 0
-                                ? price - price * (discount / 100)
-                                : price
-                            ).toFixed(2)}
-                        </Heading>
-                    </HStack>
-                </VStack>
-            </Flex>
-        </Box>
-    );
-};
-
-export default connect(mapStateToProps)(Search);
+export default connect(mapStateToProps, mapDispatchToProps)(Search);
