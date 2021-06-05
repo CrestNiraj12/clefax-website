@@ -87,7 +87,7 @@ const ProductCardColumn = ({
                     )}
                 </Link>
 
-                <VStack spacing={4} align="stretch" p="30px 40px">
+                <VStack spacing={4} align="stretch" py="30px" mx="20px">
                     <ReactStars
                         edit={false}
                         value={rating}

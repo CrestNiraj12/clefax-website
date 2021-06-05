@@ -76,7 +76,8 @@ const ProductCardRow = ({
                 <VStack
                     spacing={2}
                     align="stretch"
-                    p="10px 20px"
+                    py="10px"
+                    mx="20px"
                     justifyContent="center"
                 >
                     <ReactStars

@@ -1,0 +1,9 @@
+.shareBtn {
+    transition: background-color 0.2s ease-in, color 0.2s ease-in,
+        border-color 0.2s ease-in;
+}
+.shareBtn:hover {
+    background-color: var(--chakra-colors-secondary) !important;
+    color: #fff !important;
+    border-color: #fff !important;
+}

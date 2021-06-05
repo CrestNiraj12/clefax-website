@@ -29,7 +29,7 @@ const products = [
             "https://wpbingosite.com/wordpress/dimita/wp-content/uploads/2019/04/Image-1.jpg"
         ],
         rating: 4,
-        url: "/products/product-title-1",
+        url: "/shop/product-title-1",
         price: 46.0,
         discount: 25,
         categories: ["Hello & mellow"],
@@ -43,7 +43,7 @@ const products = [
             "https://wpbingosite.com/wordpress/dimita/wp-content/uploads/2019/04/Image-23.jpg"
         ],
         rating: 0,
-        url: "/products/product-title-1",
+        url: "/shop/product-title-1",
         price: 100.0,
         discount: 13,
         categories: ["Audio & Home"],
@@ -57,7 +57,7 @@ const products = [
             "https://wpbingosite.com/wordpress/dimita/wp-content/uploads/2019/04/Image-1.jpg"
         ],
         rating: 2,
-        url: "/products/product-title-1",
+        url: "/shop/product-title-1",
         price: 46.0,
         discount: 13,
         categories: ["Hello & mellow"],
@@ -71,7 +71,7 @@ const products = [
             "https://wpbingosite.com/wordpress/dimita/wp-content/uploads/2019/04/Image-1.jpg"
         ],
         rating: 4,
-        url: "/products/product-title-1",
+        url: "/shop/product-title-1",
         price: 46.0,
         categories: ["Hello & mellow"],
         created_at: "2021/02/01"
@@ -84,7 +84,7 @@ const products = [
             "https://wpbingosite.com/wordpress/dimita/wp-content/uploads/2019/04/Image-1.jpg"
         ],
         rating: 3.86,
-        url: "/products/product-title-1",
+        url: "/shop/product-title-1",
         price: 46.0,
         categories: ["Hello & mellow"],
         created_at: "2021/01/01"
@@ -97,7 +97,7 @@ const products = [
             "https://wpbingosite.com/wordpress/dimita/wp-content/uploads/2019/04/Image-1.jpg"
         ],
         rating: 4,
-        url: "/products/product-title-1",
+        url: "/shop/product-title-1",
         price: 46.0,
         discount: 13,
         categories: ["Hello & mellow"],
@@ -111,7 +111,7 @@ const products = [
             "https://wpbingosite.com/wordpress/dimita/wp-content/uploads/2019/04/Image-1.jpg"
         ],
         rating: 4,
-        url: "/products/product-title-1",
+        url: "/shop/product-title-1",
         price: 46.0,
         discount: 13,
         categories: ["Camera & Photo", "Hello & mellow"],
@@ -125,7 +125,7 @@ const products = [
             "https://wpbingosite.com/wordpress/dimita/wp-content/uploads/2019/04/Image-1.jpg"
         ],
         rating: 4,
-        url: "/products/product-title-1",
+        url: "/shop/product-title-1",
         price: 46.0,
         categories: ["Hello & mellow"],
         created_at: "2021/01/01"

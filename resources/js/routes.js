@@ -4,7 +4,13 @@ import Product from "./containers/Product";
 export default [
     { path: "/", Component: Home, exact: true, name: "Home" },
     {
-        path: "/products/:title",
+        path: "/shop",
+        Component: Product,
+        exact: true,
+        name: "Shop"
+    },
+    {
+        path: "/shop/:title",
         Component: Product,
         exact: false,
         name: "Product"

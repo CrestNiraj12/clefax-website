@@ -21,7 +21,7 @@ import {
     FaYoutube,
     FaLinkedin
 } from "react-icons/fa";
-import React from "react";
+import React, { Fragment } from "react";
 import { useHistory } from "react-router";
 
 const socials = [
@@ -229,10 +229,13 @@ const Footer = () => {
                     </VStack>
                     <Spacer />
                     {footerLinks.map(({ title, links }, index) => (
-                        <>
+                        <Fragment key={index}>
                             <VStack
                                 className="footerContainer"
-                                mt={{ base: "50px !important", lg: 0 }}
+                                mt={{
+                                    base: "50px !important",
+                                    lg: "0 !important"
+                                }}
                             >
                                 <Heading as="h6" className="footerHeading">
                                     {title}
@@ -252,7 +255,7 @@ const Footer = () => {
                                 </VStack>
                             </VStack>
                             <Spacer />
-                        </>
+                        </Fragment>
                     ))}
                     <Spacer />
                     <VStack className="footerContainer">

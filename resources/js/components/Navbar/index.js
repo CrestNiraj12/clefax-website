@@ -343,7 +343,11 @@ const Navbar = ({ showSearch, products }) => {
                                     >
                                         All Category
                                     </MenuButton>
-                                    <MenuList height="300px" overflowY="scroll">
+                                    <MenuList
+                                        height="300px"
+                                        overflowY="scroll"
+                                        className="scrollable"
+                                    >
                                         <MenuItem color="gray">
                                             New Window
                                         </MenuItem>
@@ -371,11 +375,11 @@ const Navbar = ({ showSearch, products }) => {
                                         />
                                         <InputRightElement
                                             onClick={handleSubmit}
+                                            alignItems="flex-start"
+                                            top="3px"
                                             children={
                                                 <SearchIcon
-                                                    color="#fff"
-                                                    w="20px"
-                                                    h="20px"
+                                                    boxSize="18px"
                                                     cursor="pointer"
                                                     _hover={{
                                                         color:

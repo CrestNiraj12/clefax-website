@@ -1,59 +1,42 @@
+import {
+    Breadcrumb as Bc,
+    BreadcrumbItem,
+    BreadcrumbLink
+} from "@chakra-ui/breadcrumb";
+import { ChevronRightIcon } from "@chakra-ui/icons";
 import React from "react";
-import { Link } from "react-router-dom";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import { makeStyles } from "@material-ui/core";
 
-const useStyles = makeStyles(theme => ({
-    lightFont: {
-        fontFamily: "Acumin Pro Light !important"
-    },
-    rightMargin: {
-        marginRight: 10
-    }
-}));
-
-const Breadcrumb = ({
-    crumbs,
-    customPageName = null,
-    fontSize = 12,
-    color = "#717273",
-    currentPageColor = "#9d9e9e"
-}) => {
-    const classes = useStyles();
-
+const Breadcrumb = ({ crumbs, customPageName = null, margin = "0" }) => {
     return (
-        <div style={{ fontSize }}>
+        <Bc
+            spacing="8px"
+            m={margin}
+            separator={<ChevronRightIcon color="gray" />}
+        >
             {crumbs.map(({ name, path }, index) =>
                 index + 1 === crumbs.length ? (
-                    <span
-                        key={index}
-                        className={classes.lightFont}
-                        style={{ color: currentPageColor }}
-                    >
-                        {customPageName ? customPageName : name}
-                    </span>
+                    <BreadcrumbItem isCurrentPage key={path}>
+                        <BreadcrumbLink
+                            href={path}
+                            color="secondary"
+                            _hover={{ textDecor: "none", cursor: "text" }}
+                        >
+                            {customPageName ? customPageName : name}
+                        </BreadcrumbLink>
+                    </BreadcrumbItem>
                 ) : (
-                    <span key={index}>
-                        <Link
-                            to={path}
-                            style={{ color }}
-                            className={`${classes.lightFont} ${classes.rightMargin}`}
+                    <BreadcrumbItem key={path}>
+                        <BreadcrumbLink
+                            href={path}
+                            color="gray"
+                            _hover={{ color: "secondary", textDecor: "none" }}
                         >
                             {name}
-                        </Link>
-                        <ExpandMoreIcon
-                            className={classes.rightMargin}
-                            style={{
-                                transform: "rotate(270deg)",
-                                fill: color,
-                                verticalAlign: "top",
-                                fontSize: fontSize + 8
-                            }}
-                        />
-                    </span>
+                        </BreadcrumbLink>
+                    </BreadcrumbItem>
                 )
             )}
-        </div>
+        </Bc>
     );
 };
 
