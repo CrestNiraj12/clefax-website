@@ -59,7 +59,7 @@ const Header = () => {
                 <Carousel
                     ssr
                     infinite
-                    autoPlay={false}
+                    autoPlay={true}
                     autoPlaySpeed={7000}
                     beforeChange={() => setChanged(false)}
                     afterChange={() => setChanged(true)}

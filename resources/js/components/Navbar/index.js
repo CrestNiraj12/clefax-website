@@ -56,6 +56,7 @@ import { connect } from "react-redux";
 import { useHistory } from "react-router";
 import ProductCardRowSmall from "../ProductCardRowSmall";
 import { showSearch } from "../../actions";
+import ShopLocal from "../../../images/shoplocal.jpg";
 
 const mapDispatchToProps = dispatch => ({
     showSearch: show => dispatch(showSearch(show))
@@ -675,8 +676,9 @@ const Navbar = ({ showSearch, products }) => {
                     >
                         <Image
                             boxSize="30px"
+                            borderRadius="100%"
                             objectFit="cover"
-                            src="https://wpbingosite.com/wordpress/dimita/wp-content/themes/dimita/images/free-shipping.svg"
+                            src={ShopLocal}
                             alt="Shop Local"
                         />
                         <Text fontSize="1em" color="#fff">

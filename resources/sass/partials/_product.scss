@@ -7,3 +7,38 @@
     color: #fff !important;
     border-color: #fff !important;
 }
+
+.slider {
+    width: 50%;
+}
+
+.slick-dots {
+    display: flex !important;
+    bottom: -135px !important;
+
+    & > li {
+        width: auto !important;
+        height: 100% !important;
+        margin: 0 20px 0 0 !important;
+    }
+
+    & > li > img {
+        width: 120px;
+    }
+
+    & > li.slick-active {
+        border: 1px solid var(--chakra-colors-secondary);
+    }
+}
+
+.product-tab {
+    text-transform: uppercase;
+    margin-right: 10px;
+    font-size: 1.2em !important;
+    letter-spacing: 0.5px;
+    font-family: var(--chakra-fonts-heading);
+}
+
+.product-tab:focus {
+    box-shadow: none !important;
+}
