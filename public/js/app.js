@@ -173414,7 +173414,9 @@ var ProductCardColumn = function ProductCardColumn(_ref) {
       images = _ref$product.images,
       rating = _ref$product.rating,
       price = _ref$product.price,
-      discount = _ref$product.discount;
+      discount = _ref$product.discount,
+      _ref$hideRatings = _ref.hideRatings,
+      hideRatings = _ref$hideRatings === void 0 ? false : _ref$hideRatings;
 
   var _useState = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(images[0]),
       _useState2 = _slicedToArray(_useState, 2),
@@ -173457,7 +173459,7 @@ var ProductCardColumn = function ProductCardColumn(_ref) {
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_3__["Image"], {
     src: src,
     alt: title,
-    minH: "22vw",
+    w: "100%",
     outline: "none",
     objectFit: "contain",
     bg: "#e6e6e6",
@@ -173487,7 +173489,7 @@ var ProductCardColumn = function ProductCardColumn(_ref) {
     align: "stretch",
     py: "30px",
     mx: "20px"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_rating_stars_component__WEBPACK_IMPORTED_MODULE_1___default.a, {
+  }, !hideRatings && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_rating_stars_component__WEBPACK_IMPORTED_MODULE_1___default.a, {
     edit: false,
     value: rating,
     size: 16,
@@ -174526,7 +174528,7 @@ var CollectionGrid = function CollectionGrid() {
       sm: "2em",
       md: "4em",
       lg: "2.8em",
-      xl: "3.8em"
+      xl: "3.2em"
     },
     p: "5px 25px",
     bg: "primary"
@@ -174534,8 +174536,7 @@ var CollectionGrid = function CollectionGrid() {
     fontSize: {
       base: "3em",
       md: "4em",
-      lg: "2.8em",
-      xl: "3.2em"
+      lg: "2.8em"
     }
   }, "favourite item")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Button"], {
     variant: "outline",
@@ -176032,6 +176033,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _chakra_ui_textarea__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @chakra-ui/textarea */ "./node_modules/@chakra-ui/textarea/dist/esm/index.js");
 /* harmony import */ var _chakra_ui_input__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @chakra-ui/input */ "./node_modules/@chakra-ui/input/dist/esm/index.js");
 /* harmony import */ var _chakra_ui_button__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @chakra-ui/button */ "./node_modules/@chakra-ui/button/dist/esm/index.js");
+/* harmony import */ var _chakra_ui_media_query__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @chakra-ui/media-query */ "./node_modules/@chakra-ui/media-query/dist/esm/index.js");
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -176054,6 +176056,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 
+
 var ProductTabs = function ProductTabs(_ref) {
   var title = _ref.title;
 
@@ -176062,9 +176065,15 @@ var ProductTabs = function ProductTabs(_ref) {
       value = _React$useState2[0],
       setValue = _React$useState2[1];
 
+  var _useMediaQuery = Object(_chakra_ui_media_query__WEBPACK_IMPORTED_MODULE_9__["useMediaQuery"])("(max-width:48em)"),
+      _useMediaQuery2 = _slicedToArray(_useMediaQuery, 1),
+      baseScreen = _useMediaQuery2[0];
+
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_chakra_ui_tabs__WEBPACK_IMPORTED_MODULE_1__["Tabs"], {
+    orientation: baseScreen ? "vertical" : "horizontal",
     variant: "unstyled",
-    w: "100%"
+    w: "100%",
+    flexDir: "column"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_chakra_ui_tabs__WEBPACK_IMPORTED_MODULE_1__["TabList"], {
     justifyContent: "center"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_chakra_ui_tabs__WEBPACK_IMPORTED_MODULE_1__["Tab"], {
@@ -176104,14 +176113,26 @@ var ProductTabs = function ProductTabs(_ref) {
   }), "Quidem, ipsam illum quis sed voluptatum quae eum fugit earum")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_chakra_ui_layout__WEBPACK_IMPORTED_MODULE_0__["Text"], {
     mb: "15px",
     lineHeight: "2"
-  }, "Sed molestie orci sem, at semper est molestie ac. Suspendisse cursus feugiat erat, eu posuere massa. Nullam posuere nibh non eros lobortis tempus. Maecenas dignissim elementum massa, vel accumsan urna elementum in. Suspendisse at dui euismod, rhoncus eros non, imperdiet ipsum. Vestibulum vehicula vel turpis et vestibulum. Ut porta et ex maximus malesuada.")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_chakra_ui_tabs__WEBPACK_IMPORTED_MODULE_1__["TabPanel"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_chakra_ui_layout__WEBPACK_IMPORTED_MODULE_0__["Flex"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_chakra_ui_layout__WEBPACK_IMPORTED_MODULE_0__["Box"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_chakra_ui_layout__WEBPACK_IMPORTED_MODULE_0__["Heading"], {
+  }, "Sed molestie orci sem, at semper est molestie ac. Suspendisse cursus feugiat erat, eu posuere massa. Nullam posuere nibh non eros lobortis tempus. Maecenas dignissim elementum massa, vel accumsan urna elementum in. Suspendisse at dui euismod, rhoncus eros non, imperdiet ipsum. Vestibulum vehicula vel turpis et vestibulum. Ut porta et ex maximus malesuada.")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_chakra_ui_tabs__WEBPACK_IMPORTED_MODULE_1__["TabPanel"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_chakra_ui_layout__WEBPACK_IMPORTED_MODULE_0__["Flex"], {
+    direction: {
+      base: "column",
+      md: "row"
+    }
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_chakra_ui_layout__WEBPACK_IMPORTED_MODULE_0__["Box"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_chakra_ui_layout__WEBPACK_IMPORTED_MODULE_0__["Heading"], {
     as: "h6",
     fontSize: "xl",
     mb: "20px"
   }, "Reviews"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_chakra_ui_layout__WEBPACK_IMPORTED_MODULE_0__["Text"], null, "There are no reviews yet.")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_chakra_ui_layout__WEBPACK_IMPORTED_MODULE_0__["Spacer"], null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_chakra_ui_layout__WEBPACK_IMPORTED_MODULE_0__["VStack"], {
     spacing: 5,
+    mt: {
+      base: "20px",
+      md: "0"
+    },
     alignItems: "flex-start",
-    w: "50%"
+    w: {
+      base: "100%",
+      md: "50%"
+    }
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_chakra_ui_layout__WEBPACK_IMPORTED_MODULE_0__["Heading"], {
     as: "h6",
     fontSize: "xl"
@@ -176207,6 +176228,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_Breadcrumb__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../components/Breadcrumb */ "./resources/js/components/Breadcrumb/index.js");
 /* harmony import */ var _components_ImageMagnifier__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../../components/ImageMagnifier */ "./resources/js/components/ImageMagnifier/index.js");
 /* harmony import */ var _ProductTabs__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./ProductTabs */ "./resources/js/containers/Product/ProductTabs.js");
+/* harmony import */ var _components_ProductCardColumn__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../../components/ProductCardColumn */ "./resources/js/components/ProductCardColumn/index.js");
+/* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
 var _in_product;
 
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
@@ -176236,6 +176259,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 
 
+
+
 var in_product = (_in_product = {
   id: "2002",
   title: "Headphone S102",
@@ -176248,13 +176273,20 @@ var in_product = (_in_product = {
   categories: ["Hello & mellow"],
   created_at: "2021/01/01",
   coupon: null
-}, _defineProperty(_in_product, "categories", ["Audio & Home", "Hellow & Mellow"]), _defineProperty(_in_product, "tags", ["Game", "Headphones", "Speaker"]), _in_product);
+}, _defineProperty(_in_product, "categories", ["Audio & Home", "Hello & Mellow"]), _defineProperty(_in_product, "tags", ["Game", "Headphones", "Speaker"]), _in_product);
+
+var mapStateToProps = function mapStateToProps(state) {
+  return {
+    products: state.products
+  };
+};
 
 var Product = function Product(_ref) {
   var _React$createElement, _React$createElement2;
 
   var match = _ref.match,
-      crumbs = _ref.crumbs;
+      crumbs = _ref.crumbs,
+      products = _ref.products;
 
   var _useState = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])(null),
       _useState2 = _slicedToArray(_useState, 2),
@@ -176289,7 +176321,10 @@ var Product = function Product(_ref) {
     mx: "20px",
     mb: "100px"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Box"], {
-    mb: "150px"
+    mb: {
+      base: "0",
+      md: "150px"
+    }
   }, product && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_1___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_components_Breadcrumb__WEBPACK_IMPORTED_MODULE_8__["default"], {
     crumbs: crumbs,
     customPageName: "Bluetooth Hismart",
@@ -176297,16 +176332,27 @@ var Product = function Product(_ref) {
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Divider"], {
     color: "gray",
     w: "auto"
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["HStack"], {
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Stack"], {
     spacing: 10,
     my: "30px",
     alignItems: "flex-start",
-    w: "100%"
+    w: "100%",
+    direction: {
+      base: "column",
+      md: "row"
+    }
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_components_ImageMagnifier__WEBPACK_IMPORTED_MODULE_9__["default"], {
     images: product.images,
     title: product.title
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Box"], {
-    w: "50%"
+    w: {
+      base: "100%",
+      md: "50%"
+    },
+    mt: {
+      base: "180px !important",
+      md: "0 !important"
+    }
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Heading"], {
     as: "h1"
   }, product.title), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["HStack"], {
@@ -176356,9 +176402,19 @@ var Product = function Product(_ref) {
     color: "green.400",
     my: "20px",
     fontSize: "medium"
-  }, "Sale 30% Off Use Code : Neoo20"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["HStack"], {
+  }, "Sale 30% Off Use Code : Neoo20"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Stack"], {
+    direction: {
+      base: "column",
+      sm: "row",
+      md: "column",
+      lg: "row"
+    },
     mt: "30px",
+    spacing: 5,
     justifyContent: "space-between"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["HStack"], {
+    w: "100%",
+    spacing: 5
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["ButtonGroup"], {
     size: "md",
     isAttached: true,
@@ -176391,11 +176447,19 @@ var Product = function Product(_ref) {
   }, inc))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Button"], {
     bgColor: "primary",
     color: "#fff",
-    w: "40%"
-  }, "Add To Cart"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Button"], {
+    w: "100%"
+  }, "Add To Cart")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Button"], {
     bgColor: "secondary",
     color: "#fff",
-    w: "40%"
+    w: {
+      base: "100%",
+      sm: "50%",
+      md: "100%",
+      lg: "50%"
+    },
+    _hover: {
+      bgColor: "#ca282d !important"
+    }
   }, "Buy Now")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Button"], {
     mt: "20px",
     mb: "30px",
@@ -176462,12 +176526,34 @@ var Product = function Product(_ref) {
     boxSize: "22px"
   }))))))))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Box"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_ProductTabs__WEBPACK_IMPORTED_MODULE_10__["default"], {
     title: product ? product.title : ""
-  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["HStack"], {
-    my: "50"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Heading"], null, "Related Products")));
+  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Box"], {
+    my: "50px"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Heading"], null, "Related Products"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["SimpleGrid"], {
+    columnGap: 5,
+    rowGap: 5,
+    mt: "50px",
+    columns: {
+      base: 1,
+      sm: 2,
+      md: 3,
+      lg: 5
+    }
+  }, products.filter(function (p) {
+    return p.categories.some(function (cat) {
+      return product.categories.map(function (c) {
+        return c.toLowerCase();
+      }).includes(cat.toLowerCase());
+    });
+  }).slice(0, 5).map(function (p, index) {
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_components_ProductCardColumn__WEBPACK_IMPORTED_MODULE_11__["default"], {
+      product: p,
+      hideRatings: true,
+      key: index
+    });
+  }))));
 };
 
-/* harmony default export */ __webpack_exports__["default"] = (Product);
+/* harmony default export */ __webpack_exports__["default"] = (Object(react_redux__WEBPACK_IMPORTED_MODULE_12__["connect"])(mapStateToProps)(Product));
 
 /***/ }),
 

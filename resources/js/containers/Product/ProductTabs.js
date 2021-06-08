@@ -18,12 +18,19 @@ import ReactStars from "react-rating-stars-component";
 import { Textarea } from "@chakra-ui/textarea";
 import { Input } from "@chakra-ui/input";
 import { Button } from "@chakra-ui/button";
+import { useMediaQuery } from "@chakra-ui/media-query";
 
 const ProductTabs = ({ title }) => {
     const [value, setValue] = React.useState("");
+    const [baseScreen] = useMediaQuery("(max-width:48em)");
 
     return (
-        <Tabs variant="unstyled" w="100%">
+        <Tabs
+            orientation={baseScreen ? "vertical" : "horizontal"}
+            variant="unstyled"
+            w="100%"
+            flexDir="column"
+        >
             <TabList justifyContent="center">
                 <Tab
                     className="product-tab"
@@ -100,7 +107,7 @@ const ProductTabs = ({ title }) => {
                     </Text>
                 </TabPanel>
                 <TabPanel>
-                    <Flex>
+                    <Flex direction={{ base: "column", md: "row" }}>
                         <Box>
                             <Heading as="h6" fontSize="xl" mb="20px">
                                 Reviews
@@ -108,7 +115,12 @@ const ProductTabs = ({ title }) => {
                             <Text>There are no reviews yet.</Text>
                         </Box>
                         <Spacer />
-                        <VStack spacing={5} alignItems="flex-start" w="50%">
+                        <VStack
+                            spacing={5}
+                            mt={{ base: "20px", md: "0" }}
+                            alignItems="flex-start"
+                            w={{ base: "100%", md: "50%" }}
+                        >
                             <Heading as="h6" fontSize="xl">
                                 BE THE FIRST TO REVIEW “{title}”
                             </Heading>

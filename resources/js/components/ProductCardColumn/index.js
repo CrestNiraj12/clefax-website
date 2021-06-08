@@ -17,7 +17,8 @@ import {
 import { CSSTransition } from "react-transition-group";
 
 const ProductCardColumn = ({
-    product: { title, url, images, rating, price, discount }
+    product: { title, url, images, rating, price, discount },
+    hideRatings = false
 }) => {
     const [src, setSrc] = useState(images[0]);
     const [imageLoaded, setImageLoaded] = useState(false);
@@ -55,7 +56,7 @@ const ProductCardColumn = ({
                         <Image
                             src={src}
                             alt={title}
-                            minH="22vw"
+                            w="100%"
                             outline="none"
                             objectFit="contain"
                             bg="#e6e6e6"
@@ -88,14 +89,16 @@ const ProductCardColumn = ({
                 </Link>
 
                 <VStack spacing={4} align="stretch" py="30px" mx="20px">
-                    <ReactStars
-                        edit={false}
-                        value={rating}
-                        size={16}
-                        emptyIcon={<Icon as={FaRegStar} />}
-                        filledIcon={<Icon as={FaStar} />}
-                        halfIcon={<Icon as={FaStarHalfAlt} />}
-                    />
+                    {!hideRatings && (
+                        <ReactStars
+                            edit={false}
+                            value={rating}
+                            size={16}
+                            emptyIcon={<Icon as={FaRegStar} />}
+                            filledIcon={<Icon as={FaStar} />}
+                            halfIcon={<Icon as={FaStarHalfAlt} />}
+                        />
+                    )}
                     <Link
                         href={url}
                         _hover={{

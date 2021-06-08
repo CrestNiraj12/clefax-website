@@ -50,7 +50,7 @@ const CollectionGrid = () => {
                             sm: "2em",
                             md: "4em",
                             lg: "2.8em",
-                            xl: "3.8em"
+                            xl: "3.2em"
                         }}
                         p="5px 25px"
                         bg="primary"
@@ -60,8 +60,7 @@ const CollectionGrid = () => {
                             fontSize={{
                                 base: "3em",
                                 md: "4em",
-                                lg: "2.8em",
-                                xl: "3.2em"
+                                lg: "2.8em"
                             }}
                         >
                             favourite item

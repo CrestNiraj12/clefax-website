@@ -11594,6 +11594,12 @@ h3 {
   width: 50%;
 }
 
+@media screen and (max-width: 48em) {
+  .slider {
+    width: 100%;
+  }
+}
+
 .slick-dots {
   display: flex !important;
   bottom: -135px !important;

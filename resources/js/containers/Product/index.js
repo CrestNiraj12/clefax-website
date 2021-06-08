@@ -11,7 +11,9 @@ import {
     Button,
     ButtonGroup,
     useNumberInput,
-    StackDivider
+    StackDivider,
+    Stack,
+    SimpleGrid
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import {
@@ -34,6 +36,8 @@ import { MinusIcon, AddIcon } from "@chakra-ui/icons";
 import Breadcrumb from "../../components/Breadcrumb";
 import ImageMagnifier from "../../components/ImageMagnifier";
 import ProductTabs from "./ProductTabs";
+import ProductCardColumn from "../../components/ProductCardColumn";
+import { connect } from "react-redux";
 
 const in_product = {
     id: "2002",
@@ -50,11 +54,15 @@ const in_product = {
     categories: ["Hello & mellow"],
     created_at: "2021/01/01",
     coupon: null,
-    categories: ["Audio & Home", "Hellow & Mellow"],
+    categories: ["Audio & Home", "Hello & Mellow"],
     tags: ["Game", "Headphones", "Speaker"]
 };
 
-const Product = ({ match, crumbs }) => {
+const mapStateToProps = state => ({
+    products: state.products
+});
+
+const Product = ({ match, crumbs, products }) => {
     const [product, setProduct] = useState(null);
     const [qty, setQty] = useState(1);
     const {
@@ -79,7 +87,7 @@ const Product = ({ match, crumbs }) => {
 
     return (
         <Box mx="20px" mb="100px">
-            <Box mb="150px">
+            <Box mb={{ base: "0", md: "150px" }}>
                 {product && (
                     <>
                         <Breadcrumb
@@ -89,18 +97,25 @@ const Product = ({ match, crumbs }) => {
                         />
                         <Divider color="gray" w="auto" />
 
-                        <HStack
+                        <Stack
                             spacing={10}
                             my="30px"
                             alignItems="flex-start"
                             w="100%"
+                            direction={{ base: "column", md: "row" }}
                         >
                             <ImageMagnifier
                                 images={product.images}
                                 title={product.title}
                             />
 
-                            <Box w="50%">
+                            <Box
+                                w={{ base: "100%", md: "50%" }}
+                                mt={{
+                                    base: "180px !important",
+                                    md: "0 !important"
+                                }}
+                            >
                                 <Heading as="h1">{product.title}</Heading>
                                 <HStack spacing={2} my="20px">
                                     {product.discount && product.discount > 0 && (
@@ -187,68 +202,86 @@ const Product = ({ match, crumbs }) => {
                                         Sale 30% Off Use Code : Neoo20
                                     </Text>
                                 )}
-                                <HStack
+                                <Stack
+                                    direction={{
+                                        base: "column",
+                                        sm: "row",
+                                        md: "column",
+                                        lg: "row"
+                                    }}
                                     mt="30px"
+                                    spacing={5}
                                     justifyContent="space-between"
                                 >
-                                    <ButtonGroup
-                                        size="md"
-                                        isAttached
-                                        variant="outline"
-                                    >
-                                        <IconButton
-                                            aria-label="Decrease quantity"
-                                            borderRadius="0"
-                                            icon={<MinusIcon />}
-                                            _hover={{
-                                                backgroundColor:
-                                                    "transparent !important",
-                                                color:
-                                                    "var(--chakra-colors-secondary) !important"
-                                            }}
-                                            {...dec}
-                                        />
-                                        <Input
-                                            borderRadius="0"
-                                            textAlign="center"
-                                            w="60px"
-                                            minW="60px"
-                                            onChange={e => {
-                                                const v = Number(
-                                                    e.target.value
-                                                );
-                                                setQty(v);
-                                            }}
-                                            {...input}
-                                        />
-                                        <IconButton
-                                            borderRadius="0"
-                                            aria-label="Increase quantity"
-                                            icon={<AddIcon />}
-                                            _hover={{
-                                                backgroundColor:
-                                                    "transparent !important",
-                                                color:
-                                                    "var(--chakra-colors-secondary) !important"
-                                            }}
-                                            {...inc}
-                                        />
-                                    </ButtonGroup>
-                                    <Button
-                                        bgColor="primary"
-                                        color="#fff"
-                                        w="40%"
-                                    >
-                                        Add To Cart
-                                    </Button>
+                                    <HStack w="100%" spacing={5}>
+                                        <ButtonGroup
+                                            size="md"
+                                            isAttached
+                                            variant="outline"
+                                        >
+                                            <IconButton
+                                                aria-label="Decrease quantity"
+                                                borderRadius="0"
+                                                icon={<MinusIcon />}
+                                                _hover={{
+                                                    backgroundColor:
+                                                        "transparent !important",
+                                                    color:
+                                                        "var(--chakra-colors-secondary) !important"
+                                                }}
+                                                {...dec}
+                                            />
+                                            <Input
+                                                borderRadius="0"
+                                                textAlign="center"
+                                                w="60px"
+                                                minW="60px"
+                                                onChange={e => {
+                                                    const v = Number(
+                                                        e.target.value
+                                                    );
+                                                    setQty(v);
+                                                }}
+                                                {...input}
+                                            />
+                                            <IconButton
+                                                borderRadius="0"
+                                                aria-label="Increase quantity"
+                                                icon={<AddIcon />}
+                                                _hover={{
+                                                    backgroundColor:
+                                                        "transparent !important",
+                                                    color:
+                                                        "var(--chakra-colors-secondary) !important"
+                                                }}
+                                                {...inc}
+                                            />
+                                        </ButtonGroup>
+
+                                        <Button
+                                            bgColor="primary"
+                                            color="#fff"
+                                            w="100%"
+                                        >
+                                            Add To Cart
+                                        </Button>
+                                    </HStack>
                                     <Button
                                         bgColor="secondary"
                                         color="#fff"
-                                        w="40%"
+                                        w={{
+                                            base: "100%",
+                                            sm: "50%",
+                                            md: "100%",
+                                            lg: "50%"
+                                        }}
+                                        _hover={{
+                                            bgColor: "#ca282d !important"
+                                        }}
                                     >
                                         Buy Now
                                     </Button>
-                                </HStack>
+                                </Stack>
                                 <Button
                                     mt="20px"
                                     mb="30px"
@@ -336,18 +369,41 @@ const Product = ({ match, crumbs }) => {
                                     </HStack>
                                 </VStack>
                             </Box>
-                        </HStack>
+                        </Stack>
                     </>
                 )}
             </Box>
             <Box>
                 <ProductTabs title={product ? product.title : ""} />
             </Box>
-            <HStack my="50">
+            <Box my="50px">
                 <Heading>Related Products</Heading>
-            </HStack>
+                <SimpleGrid
+                    columnGap={5}
+                    rowGap={5}
+                    mt="50px"
+                    columns={{ base: 1, sm: 2, md: 3, lg: 5 }}
+                >
+                    {products
+                        .filter(p =>
+                            p.categories.some(cat =>
+                                product.categories
+                                    .map(c => c.toLowerCase())
+                                    .includes(cat.toLowerCase())
+                            )
+                        )
+                        .slice(0, 5)
+                        .map((p, index) => (
+                            <ProductCardColumn
+                                product={p}
+                                hideRatings={true}
+                                key={index}
+                            />
+                        ))}
+                </SimpleGrid>
+            </Box>
         </Box>
     );
 };
 
-export default Product;
+export default connect(mapStateToProps)(Product);
