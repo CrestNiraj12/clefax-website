@@ -307,7 +307,7 @@
 }
 
 .activeFilter {
-    background-color: var(--chakra-colors-secondary);
+    background: var(--chakra-colors-secondary) !important;
     color: #fff;
 }
 

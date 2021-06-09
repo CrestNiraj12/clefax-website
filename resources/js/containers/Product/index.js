@@ -1,6 +1,5 @@
 import {
     Box,
-    Divider,
     Heading,
     HStack,
     VStack,
@@ -95,7 +94,6 @@ const Product = ({ match, crumbs, products }) => {
                             customPageName="Bluetooth Hismart"
                             margin="20px 0"
                         />
-                        <Divider color="gray" w="auto" />
 
                         <Stack
                             spacing={10}

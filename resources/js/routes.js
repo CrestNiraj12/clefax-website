@@ -1,3 +1,4 @@
+import Checkout from "./containers/Checkout";
 import Home from "./containers/Home";
 import Product from "./containers/Product";
 
@@ -14,6 +15,12 @@ export default [
         Component: Product,
         exact: false,
         name: "Product"
+    },
+    {
+        path: "/checkout",
+        Component: Checkout,
+        exact: false,
+        name: "Checkout"
     }
     /*{
         path: "/contact-us",

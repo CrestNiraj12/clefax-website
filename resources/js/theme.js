@@ -12,6 +12,8 @@ const theme = extendTheme({
         primary: "#1b1b1b",
         secondary: "#ed1d24",
         gray: "#909090",
+        darkgray: "#585555",
+        "gray.100": "#EDF2F7",
         lightgray: "#ededed"
     },
     components: {
@@ -38,6 +40,14 @@ const theme = extendTheme({
                     bg: "secondary",
                     color: "#fff",
                     borderColor: "secondary"
+                }
+            }
+        },
+        Link: {
+            baseStyle: {
+                "&:hover": {
+                    color: "secondary",
+                    textDecoration: "none"
                 }
             }
         }

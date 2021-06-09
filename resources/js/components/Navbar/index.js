@@ -466,7 +466,7 @@ const Navbar = ({ showSearch, products }) => {
                                     <span>My Account</span>
                                 </MenuItem>
                                 <MenuItem minH="40px">
-                                    <span>Checkout</span>
+                                    <Link href="/checkout">Checkout</Link>
                                 </MenuItem>
                                 <MenuItem minH="40px">
                                     <span>Wishlist</span>

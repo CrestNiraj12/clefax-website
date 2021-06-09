@@ -108,6 +108,7 @@ const Featured = ({ products }) => {
                         {filters.map((filter, index) => (
                             <Button
                                 key={index}
+                                background="transparent"
                                 fontSize={{ base: "10px", md: "13px" }}
                                 fontWeight="bold"
                                 fontFamily="Archivo"

@@ -36,6 +36,7 @@
         "@emotion/styled": "^11.3.0",
         "@fontsource/archivo": "^4.3.0",
         "@fontsource/rubik": "^4.3.0",
+        "formik": "^2.2.9",
         "framer-motion": "^4.1.16",
         "rc-slider": "^9.7.2",
         "react-compound-slider": "^0.16.3",

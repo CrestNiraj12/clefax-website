@@ -181,7 +181,7 @@ const Navbar = ({ showSearch }) => {
                                         <Divider />
                                         <Box p="10px">
                                             <Link
-                                                href="/"
+                                                href="/checkout"
                                                 className="link textLink"
                                             >
                                                 Checkout
@@ -481,7 +481,7 @@ const Navbar = ({ showSearch }) => {
                                         <span>My Account</span>
                                     </MenuItem>
                                     <MenuItem minH="40px">
-                                        <span>Checkout</span>
+                                        <Link href="/checkout">Checkout</Link>
                                     </MenuItem>
                                     <MenuItem minH="40px">
                                         <span>Wishlist</span>
