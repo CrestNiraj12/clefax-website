@@ -8,4 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 class Offer extends Model
 {
     use HasFactory;
+    
+     protected $fillable = [
+        'name',
+        'offer_type',
+        'end_date',
+    ];
+
+    public function products() {
+        return $this->hasMany(Product::class);
+    }
 }

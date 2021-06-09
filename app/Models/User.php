@@ -19,10 +19,16 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name',
+        'fullname',
         'email',
         'password',
-        'role_id'
+        'role',
+        'address',
+        'phone',
+        'dob',
+        'gender',
+        'paypal_email',
+        'stripe_email',
     ];
 
     /**
@@ -52,5 +58,29 @@ class User extends Authenticatable
     public function adminlte_profile_url()
     {
         return '/admin/profile';
+    }
+
+    public function cart() {
+        return $this->hasOne(Cart::class);
+    }
+
+    public function wishlist() {
+        return $this->hasOne(Wishlist::class);
+    }
+
+    public function payments() {
+        return $this->hasMany(Payment::class);
+    }
+
+    public function reports() {
+        return $this->hasMany(Report::class);
+    }
+
+    public function reviews() {
+        return $this->hasMany(Review::class);
+    }
+
+    public function shops() {
+        return $this->hasMany(Shop::class);
     }
 }

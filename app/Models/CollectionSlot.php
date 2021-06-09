@@ -8,4 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 class CollectionSlot extends Model
 {
     use HasFactory;
+
+     protected $fillable = [
+        'times',
+        'day'
+    ];
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
 }
