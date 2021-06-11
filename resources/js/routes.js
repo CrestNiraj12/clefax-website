@@ -1,6 +1,7 @@
 import Checkout from "./containers/Checkout";
 import Home from "./containers/Home";
 import Product from "./containers/Product";
+import Invoice from "./containers/Invoice";
 
 export default [
     { path: "/", Component: Home, exact: true, name: "Home" },
@@ -21,6 +22,12 @@ export default [
         Component: Checkout,
         exact: false,
         name: "Checkout"
+    },
+    {
+        path: "/invoice",
+        Component: Invoice,
+        exact: false,
+        name: "Invoice"
     }
     /*{
         path: "/contact-us",

@@ -525,6 +525,7 @@ const Navbar = ({ showSearch, products }) => {
                                     borderBottom="1px solid var(--chakra-colors-secondary) !important"
                                     h="30px"
                                     my="10px"
+                                    background="transparent"
                                 >
                                     Menu
                                 </Button>

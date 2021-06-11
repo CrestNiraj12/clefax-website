@@ -165,7 +165,7 @@ const Footer = () => {
                         bg="primary"
                         _hover={{
                             background:
-                                "var(--chakra-colors-secondary) !important"
+                                "var(--chakra-colors-darkgray) !important"
                         }}
                     >
                         Subscribe

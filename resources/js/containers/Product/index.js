@@ -12,7 +12,8 @@ import {
     useNumberInput,
     StackDivider,
     Stack,
-    SimpleGrid
+    SimpleGrid,
+    useDisclosure
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import {
@@ -28,7 +29,7 @@ import {
     LinkedinShareButton,
     TwitterShareButton
 } from "react-share";
-import { IoHeartOutline } from "react-icons/io5";
+import { IoHeartOutline, IoWarningOutline } from "react-icons/io5";
 import ReactStars from "react-rating-stars-component";
 import { BsCheckBox, BsXSquare } from "react-icons/bs";
 import { MinusIcon, AddIcon } from "@chakra-ui/icons";
@@ -37,6 +38,7 @@ import ImageMagnifier from "../../components/ImageMagnifier";
 import ProductTabs from "./ProductTabs";
 import ProductCardColumn from "../../components/ProductCardColumn";
 import { connect } from "react-redux";
+import Report from "./Report";
 
 const in_product = {
     id: "2002",
@@ -63,6 +65,7 @@ const mapStateToProps = state => ({
 
 const Product = ({ match, crumbs, products }) => {
     const [product, setProduct] = useState(null);
+    const { isOpen, onOpen, onClose } = useDisclosure();
     const [qty, setQty] = useState(1);
     const {
         getInputProps,
@@ -89,6 +92,7 @@ const Product = ({ match, crumbs, products }) => {
             <Box mb={{ base: "0", md: "150px" }}>
                 {product && (
                     <>
+                        <Report isOpen={isOpen} onClose={onClose} />
                         <Breadcrumb
                             crumbs={crumbs}
                             customPageName="Bluetooth Hismart"
@@ -280,28 +284,55 @@ const Product = ({ match, crumbs, products }) => {
                                         Buy Now
                                     </Button>
                                 </Stack>
-                                <Button
-                                    mt="20px"
-                                    mb="30px"
-                                    leftIcon={
-                                        <Icon
-                                            as={IoHeartOutline}
-                                            boxSize="22px"
-                                            mr="5px"
-                                        />
-                                    }
-                                    color="gray"
-                                    variant="link"
-                                    textTransform="none"
-                                    letterSpacing="0"
-                                    _hover={{
-                                        background: "transparent !important",
-                                        color:
-                                            "var(--chakra-colors-secondary) !important"
-                                    }}
-                                >
-                                    Add to Wishlist
-                                </Button>
+                                <HStack alignItems="baseline" spacing={5}>
+                                    <Button
+                                        mt="20px"
+                                        mb="30px"
+                                        leftIcon={
+                                            <Icon
+                                                as={IoHeartOutline}
+                                                boxSize="22px"
+                                                mr="5px"
+                                            />
+                                        }
+                                        color="gray"
+                                        variant="link"
+                                        textTransform="none"
+                                        letterSpacing="0"
+                                        _hover={{
+                                            background:
+                                                "transparent !important",
+                                            color:
+                                                "var(--chakra-colors-secondary) !important"
+                                        }}
+                                    >
+                                        Add to Wishlist
+                                    </Button>
+                                    <Button
+                                        mt="20px"
+                                        mb="30px"
+                                        leftIcon={
+                                            <Icon
+                                                as={IoWarningOutline}
+                                                boxSize="22px"
+                                                mr="5px"
+                                            />
+                                        }
+                                        color="gray"
+                                        variant="link"
+                                        textTransform="none"
+                                        letterSpacing="0"
+                                        onClick={onOpen}
+                                        _hover={{
+                                            background:
+                                                "transparent !important",
+                                            color:
+                                                "var(--chakra-colors-yellow) !important"
+                                        }}
+                                    >
+                                        Report
+                                    </Button>
+                                </HStack>
                                 <VStack
                                     divider={<StackDivider />}
                                     alignItems="flex-start"

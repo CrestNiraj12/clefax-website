@@ -20,8 +20,6 @@ mix.react("resources/js/app.js", "public/js")
     })
     .version();
 
-mix.browserSync("http://localhost:8080");
-
 Mix.listen("configReady", webpackConfig => {
     webpackConfig.module.rules.forEach(rule => {
         if (Array.isArray(rule.use)) {
@@ -33,3 +31,5 @@ Mix.listen("configReady", webpackConfig => {
         }
     });
 });
+
+mix.browserSync("http://localhost:8080");

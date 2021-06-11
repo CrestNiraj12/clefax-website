@@ -15,5 +15,19 @@ export const validateForm = values => {
     }
     if (!values.street_no) errors.street_no = "Street address is required";
     if (!values.address) errors.address = "Town / City is required";
+    if (!values.date) errors.date = "Collection date is required";
+    if (!values.collection_id)
+        errors.collection_id = "Collection slot is required";
     return errors;
+};
+
+export const isValidDate = date => {
+    var dateObj = new Date();
+    var month = dateObj.getUTCMonth();
+    var day = dateObj.getUTCDate();
+    var year = dateObj.getUTCFullYear();
+    return (
+        date >= new Date(year, month, day) &&
+        (date.getDay() == 3 || date.getDay() == 4 || date.getDay() == 5)
+    );
 };

@@ -17,12 +17,15 @@ import {
     Text,
     RadioGroup,
     Radio,
-    StackDivider
+    StackDivider,
+    Select
 } from "@chakra-ui/react";
-import React from "react";
+import React, { useState } from "react";
 import Breadcrumb from "../../components/Breadcrumb";
 import { Formik, Form, Field } from "formik";
-import { validateForm } from "../../utilities/validation";
+import { isValidDate, validateForm } from "../../utilities/validation";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 const Checkout = ({ crumbs }) => {
     return (
@@ -35,7 +38,9 @@ const Checkout = ({ crumbs }) => {
                     email: "",
                     phone: "",
                     street_no: "",
-                    address: ""
+                    address: "",
+                    date: "",
+                    collection_id: ""
                 }}
                 onSubmit={(values, actions) => {
                     setTimeout(() => {
@@ -45,12 +50,16 @@ const Checkout = ({ crumbs }) => {
                 }}
             >
                 {props => (
-                    <Stack direction={{ base: "column", lg: "row" }} mt="50px">
-                        <VStack alignItems="flex-start" w="100%" mr="20px">
-                            <Heading as="h6" fontSize="md" mb="30px">
-                                Billing Details
-                            </Heading>
-                            <Form style={{ width: "100%" }}>
+                    <Form style={{ width: "100%" }}>
+                        <Stack
+                            direction={{ base: "column", lg: "row" }}
+                            mt="50px"
+                        >
+                            <VStack alignItems="flex-start" w="100%" mr="20px">
+                                <Heading as="h6" fontSize="md" mb="30px">
+                                    Billing Details
+                                </Heading>
+
                                 <Field name="fullname">
                                     {({ field, form }) => (
                                         <FormControl
@@ -132,7 +141,7 @@ const Checkout = ({ crumbs }) => {
                                             <Input
                                                 variant="flushed"
                                                 {...field}
-                                                id="email"
+                                                id="street_no"
                                             />
                                             <FormErrorMessage>
                                                 {form.errors.street_no}
@@ -155,7 +164,7 @@ const Checkout = ({ crumbs }) => {
                                             <Input
                                                 variant="flushed"
                                                 {...field}
-                                                id="email"
+                                                id="address"
                                             />
                                             <FormErrorMessage>
                                                 {form.errors.address}
@@ -163,114 +172,177 @@ const Checkout = ({ crumbs }) => {
                                         </FormControl>
                                     )}
                                 </Field>
-                            </Form>
-                        </VStack>
-                        <Box w={{ base: "100%", lg: "60%" }}>
-                            <Heading as="h6" fontSize="md" mb="30px">
-                                Your Order
-                            </Heading>
-                            <VStack
-                                bgColor="lightgray"
-                                p="20px !important"
-                                alignItems="flex-start"
-                            >
-                                <Table bgColor="#fff">
-                                    <Thead>
-                                        <Tr>
-                                            <Th>Product</Th>
-                                            <Th>Amount</Th>
-                                        </Tr>
-                                    </Thead>
-                                    <Tbody>
-                                        <Tr>
-                                            <Td>
-                                                <VStack alignItems="flex-start">
-                                                    <Text>
-                                                        Bluetooth Speaker GK1 ×
-                                                        1
-                                                    </Text>
-                                                    <Text>
-                                                        <b>Vendor:</b> James
-                                                        David
-                                                    </Text>
-                                                </VStack>
-                                            </Td>
-                                            <Td>
-                                                <Text fontWeight="bold">
-                                                    £100.0
-                                                </Text>
-                                            </Td>
-                                        </Tr>
-                                        <Tr>
-                                            <Td>Subtotal</Td>
-                                            <Td>
-                                                <Text fontWeight="bold">
-                                                    £100.0
-                                                </Text>
-                                            </Td>
-                                        </Tr>
-                                        <Tr>
-                                            <Td>Total</Td>
-                                            <Td>
-                                                <Text
-                                                    color="secondary"
-                                                    fontWeight="bold"
-                                                    fontSize="xl"
+                                <Stack
+                                    direction={{ base: "column", md: "row" }}
+                                    spacing={10}
+                                >
+                                    <Field name="date">
+                                        {({ field, form }) => (
+                                            <FormControl>
+                                                <FormLabel
+                                                    htmlFor="date"
+                                                    mb="20px !important"
                                                 >
-                                                    £100.0
-                                                </Text>
-                                            </Td>
-                                        </Tr>
-                                    </Tbody>
-                                </Table>
-                                <RadioGroup
-                                    defaultValue="1"
-                                    mt="20px !important"
-                                    w="100%"
-                                >
-                                    <VStack
-                                        alignItems="flex-start"
-                                        divider={
-                                            <StackDivider borderColor="#d1d1d1" />
-                                        }
-                                    >
-                                        <Radio
-                                            colorScheme="red"
-                                            size="sm"
-                                            value="1"
-                                            borderColor="secondary"
-                                        >
-                                            Paypal
-                                        </Radio>
-                                        <Radio
-                                            colorScheme="red"
-                                            size="sm"
-                                            value="2"
-                                            borderColor="secondary"
-                                        >
-                                            Stripe
-                                        </Radio>
-                                    </VStack>
-                                </RadioGroup>
-                                <Text my="30px" fontSize="small" color="gray">
-                                    Secure you payment with Paypal or Stripe.
-                                </Text>
-                                <Button
-                                    mt="30px !important"
-                                    isLoading={props.isSubmitting}
-                                    background="primary"
-                                    color="#fff"
-                                    fontSize="smaller"
-                                    letterSpacing="3px"
-                                    fontWeight="bold"
-                                    px="25px !important"
-                                    type="submit"
-                                >
-                                    Place Order
-                                </Button>
+                                                    Collection Date
+                                                </FormLabel>
+                                                <DatePicker
+                                                    value={props.values["date"]}
+                                                    onChange={date =>
+                                                        form.setFieldValue(
+                                                            "date",
+                                                            date
+                                                        )
+                                                    }
+                                                    filterDate={isValidDate}
+                                                    inline
+                                                />
+                                            </FormControl>
+                                        )}
+                                    </Field>
+                                    <Field name="collection_id">
+                                        {({ field, form }) => (
+                                            <FormControl>
+                                                <FormLabel
+                                                    htmlFor="collection_id"
+                                                    mb="20px !important"
+                                                >
+                                                    Collection Slot
+                                                </FormLabel>
+                                                <Select
+                                                    {...field}
+                                                    placeholder="Select slot"
+                                                    id="collection_id"
+                                                >
+                                                    <option value="1">
+                                                        10:00 AM - 01:00 PM
+                                                    </option>
+                                                    <option value="2">
+                                                        01:00 PM - 04:00 PM
+                                                    </option>
+                                                    <option value="3">
+                                                        04:00 PM - 07:00 PM
+                                                    </option>
+                                                </Select>
+                                                <FormErrorMessage>
+                                                    {form.errors.collection_id}
+                                                </FormErrorMessage>
+                                            </FormControl>
+                                        )}
+                                    </Field>
+                                </Stack>
                             </VStack>
-                        </Box>
-                    </Stack>
+                            <Box w={{ base: "100%", lg: "60%" }}>
+                                <Heading as="h6" fontSize="md" mb="30px">
+                                    Your Order
+                                </Heading>
+                                <VStack
+                                    bgColor="lightgray"
+                                    p="20px !important"
+                                    alignItems="flex-start"
+                                >
+                                    <Table bgColor="#fff">
+                                        <Thead>
+                                            <Tr>
+                                                <Th>Product</Th>
+                                                <Th>Amount</Th>
+                                            </Tr>
+                                        </Thead>
+                                        <Tbody>
+                                            <Tr>
+                                                <Td>
+                                                    <VStack alignItems="flex-start">
+                                                        <Text>
+                                                            Bluetooth Speaker
+                                                            GK1 × 1
+                                                        </Text>
+                                                        <Text>
+                                                            <b>Vendor:</b> James
+                                                            David
+                                                        </Text>
+                                                    </VStack>
+                                                </Td>
+                                                <Td>
+                                                    <Text fontWeight="bold">
+                                                        £100.0
+                                                    </Text>
+                                                </Td>
+                                            </Tr>
+                                            <Tr>
+                                                <Td>Subtotal</Td>
+                                                <Td>
+                                                    <Text fontWeight="bold">
+                                                        £100.0
+                                                    </Text>
+                                                </Td>
+                                            </Tr>
+                                            <Tr>
+                                                <Td>Total</Td>
+                                                <Td>
+                                                    <Text
+                                                        color="secondary"
+                                                        fontWeight="bold"
+                                                        fontSize="xl"
+                                                    >
+                                                        £100.0
+                                                    </Text>
+                                                </Td>
+                                            </Tr>
+                                        </Tbody>
+                                    </Table>
+                                    <RadioGroup
+                                        defaultValue="1"
+                                        mt="20px !important"
+                                        w="100%"
+                                    >
+                                        <VStack
+                                            alignItems="flex-start"
+                                            divider={
+                                                <StackDivider borderColor="#d1d1d1" />
+                                            }
+                                        >
+                                            <Radio
+                                                colorScheme="red"
+                                                size="sm"
+                                                value="1"
+                                                borderColor="secondary"
+                                            >
+                                                Paypal
+                                            </Radio>
+                                            <Radio
+                                                colorScheme="red"
+                                                size="sm"
+                                                value="2"
+                                                borderColor="secondary"
+                                            >
+                                                Stripe
+                                            </Radio>
+                                        </VStack>
+                                    </RadioGroup>
+                                    <Text
+                                        my="30px"
+                                        fontSize="small"
+                                        color="gray"
+                                    >
+                                        Secure you payment with Paypal or
+                                        Stripe.
+                                    </Text>
+                                    <Button
+                                        mt="30px !important"
+                                        isLoading={props.isSubmitting}
+                                        background="primary"
+                                        color="#fff"
+                                        fontSize="smaller"
+                                        letterSpacing="3px"
+                                        fontWeight="bold"
+                                        px="25px !important"
+                                        type="submit"
+                                    >
+                                        Place Order
+                                    </Button>
+                                </VStack>
+                            </Box>
+                        </Stack>
+                    </Form>
                 )}
             </Formik>
         </Box>

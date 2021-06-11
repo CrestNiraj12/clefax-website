@@ -14,7 +14,8 @@ const theme = extendTheme({
         gray: "#909090",
         darkgray: "#585555",
         "gray.100": "#EDF2F7",
-        lightgray: "#ededed"
+        lightgray: "#ededed",
+        yellow: "#D69E2E"
     },
     components: {
         Heading: {
