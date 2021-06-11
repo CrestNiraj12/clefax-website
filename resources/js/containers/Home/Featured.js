@@ -22,6 +22,7 @@ import Shopping from "../../../images/shopping.png";
 import ProductCardRow, {
     SkeletonCardRow
 } from "../../components/ProductCardRow";
+import Deli from "../../../images/deli-serve.jpg";
 
 const mapStateToProps = state => ({
     products: state.products
@@ -127,12 +128,12 @@ const Featured = ({ products }) => {
                     templateRows={{
                         base: "repeat(6, 1fr)",
                         md: "repeat(3, 1fr)",
-                        lg: "repeat(2, 1fr)"
+                        xl: "repeat(2, 1fr)"
                     }}
                     templateColumns={{
                         base: "repeat(1, 1fr)",
                         md: "repeat(2, 1fr)",
-                        lg: "repeat(3, 1fr)"
+                        xl: "repeat(3, 1fr)"
                     }}
                     gap={10}
                     position="relative"
@@ -171,18 +172,15 @@ const Featured = ({ products }) => {
                 <Box
                     marginY="100px"
                     w="100%"
-                    h={{ base: "200px", lg: "100%" }}
+                    h={{ base: "150px", md: "25vw", lg: "15vw" }}
+                    display="flex"
+                    bg={`url(${Deli}) no-repeat center center`}
+                    bgColor="#3b3b3b"
+                    bgBlendMode="overlay"
+                    bgSize="cover"
                     pos="relative"
                 >
-                    <Image
-                        src="https://wpbingosite.com/wordpress/dimita/wp-content/uploads/2019/12/banner2-7.jpg"
-                        w="100%"
-                        h="100%"
-                        alt="banner"
-                        objectFit="cover"
-                    />
                     <VStack
-                        pos="absolute"
                         w="100%"
                         h="100%"
                         justifyContent="center"

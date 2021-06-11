@@ -252,12 +252,12 @@ const Checkout = ({ crumbs }) => {
                                                 <Td>
                                                     <VStack alignItems="flex-start">
                                                         <Text>
-                                                            Bluetooth Speaker
-                                                            GK1 × 1
+                                                            Cookies ×{" "}
+                                                            <span>1</span>
                                                         </Text>
                                                         <Text>
-                                                            <b>Vendor:</b> James
-                                                            David
+                                                            <b>Vendor:</b> Niraj
+                                                            Shrestha
                                                         </Text>
                                                     </VStack>
                                                 </Td>

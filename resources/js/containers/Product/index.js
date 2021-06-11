@@ -39,24 +39,21 @@ import ProductTabs from "./ProductTabs";
 import ProductCardColumn from "../../components/ProductCardColumn";
 import { connect } from "react-redux";
 import Report from "./Report";
+import Cookies from "../../../images/cookies.png";
 
 const in_product = {
-    id: "2002",
-    title: "Headphone S102",
-    images: [
-        "https://wpbingosite.com/wordpress/dimita/wp-content/uploads/2019/04/Image-11-720x720.jpg",
-        "https://wpbingosite.com/wordpress/dimita/wp-content/uploads/2019/04/Image-1.jpg"
-    ],
+    id: "0001",
+    title: "Choco Chip Cookies",
+    images: [Cookies, Cookies],
     rating: 4,
     url: "/shop/product-title-1",
-    qty: 20,
+    qty: 10,
     price: 46.0,
     discount: 25,
-    categories: ["Hello & mellow"],
+    categories: ["Cookies"],
     created_at: "2021/01/01",
     coupon: null,
-    categories: ["Audio & Home", "Hello & Mellow"],
-    tags: ["Game", "Headphones", "Speaker"]
+    tags: ["Cookies", "Bakery", "Food"]
 };
 
 const mapStateToProps = state => ({
@@ -75,7 +72,7 @@ const Product = ({ match, crumbs, products }) => {
         step: 1,
         defaultValue: 1,
         min: 1,
-        max: 20
+        max: in_product.qty > 20 ? 20 : in_product.qty
     });
 
     const inc = getIncrementButtonProps();
@@ -413,14 +410,16 @@ const Product = ({ match, crumbs, products }) => {
                     mt="50px"
                     columns={{ base: 1, sm: 2, md: 3, lg: 5 }}
                 >
-                    {products
-                        .filter(p =>
+                    {[
+                        ...products.filter(p =>
                             p.categories.some(cat =>
                                 product.categories
                                     .map(c => c.toLowerCase())
                                     .includes(cat.toLowerCase())
                             )
-                        )
+                        ),
+                        ...products
+                    ]
                         .slice(0, 5)
                         .map((p, index) => (
                             <ProductCardColumn

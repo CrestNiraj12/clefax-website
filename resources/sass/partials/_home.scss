@@ -286,7 +286,7 @@
 }
 
 .slideshow {
-    animation: moveSlideshow 15s linear infinite;
+    animation: moveSlideshow 40s linear infinite;
 
     &:hover {
         animation-play-state: paused;

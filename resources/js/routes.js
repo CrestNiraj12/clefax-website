@@ -2,6 +2,7 @@ import Checkout from "./containers/Checkout";
 import Home from "./containers/Home";
 import Product from "./containers/Product";
 import Invoice from "./containers/Invoice";
+import Contact from "./containers/Contact";
 
 export default [
     { path: "/", Component: Home, exact: true, name: "Home" },
@@ -28,13 +29,14 @@ export default [
         Component: Invoice,
         exact: false,
         name: "Invoice"
-    }
-    /*{
-        path: "/contact-us",
+    },
+    {
+        path: "/contact",
         Component: Contact,
         exact: true,
-        name: "Contact us",
-    },
+        name: "Contact us"
+    }
+    /*
     { path: "/courses", Component: Courses, exact: true, name: "Courses" },
     {
         path: "/courses/:title",

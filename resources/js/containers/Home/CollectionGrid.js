@@ -8,6 +8,9 @@ import {
     Text
 } from "@chakra-ui/react";
 import React from "react";
+import Lamb from "../../../images/lamb-dark.png";
+import Deli from "../../../images/deli.png";
+import Cake from "../../../images/cake.png";
 
 const CollectionGrid = () => {
     return (
@@ -27,7 +30,10 @@ const CollectionGrid = () => {
             >
                 <Box
                     className="gridItemImage"
-                    bgImage="url(https://wpbingosite.com/wordpress/dimita/wp-content/uploads/2020/02/banner2-8.jpg)"
+                    bg={`url(${Lamb}) no-repeat center center`}
+                    bgColor="#3b3b3b"
+                    bgBlendMode="overlay"
+                    bgSize="cover"
                     w="100%"
                     h="100%"
                 ></Box>
@@ -79,7 +85,8 @@ const CollectionGrid = () => {
             >
                 <Box
                     className="gridItemImage"
-                    bgImage="url(https://wpbingosite.com/wordpress/dimita/wp-content/uploads/2019/12/banner2-2.jpg)"
+                    bg={`url(${Deli}) no-repeat center center`}
+                    bgSize="cover"
                     w="100%"
                     h="100%"
                 ></Box>
@@ -112,7 +119,8 @@ const CollectionGrid = () => {
             >
                 <Box
                     className="gridItemImage"
-                    bgImage="url(https://wpbingosite.com/wordpress/dimita/wp-content/uploads/2020/02/banner2-9.jpg)"
+                    bg={`url(${Cake}) no-repeat center center`}
+                    bgSize="cover"
                     w="100%"
                     h="100%"
                 ></Box>

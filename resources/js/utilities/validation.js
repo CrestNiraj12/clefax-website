@@ -21,6 +21,20 @@ export const validateForm = values => {
     return errors;
 };
 
+export const validateContactForm = values => {
+    const errors = {};
+    if (!values.fullname) errors.fullname = "Name is required";
+
+    if (!values.email) errors.email = "Email is required";
+    else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)) {
+        errors.email = "Email address is invalid";
+    }
+
+    if (!values.phone) errors.subject = "Subject is required";
+    if (!values.message) errors.message = "Message is required";
+    return errors;
+};
+
 export const isValidDate = date => {
     var dateObj = new Date();
     var month = dateObj.getUTCMonth();

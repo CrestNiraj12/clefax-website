@@ -21,8 +21,17 @@ import {
     FaYoutube,
     FaLinkedin
 } from "react-icons/fa";
-import React, { Fragment } from "react";
+import React, { useState, Fragment } from "react";
 import { useHistory } from "react-router";
+import Paypal from "../../../images/paypal.png";
+import Stripe from "../../../images/stripe.png";
+import { Map, GoogleApiWrapper, InfoWindow, Marker } from "google-maps-react";
+import { MAPS_API_KEY } from "../../constants";
+
+const mapStyles = {
+    width: "100%",
+    height: "100%"
+};
 
 const socials = [
     {
@@ -57,28 +66,28 @@ const footerLinks = [
         title: "company",
         links: [
             {
-                title: "About us",
-                url: "#"
+                title: "Wishlist",
+                url: "/wishlist"
             },
             {
                 title: "Shop Products",
-                url: "#"
+                url: "/shop"
             },
             {
                 title: "My Cart",
-                url: "#"
+                url: "/cart"
             },
             {
                 title: "Checkout",
-                url: "#"
+                url: "/checkout"
             },
             {
                 title: "Contact Us",
-                url: "#"
+                url: "/contact"
             },
             {
                 title: "Order Tracking",
-                url: "#"
+                url: "/orders"
             }
         ]
     },
@@ -115,6 +124,22 @@ const footerLinks = [
 
 const Footer = () => {
     var history = useHistory();
+    const [showInfoWindow, setShowInfoWindow] = useState(false);
+    const [activeMarker, setActiveMarker] = useState(null);
+    const [selectedPlace, setSelectedPlace] = useState(null);
+
+    const handleMarkerClick = (props, marker, e) => {
+        setActiveMarker(marker);
+        setSelectedPlace(props);
+        setShowInfoWindow(true);
+    };
+
+    const handleClose = props => {
+        if (showInfoWindow) {
+            setShowInfoWindow(false);
+            setActiveMarker(null);
+        }
+    };
 
     return (
         <Box bgColor="primary" pos="relative">
@@ -216,7 +241,7 @@ const Footer = () => {
                                 color="var(--chakra-colors-secondary) !important"
                                 fontWeight="700"
                             >
-                                1234 567 6789
+                                161 123 6789
                             </Text>
                             <Text className="footerText">
                                 clefax-eshop@gmail.com
@@ -248,6 +273,10 @@ const Footer = () => {
                                             color="var(--chakra-colors-gray) !important"
                                             fontSize="16px"
                                             mb="10px !important"
+                                            _hover={{
+                                                color:
+                                                    "var(--chakra-colors-secondary) !important"
+                                            }}
                                         >
                                             {title}
                                         </Link>
@@ -258,16 +287,39 @@ const Footer = () => {
                         </Fragment>
                     ))}
                     <Spacer />
-                    <VStack className="footerContainer">
+                    <VStack className="footerContainer" w="30%">
                         <Heading as="h6" className="footerHeading">
                             Our Location
                         </Heading>
-                        <Box>
-                            <Image
-                                src="https://wpbingosite.com/wordpress/dimita/wp-content/uploads/2018/06/banner1-5-1.png"
-                                alt="Shops"
-                                w="500px"
-                            />
+
+                        <Box pos="relative" w="100%" h="220px">
+                            <Map
+                                google={google}
+                                zoom={10}
+                                style={mapStyles}
+                                initialCenter={{
+                                    lat: 53.728425226686504,
+                                    lng: -1.6996983882411096
+                                }}
+                            >
+                                <Marker
+                                    onClick={handleMarkerClick}
+                                    name={"Clefax E-Shop"}
+                                />
+                                <InfoWindow
+                                    marker={activeMarker}
+                                    visible={showInfoWindow}
+                                    onClose={handleClose}
+                                >
+                                    <div>
+                                        <h6>
+                                            {selectedPlace
+                                                ? selectedPlace.name
+                                                : ""}
+                                        </h6>
+                                    </div>
+                                </InfoWindow>
+                            </Map>
                         </Box>
                     </VStack>
                 </Stack>
@@ -282,15 +334,13 @@ const Footer = () => {
                     Copyright © 2020 Clefax. All rights reserved.
                 </Text>
                 <Spacer />
-                <Box>
-                    <Image
-                        src="https://wpbingosite.com/wordpress/dimita/wp-content/uploads/2018/06/paymet-1.png"
-                        alt="Payment options"
-                    />
-                </Box>
+                <HStack>
+                    <Image src={Paypal} alt="Paypal" maxH="24px" />
+                    <Image src={Stripe} alt="Stripe" maxH="24px" />
+                </HStack>
             </Flex>
         </Box>
     );
 };
 
-export default Footer;
+export default GoogleApiWrapper({ apiKey: MAPS_API_KEY })(Footer);

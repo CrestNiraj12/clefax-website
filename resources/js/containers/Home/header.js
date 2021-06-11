@@ -5,6 +5,9 @@ import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import { CSSTransition } from "react-transition-group";
 import { useHistory } from "react-router";
+import Meat from "../../../images/meat.png";
+import Bread from "../../../images/BREAD.png";
+import Donuts from "../../../images/donuts.png";
 
 const responsive = {
     superLargeDesktop: {
@@ -27,24 +30,21 @@ const responsive = {
 
 const carousel = [
     {
-        title: "Headphone",
-        subtitle: "Google Technology",
-        image:
-            "https://wpbingosite.com/wordpress/dimita/wp-content/uploads/2020/01/img1.png",
+        title: "Meat",
+        subtitle: "Fresh meats of all kind",
+        image: Meat,
         button_url: "#"
     },
     {
-        title: "Airpods",
-        subtitle: "Google Technology",
-        image:
-            "https://wpbingosite.com/wordpress/dimita/wp-content/uploads/2020/01/img2-1.png",
+        title: "Breads",
+        subtitle: "Fresh breads",
+        image: Bread,
         button_url: "#"
     },
     {
-        title: "Smartphone",
-        subtitle: "Apple Technology",
-        image:
-            "https://wpbingosite.com/wordpress/dimita/wp-content/uploads/2020/01/img3-1.png",
+        title: "Donuts",
+        subtitle: "Sprinkled donuts",
+        image: Donuts,
         button_url: "#"
     }
 ];
@@ -143,6 +143,7 @@ const Header = () => {
                                         display="flex"
                                         justifyContent="center"
                                         className="floatImage"
+                                        zIndex="-1"
                                     >
                                         <CSSTransition
                                             in={changed}

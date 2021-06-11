@@ -73,15 +73,18 @@ html {
 
 body {
     position: relative;
+    overflow-x: hidden;
 }
 
 ::-moz-selection {
     /* Code for Firefox */
     background: var(--chakra-colors-secondary);
+    color: #fff;
 }
 
 ::selection {
     background: var(--chakra-colors-secondary);
+    color: #fff;
 }
 
 .chakra-button__icon {

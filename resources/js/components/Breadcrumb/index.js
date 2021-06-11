@@ -42,7 +42,7 @@ const Breadcrumb = ({ crumbs, customPageName = null, margin = "0" }) => {
                     )
                 )}
             </Bc>
-            <Divider color="gray" w="auto" />
+            <Divider color="gray" w="auto" m={margin} />
         </>
     );
 };

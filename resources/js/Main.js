@@ -10,6 +10,7 @@ import { useMediaQuery } from "@chakra-ui/media-query";
 import Navbar from "./components/Navbar";
 import { HOME_PAGE } from "./constants";
 import Search from "./components/Search";
+import Cookies from "../images/cookies.png";
 
 const mapDispatchToProps = dispatch => ({
     setProducts: products => dispatch(setProducts(products)),
@@ -23,9 +24,9 @@ const mapStateToProps = state => ({
 
 const products = [
     {
-        title: "Headphone S102",
+        title: "Cookies",
         images: [
-            "https://wpbingosite.com/wordpress/dimita/wp-content/uploads/2019/04/Image-11-720x720.jpg",
+            Cookies,
             "https://wpbingosite.com/wordpress/dimita/wp-content/uploads/2019/04/Image-1.jpg"
         ],
         rating: 4,
@@ -37,9 +38,9 @@ const products = [
     },
     {
         id: 1,
-        title: "Bluetooth Speaker GK1",
+        title: "Cookies",
         images: [
-            "https://wpbingosite.com/wordpress/dimita/wp-content/uploads/2019/04/Image-12.jpg",
+            Cookies,
             "https://wpbingosite.com/wordpress/dimita/wp-content/uploads/2019/04/Image-23.jpg"
         ],
         rating: 0,
@@ -51,9 +52,9 @@ const products = [
     },
     {
         id: 1,
-        title: "Headphone S102",
+        title: "Cookies",
         images: [
-            "https://wpbingosite.com/wordpress/dimita/wp-content/uploads/2019/04/Image-11-720x720.jpg",
+            Cookies,
             "https://wpbingosite.com/wordpress/dimita/wp-content/uploads/2019/04/Image-1.jpg"
         ],
         rating: 2,
@@ -65,9 +66,9 @@ const products = [
     },
     {
         id: 1,
-        title: "Headphone S102",
+        title: "Cookies",
         images: [
-            "https://wpbingosite.com/wordpress/dimita/wp-content/uploads/2019/04/Image-11-720x720.jpg",
+            Cookies,
             "https://wpbingosite.com/wordpress/dimita/wp-content/uploads/2019/04/Image-1.jpg"
         ],
         rating: 4,
@@ -78,9 +79,9 @@ const products = [
     },
     {
         id: 1,
-        title: "Headphone S102",
+        title: "Cookies",
         images: [
-            "https://wpbingosite.com/wordpress/dimita/wp-content/uploads/2019/04/Image-11-720x720.jpg",
+            Cookies,
             "https://wpbingosite.com/wordpress/dimita/wp-content/uploads/2019/04/Image-1.jpg"
         ],
         rating: 3.86,
@@ -91,9 +92,9 @@ const products = [
     },
     {
         id: 1,
-        title: "Headphone S102",
+        title: "Cookies",
         images: [
-            "https://wpbingosite.com/wordpress/dimita/wp-content/uploads/2019/04/Image-11-720x720.jpg",
+            Cookies,
             "https://wpbingosite.com/wordpress/dimita/wp-content/uploads/2019/04/Image-1.jpg"
         ],
         rating: 4,
@@ -105,9 +106,9 @@ const products = [
     },
     {
         id: 1,
-        title: "Headphone S102",
+        title: "Cookies",
         images: [
-            "https://wpbingosite.com/wordpress/dimita/wp-content/uploads/2019/04/Image-11-720x720.jpg",
+            Cookies,
             "https://wpbingosite.com/wordpress/dimita/wp-content/uploads/2019/04/Image-1.jpg"
         ],
         rating: 4,
@@ -119,9 +120,9 @@ const products = [
     },
     {
         id: 1,
-        title: "Headphone S102",
+        title: "Cookies",
         images: [
-            "https://wpbingosite.com/wordpress/dimita/wp-content/uploads/2019/04/Image-11-720x720.jpg",
+            Cookies,
             "https://wpbingosite.com/wordpress/dimita/wp-content/uploads/2019/04/Image-1.jpg"
         ],
         rating: 4,

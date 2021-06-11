@@ -11355,8 +11355,8 @@ h3 {
 }
 
 .slideshow {
-  -webkit-animation: moveSlideshow 15s linear infinite;
-          animation: moveSlideshow 15s linear infinite;
+  -webkit-animation: moveSlideshow 40s linear infinite;
+          animation: moveSlideshow 40s linear infinite;
 }
 
 .slideshow:hover {
@@ -11663,15 +11663,18 @@ html {
 
 body {
   position: relative;
+  overflow-x: hidden;
 }
 
 ::-moz-selection {
   /* Code for Firefox */
   background: var(--chakra-colors-secondary);
+  color: #fff;
 }
 
 ::selection {
   background: var(--chakra-colors-secondary);
+  color: #fff;
 }
 
 .chakra-button__icon {

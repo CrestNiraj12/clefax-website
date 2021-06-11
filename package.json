@@ -38,6 +38,7 @@
         "@fontsource/rubik": "^4.3.0",
         "formik": "^2.2.9",
         "framer-motion": "^4.1.16",
+        "google-maps-react": "^2.0.6",
         "rc-slider": "^9.7.2",
         "react-compound-slider": "^0.16.3",
         "react-datepicker": "^4.1.1",

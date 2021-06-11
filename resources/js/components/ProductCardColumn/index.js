@@ -57,6 +57,7 @@ const ProductCardColumn = ({
                             src={src}
                             alt={title}
                             w="100%"
+                            minH="22vw"
                             outline="none"
                             objectFit="contain"
                             bg="#e6e6e6"

@@ -50,7 +50,7 @@ import {
     IoSearch
 } from "react-icons/io5";
 import { CSSTransition } from "react-transition-group";
-import Logo from "../../../images/logo-2.png";
+import Logo from "../../../images/logo-black.png";
 import "@fontsource/archivo";
 import { connect } from "react-redux";
 import { useHistory } from "react-router";
@@ -313,7 +313,7 @@ const Navbar = ({ showSearch, products }) => {
                     >
                         <Image
                             src={Logo}
-                            w={smallerThan1100 ? "200px" : "230px"}
+                            w="200px"
                             h={smallerThan1100 ? "100px" : "80px"}
                             objectFit="cover"
                         />
@@ -463,13 +463,19 @@ const Navbar = ({ showSearch, products }) => {
                             </MenuButton>
                             <MenuList>
                                 <MenuItem minH="48px">
-                                    <span>My Account</span>
+                                    <Link href="/account" w="100%">
+                                        My Account
+                                    </Link>
                                 </MenuItem>
                                 <MenuItem minH="40px">
-                                    <Link href="/checkout">Checkout</Link>
+                                    <Link href="/checkout" w="100%">
+                                        Checkout
+                                    </Link>
                                 </MenuItem>
                                 <MenuItem minH="40px">
-                                    <span>Wishlist</span>
+                                    <Link href="/wishlist" w="100%">
+                                        Wishlist
+                                    </Link>
                                 </MenuItem>
                             </MenuList>
                         </Menu>
@@ -482,6 +488,7 @@ const Navbar = ({ showSearch, products }) => {
                                     aria-label="Wishlist"
                                     icon={<Icon as={IoHeartOutline} />}
                                     variant="unstyled"
+                                    onClick={() => history.push("/wishlist")}
                                 />
                                 <Badge
                                     variant="solid"
@@ -500,6 +507,7 @@ const Navbar = ({ showSearch, products }) => {
                                 aria-label="Cart"
                                 icon={<Icon as={IoCartOutline} />}
                                 variant="unstyled"
+                                onClick={() => history.push("/cart")}
                             />
                             <Badge
                                 variant="solid"
