@@ -41,6 +41,9 @@ const theme = extendTheme({
                     bg: "secondary",
                     color: "#fff",
                     borderColor: "secondary"
+                },
+                "&:focus": {
+                    boxShadow: "none"
                 }
             }
         },

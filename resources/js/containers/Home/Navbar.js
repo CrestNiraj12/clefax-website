@@ -45,6 +45,7 @@ import Logo from "../../../images/logo-2.png";
 import "@fontsource/archivo";
 import { showSearch } from "../../actions";
 import { connect } from "react-redux";
+import { useHistory } from "react-router-dom";
 
 const mapDispatchToProps = dispatch => ({
     showSearch: show => dispatch(showSearch(show))
@@ -92,6 +93,7 @@ const headings = [
 ];
 
 const Navbar = ({ showSearch }) => {
+    var history = useHistory();
     const [hovered, setHovered] = useState(false);
     const [smallerThan1100] = useMediaQuery("(max-width: 1100px)");
     const [smallerThan475] = useMediaQuery("(max-width: 475px)");
@@ -142,13 +144,19 @@ const Navbar = ({ showSearch }) => {
                                 </Flex>
                                 <Divider color="gray.200" />
                                 <Box p="10px">
-                                    <Link href="/" className="link textLink">
+                                    <Link
+                                        href="/contact"
+                                        className="link textLink"
+                                    >
                                         Contact
                                     </Link>
                                 </Box>
                                 <Divider color="gray.200" />
                                 <Box p="10px">
-                                    <Link href="/" className="link textLink">
+                                    <Link
+                                        href="/vendors"
+                                        className="link textLink"
+                                    >
                                         Vendors
                                     </Link>
                                 </Box>
@@ -157,7 +165,7 @@ const Navbar = ({ showSearch }) => {
                                         <Divider />
                                         <Box p="10px">
                                             <Link
-                                                href="/"
+                                                href="/cart"
                                                 className="link textLink"
                                             >
                                                 Cart{" "}
@@ -172,7 +180,7 @@ const Navbar = ({ showSearch }) => {
                                         <Divider />
                                         <Box p="10px">
                                             <Link
-                                                href="/"
+                                                href="/account"
                                                 className="link textLink"
                                             >
                                                 My Account
@@ -190,7 +198,7 @@ const Navbar = ({ showSearch }) => {
                                         <Divider />
                                         <Box p="10px">
                                             <Link
-                                                href="/"
+                                                href="/wishlist"
                                                 className="link textLink"
                                             >
                                                 Wishlist{" "}
@@ -223,7 +231,7 @@ const Navbar = ({ showSearch }) => {
                                     />
                                     <Spacer />
                                     <Link
-                                        href="/"
+                                        href="/shop"
                                         _hover={{
                                             textDecor: "none",
                                             borderBottom:
@@ -478,13 +486,19 @@ const Navbar = ({ showSearch }) => {
                                 </MenuButton>
                                 <MenuList>
                                     <MenuItem minH="48px">
-                                        <span>My Account</span>
+                                        <Link href="/account" w="100%">
+                                            My Account
+                                        </Link>
                                     </MenuItem>
                                     <MenuItem minH="40px">
-                                        <Link href="/checkout">Checkout</Link>
+                                        <Link href="/checkout" w="100%">
+                                            Checkout
+                                        </Link>
                                     </MenuItem>
                                     <MenuItem minH="40px">
-                                        <span>Wishlist</span>
+                                        <Link href="/wishlist" w="100%">
+                                            Wishlist
+                                        </Link>
                                     </MenuItem>
                                 </MenuList>
                             </Menu>
@@ -497,6 +511,7 @@ const Navbar = ({ showSearch }) => {
                                     aria-label="Wishlist"
                                     icon={<Icon as={IoHeartOutline} />}
                                     variant="unstyled"
+                                    onClick={() => history.push("/wishlist")}
                                 />
                                 <Badge
                                     variant="solid"
@@ -515,6 +530,7 @@ const Navbar = ({ showSearch }) => {
                                     aria-label="Cart"
                                     icon={<Icon as={IoCartOutline} />}
                                     variant="unstyled"
+                                    onClick={() => history.push("/cart")}
                                 />
                                 <Badge
                                     variant="solid"

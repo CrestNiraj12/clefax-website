@@ -63,8 +63,8 @@ const mapStateToProps = state => ({
 const Product = ({ match, crumbs, products }) => {
     const [product, setProduct] = useState(null);
     const { isOpen, onOpen, onClose } = useDisclosure();
-    const [qty, setQty] = useState(1);
     const {
+        value,
         getInputProps,
         getIncrementButtonProps,
         getDecrementButtonProps
@@ -120,7 +120,6 @@ const Product = ({ match, crumbs, products }) => {
                                     {product.discount && product.discount > 0 && (
                                         <Heading
                                             as="h2"
-                                            fontSize="lg"
                                             color="gray"
                                             fontSize="xl"
                                             textDecor="line-through"
@@ -130,7 +129,6 @@ const Product = ({ match, crumbs, products }) => {
                                     )}
                                     <Heading
                                         as="h2"
-                                        fontSize="lg"
                                         fontSize="xl"
                                         color="secondary"
                                     >
@@ -235,12 +233,6 @@ const Product = ({ match, crumbs, products }) => {
                                                 textAlign="center"
                                                 w="60px"
                                                 minW="60px"
-                                                onChange={e => {
-                                                    const v = Number(
-                                                        e.target.value
-                                                    );
-                                                    setQty(v);
-                                                }}
                                                 {...input}
                                             />
                                             <IconButton
