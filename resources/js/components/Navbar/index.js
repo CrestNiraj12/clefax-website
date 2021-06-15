@@ -41,7 +41,7 @@ import {
     StackDivider,
     Spinner
 } from "@chakra-ui/react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "@fontsource/rubik";
 import {
     IoCartOutline,
@@ -105,13 +105,16 @@ const headings = [
 ];
 
 const mapStateToProps = state => ({
-    products: state.products
+    products: state.products,
+    categories: state.categories
 });
 
-const Navbar = ({ showSearch, products }) => {
+const Navbar = ({ showSearch, products, categories }) => {
     var history = useHistory();
+    const [selectedCategory, setSelectedCategory] = useState(null);
     const [hovered, setHovered] = useState(false);
     const [filteredProducts, setFilteredProducts] = useState([]);
+    const [searchedProducts, setSearchedProducts] = useState([]);
     const [smallerThan1100] = useMediaQuery("(max-width: 1100px)");
     const [smallerThan1024] = useMediaQuery("(max-width: 1024px)");
     const { isOpen, onOpen, onClose } = useDisclosure();
@@ -120,13 +123,26 @@ const Navbar = ({ showSearch, products }) => {
     const [loading, setLoading] = useState(false);
     const [query, setQuery] = useState("");
 
+    useEffect(() => {
+        setQuery("");
+        if (products.length) setFilteredProducts(products);
+    }, [products]);
+
     const handleClose = () => {
         setChangeDrawer(false);
         onClose();
     };
 
     const handleSubmit = () => {
-        if (query.length > 0) history.push("/shop/?q=" + query);
+        if (query.length > 0)
+            history.push(
+                "/shop/?q=" +
+                    query +
+                    "&cat=" +
+                    (selectedCategory !== null
+                        ? categories[selectedCategory].title
+                        : "")
+            );
     };
 
     const handleKeyDown = event => {
@@ -138,9 +154,23 @@ const Navbar = ({ showSearch, products }) => {
         setLoading(true);
         const q = e.target.value;
         setQuery(q);
+        handleSearch(q);
+    };
 
-        const filtered = searchQuery(products, q);
-        setFilteredProducts(q.length > 0 ? filtered : []);
+    const handleFilterProducts = index => {
+        setLoading(true);
+        setSelectedCategory(index);
+        var fp = [];
+        if (index !== null)
+            fp = products.filter(p => p.category === categories[index].title);
+        else fp = products;
+        setFilteredProducts(fp);
+        handleSearch(query, fp);
+    };
+
+    const handleSearch = (q, fp = filteredProducts) => {
+        const filtered = searchQuery(fp, q);
+        setSearchedProducts(q.length > 0 ? filtered : []);
         setTimeout(() => setLoading(false), 0);
     };
 
@@ -325,8 +355,10 @@ const Navbar = ({ showSearch, products }) => {
                                 <Menu isLazy>
                                     <MenuButton
                                         as={Button}
-                                        rightIcon={<ChevronDownIcon />}
-                                        minW="125px"
+                                        rightIcon={
+                                            <ChevronDownIcon ml="10px" />
+                                        }
+                                        minW="180px"
                                         color="gray"
                                         textTransform="initial"
                                         fontSize="14px "
@@ -335,23 +367,44 @@ const Navbar = ({ showSearch, products }) => {
                                         _hover={{
                                             color: "#000 !important"
                                         }}
+                                        p="0 10px !important"
                                     >
-                                        All Category
+                                        {selectedCategory !== null
+                                            ? categories[selectedCategory].title
+                                            : "All Categories"}
                                     </MenuButton>
                                     <MenuList
-                                        height="300px"
+                                        maxH="300px"
                                         overflowY="scroll"
                                         className="scrollable"
                                     >
-                                        <MenuItem color="gray">
-                                            New Window
+                                        <MenuItem
+                                            color="gray"
+                                            _hover={{
+                                                color:
+                                                    "var(--chakra-colors-secondary) !important"
+                                            }}
+                                            onClick={() =>
+                                                handleFilterProducts(null)
+                                            }
+                                        >
+                                            All Categories
                                         </MenuItem>
-                                        <MenuItem color="gray">
-                                            Open Closed Tab
-                                        </MenuItem>
-                                        <MenuItem color="gray">
-                                            Open File
-                                        </MenuItem>
+                                        {categories.map(({ title }, index) => (
+                                            <MenuItem
+                                                color="gray"
+                                                _hover={{
+                                                    color:
+                                                        "var(--chakra-colors-secondary) !important"
+                                                }}
+                                                key={index}
+                                                onClick={() =>
+                                                    handleFilterProducts(index)
+                                                }
+                                            >
+                                                {title}
+                                            </MenuItem>
+                                        ))}
                                     </MenuList>
                                 </Menu>
                                 <Divider
@@ -384,8 +437,8 @@ const Navbar = ({ showSearch, products }) => {
                                             }
                                         />
                                     </InputGroup>
-                                    {filteredProducts &&
-                                        filteredProducts.length > 0 && (
+                                    {searchedProducts &&
+                                        searchedProducts.length > 0 && (
                                             <VStack
                                                 bgColor="#fff"
                                                 pos="absolute"
@@ -410,7 +463,7 @@ const Navbar = ({ showSearch, products }) => {
                                                 {loading ? (
                                                     <Spinner color="secondary" />
                                                 ) : (
-                                                    filteredProducts.map(
+                                                    searchedProducts.map(
                                                         (product, index) => (
                                                             <ProductCardRowSmall
                                                                 product={

@@ -197329,6 +197329,9 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch) {
     },
     setPage: function setPage(page) {
       return dispatch(Object(_actions__WEBPACK_IMPORTED_MODULE_6__["setPage"])(page));
+    },
+    setCategories: function setCategories(category) {
+      return dispatch(Object(_actions__WEBPACK_IMPORTED_MODULE_6__["setCategories"])(category));
     }
   };
 };
@@ -197347,7 +197350,8 @@ var products = [{
   url: "/shop/product-title-1",
   price: 46.0,
   discount: 25,
-  categories: ["Hello & mellow"],
+  category: "Hello & Mellow",
+  tags: ["meat", "poultry"],
   created_at: "2021/01/01"
 }, {
   id: 1,
@@ -197357,7 +197361,8 @@ var products = [{
   url: "/shop/product-title-1",
   price: 100.0,
   discount: 13,
-  categories: ["Audio & Home"],
+  category: "Audio & Home",
+  tags: ["meat", "lamb"],
   created_at: "2022/01/01"
 }, {
   id: 1,
@@ -197367,7 +197372,8 @@ var products = [{
   url: "/shop/product-title-1",
   price: 46.0,
   discount: 13,
-  categories: ["Hello & mellow"],
+  category: "Hello & Mellow",
+  tags: ["vegetables"],
   created_at: "2021/01/01"
 }, {
   id: 1,
@@ -197376,7 +197382,8 @@ var products = [{
   rating: 4,
   url: "/shop/product-title-1",
   price: 46.0,
-  categories: ["Hello & mellow"],
+  category: "Hello & Mellow",
+  tags: ["vegetables"],
   created_at: "2021/02/01"
 }, {
   id: 1,
@@ -197385,7 +197392,8 @@ var products = [{
   rating: 3.86,
   url: "/shop/product-title-1",
   price: 46.0,
-  categories: ["Hello & mellow"],
+  category: "Hello & Mellow",
+  tags: ["meat"],
   created_at: "2021/01/01"
 }, {
   id: 1,
@@ -197395,7 +197403,8 @@ var products = [{
   url: "/shop/product-title-1",
   price: 46.0,
   discount: 13,
-  categories: ["Hello & mellow"],
+  category: "Hello & Mellow",
+  tags: ["cake"],
   created_at: "2021/01/01"
 }, {
   id: 1,
@@ -197405,7 +197414,8 @@ var products = [{
   url: "/shop/product-title-1",
   price: 46.0,
   discount: 13,
-  categories: ["Camera & Photo", "Hello & mellow"],
+  category: "Camera & Photo",
+  tags: ["chocolate"],
   created_at: "2021/01/02"
 }, {
   id: 1,
@@ -197414,15 +197424,37 @@ var products = [{
   rating: 4,
   url: "/shop/product-title-1",
   price: 46.0,
-  categories: ["Hello & mellow"],
+  category: "Hello & Mellow",
+  tags: ["vegetables"],
   created_at: "2021/01/01"
+}];
+var categories = [{
+  title: "Hello & Mellow",
+  products: [{
+    name: "hello"
+  }]
+}, {
+  title: "Audio & Home",
+  products: [{
+    name: "hello"
+  }, {
+    name: "hello"
+  }]
+}, {
+  title: "Camera & Photo",
+  products: [{
+    name: "hello"
+  }, {
+    name: "hello"
+  }]
 }];
 
 var Main = function Main(_ref) {
   var setProducts = _ref.setProducts,
       setPage = _ref.setPage,
       page = _ref.page,
-      showSearch = _ref.showSearch;
+      showSearch = _ref.showSearch,
+      setCategories = _ref.setCategories;
   var location = Object(react_router_dom__WEBPACK_IMPORTED_MODULE_3__["useLocation"])();
 
   var _useMediaQuery = Object(_chakra_ui_media_query__WEBPACK_IMPORTED_MODULE_8__["useMediaQuery"])("(min-width: 1100px)"),
@@ -197443,6 +197475,7 @@ var Main = function Main(_ref) {
         .then((res) => setProducts(res.data))
         .catch((err) => console.log(err));*/
     setProducts(products);
+    setCategories(categories);
   }, []);
   Object(react__WEBPACK_IMPORTED_MODULE_1__["useEffect"])(function () {
     window.onscroll = function (e) {
@@ -197489,12 +197522,13 @@ var Main = function Main(_ref) {
 /*!***************************************!*\
   !*** ./resources/js/actions/index.js ***!
   \***************************************/
-/*! exports provided: setProducts, setPage, showSearch */
+/*! exports provided: setProducts, setCategories, setPage, showSearch */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setProducts", function() { return setProducts; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setCategories", function() { return setCategories; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setPage", function() { return setPage; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "showSearch", function() { return showSearch; });
 /* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../constants */ "./resources/js/constants.js");
@@ -197503,6 +197537,12 @@ var setProducts = function setProducts(products) {
   return {
     type: _constants__WEBPACK_IMPORTED_MODULE_0__["SET_PRODUCTS"],
     payload: products
+  };
+};
+var setCategories = function setCategories(categories) {
+  return {
+    type: _constants__WEBPACK_IMPORTED_MODULE_0__["SET_CATEGORIES"],
+    payload: categories
   };
 };
 var setPage = function setPage(page) {
@@ -198210,24 +198250,36 @@ var headings = [{
 
 var mapStateToProps = function mapStateToProps(state) {
   return {
-    products: state.products
+    products: state.products,
+    categories: state.categories
   };
 };
 
 var Navbar = function Navbar(_ref) {
   var showSearch = _ref.showSearch,
-      products = _ref.products;
+      products = _ref.products,
+      categories = _ref.categories;
   var history = Object(react_router__WEBPACK_IMPORTED_MODULE_9__["useHistory"])();
 
-  var _useState = Object(react__WEBPACK_IMPORTED_MODULE_2__["useState"])(false),
+  var _useState = Object(react__WEBPACK_IMPORTED_MODULE_2__["useState"])(null),
       _useState2 = _slicedToArray(_useState, 2),
-      hovered = _useState2[0],
-      setHovered = _useState2[1];
+      selectedCategory = _useState2[0],
+      setSelectedCategory = _useState2[1];
 
-  var _useState3 = Object(react__WEBPACK_IMPORTED_MODULE_2__["useState"])([]),
+  var _useState3 = Object(react__WEBPACK_IMPORTED_MODULE_2__["useState"])(false),
       _useState4 = _slicedToArray(_useState3, 2),
-      filteredProducts = _useState4[0],
-      setFilteredProducts = _useState4[1];
+      hovered = _useState4[0],
+      setHovered = _useState4[1];
+
+  var _useState5 = Object(react__WEBPACK_IMPORTED_MODULE_2__["useState"])([]),
+      _useState6 = _slicedToArray(_useState5, 2),
+      filteredProducts = _useState6[0],
+      setFilteredProducts = _useState6[1];
+
+  var _useState7 = Object(react__WEBPACK_IMPORTED_MODULE_2__["useState"])([]),
+      _useState8 = _slicedToArray(_useState7, 2),
+      searchedProducts = _useState8[0],
+      setSearchedProducts = _useState8[1];
 
   var _useMediaQuery = Object(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["useMediaQuery"])("(max-width: 1100px)"),
       _useMediaQuery2 = _slicedToArray(_useMediaQuery, 1),
@@ -198244,20 +198296,25 @@ var Navbar = function Navbar(_ref) {
 
   var btnRef = react__WEBPACK_IMPORTED_MODULE_2___default.a.useRef();
 
-  var _useState5 = Object(react__WEBPACK_IMPORTED_MODULE_2__["useState"])(false),
-      _useState6 = _slicedToArray(_useState5, 2),
-      changeDrawer = _useState6[0],
-      setChangeDrawer = _useState6[1];
-
-  var _useState7 = Object(react__WEBPACK_IMPORTED_MODULE_2__["useState"])(false),
-      _useState8 = _slicedToArray(_useState7, 2),
-      loading = _useState8[0],
-      setLoading = _useState8[1];
-
-  var _useState9 = Object(react__WEBPACK_IMPORTED_MODULE_2__["useState"])(""),
+  var _useState9 = Object(react__WEBPACK_IMPORTED_MODULE_2__["useState"])(false),
       _useState10 = _slicedToArray(_useState9, 2),
-      query = _useState10[0],
-      setQuery = _useState10[1];
+      changeDrawer = _useState10[0],
+      setChangeDrawer = _useState10[1];
+
+  var _useState11 = Object(react__WEBPACK_IMPORTED_MODULE_2__["useState"])(false),
+      _useState12 = _slicedToArray(_useState11, 2),
+      loading = _useState12[0],
+      setLoading = _useState12[1];
+
+  var _useState13 = Object(react__WEBPACK_IMPORTED_MODULE_2__["useState"])(""),
+      _useState14 = _slicedToArray(_useState13, 2),
+      query = _useState14[0],
+      setQuery = _useState14[1];
+
+  Object(react__WEBPACK_IMPORTED_MODULE_2__["useEffect"])(function () {
+    setQuery("");
+    if (products.length) setFilteredProducts(products);
+  }, [products]);
 
   var handleClose = function handleClose() {
     setChangeDrawer(false);
@@ -198265,7 +198322,7 @@ var Navbar = function Navbar(_ref) {
   };
 
   var handleSubmit = function handleSubmit() {
-    if (query.length > 0) history.push("/shop/?q=" + query);
+    if (query.length > 0) history.push("/shop/?q=" + query + "&cat=" + (selectedCategory !== null ? categories[selectedCategory].title : ""));
   };
 
   var handleKeyDown = function handleKeyDown(event) {
@@ -198278,8 +198335,24 @@ var Navbar = function Navbar(_ref) {
     setLoading(true);
     var q = e.target.value;
     setQuery(q);
-    var filtered = Object(_utilities__WEBPACK_IMPORTED_MODULE_13__["searchQuery"])(products, q);
-    setFilteredProducts(q.length > 0 ? filtered : []);
+    handleSearch(q);
+  };
+
+  var handleFilterProducts = function handleFilterProducts(index) {
+    setLoading(true);
+    setSelectedCategory(index);
+    var fp = [];
+    if (index !== null) fp = products.filter(function (p) {
+      return p.category === categories[index].title;
+    });else fp = products;
+    setFilteredProducts(fp);
+    handleSearch(query, fp);
+  };
+
+  var handleSearch = function handleSearch(q) {
+    var fp = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : filteredProducts;
+    var filtered = Object(_utilities__WEBPACK_IMPORTED_MODULE_13__["searchQuery"])(fp, q);
+    setSearchedProducts(q.length > 0 ? filtered : []);
     setTimeout(function () {
       return setLoading(false);
     }, 0);
@@ -198441,8 +198514,10 @@ var Navbar = function Navbar(_ref) {
     isLazy: true
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["MenuButton"], {
     as: _chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Button"],
-    rightIcon: /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_icons__WEBPACK_IMPORTED_MODULE_0__["ChevronDownIcon"], null),
-    minW: "125px",
+    rightIcon: /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_icons__WEBPACK_IMPORTED_MODULE_0__["ChevronDownIcon"], {
+      ml: "10px"
+    }),
+    minW: "180px",
     color: "gray",
     textTransform: "initial",
     fontSize: "14px ",
@@ -198450,18 +198525,33 @@ var Navbar = function Navbar(_ref) {
     bg: "transparent !important",
     _hover: {
       color: "#000 !important"
-    }
-  }, "All Category"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["MenuList"], {
-    height: "300px",
+    },
+    p: "0 10px !important"
+  }, selectedCategory !== null ? categories[selectedCategory].title : "All Categories"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["MenuList"], {
+    maxH: "300px",
     overflowY: "scroll",
     className: "scrollable"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["MenuItem"], {
-    color: "gray"
-  }, "New Window"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["MenuItem"], {
-    color: "gray"
-  }, "Open Closed Tab"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["MenuItem"], {
-    color: "gray"
-  }, "Open File"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Divider"], {
+    color: "gray",
+    _hover: {
+      color: "var(--chakra-colors-secondary) !important"
+    },
+    onClick: function onClick() {
+      return handleFilterProducts(null);
+    }
+  }, "All Categories"), categories.map(function (_ref4, index) {
+    var title = _ref4.title;
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["MenuItem"], {
+      color: "gray",
+      _hover: {
+        color: "var(--chakra-colors-secondary) !important"
+      },
+      key: index,
+      onClick: function onClick() {
+        return handleFilterProducts(index);
+      }
+    }, title);
+  }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Divider"], {
     orientation: "vertical",
     height: "15px",
     color: "lightgray"
@@ -198485,7 +198575,7 @@ var Navbar = function Navbar(_ref) {
         color: "var(--chakra-colors-secondary)"
       }
     })
-  })), filteredProducts && filteredProducts.length > 0 && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["VStack"], {
+  })), searchedProducts && searchedProducts.length > 0 && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["VStack"], {
     bgColor: "#fff",
     pos: "absolute",
     overflowY: "scroll",
@@ -198503,7 +198593,7 @@ var Navbar = function Navbar(_ref) {
     })
   }, loading ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Spinner"], {
     color: "secondary"
-  }) : filteredProducts.map(function (product, index) {
+  }) : searchedProducts.map(function (product, index) {
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_ProductCardRowSmall__WEBPACK_IMPORTED_MODULE_10__["default"], {
       product: product,
       query: query,
@@ -198646,9 +198736,9 @@ var Navbar = function Navbar(_ref) {
     right: "0",
     className: "navMenu-page",
     zIndex: "999"
-  }, headings.map(function (_ref4, index) {
-    var title = _ref4.title,
-        content = _ref4.content;
+  }, headings.map(function (_ref5, index) {
+    var title = _ref5.title,
+        content = _ref5.content;
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Box"], {
       w: "100%",
       key: index
@@ -198662,9 +198752,9 @@ var Navbar = function Navbar(_ref) {
       className: "line"
     }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Divider"], {
       borderColor: "#66666663"
-    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["List"], null, content.map(function (_ref5, index) {
-      var title = _ref5.title,
-          url = _ref5.url;
+    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["List"], null, content.map(function (_ref6, index) {
+      var title = _ref6.title,
+          url = _ref6.url;
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["ListItem"], {
         key: index,
         m: "15px 0"
@@ -198745,8 +198835,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 
-
-var PriceRange = function PriceRange(_ref) {
+var PriceRange = /*#__PURE__*/Object(react__WEBPACK_IMPORTED_MODULE_3__["forwardRef"])(function (_ref, ref) {
   var setLoading = _ref.setLoading,
       data = _ref.data,
       setPriceRange = _ref.setPriceRange,
@@ -198792,6 +198881,13 @@ var PriceRange = function PriceRange(_ref) {
     setLoading(false);
   };
 
+  Object(react__WEBPACK_IMPORTED_MODULE_3__["useImperativeHandle"])(ref, function () {
+    return {
+      resetRange: function resetRange() {
+        setValue(range);
+      }
+    };
+  });
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_3___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Box"], {
     m: margin
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_3___default.a.createElement(rc_slider__WEBPACK_IMPORTED_MODULE_2__["Range"], {
@@ -198821,7 +198917,7 @@ var PriceRange = function PriceRange(_ref) {
     fontSize: fontSize,
     mt: "20px"
   }, "Range: \xA3", value[0], " - \xA3", value[1]));
-};
+});
 
 var SliderHandle = function SliderHandle(_ref2) {
   var height = _ref2.height,
@@ -199648,7 +199744,9 @@ var Sorter = function Sorter(_ref) {
     p: "0px 10px !important",
     borderColor: bColor,
     rightIcon: /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_3___default.a.createElement(_chakra_ui_icons__WEBPACK_IMPORTED_MODULE_1__["ChevronDownIcon"], null)
-  }, sortingOptions[sortBy]), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_3___default.a.createElement(_chakra_ui_menu__WEBPACK_IMPORTED_MODULE_2__["MenuList"], null, sortingOptions.map(function (option, index) {
+  }, sortingOptions[sortBy]), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_3___default.a.createElement(_chakra_ui_menu__WEBPACK_IMPORTED_MODULE_2__["MenuList"], {
+    zIndex: "999"
+  }, sortingOptions.map(function (option, index) {
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_3___default.a.createElement(_chakra_ui_menu__WEBPACK_IMPORTED_MODULE_2__["MenuItem"], {
       key: index,
       _hover: {
@@ -199691,19 +199789,21 @@ var handleSortBy = function handleSortBy(index, setSortBy, setFilteredProducts, 
 /*!***********************************!*\
   !*** ./resources/js/constants.js ***!
   \***********************************/
-/*! exports provided: MONTHS, SET_PRODUCTS, SET_PAGE, HOME_PAGE, SHOW_SEARCH, MAPS_API_KEY */
+/*! exports provided: MONTHS, SET_PRODUCTS, SET_CATEGORIES, SET_PAGE, HOME_PAGE, SHOW_SEARCH, MAPS_API_KEY */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MONTHS", function() { return MONTHS; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SET_PRODUCTS", function() { return SET_PRODUCTS; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SET_CATEGORIES", function() { return SET_CATEGORIES; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SET_PAGE", function() { return SET_PAGE; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "HOME_PAGE", function() { return HOME_PAGE; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SHOW_SEARCH", function() { return SHOW_SEARCH; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MAPS_API_KEY", function() { return MAPS_API_KEY; });
 var MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 var SET_PRODUCTS = "SET_PRODUCTS";
+var SET_CATEGORIES = "SET_CATEGORIES";
 var SET_PAGE = "SET_PAGE";
 var HOME_PAGE = "HOME_PAGE";
 var SHOW_SEARCH = "SHOW_SEARCH";
@@ -202082,14 +202182,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
 /* harmony import */ var _components_ProductCardColumn__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../../components/ProductCardColumn */ "./resources/js/components/ProductCardColumn/index.js");
 /* harmony import */ var _components_PriceRange__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../../components/PriceRange */ "./resources/js/components/PriceRange/index.js");
-function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
-
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-
-function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
-
-function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
-
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -202114,16 +202206,18 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 
-var categories = ["Audio & Home", "Camera & Photo", "Hello & mellow"];
 
 var mapStateToProps = function mapStateToProps(state) {
   return {
-    products: state.products
+    products: state.products,
+    categories: state.categories
   };
 };
 
 var Products = function Products(_ref) {
-  var products = _ref.products;
+  var products = _ref.products,
+      categories = _ref.categories;
+  var rangeRef = Object(react__WEBPACK_IMPORTED_MODULE_1__["useRef"])();
 
   var _useState = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])(0),
       _useState2 = _slicedToArray(_useState, 2),
@@ -202135,29 +202229,20 @@ var Products = function Products(_ref) {
       value = _useState4[0],
       setValue = _useState4[1];
 
-  var _useState5 = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])(Array.from({
-    length: categories.length
-  }, function () {
-    return false;
-  })),
+  var _useState5 = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])(null),
       _useState6 = _slicedToArray(_useState5, 2),
-      checkedItems = _useState6[0],
-      setCheckedItems = _useState6[1];
+      activeCategory = _useState6[0],
+      setActiveCategory = _useState6[1];
 
   var _useState7 = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])([]),
       _useState8 = _slicedToArray(_useState7, 2),
-      checkedCategories = _useState8[0],
-      setCheckedCategories = _useState8[1];
+      filteredProducts = _useState8[0],
+      setFilteredProducts = _useState8[1];
 
-  var _useState9 = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])([]),
+  var _useState9 = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])(false),
       _useState10 = _slicedToArray(_useState9, 2),
-      filteredProducts = _useState10[0],
-      setFilteredProducts = _useState10[1];
-
-  var _useState11 = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])(false),
-      _useState12 = _slicedToArray(_useState11, 2),
-      loading = _useState12[0],
-      setLoading = _useState12[1];
+      loading = _useState10[0],
+      setLoading = _useState10[1];
 
   var _useDisclosure = Object(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["useDisclosure"])(),
       isOpen = _useDisclosure.isOpen,
@@ -202172,48 +202257,31 @@ var Products = function Products(_ref) {
   }, [products]);
 
   var handleFilter = function handleFilter(v) {
-    var checkedFilters = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : checkedItems;
-    var checked = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : checkedCategories;
+    var index = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+    setLoading(true);
+
+    if (index !== null) {
+      setActiveCategory(index === activeCategory ? null : index);
+    }
+
     var fp = products.filter(function (product) {
       return Object(_utilities__WEBPACK_IMPORTED_MODULE_8__["getFinalPrice"])(product) >= v[0] && Object(_utilities__WEBPACK_IMPORTED_MODULE_8__["getFinalPrice"])(product) <= v[1];
     });
-    fp = checkedFilters.every(function (item) {
-      return !item;
-    }) ? fp : fp.filter(function (product) {
-      return product.categories.some(function (cat) {
-        return checked.includes(cat);
-      });
+    fp = index === activeCategory ? fp : fp.filter(function (product) {
+      return product.category === categories[index === null ? activeCategory : index].title;
     });
+    console.log(index);
+    console.log(activeCategory);
     Object(_components_Sorter__WEBPACK_IMPORTED_MODULE_7__["handleSortBy"])(sortBy, setSortBy, setFilteredProducts, fp);
     setTimeout(function () {
       return setLoading(false);
     }, 0);
   };
 
-  var handleFilterPrice = function handleFilterPrice(v) {
-    setLoading(true);
-    handleFilter(v);
-  };
-
-  var handleFilterCategories = function handleFilterCategories(e, index, category) {
-    setLoading(true);
-    var checkedFilters = [].concat(_toConsumableArray(checkedItems.slice(0, index)), [e.target.checked], _toConsumableArray(checkedItems.slice(index + 1)));
-    setCheckedItems(checkedFilters);
-    var checked = e.target.checked ? [].concat(_toConsumableArray(checkedCategories), [category]) : checkedCategories.filter(function (cat) {
-      return cat !== category;
-    });
-    setCheckedCategories(checked);
-    handleFilter(value, checkedFilters, checked);
-  };
-
   var handleReset = function handleReset() {
     setLoading(true);
-    setValue([range[0], range[1]]);
-    setCheckedItems(Array.from({
-      length: categories.length
-    }, function () {
-      return false;
-    }));
+    rangeRef.current.resetRange();
+    setActiveCategory(null);
     setFilteredProducts(products);
     setLoading(false);
   };
@@ -202280,18 +202348,19 @@ var Products = function Products(_ref) {
     },
     columnGap: 10,
     rowGap: 2
-  }, categories.map(function (category, index) {
+  }, categories.map(function (_ref2, index) {
+    var title = _ref2.title;
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Checkbox"], {
       key: index,
-      isChecked: checkedItems[index],
+      isChecked: activeCategory === index,
       spacing: 4,
       colorScheme: "red",
       icon: /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_icons__WEBPACK_IMPORTED_MODULE_3__["AddIcon"], null),
       color: "blackAlpha.700",
-      onChange: function onChange(e) {
-        return handleFilterCategories(e, index, category);
+      onChange: function onChange() {
+        return handleFilter(value, index);
       }
-    }, category);
+    }, title);
   }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Box"], {
     minW: {
       lg: "500px"
@@ -202305,10 +202374,11 @@ var Products = function Products(_ref) {
     as: "h6",
     className: "filterHeading"
   }, "Choose Price"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_components_PriceRange__WEBPACK_IMPORTED_MODULE_11__["default"], {
+    ref: rangeRef,
     setLoading: setLoading,
     data: products,
     setPriceRange: setValue,
-    handleFilter: handleFilterPrice
+    handleFilter: handleFilter
   })))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Button"], {
     bg: "secondary",
     color: "#fff",
@@ -202790,7 +202860,7 @@ var in_product = {
   qty: 10,
   price: 46.0,
   discount: 25,
-  categories: ["Cookies"],
+  category: "Cookies",
   created_at: "2021/01/01",
   coupon: null,
   tags: ["Cookies", "Bakery", "Food"]
@@ -203023,7 +203093,7 @@ var Product = function Product(_ref) {
     py: "5px"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("b", null, "SKU:"), " U", product.id), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Text"], {
     py: "5px"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("b", null, "Categories:"), " ", product.categories.join(", ")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Text"], {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("b", null, "Category:"), " ", product.category), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Text"], {
     py: "5px"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("b", null, "Tags:"), " ", product.tags.join(", ")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["HStack"], {
     py: "5px"
@@ -203077,11 +203147,7 @@ var Product = function Product(_ref) {
       lg: 5
     }
   }, [].concat(_toConsumableArray(products.filter(function (p) {
-    return p.categories.some(function (cat) {
-      return product.categories.map(function (c) {
-        return c.toLowerCase();
-      }).includes(cat.toLowerCase());
-    });
+    return p.category === product.category;
   })), _toConsumableArray(products)).slice(0, 5).map(function (p, index) {
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_components_ProductCardColumn__WEBPACK_IMPORTED_MODULE_11__["default"], {
       product: p,
@@ -203119,6 +203185,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
 /* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_10___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_10__);
 /* harmony import */ var _utilities__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../../utilities */ "./resources/js/utilities/index.js");
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -203143,24 +203217,12 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 
-var cats = [{
-  title: "Hello & Mellow",
-  products: [{
-    name: "hello"
-  }]
-}, {
-  title: "Audio & Home",
-  products: [{
-    name: "hello"
-  }, {
-    name: "hello"
-  }]
-}];
 var tags = ["meat", "vegetables", "lamb", "cake", "bakery"];
 
 var mapStateToProps = function mapStateToProps(state) {
   return {
-    products: state.products
+    products: state.products,
+    categories: state.categories
   };
 };
 
@@ -203168,51 +203230,49 @@ var options = [6, 12, 18];
 
 var Shop = function Shop(_ref) {
   var crumbs = _ref.crumbs,
-      products = _ref.products;
+      products = _ref.products,
+      categories = _ref.categories;
 
   var _useState = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])(0),
       _useState2 = _slicedToArray(_useState, 2),
       sortBy = _useState2[0],
       setSortBy = _useState2[1];
 
-  var _useState3 = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])([]),
+  var _useState3 = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])(false),
       _useState4 = _slicedToArray(_useState3, 2),
-      categories = _useState4[0],
-      setCategories = _useState4[1];
+      loading = _useState4[0],
+      setLoading = _useState4[1];
 
-  var _useState5 = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])(false),
+  var _useState5 = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])([]),
       _useState6 = _slicedToArray(_useState5, 2),
-      loading = _useState6[0],
-      setLoading = _useState6[1];
+      filteredProducts = _useState6[0],
+      setFilteredProducts = _useState6[1];
 
-  var _useState7 = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])([]),
+  var _useState7 = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])(null),
       _useState8 = _slicedToArray(_useState7, 2),
-      filteredProducts = _useState8[0],
-      setFilteredProducts = _useState8[1];
+      activeCategory = _useState8[0],
+      setActiveCategory = _useState8[1];
 
-  var _useState9 = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])(null),
+  var _useState9 = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])([]),
       _useState10 = _slicedToArray(_useState9, 2),
-      catFilter = _useState10[0],
-      setCatFilter = _useState10[1];
+      value = _useState10[0],
+      setValue = _useState10[1];
 
-  var _useState11 = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])([]),
+  var _useState11 = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])(0),
       _useState12 = _slicedToArray(_useState11, 2),
-      value = _useState12[0],
-      setValue = _useState12[1];
+      activeN = _useState12[0],
+      setActiveN = _useState12[1];
 
-  var _useState13 = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])(0),
+  var _useState13 = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])([0, options[activeN]]),
       _useState14 = _slicedToArray(_useState13, 2),
-      activeN = _useState14[0],
-      setActiveN = _useState14[1];
+      pageIndex = _useState14[0],
+      setPageIndex = _useState14[1];
 
-  var _useState15 = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])([0, options[activeN]]),
+  var _useState15 = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])([]),
       _useState16 = _slicedToArray(_useState15, 2),
-      pageIndex = _useState16[0],
-      setPageIndex = _useState16[1];
+      activeTags = _useState16[0],
+      setActiveTags = _useState16[1];
 
-  Object(react__WEBPACK_IMPORTED_MODULE_1__["useEffect"])(function () {
-    setCategories(cats);
-  }, []);
   Object(react__WEBPACK_IMPORTED_MODULE_1__["useEffect"])(function () {
     if (products.length) {
       setLoading(true);
@@ -203223,25 +203283,39 @@ var Shop = function Shop(_ref) {
 
   var handleFilter = function handleFilter(v) {
     var index = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+    var tags = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
     setLoading(true);
 
     if (index !== null) {
-      setCatFilter(index === catFilter ? null : index);
+      setActiveCategory(index === activeCategory ? null : index);
     }
 
     var fp = products.filter(function (product) {
       return Object(_utilities__WEBPACK_IMPORTED_MODULE_11__["getFinalPrice"])(product) >= v[0] && Object(_utilities__WEBPACK_IMPORTED_MODULE_11__["getFinalPrice"])(product) <= v[1];
     });
-    console.log(index);
-    fp = index === catFilter || index === null ? fp : fp.filter(function (product) {
-      return product.categories.some(function (cat) {
-        return cat === categories[index].title;
+    fp = index === activeCategory ? fp : fp.filter(function (product) {
+      return product.category === categories[index === null ? activeCategory : index].title;
+    });
+    fp = tags === null && !activeTags.length || tags && !tags.length ? fp : fp.filter(function (product) {
+      return product.tags.some(function (t) {
+        tags = tags === null ? activeTags : tags;
+        return tags.map(function (tag) {
+          return tag.toLowerCase();
+        }).includes(t.toLowerCase());
       });
     });
     Object(_components_Sorter__WEBPACK_IMPORTED_MODULE_6__["handleSortBy"])(sortBy, setSortBy, setFilteredProducts, fp);
     setTimeout(function () {
       return setLoading(false);
     }, 0);
+  };
+
+  var handleTagFilter = function handleTagFilter(tag) {
+    var tags = activeTags.includes(tag) ? activeTags.filter(function (t) {
+      return t !== tag;
+    }) : [].concat(_toConsumableArray(activeTags), [tag]);
+    setActiveTags(tags);
+    handleFilter(value, activeCategory, tags);
   };
 
   var handleChangeProductN = function handleChangeProductN(index) {
@@ -203292,7 +203366,7 @@ var Shop = function Shop(_ref) {
       key: index,
       fontSize: "md",
       cursor: "pointer",
-      color: catFilter === index ? "secondary" : "gray",
+      color: activeCategory === index ? "secondary" : "gray",
       _hover: {
         color: "red"
       },
@@ -203329,13 +203403,18 @@ var Shop = function Shop(_ref) {
     mb: "20px"
   }), tags.map(function (tag, index) {
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Button"], {
+      onClick: function onClick() {
+        return handleTagFilter(tag);
+      },
       variant: "outline",
       key: index,
       fontSize: "sm",
       p: "0 20px !important",
       m: "0 10px 10px 0",
-      color: "gray",
-      borderColor: "gray"
+      color: activeTags.includes(tag) ? "#fff" : "gray",
+      borderColor: activeTags.includes(tag) ? "secondary" : "gray",
+      background: activeTags.includes(tag) ? "secondary" : "transparent",
+      className: "ignoreHover"
     }, tag);
   }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Box"], {
     w: "100%"
@@ -203415,7 +203494,7 @@ var Shop = function Shop(_ref) {
     breakLabel: "...",
     initialPage: 0,
     breakClassName: "breakPagination",
-    pageCount: Object(lodash__WEBPACK_IMPORTED_MODULE_10__["ceil"])(products.length / options[activeN]),
+    pageCount: Object(lodash__WEBPACK_IMPORTED_MODULE_10__["ceil"])(filteredProducts.length / options[activeN]),
     marginPagesDisplayed: 2,
     pageRangeDisplayed: 5,
     onPageChange: handlePageClick,
@@ -204023,16 +204102,45 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var redux__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! redux */ "./node_modules/redux/es/redux.js");
 /* harmony import */ var _setProducts__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./setProducts */ "./resources/js/reducers/setProducts.js");
 /* harmony import */ var _setPage__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./setPage */ "./resources/js/reducers/setPage.js");
-/* harmony import */ var _showSearch__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./showSearch */ "./resources/js/reducers/showSearch.js");
+/* harmony import */ var _setCategories__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./setCategories */ "./resources/js/reducers/setCategories.js");
+/* harmony import */ var _showSearch__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./showSearch */ "./resources/js/reducers/showSearch.js");
+
 
 
 
 
 /* harmony default export */ __webpack_exports__["default"] = (Object(redux__WEBPACK_IMPORTED_MODULE_0__["combineReducers"])({
   products: _setProducts__WEBPACK_IMPORTED_MODULE_1__["default"],
+  categories: _setCategories__WEBPACK_IMPORTED_MODULE_3__["default"],
   page: _setPage__WEBPACK_IMPORTED_MODULE_2__["default"],
-  showSearch: _showSearch__WEBPACK_IMPORTED_MODULE_3__["default"]
+  showSearch: _showSearch__WEBPACK_IMPORTED_MODULE_4__["default"]
 }));
+
+/***/ }),
+
+/***/ "./resources/js/reducers/setCategories.js":
+/*!************************************************!*\
+  !*** ./resources/js/reducers/setCategories.js ***!
+  \************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../constants */ "./resources/js/constants.js");
+
+/* harmony default export */ __webpack_exports__["default"] = (function () {
+  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+  var action = arguments.length > 1 ? arguments[1] : undefined;
+
+  switch (action.type) {
+    case _constants__WEBPACK_IMPORTED_MODULE_0__["SET_CATEGORIES"]:
+      return action.payload;
+
+    default:
+      return state;
+  }
+});
 
 /***/ }),
 

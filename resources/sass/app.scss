@@ -197,3 +197,11 @@ body {
 .disabledPagination {
     display: none;
 }
+
+@media (hover: none) {
+    .ignoreHover {
+        background: "transparent !important";
+        color: "gray !important";
+        border-color: "gray !important";
+    }
+}

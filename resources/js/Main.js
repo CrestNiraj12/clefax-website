@@ -1,10 +1,10 @@
 import axios from "axios";
-import React, { Fragment, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { Switch, Route, useLocation } from "react-router-dom";
 import Footer from "./components/Footer";
 import ScrollToTopButton from "./components/ScrollToTopButton";
-import { setPage, setProducts } from "./actions";
+import { setPage, setProducts, setCategories } from "./actions";
 import routes from "./routes";
 import { useMediaQuery } from "@chakra-ui/media-query";
 import Navbar from "./components/Navbar";
@@ -14,7 +14,8 @@ import Cookies from "../images/cookies.png";
 
 const mapDispatchToProps = dispatch => ({
     setProducts: products => dispatch(setProducts(products)),
-    setPage: page => dispatch(setPage(page))
+    setPage: page => dispatch(setPage(page)),
+    setCategories: category => dispatch(setCategories(category))
 });
 
 const mapStateToProps = state => ({
@@ -33,7 +34,8 @@ const products = [
         url: "/shop/product-title-1",
         price: 46.0,
         discount: 25,
-        categories: ["Hello & mellow"],
+        category: "Hello & Mellow",
+        tags: ["meat", "poultry"],
         created_at: "2021/01/01"
     },
     {
@@ -47,7 +49,8 @@ const products = [
         url: "/shop/product-title-1",
         price: 100.0,
         discount: 13,
-        categories: ["Audio & Home"],
+        category: "Audio & Home",
+        tags: ["meat", "lamb"],
         created_at: "2022/01/01"
     },
     {
@@ -61,7 +64,8 @@ const products = [
         url: "/shop/product-title-1",
         price: 46.0,
         discount: 13,
-        categories: ["Hello & mellow"],
+        category: "Hello & Mellow",
+        tags: ["vegetables"],
         created_at: "2021/01/01"
     },
     {
@@ -74,7 +78,8 @@ const products = [
         rating: 4,
         url: "/shop/product-title-1",
         price: 46.0,
-        categories: ["Hello & mellow"],
+        category: "Hello & Mellow",
+        tags: ["vegetables"],
         created_at: "2021/02/01"
     },
     {
@@ -87,7 +92,8 @@ const products = [
         rating: 3.86,
         url: "/shop/product-title-1",
         price: 46.0,
-        categories: ["Hello & mellow"],
+        category: "Hello & Mellow",
+        tags: ["meat"],
         created_at: "2021/01/01"
     },
     {
@@ -101,7 +107,8 @@ const products = [
         url: "/shop/product-title-1",
         price: 46.0,
         discount: 13,
-        categories: ["Hello & mellow"],
+        category: "Hello & Mellow",
+        tags: ["cake"],
         created_at: "2021/01/01"
     },
     {
@@ -115,7 +122,8 @@ const products = [
         url: "/shop/product-title-1",
         price: 46.0,
         discount: 13,
-        categories: ["Camera & Photo", "Hello & mellow"],
+        category: "Camera & Photo",
+        tags: ["chocolate"],
         created_at: "2021/01/02"
     },
     {
@@ -128,12 +136,22 @@ const products = [
         rating: 4,
         url: "/shop/product-title-1",
         price: 46.0,
-        categories: ["Hello & mellow"],
+        category: "Hello & Mellow",
+        tags: ["vegetables"],
         created_at: "2021/01/01"
     }
 ];
 
-const Main = ({ setProducts, setPage, page, showSearch }) => {
+const categories = [
+    { title: "Hello & Mellow", products: [{ name: "hello" }] },
+    { title: "Audio & Home", products: [{ name: "hello" }, { name: "hello" }] },
+    {
+        title: "Camera & Photo",
+        products: [{ name: "hello" }, { name: "hello" }]
+    }
+];
+
+const Main = ({ setProducts, setPage, page, showSearch, setCategories }) => {
     const location = useLocation();
     const [desktop] = useMediaQuery("(min-width: 1100px)");
     const [showScrollBtn, setShowScrollBtn] = useState(false);
@@ -148,6 +166,7 @@ const Main = ({ setProducts, setPage, page, showSearch }) => {
             .then((res) => setProducts(res.data))
             .catch((err) => console.log(err));*/
         setProducts(products);
+        setCategories(categories);
     }, []);
 
     useEffect(() => {

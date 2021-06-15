@@ -12,7 +12,7 @@ import {
     Stack,
     useDisclosure
 } from "@chakra-ui/react";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "rc-slider/assets/index.css";
 import { AddIcon } from "@chakra-ui/icons";
 import { BiX, BiSliderAlt } from "react-icons/bi";
@@ -26,19 +26,16 @@ import ProductCardColumn, {
 } from "../../components/ProductCardColumn";
 import PriceRange from "../../components/PriceRange";
 
-const categories = ["Audio & Home", "Camera & Photo", "Hello & mellow"];
-
 const mapStateToProps = state => ({
-    products: state.products
+    products: state.products,
+    categories: state.categories
 });
 
-const Products = ({ products }) => {
+const Products = ({ products, categories }) => {
+    const rangeRef = useRef();
     const [sortBy, setSortBy] = useState(0);
     const [value, setValue] = useState([0, 1000]);
-    const [checkedItems, setCheckedItems] = useState(
-        Array.from({ length: categories.length }, () => false)
-    );
-    const [checkedCategories, setCheckedCategories] = useState([]);
+    const [activeCategory, setActiveCategory] = useState(null);
     const [filteredProducts, setFilteredProducts] = useState([]);
     const [loading, setLoading] = useState(false);
     const { isOpen, onToggle } = useDisclosure();
@@ -51,51 +48,35 @@ const Products = ({ products }) => {
         }
     }, [products]);
 
-    const handleFilter = (
-        v,
-        checkedFilters = checkedItems,
-        checked = checkedCategories
-    ) => {
+    const handleFilter = (v, index = null) => {
+        setLoading(true);
+        if (index !== null) {
+            setActiveCategory(index === activeCategory ? null : index);
+        }
+
         var fp = products.filter(
             product =>
                 getFinalPrice(product) >= v[0] && getFinalPrice(product) <= v[1]
         );
-        fp = checkedFilters.every(item => !item)
-            ? fp
-            : fp.filter(product =>
-                  product.categories.some(cat => checked.includes(cat))
-              );
+        fp =
+            index === activeCategory
+                ? fp
+                : fp.filter(
+                      product =>
+                          product.category ===
+                          categories[index === null ? activeCategory : index]
+                              .title
+                  );
+        console.log(index);
+        console.log(activeCategory);
         handleSortBy(sortBy, setSortBy, setFilteredProducts, fp);
         setTimeout(() => setLoading(false), 0);
     };
 
-    const handleFilterPrice = v => {
-        setLoading(true);
-        handleFilter(v);
-    };
-
-    const handleFilterCategories = (e, index, category) => {
-        setLoading(true);
-        const checkedFilters = [
-            ...checkedItems.slice(0, index),
-            e.target.checked,
-            ...checkedItems.slice(index + 1)
-        ];
-
-        setCheckedItems(checkedFilters);
-        const checked = e.target.checked
-            ? [...checkedCategories, category]
-            : checkedCategories.filter(cat => cat !== category);
-
-        setCheckedCategories(checked);
-
-        handleFilter(value, checkedFilters, checked);
-    };
-
     const handleReset = () => {
         setLoading(true);
-        setValue([range[0], range[1]]);
-        setCheckedItems(Array.from({ length: categories.length }, () => false));
+        rangeRef.current.resetRange();
+        setActiveCategory(null);
         setFilteredProducts(products);
         setLoading(false);
     };
@@ -162,23 +143,21 @@ const Products = ({ products }) => {
                                         columnGap={10}
                                         rowGap={2}
                                     >
-                                        {categories.map((category, index) => (
+                                        {categories.map(({ title }, index) => (
                                             <Checkbox
                                                 key={index}
-                                                isChecked={checkedItems[index]}
+                                                isChecked={
+                                                    activeCategory === index
+                                                }
                                                 spacing={4}
                                                 colorScheme="red"
                                                 icon={<AddIcon />}
                                                 color="blackAlpha.700"
-                                                onChange={e =>
-                                                    handleFilterCategories(
-                                                        e,
-                                                        index,
-                                                        category
-                                                    )
+                                                onChange={() =>
+                                                    handleFilter(value, index)
                                                 }
                                             >
-                                                {category}
+                                                {title}
                                             </Checkbox>
                                         ))}
                                     </SimpleGrid>
@@ -196,10 +175,11 @@ const Products = ({ products }) => {
                                         Choose Price
                                     </Heading>
                                     <PriceRange
+                                        ref={rangeRef}
                                         setLoading={setLoading}
                                         data={products}
                                         setPriceRange={setValue}
-                                        handleFilter={handleFilterPrice}
+                                        handleFilter={handleFilter}
                                     />
                                 </Box>
                             </Stack>

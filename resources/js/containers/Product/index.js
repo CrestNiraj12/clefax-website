@@ -50,7 +50,7 @@ const in_product = {
     qty: 10,
     price: 46.0,
     discount: 25,
-    categories: ["Cookies"],
+    category: "Cookies",
     created_at: "2021/01/01",
     coupon: null,
     tags: ["Cookies", "Bakery", "Food"]
@@ -332,8 +332,7 @@ const Product = ({ match, crumbs, products }) => {
                                         <b>SKU:</b> U{product.id}
                                     </Text>
                                     <Text py="5px">
-                                        <b>Categories:</b>{" "}
-                                        {product.categories.join(", ")}
+                                        <b>Category:</b> {product.category}
                                     </Text>
                                     <Text py="5px">
                                         <b>Tags:</b> {product.tags.join(", ")}
@@ -403,12 +402,8 @@ const Product = ({ match, crumbs, products }) => {
                     columns={{ base: 1, sm: 2, md: 3, lg: 5 }}
                 >
                     {[
-                        ...products.filter(p =>
-                            p.categories.some(cat =>
-                                product.categories
-                                    .map(c => c.toLowerCase())
-                                    .includes(cat.toLowerCase())
-                            )
+                        ...products.filter(
+                            p => p.category === product.category
                         ),
                         ...products
                     ]

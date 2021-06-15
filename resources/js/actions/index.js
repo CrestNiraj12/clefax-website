@@ -1,8 +1,18 @@
-import { SET_PAGE, SET_PRODUCTS, SHOW_SEARCH } from "../constants";
+import {
+    SET_CATEGORIES,
+    SET_PAGE,
+    SET_PRODUCTS,
+    SHOW_SEARCH
+} from "../constants";
 
 export const setProducts = products => ({
     type: SET_PRODUCTS,
     payload: products
+});
+
+export const setCategories = categories => ({
+    type: SET_CATEGORIES,
+    payload: categories
 });
 
 export const setPage = page => ({

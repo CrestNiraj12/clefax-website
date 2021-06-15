@@ -34,7 +34,7 @@ const Sorter = ({
             >
                 {sortingOptions[sortBy]}
             </MenuButton>
-            <MenuList>
+            <MenuList zIndex="999">
                 {sortingOptions.map((option, index) => (
                     <MenuItem
                         key={index}

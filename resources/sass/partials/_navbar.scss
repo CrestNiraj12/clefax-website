@@ -1,4 +1,5 @@
 .link {
+    cursor: pointer;
     &:hover {
         color: var(--chakra-colors-secondary) !important;
         background: transparent !important;

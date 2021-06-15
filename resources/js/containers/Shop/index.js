@@ -28,32 +28,24 @@ import { ChevronRightIcon } from "@chakra-ui/icons";
 import { ceil } from "lodash";
 import { getFinalPrice } from "../../utilities";
 
-const cats = [
-    { title: "Hello & Mellow", products: [{ name: "hello" }] },
-    { title: "Audio & Home", products: [{ name: "hello" }, { name: "hello" }] }
-];
-
 const tags = ["meat", "vegetables", "lamb", "cake", "bakery"];
 
 const mapStateToProps = state => ({
-    products: state.products
+    products: state.products,
+    categories: state.categories
 });
 
 const options = [6, 12, 18];
 
-const Shop = ({ crumbs, products }) => {
+const Shop = ({ crumbs, products, categories }) => {
     const [sortBy, setSortBy] = useState(0);
-    const [categories, setCategories] = useState([]);
     const [loading, setLoading] = useState(false);
     const [filteredProducts, setFilteredProducts] = useState([]);
-    const [catFilter, setCatFilter] = useState(null);
+    const [activeCategory, setActiveCategory] = useState(null);
     const [value, setValue] = useState([]);
     const [activeN, setActiveN] = useState(0);
     const [pageIndex, setPageIndex] = useState([0, options[activeN]]);
-
-    useEffect(() => {
-        setCategories(cats);
-    }, []);
+    const [activeTags, setActiveTags] = useState([]);
 
     useEffect(() => {
         if (products.length) {
@@ -63,26 +55,47 @@ const Shop = ({ crumbs, products }) => {
         }
     }, [products]);
 
-    const handleFilter = (v, index = null) => {
+    const handleFilter = (v, index = null, tags = null) => {
         setLoading(true);
+
         if (index !== null) {
-            setCatFilter(index === catFilter ? null : index);
+            setActiveCategory(index === activeCategory ? null : index);
         }
         var fp = products.filter(
             product =>
                 getFinalPrice(product) >= v[0] && getFinalPrice(product) <= v[1]
         );
-        console.log(index);
         fp =
-            index === catFilter || index === null
+            index === activeCategory
+                ? fp
+                : fp.filter(
+                      product =>
+                          product.category ===
+                          categories[index === null ? activeCategory : index]
+                              .title
+                  );
+
+        fp =
+            (tags === null && !activeTags.length) || (tags && !tags.length)
                 ? fp
                 : fp.filter(product =>
-                      product.categories.some(
-                          cat => cat === categories[index].title
-                      )
+                      product.tags.some(t => {
+                          tags = tags === null ? activeTags : tags;
+                          return tags
+                              .map(tag => tag.toLowerCase())
+                              .includes(t.toLowerCase());
+                      })
                   );
         handleSortBy(sortBy, setSortBy, setFilteredProducts, fp);
         setTimeout(() => setLoading(false), 0);
+    };
+
+    const handleTagFilter = tag => {
+        const tags = activeTags.includes(tag)
+            ? activeTags.filter(t => t !== tag)
+            : [...activeTags, tag];
+        setActiveTags(tags);
+        handleFilter(value, activeCategory, tags);
     };
 
     const handleChangeProductN = index => {
@@ -124,7 +137,7 @@ const Shop = ({ crumbs, products }) => {
                                     fontSize="md"
                                     cursor="pointer"
                                     color={
-                                        catFilter === index
+                                        activeCategory === index
                                             ? "secondary"
                                             : "gray"
                                     }
@@ -162,13 +175,26 @@ const Shop = ({ crumbs, products }) => {
                         <Divider borderColor="#66666663" mb="20px" />
                         {tags.map((tag, index) => (
                             <Button
+                                onClick={() => handleTagFilter(tag)}
                                 variant="outline"
                                 key={index}
                                 fontSize="sm"
                                 p="0 20px !important"
                                 m="0 10px 10px 0"
-                                color="gray"
-                                borderColor="gray"
+                                color={
+                                    activeTags.includes(tag) ? "#fff" : "gray"
+                                }
+                                borderColor={
+                                    activeTags.includes(tag)
+                                        ? "secondary"
+                                        : "gray"
+                                }
+                                background={
+                                    activeTags.includes(tag)
+                                        ? "secondary"
+                                        : "transparent"
+                                }
+                                className="ignoreHover"
                             >
                                 {tag}
                             </Button>
@@ -275,7 +301,7 @@ const Shop = ({ crumbs, products }) => {
                                 initialPage={0}
                                 breakClassName="breakPagination"
                                 pageCount={ceil(
-                                    products.length / options[activeN]
+                                    filteredProducts.length / options[activeN]
                                 )}
                                 marginPagesDisplayed={2}
                                 pageRangeDisplayed={5}
