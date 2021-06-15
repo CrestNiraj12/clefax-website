@@ -7,6 +7,38 @@
 // Bootstrap
 @import "~bootstrap/scss/bootstrap";
 
+@mixin filterTransition($h) {
+    opacity: 0;
+    height: 0;
+    overflow: hidden;
+
+    &-enter {
+        opacity: 0;
+        height: 0;
+    }
+    &-enter-active {
+        opacity: 1;
+        height: $h;
+        transition: opacity 0.25s ease-in, height 0.25s ease-in-out;
+    }
+    &-enter-done {
+        opacity: 1;
+        height: $h;
+    }
+    &-exit {
+        opacity: 1;
+        height: $h;
+    }
+    &-exit-active {
+        height: 0;
+        transition: opacity 0.25s ease-in, height 0.25s ease-in-out;
+    }
+    &-exit-done {
+        opacity: 0;
+        height: 0;
+    }
+}
+
 @mixin customTransition(
     $time: 0.25s,
     $delay: 0s,
@@ -66,6 +98,7 @@
 @import "partials/home";
 @import "partials/product";
 @import "partials/checkout";
+@import "partials/vendors";
 
 html {
     scroll-behavior: smooth;
@@ -119,4 +152,48 @@ body {
     padding-inline-start: 0px !important;
     -webkit-padding-start: 0px !important;
     -webkit-padding-end: 0px !important;
+}
+
+.pagination {
+    margin: 20px 0;
+    width: 100%;
+    text-align: center;
+    justify-content: center;
+}
+
+.activePagination {
+    background-color: var(--chakra-colors-secondary);
+    color: #fff !important;
+}
+
+.defPagination,
+.nextPagination,
+.previousPagination {
+    display: flex;
+    align-items: center;
+    border: 1px solid var(--chakra-colors-lightgray);
+    color: var(--chakra-colors-gray);
+    padding: 5px 12px !important;
+    cursor: pointer;
+    margin-right: 5px;
+    font-size: var(--chakra-fontSizes-lg);
+
+    &:hover {
+        background-color: var(--chakra-colors-secondary);
+        color: #fff;
+        text-decoration: none;
+    }
+}
+
+.nextPagination,
+.previousPagination {
+    padding: 6px !important;
+}
+
+.defPagination {
+    padding: 5px 15px !important;
+}
+
+.disabledPagination {
+    display: none;
 }

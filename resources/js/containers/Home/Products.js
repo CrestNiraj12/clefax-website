@@ -2,28 +2,29 @@ import {
     Box,
     Button,
     Checkbox,
+    Collapse,
     Flex,
     Grid,
     Heading,
     Icon,
     SimpleGrid,
     Spacer,
-    Text
+    Stack,
+    useDisclosure
 } from "@chakra-ui/react";
-import { Range, Handle } from "rc-slider";
 import React, { useEffect, useState } from "react";
 import "rc-slider/assets/index.css";
 import { AddIcon } from "@chakra-ui/icons";
 import { BiX, BiSliderAlt } from "react-icons/bi";
 import "@fontsource/rubik/500.css";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
-import { floor } from "lodash";
 import Sorter, { handleSortBy } from "../../components/Sorter";
 import { getFinalPrice } from "../../utilities";
 import { connect } from "react-redux";
 import ProductCardColumn, {
     SkeletonCardColumn
 } from "../../components/ProductCardColumn";
+import PriceRange from "../../components/PriceRange";
 
 const categories = ["Audio & Home", "Camera & Photo", "Hello & mellow"];
 
@@ -32,31 +33,20 @@ const mapStateToProps = state => ({
 });
 
 const Products = ({ products }) => {
-    const [range, setRange] = useState([0, 1000]);
     const [sortBy, setSortBy] = useState(0);
     const [value, setValue] = useState([0, 1000]);
     const [checkedItems, setCheckedItems] = useState(
         Array.from({ length: categories.length }, () => false)
     );
     const [checkedCategories, setCheckedCategories] = useState([]);
-    const [showFilters, setShowFilters] = useState(false);
     const [filteredProducts, setFilteredProducts] = useState([]);
     const [loading, setLoading] = useState(false);
+    const { isOpen, onToggle } = useDisclosure();
 
     useEffect(() => {
-        if (products.length > 0) {
+        if (products.length) {
             setLoading(true);
             handleSortBy(0, setSortBy, setFilteredProducts, products);
-            const min = floor(
-                getFinalPrice(
-                    products.reduce((a, b) =>
-                        getFinalPrice(a) < getFinalPrice(b) ? a : b
-                    )
-                )
-            );
-            const max = products.reduce((a, b) => (b > a ? b : a)).price;
-            setRange([min, max]);
-            setValue([min, max]);
             setLoading(false);
         }
     }, [products]);
@@ -81,7 +71,6 @@ const Products = ({ products }) => {
 
     const handleFilterPrice = v => {
         setLoading(true);
-        setValue(v);
         handleFilter(v);
     };
 
@@ -139,22 +128,16 @@ const Products = ({ products }) => {
                         <Button
                             variant="outline"
                             className="optionBtn"
-                            rightIcon={
-                                <Icon as={showFilters ? BiX : BiSliderAlt} />
-                            }
+                            rightIcon={<Icon as={isOpen ? BiX : BiSliderAlt} />}
                             p="0px 10px !important"
-                            onClick={() => setShowFilters(!showFilters)}
+                            onClick={onToggle}
                         >
                             Filter
                         </Button>
                     </Flex>
                 </Flex>
-                <CSSTransition
-                    in={showFilters}
-                    timeout={250}
-                    classNames="filters"
-                >
-                    <Box className="filters">
+                <Collapse in={isOpen} animateOpacity>
+                    <Box>
                         <Box
                             marginY="30px"
                             borderWidth="1px"
@@ -162,19 +145,20 @@ const Products = ({ products }) => {
                             borderColor="gray.300"
                             p="50px"
                         >
-                            <Flex
+                            <Stack
                                 direction={{
                                     base: "column",
-                                    md: "column",
                                     lg: "row"
                                 }}
+                                spacing={12}
+                                justifyContent="space-between"
                             >
                                 <Box>
                                     <Heading as="h6" className="filterHeading">
                                         Choose Categories
                                     </Heading>
                                     <SimpleGrid
-                                        columns={3}
+                                        columns={{ base: 1, sm: 2, md: 3 }}
                                         columnGap={10}
                                         rowGap={2}
                                     >
@@ -199,39 +183,26 @@ const Products = ({ products }) => {
                                         ))}
                                     </SimpleGrid>
                                 </Box>
-                                <Spacer />
+
                                 <Box
-                                    minW={{ lg: "600px" }}
-                                    mt={{ base: "50px", md: "50px" }}
+                                    minW={{ lg: "500px" }}
+                                    mt={{
+                                        base: "30px !important",
+                                        md: "50px !important",
+                                        lg: "0 !important"
+                                    }}
                                 >
                                     <Heading as="h6" className="filterHeading">
                                         Choose Price
                                     </Heading>
-                                    <Range
-                                        allowCross={false}
-                                        min={range[0]}
-                                        max={range[1]}
-                                        value={value}
-                                        handle={SliderHandle}
-                                        railStyle={{
-                                            height: 10,
-                                            margin: "0 -10px",
-                                            backgroundColor: "#e1e1e1"
-                                        }}
-                                        style={{
-                                            margin: "0 10px"
-                                        }}
-                                        onChange={handleFilterPrice}
+                                    <PriceRange
+                                        setLoading={setLoading}
+                                        data={products}
+                                        setPriceRange={setValue}
+                                        handleFilter={handleFilterPrice}
                                     />
-                                    <Text
-                                        color="blackAlpha.700"
-                                        fontSize="18px"
-                                        mt="20px"
-                                    >
-                                        Range: £{value[0]} - £{value[1]}
-                                    </Text>
                                 </Box>
-                            </Flex>
+                            </Stack>
                         </Box>
                         <Button
                             bg="secondary"
@@ -244,7 +215,7 @@ const Products = ({ products }) => {
                             Clear filters
                         </Button>
                     </Box>
-                </CSSTransition>
+                </Collapse>
             </Box>
             <Grid
                 templateRows={{
@@ -291,27 +262,6 @@ const Products = ({ products }) => {
                 </TransitionGroup>
             </Grid>
         </Box>
-    );
-};
-
-const SliderHandle = props => {
-    return (
-        <Handle
-            {...props}
-            style={{
-                borderColor: "var(--chakra-colors-secondary)",
-                borderRadius: 0,
-                borderWidth: 5,
-                height: 20,
-                width: 20,
-                "&:active": {
-                    borderColor: "var(--chakra-colors-secondary)"
-                },
-                "&:hover": {
-                    backgroundColor: "var(--chakra-colors-secondary)"
-                }
-            }}
-        />
     );
 };
 

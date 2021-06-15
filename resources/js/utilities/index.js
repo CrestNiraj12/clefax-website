@@ -3,3 +3,12 @@ export const getFinalPrice = product => {
         ? product.price - (product.discount / 100) * product.price
         : product.price;
 };
+
+export const searchQuery = (arr, q, key = "title") => {
+    return arr.filter(elem =>
+        q.split(" ").some(word => {
+            if (word.length)
+                return elem[key].toLowerCase().includes(word.toLowerCase());
+        })
+    );
+};

@@ -5,13 +5,15 @@ import Invoice from "./containers/Invoice";
 import Contact from "./containers/Contact";
 import Cart from "./containers/Cart";
 import Wishlist from "./containers/Wishlist";
-import Stores from "./containers/Stores";
+import Vendors from "./containers/Vendors";
+import Shop from "./containers/Shop";
 
 export default [
     { path: "/", Component: Home, exact: true, name: "Home" },
+    { path: "/search", Component: Shop, exact: false, name: "Search results" },
     {
         path: "/shop",
-        Component: Product,
+        Component: Shop,
         exact: true,
         name: "Shop"
     },
@@ -53,8 +55,8 @@ export default [
     },
     {
         path: "/vendors",
-        Component: Stores,
+        Component: Vendors,
         exact: true,
-        name: "Store Listing"
+        name: "Shop Listing"
     }
 ];

@@ -12,7 +12,14 @@ const sortingOptions = [
     "Sort by price: high to low"
 ];
 
-const Sorter = ({ sortBy, setSortBy, setProducts, products, setLoading }) => {
+const Sorter = ({
+    sortBy,
+    setSortBy,
+    setProducts,
+    products,
+    setLoading,
+    bColor = "#000"
+}) => {
     return (
         <Menu>
             <MenuButton
@@ -22,6 +29,7 @@ const Sorter = ({ sortBy, setSortBy, setProducts, products, setLoading }) => {
                 className="optionBtn"
                 mr="20px"
                 p="0px 10px !important"
+                borderColor={bColor}
                 rightIcon={<ChevronDownIcon />}
             >
                 {sortingOptions[sortBy]}
@@ -55,8 +63,15 @@ const Sorter = ({ sortBy, setSortBy, setProducts, products, setLoading }) => {
 
 export default Sorter;
 
-export const handleSortBy = (index, setSortBy, setFilteredProducts, p) => {
-    setSortBy(index);
+export const handleSortBy = (
+    index,
+    setSortBy,
+    setFilteredProducts,
+    p,
+    indexDiff = null,
+    reverse = false
+) => {
+    setSortBy(index - (indexDiff ? indexDiff : 0));
     var fp = [];
     if (index === 0)
         fp = p.sort((a, b) =>
@@ -69,5 +84,5 @@ export const handleSortBy = (index, setSortBy, setFilteredProducts, p) => {
         fp = p.sort((a, b) => getFinalPrice(a) - getFinalPrice(b));
     else if (index === 4)
         fp = p.sort((a, b) => getFinalPrice(b) - getFinalPrice(a));
-    setFilteredProducts(fp);
+    setFilteredProducts(reverse ? fp.reverse() : fp);
 };

@@ -15,6 +15,7 @@ import { useHistory } from "react-router";
 import { showSearch } from "../../actions";
 import { CSSTransition } from "react-transition-group";
 import ProductCardRowSmall from "../../components/ProductCardRowSmall";
+import { searchQuery } from "../../utilities/index";
 
 const mapStateToProps = state => ({
     products: state.products,
@@ -46,13 +47,7 @@ const Search = ({ search, setShowSearch, products }) => {
         const q = e.target.value;
         setQuery(q);
 
-        const filtered = products.filter(p =>
-            q
-                .split(" ")
-                .some(word =>
-                    p.title.toLowerCase().includes(word.toLowerCase())
-                )
-        );
+        const filtered = searchQuery(products, q);
         setFilteredProducts(q.length > 0 ? filtered : []);
         setTimeout(() => setLoading(false), 0);
     };

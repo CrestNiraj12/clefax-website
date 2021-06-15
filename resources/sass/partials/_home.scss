@@ -239,38 +239,6 @@
     box-shadow: none !important;
 }
 
-@mixin filterTransition($h) {
-    opacity: 0;
-    height: 0;
-    overflow: hidden;
-
-    &-enter {
-        opacity: 0;
-        height: 0;
-    }
-    &-enter-active {
-        opacity: 1;
-        height: $h;
-        transition: opacity 0.1s ease-in, height 0.25s ease-in-out;
-    }
-    &-enter-done {
-        opacity: 1;
-        height: $h;
-    }
-    &-exit {
-        opacity: 1;
-        height: $h;
-    }
-    &-exit-active {
-        height: 0;
-        transition: opacity 0.1s ease-in, height 0.25s ease-in-out;
-    }
-    &-exit-done {
-        opacity: 0;
-        height: 0;
-    }
-}
-
 .filters {
     @include filterTransition(400px);
 }

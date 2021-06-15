@@ -21,6 +21,7 @@ const Breadcrumb = ({ crumbs, customPageName = null, margin = "0" }) => {
                             <BreadcrumbLink
                                 href={path}
                                 color="secondary"
+                                fontSize="xs"
                                 _hover={{ textDecor: "none", cursor: "text" }}
                             >
                                 {customPageName ? customPageName : name}
@@ -31,6 +32,7 @@ const Breadcrumb = ({ crumbs, customPageName = null, margin = "0" }) => {
                             <BreadcrumbLink
                                 href={path}
                                 color="gray"
+                                fontSize="xs"
                                 _hover={{
                                     color: "secondary",
                                     textDecor: "none"

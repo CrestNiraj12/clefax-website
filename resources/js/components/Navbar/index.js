@@ -57,6 +57,7 @@ import { useHistory } from "react-router";
 import ProductCardRowSmall from "../ProductCardRowSmall";
 import { showSearch } from "../../actions";
 import ShopLocal from "../../../images/shoplocal.jpg";
+import { searchQuery } from "../../utilities";
 
 const mapDispatchToProps = dispatch => ({
     showSearch: show => dispatch(showSearch(show))
@@ -138,13 +139,7 @@ const Navbar = ({ showSearch, products }) => {
         const q = e.target.value;
         setQuery(q);
 
-        const filtered = products.filter(p =>
-            q
-                .split(" ")
-                .some(word =>
-                    p.title.toLowerCase().includes(word.toLowerCase())
-                )
-        );
+        const filtered = searchQuery(products, q);
         setFilteredProducts(q.length > 0 ? filtered : []);
         setTimeout(() => setLoading(false), 0);
     };
@@ -336,9 +331,8 @@ const Navbar = ({ showSearch, products }) => {
                                         textTransform="initial"
                                         fontSize="14px "
                                         letterSpacing="0"
+                                        bg="transparent !important"
                                         _hover={{
-                                            background:
-                                                "transparent !important",
                                             color: "#000 !important"
                                         }}
                                     >
@@ -401,6 +395,7 @@ const Navbar = ({ showSearch, products }) => {
                                                 left="-10px"
                                                 maxH="300px"
                                                 p="20px 30px"
+                                                zIndex="999"
                                                 spacing={5}
                                                 className="scrollable"
                                                 alignItems={

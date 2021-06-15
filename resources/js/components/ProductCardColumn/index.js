@@ -41,15 +41,16 @@ const ProductCardColumn = ({
                     textAlign="center"
                     top="25px"
                     left="20px"
+                    zIndex="1"
                     pointerEvents="none"
                 >
                     -{discount}%
                 </Box>
             )}
             <Flex direction="column">
-                <Link href={url}>
+                <Link href={url} pos="relative">
                     <CSSTransition
-                        in={imageLoaded}
+                        in={imageLoaded && src === images[0]}
                         classNames="container-load"
                         timeout={500}
                     >
@@ -62,6 +63,7 @@ const ProductCardColumn = ({
                             objectFit="contain"
                             bg="#e6e6e6"
                             tabIndex="-1"
+                            className="container-load"
                             _hover={{
                                 boxShadow: "none"
                             }}
@@ -69,24 +71,48 @@ const ProductCardColumn = ({
                             onLoad={() => setImageLoaded(true)}
                         />
                     </CSSTransition>
-                    {!imageLoaded && (
-                        <CSSTransition
-                            in={!imageLoaded}
-                            classNames="container-load"
-                            timeout={500}
-                        >
-                            <Skeleton
-                                width="150px"
-                                height="150px"
-                                startColor="lightgray"
-                                endColor="gray"
-                                borderRadius="0"
-                                className="container-load"
-                                top={0}
-                                pos="absolute"
-                            />
-                        </CSSTransition>
-                    )}
+                    <CSSTransition
+                        in={imageLoaded && src === images[1]}
+                        classNames="container-load"
+                        timeout={500}
+                        unmountOnExit
+                    >
+                        <Image
+                            src={src}
+                            alt={title}
+                            w="100%"
+                            minH="22vw"
+                            pos="absolute"
+                            top="0"
+                            outline="none"
+                            objectFit="contain"
+                            bg="#e6e6e6"
+                            tabIndex="-1"
+                            className="container-load"
+                            _hover={{
+                                boxShadow: "none"
+                            }}
+                            cursor="pointer"
+                            onLoad={() => setImageLoaded(true)}
+                        />
+                    </CSSTransition>
+                    <CSSTransition
+                        in={!imageLoaded}
+                        classNames="container-load"
+                        timeout={500}
+                        unmountOnExit
+                    >
+                        <Skeleton
+                            width="150px"
+                            height="150px"
+                            startColor="lightgray"
+                            endColor="gray"
+                            borderRadius="0"
+                            className="container-load"
+                            top={0}
+                            pos="absolute"
+                        />
+                    </CSSTransition>
                 </Link>
 
                 <VStack spacing={4} align="stretch" py="30px" mx="20px">
