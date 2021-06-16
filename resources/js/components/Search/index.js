@@ -33,7 +33,7 @@ const Search = ({ search, setShowSearch, products }) => {
     const [loading, setLoading] = useState(false);
 
     const handleSubmit = () => {
-        if (query.length > 0) history.push("/shop/?q=" + query);
+        if (query.length > 0) window.location = "/shop/search/?q=" + query;
     };
 
     const handleKeyDown = event => {

@@ -7,15 +7,22 @@ import Cart from "./containers/Cart";
 import Wishlist from "./containers/Wishlist";
 import Vendors from "./containers/Vendors";
 import Shop from "./containers/Shop";
+import Login from "./containers/Login";
+import NotFound from "./containers/NotFound";
 
 export default [
     { path: "/", Component: Home, exact: true, name: "Home" },
-    { path: "/search", Component: Shop, exact: false, name: "Search results" },
     {
         path: "/shop",
         Component: Shop,
         exact: true,
         name: "Shop"
+    },
+    {
+        path: "/shop/search",
+        Component: Shop,
+        exact: false,
+        name: "Search results"
     },
     {
         path: "/shop/:title",
@@ -58,5 +65,17 @@ export default [
         Component: Vendors,
         exact: true,
         name: "Shop Listing"
+    },
+    {
+        path: "/login",
+        Component: Login,
+        exact: true,
+        name: "Login"
+    },
+    {
+        path: "/*",
+        Component: NotFound,
+        exact: true,
+        name: "Page Not Found"
     }
 ];

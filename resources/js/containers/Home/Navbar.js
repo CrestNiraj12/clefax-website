@@ -180,12 +180,29 @@ const Navbar = ({ showSearch }) => {
                                         <Divider />
                                         <Box p="10px">
                                             <Link
+                                                href="/login"
+                                                className="link textLink"
+                                            >
+                                                Login
+                                            </Link>
+                                        </Box>
+                                        <Divider />
+                                        <Box p="10px">
+                                            <Link
+                                                href="/register"
+                                                className="link textLink"
+                                            >
+                                                Register
+                                            </Link>
+                                        </Box>
+                                        {/* <Box p="10px">
+                                            <Link
                                                 href="/account"
                                                 className="link textLink"
                                             >
                                                 My Account
                                             </Link>
-                                        </Box>
+                                        </Box> */}
                                         <Divider />
                                         <Box p="10px">
                                             <Link
@@ -485,6 +502,16 @@ const Navbar = ({ showSearch }) => {
                                     <Icon as={IoPersonOutline} />
                                 </MenuButton>
                                 <MenuList>
+                                    <MenuItem minH="48px">
+                                        <Link href="/login" w="100%">
+                                            Login
+                                        </Link>
+                                    </MenuItem>
+                                    <MenuItem minH="48px">
+                                        <Link href="/signup" w="100%">
+                                            Register
+                                        </Link>
+                                    </MenuItem>
                                     <MenuItem minH="48px">
                                         <Link href="/account" w="100%">
                                             My Account

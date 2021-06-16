@@ -26,7 +26,8 @@ import ReactPaginate from "react-paginate";
 import { BsArrowLeftShort, BsArrowRightShort } from "react-icons/bs";
 import { ChevronRightIcon } from "@chakra-ui/icons";
 import { ceil } from "lodash";
-import { getFinalPrice } from "../../utilities";
+import { getFinalPrice, searchQuery } from "../../utilities";
+import qs from "query-string";
 
 const tags = ["meat", "vegetables", "lamb", "cake", "bakery"];
 
@@ -46,25 +47,48 @@ const Shop = ({ crumbs, products, categories }) => {
     const [activeN, setActiveN] = useState(0);
     const [pageIndex, setPageIndex] = useState([0, options[activeN]]);
     const [activeTags, setActiveTags] = useState([]);
+    const [query, setQuery] = useState(null);
 
     useEffect(() => {
-        if (products.length) {
+        if (location.pathname === "/shop/search/") {
+            setLoading(true);
+            const q = qs.parse(location.search);
+            setQuery(q);
+            if (categories.length) {
+                const index = q.cat
+                    ? categories.findIndex(category => category.title === q.cat)
+                    : null;
+                handleFilter(value, index, null, q.q);
+            }
+        }
+    }, [categories]);
+
+    useEffect(() => {
+        if (location.pathname !== "/shop/search/" && products.length) {
             setLoading(true);
             setFilteredProducts(products);
             setLoading(false);
         }
     }, [products]);
 
-    const handleFilter = (v, index = null, tags = null) => {
+    const handleFilter = (v, index = null, tags = null, q = null) => {
         setLoading(true);
+
+        var fp = [];
+
+        if (q) fp = searchQuery(products, q);
 
         if (index !== null) {
             setActiveCategory(index === activeCategory ? null : index);
         }
-        var fp = products.filter(
-            product =>
-                getFinalPrice(product) >= v[0] && getFinalPrice(product) <= v[1]
-        );
+
+        if (v.length)
+            fp = products.filter(
+                product =>
+                    getFinalPrice(product) >= v[0] &&
+                    getFinalPrice(product) <= v[1]
+            );
+
         fp =
             index === activeCategory
                 ? fp
@@ -86,6 +110,7 @@ const Shop = ({ crumbs, products, categories }) => {
                               .includes(t.toLowerCase());
                       })
                   );
+
         handleSortBy(sortBy, setSortBy, setFilteredProducts, fp);
         setTimeout(() => setLoading(false), 0);
     };
@@ -95,7 +120,7 @@ const Shop = ({ crumbs, products, categories }) => {
             ? activeTags.filter(t => t !== tag)
             : [...activeTags, tag];
         setActiveTags(tags);
-        handleFilter(value, activeCategory, tags);
+        handleFilter(value, null, tags);
     };
 
     const handleChangeProductN = index => {
@@ -117,7 +142,13 @@ const Shop = ({ crumbs, products, categories }) => {
 
     return (
         <Box mx="20px" mb="100px">
-            <Breadcrumb crumbs={crumbs} margin="20px 0" />
+            <Breadcrumb
+                crumbs={crumbs}
+                margin="20px 0"
+                customPageName={
+                    query ? `Search Results for "${query.q}"` : null
+                }
+            />
             <Stack
                 direction={{ base: "column", lg: "row" }}
                 mt="50px"
@@ -245,13 +276,17 @@ const Shop = ({ crumbs, products, categories }) => {
                             <Text color="gray">
                                 {pageIndex[0] === 0 &&
                                 pageIndex[1] > filteredProducts.length
-                                    ? `Showing all ${filteredProducts.length} item(s)`
+                                    ? `Showing all ${filteredProducts.length} ${
+                                          query ? "result" : "item"
+                                      }(s)`
                                     : `Showing ${pageIndex[0] + 1}-
                                 ${
                                     pageIndex[1] >= filteredProducts.length
                                         ? filteredProducts.length
                                         : pageIndex[1]
-                                } of ${filteredProducts.length} item(s)`}
+                                } of ${filteredProducts.length} ${
+                                          query ? "result" : "item"
+                                      }(s)`}
                             </Text>
                         </HStack>
                         <Spacer />

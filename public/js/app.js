@@ -55396,6 +55396,112 @@ function toDate(argument) {
 
 /***/ }),
 
+/***/ "./node_modules/decode-uri-component/index.js":
+/*!****************************************************!*\
+  !*** ./node_modules/decode-uri-component/index.js ***!
+  \****************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var token = '%[a-f0-9]{2}';
+var singleMatcher = new RegExp(token, 'gi');
+var multiMatcher = new RegExp('(' + token + ')+', 'gi');
+
+function decodeComponents(components, split) {
+	try {
+		// Try to decode the entire string first
+		return decodeURIComponent(components.join(''));
+	} catch (err) {
+		// Do nothing
+	}
+
+	if (components.length === 1) {
+		return components;
+	}
+
+	split = split || 1;
+
+	// Split the array in 2 parts
+	var left = components.slice(0, split);
+	var right = components.slice(split);
+
+	return Array.prototype.concat.call([], decodeComponents(left), decodeComponents(right));
+}
+
+function decode(input) {
+	try {
+		return decodeURIComponent(input);
+	} catch (err) {
+		var tokens = input.match(singleMatcher);
+
+		for (var i = 1; i < tokens.length; i++) {
+			input = decodeComponents(tokens, i).join('');
+
+			tokens = input.match(singleMatcher);
+		}
+
+		return input;
+	}
+}
+
+function customDecodeURIComponent(input) {
+	// Keep track of all the replacements and prefill the map with the `BOM`
+	var replaceMap = {
+		'%FE%FF': '\uFFFD\uFFFD',
+		'%FF%FE': '\uFFFD\uFFFD'
+	};
+
+	var match = multiMatcher.exec(input);
+	while (match) {
+		try {
+			// Decode as big chunks as possible
+			replaceMap[match[0]] = decodeURIComponent(match[0]);
+		} catch (err) {
+			var result = decode(match[0]);
+
+			if (result !== match[0]) {
+				replaceMap[match[0]] = result;
+			}
+		}
+
+		match = multiMatcher.exec(input);
+	}
+
+	// Add `%C2` at the end of the map to make sure it does not replace the combinator before everything else
+	replaceMap['%C2'] = '\uFFFD';
+
+	var entries = Object.keys(replaceMap);
+
+	for (var i = 0; i < entries.length; i++) {
+		// Replace all decoded components
+		var key = entries[i];
+		input = input.replace(new RegExp(key, 'g'), replaceMap[key]);
+	}
+
+	return input;
+}
+
+module.exports = function (encodedURI) {
+	if (typeof encodedURI !== 'string') {
+		throw new TypeError('Expected `encodedURI` to be of type `string`, got `' + typeof encodedURI + '`');
+	}
+
+	try {
+		encodedURI = encodedURI.replace(/\+/g, ' ');
+
+		// Try the built in decoder first
+		return decodeURIComponent(encodedURI);
+	} catch (err) {
+		// Fallback to a more advanced decoder
+		return customDecodeURIComponent(encodedURI);
+	}
+};
+
+
+/***/ }),
+
 /***/ "./node_modules/deepmerge/dist/es.js":
 /*!*******************************************!*\
   !*** ./node_modules/deepmerge/dist/es.js ***!
@@ -57300,6 +57406,35 @@ module.exports = {
 
 var MediaQueryDispatch = __webpack_require__(/*! ./MediaQueryDispatch */ "./node_modules/enquire.js/src/MediaQueryDispatch.js");
 module.exports = new MediaQueryDispatch();
+
+
+/***/ }),
+
+/***/ "./node_modules/filter-obj/index.js":
+/*!******************************************!*\
+  !*** ./node_modules/filter-obj/index.js ***!
+  \******************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+module.exports = function (obj, predicate) {
+	var ret = {};
+	var keys = Object.keys(obj);
+	var isArr = Array.isArray(predicate);
+
+	for (var i = 0; i < keys.length; i++) {
+		var key = keys[i];
+		var val = obj[key];
+
+		if (isArr ? predicate.indexOf(key) !== -1 : predicate(key, val, obj)) {
+			ret[key] = val;
+		}
+	}
+
+	return ret;
+};
 
 
 /***/ }),
@@ -118146,6 +118281,461 @@ if (true) {
 var ReactPropTypesSecret = 'SECRET_DO_NOT_PASS_THIS_OR_YOU_WILL_BE_FIRED';
 
 module.exports = ReactPropTypesSecret;
+
+
+/***/ }),
+
+/***/ "./node_modules/query-string/index.js":
+/*!********************************************!*\
+  !*** ./node_modules/query-string/index.js ***!
+  \********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+const strictUriEncode = __webpack_require__(/*! strict-uri-encode */ "./node_modules/strict-uri-encode/index.js");
+const decodeComponent = __webpack_require__(/*! decode-uri-component */ "./node_modules/decode-uri-component/index.js");
+const splitOnFirst = __webpack_require__(/*! split-on-first */ "./node_modules/split-on-first/index.js");
+const filterObject = __webpack_require__(/*! filter-obj */ "./node_modules/filter-obj/index.js");
+
+const isNullOrUndefined = value => value === null || value === undefined;
+
+function encoderForArrayFormat(options) {
+	switch (options.arrayFormat) {
+		case 'index':
+			return key => (result, value) => {
+				const index = result.length;
+
+				if (
+					value === undefined ||
+					(options.skipNull && value === null) ||
+					(options.skipEmptyString && value === '')
+				) {
+					return result;
+				}
+
+				if (value === null) {
+					return [...result, [encode(key, options), '[', index, ']'].join('')];
+				}
+
+				return [
+					...result,
+					[encode(key, options), '[', encode(index, options), ']=', encode(value, options)].join('')
+				];
+			};
+
+		case 'bracket':
+			return key => (result, value) => {
+				if (
+					value === undefined ||
+					(options.skipNull && value === null) ||
+					(options.skipEmptyString && value === '')
+				) {
+					return result;
+				}
+
+				if (value === null) {
+					return [...result, [encode(key, options), '[]'].join('')];
+				}
+
+				return [...result, [encode(key, options), '[]=', encode(value, options)].join('')];
+			};
+
+		case 'comma':
+		case 'separator':
+		case 'bracket-separator': {
+			const keyValueSep = options.arrayFormat === 'bracket-separator' ?
+				'[]=' :
+				'=';
+
+			return key => (result, value) => {
+				if (
+					value === undefined ||
+					(options.skipNull && value === null) ||
+					(options.skipEmptyString && value === '')
+				) {
+					return result;
+				}
+
+				// Translate null to an empty string so that it doesn't serialize as 'null'
+				value = value === null ? '' : value;
+
+				if (result.length === 0) {
+					return [[encode(key, options), keyValueSep, encode(value, options)].join('')];
+				}
+
+				return [[result, encode(value, options)].join(options.arrayFormatSeparator)];
+			};
+		}
+
+		default:
+			return key => (result, value) => {
+				if (
+					value === undefined ||
+					(options.skipNull && value === null) ||
+					(options.skipEmptyString && value === '')
+				) {
+					return result;
+				}
+
+				if (value === null) {
+					return [...result, encode(key, options)];
+				}
+
+				return [...result, [encode(key, options), '=', encode(value, options)].join('')];
+			};
+	}
+}
+
+function parserForArrayFormat(options) {
+	let result;
+
+	switch (options.arrayFormat) {
+		case 'index':
+			return (key, value, accumulator) => {
+				result = /\[(\d*)\]$/.exec(key);
+
+				key = key.replace(/\[\d*\]$/, '');
+
+				if (!result) {
+					accumulator[key] = value;
+					return;
+				}
+
+				if (accumulator[key] === undefined) {
+					accumulator[key] = {};
+				}
+
+				accumulator[key][result[1]] = value;
+			};
+
+		case 'bracket':
+			return (key, value, accumulator) => {
+				result = /(\[\])$/.exec(key);
+				key = key.replace(/\[\]$/, '');
+
+				if (!result) {
+					accumulator[key] = value;
+					return;
+				}
+
+				if (accumulator[key] === undefined) {
+					accumulator[key] = [value];
+					return;
+				}
+
+				accumulator[key] = [].concat(accumulator[key], value);
+			};
+
+		case 'comma':
+		case 'separator':
+			return (key, value, accumulator) => {
+				const isArray = typeof value === 'string' && value.includes(options.arrayFormatSeparator);
+				const isEncodedArray = (typeof value === 'string' && !isArray && decode(value, options).includes(options.arrayFormatSeparator));
+				value = isEncodedArray ? decode(value, options) : value;
+				const newValue = isArray || isEncodedArray ? value.split(options.arrayFormatSeparator).map(item => decode(item, options)) : value === null ? value : decode(value, options);
+				accumulator[key] = newValue;
+			};
+
+		case 'bracket-separator':
+			return (key, value, accumulator) => {
+				const isArray = /(\[\])$/.test(key);
+				key = key.replace(/\[\]$/, '');
+
+				if (!isArray) {
+					accumulator[key] = value ? decode(value, options) : value;
+					return;
+				}
+
+				const arrayValue = value === null ?
+					[] :
+					value.split(options.arrayFormatSeparator).map(item => decode(item, options));
+
+				if (accumulator[key] === undefined) {
+					accumulator[key] = arrayValue;
+					return;
+				}
+
+				accumulator[key] = [].concat(accumulator[key], arrayValue);
+			};
+
+		default:
+			return (key, value, accumulator) => {
+				if (accumulator[key] === undefined) {
+					accumulator[key] = value;
+					return;
+				}
+
+				accumulator[key] = [].concat(accumulator[key], value);
+			};
+	}
+}
+
+function validateArrayFormatSeparator(value) {
+	if (typeof value !== 'string' || value.length !== 1) {
+		throw new TypeError('arrayFormatSeparator must be single character string');
+	}
+}
+
+function encode(value, options) {
+	if (options.encode) {
+		return options.strict ? strictUriEncode(value) : encodeURIComponent(value);
+	}
+
+	return value;
+}
+
+function decode(value, options) {
+	if (options.decode) {
+		return decodeComponent(value);
+	}
+
+	return value;
+}
+
+function keysSorter(input) {
+	if (Array.isArray(input)) {
+		return input.sort();
+	}
+
+	if (typeof input === 'object') {
+		return keysSorter(Object.keys(input))
+			.sort((a, b) => Number(a) - Number(b))
+			.map(key => input[key]);
+	}
+
+	return input;
+}
+
+function removeHash(input) {
+	const hashStart = input.indexOf('#');
+	if (hashStart !== -1) {
+		input = input.slice(0, hashStart);
+	}
+
+	return input;
+}
+
+function getHash(url) {
+	let hash = '';
+	const hashStart = url.indexOf('#');
+	if (hashStart !== -1) {
+		hash = url.slice(hashStart);
+	}
+
+	return hash;
+}
+
+function extract(input) {
+	input = removeHash(input);
+	const queryStart = input.indexOf('?');
+	if (queryStart === -1) {
+		return '';
+	}
+
+	return input.slice(queryStart + 1);
+}
+
+function parseValue(value, options) {
+	if (options.parseNumbers && !Number.isNaN(Number(value)) && (typeof value === 'string' && value.trim() !== '')) {
+		value = Number(value);
+	} else if (options.parseBooleans && value !== null && (value.toLowerCase() === 'true' || value.toLowerCase() === 'false')) {
+		value = value.toLowerCase() === 'true';
+	}
+
+	return value;
+}
+
+function parse(query, options) {
+	options = Object.assign({
+		decode: true,
+		sort: true,
+		arrayFormat: 'none',
+		arrayFormatSeparator: ',',
+		parseNumbers: false,
+		parseBooleans: false
+	}, options);
+
+	validateArrayFormatSeparator(options.arrayFormatSeparator);
+
+	const formatter = parserForArrayFormat(options);
+
+	// Create an object with no prototype
+	const ret = Object.create(null);
+
+	if (typeof query !== 'string') {
+		return ret;
+	}
+
+	query = query.trim().replace(/^[?#&]/, '');
+
+	if (!query) {
+		return ret;
+	}
+
+	for (const param of query.split('&')) {
+		if (param === '') {
+			continue;
+		}
+
+		let [key, value] = splitOnFirst(options.decode ? param.replace(/\+/g, ' ') : param, '=');
+
+		// Missing `=` should be `null`:
+		// http://w3.org/TR/2012/WD-url-20120524/#collect-url-parameters
+		value = value === undefined ? null : ['comma', 'separator', 'bracket-separator'].includes(options.arrayFormat) ? value : decode(value, options);
+		formatter(decode(key, options), value, ret);
+	}
+
+	for (const key of Object.keys(ret)) {
+		const value = ret[key];
+		if (typeof value === 'object' && value !== null) {
+			for (const k of Object.keys(value)) {
+				value[k] = parseValue(value[k], options);
+			}
+		} else {
+			ret[key] = parseValue(value, options);
+		}
+	}
+
+	if (options.sort === false) {
+		return ret;
+	}
+
+	return (options.sort === true ? Object.keys(ret).sort() : Object.keys(ret).sort(options.sort)).reduce((result, key) => {
+		const value = ret[key];
+		if (Boolean(value) && typeof value === 'object' && !Array.isArray(value)) {
+			// Sort object keys, not values
+			result[key] = keysSorter(value);
+		} else {
+			result[key] = value;
+		}
+
+		return result;
+	}, Object.create(null));
+}
+
+exports.extract = extract;
+exports.parse = parse;
+
+exports.stringify = (object, options) => {
+	if (!object) {
+		return '';
+	}
+
+	options = Object.assign({
+		encode: true,
+		strict: true,
+		arrayFormat: 'none',
+		arrayFormatSeparator: ','
+	}, options);
+
+	validateArrayFormatSeparator(options.arrayFormatSeparator);
+
+	const shouldFilter = key => (
+		(options.skipNull && isNullOrUndefined(object[key])) ||
+		(options.skipEmptyString && object[key] === '')
+	);
+
+	const formatter = encoderForArrayFormat(options);
+
+	const objectCopy = {};
+
+	for (const key of Object.keys(object)) {
+		if (!shouldFilter(key)) {
+			objectCopy[key] = object[key];
+		}
+	}
+
+	const keys = Object.keys(objectCopy);
+
+	if (options.sort !== false) {
+		keys.sort(options.sort);
+	}
+
+	return keys.map(key => {
+		const value = object[key];
+
+		if (value === undefined) {
+			return '';
+		}
+
+		if (value === null) {
+			return encode(key, options);
+		}
+
+		if (Array.isArray(value)) {
+			if (value.length === 0 && options.arrayFormat === 'bracket-separator') {
+				return encode(key, options) + '[]';
+			}
+
+			return value
+				.reduce(formatter(key), [])
+				.join('&');
+		}
+
+		return encode(key, options) + '=' + encode(value, options);
+	}).filter(x => x.length > 0).join('&');
+};
+
+exports.parseUrl = (url, options) => {
+	options = Object.assign({
+		decode: true
+	}, options);
+
+	const [url_, hash] = splitOnFirst(url, '#');
+
+	return Object.assign(
+		{
+			url: url_.split('?')[0] || '',
+			query: parse(extract(url), options)
+		},
+		options && options.parseFragmentIdentifier && hash ? {fragmentIdentifier: decode(hash, options)} : {}
+	);
+};
+
+exports.stringifyUrl = (object, options) => {
+	options = Object.assign({
+		encode: true,
+		strict: true
+	}, options);
+
+	const url = removeHash(object.url).split('?')[0] || '';
+	const queryFromUrl = exports.extract(object.url);
+	const parsedQueryFromUrl = exports.parse(queryFromUrl, {sort: false});
+
+	const query = Object.assign(parsedQueryFromUrl, object.query);
+	let queryString = exports.stringify(query, options);
+	if (queryString) {
+		queryString = `?${queryString}`;
+	}
+
+	let hash = getHash(object.url);
+	if (object.fragmentIdentifier) {
+		hash = `#${encode(object.fragmentIdentifier, options)}`;
+	}
+
+	return `${url}${queryString}${hash}`;
+};
+
+exports.pick = (input, filter, options) => {
+	options = Object.assign({
+		parseFragmentIdentifier: true
+	}, options);
+
+	const {url, query, fragmentIdentifier} = exports.parseUrl(input, options);
+	return exports.stringifyUrl({
+		url,
+		query: filterObject(query, filter),
+		fragmentIdentifier
+	}, options);
+};
+
+exports.exclude = (input, filter, options) => {
+	const exclusionFilter = Array.isArray(filter) ? key => !filter.includes(key) : (key, value) => !filter(key, value);
+
+	return exports.pick(input, exclusionFilter, options);
+};
 
 
 /***/ }),
@@ -193189,6 +193779,54 @@ if(false) {}
 
 /***/ }),
 
+/***/ "./node_modules/split-on-first/index.js":
+/*!**********************************************!*\
+  !*** ./node_modules/split-on-first/index.js ***!
+  \**********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = (string, separator) => {
+	if (!(typeof string === 'string' && typeof separator === 'string')) {
+		throw new TypeError('Expected the arguments to be of type `string`');
+	}
+
+	if (separator === '') {
+		return [string];
+	}
+
+	const separatorIndex = string.indexOf(separator);
+
+	if (separatorIndex === -1) {
+		return [string];
+	}
+
+	return [
+		string.slice(0, separatorIndex),
+		string.slice(separatorIndex + separator.length)
+	];
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/strict-uri-encode/index.js":
+/*!*************************************************!*\
+  !*** ./node_modules/strict-uri-encode/index.js ***!
+  \*************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+module.exports = str => encodeURIComponent(str).replace(/[!'()*]/g, x => `%${x.charCodeAt(0).toString(16).toUpperCase()}`);
+
+
+/***/ }),
+
 /***/ "./node_modules/string-convert/camel2hyphen.js":
 /*!*****************************************************!*\
   !*** ./node_modules/string-convert/camel2hyphen.js ***!
@@ -198312,7 +198950,6 @@ var Navbar = function Navbar(_ref) {
       setQuery = _useState14[1];
 
   Object(react__WEBPACK_IMPORTED_MODULE_2__["useEffect"])(function () {
-    setQuery("");
     if (products.length) setFilteredProducts(products);
   }, [products]);
 
@@ -198322,7 +198959,9 @@ var Navbar = function Navbar(_ref) {
   };
 
   var handleSubmit = function handleSubmit() {
-    if (query.length > 0) history.push("/shop/?q=" + query + "&cat=" + (selectedCategory !== null ? categories[selectedCategory].title : ""));
+    if (query.length > 0) {
+      window.location = "/shop/search/?q=" + query + "&cat=" + (selectedCategory !== null ? encodeURIComponent(categories[selectedCategory].title) : "");
+    }
   };
 
   var handleKeyDown = function handleKeyDown(event) {
@@ -198625,6 +199264,16 @@ var Navbar = function Navbar(_ref) {
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Icon"], {
     as: react_icons_io5__WEBPACK_IMPORTED_MODULE_4__["IoPersonOutline"]
   })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["MenuList"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["MenuItem"], {
+    minH: "48px"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Link"], {
+    href: "/login",
+    w: "100%"
+  }, "Login")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["MenuItem"], {
+    minH: "48px"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Link"], {
+    href: "/signup",
+    w: "100%"
+  }, "Register")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["MenuItem"], {
     minH: "48px"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Link"], {
     href: "/account",
@@ -199603,7 +200252,7 @@ var Search = function Search(_ref) {
       setLoading = _useState6[1];
 
   var handleSubmit = function handleSubmit() {
-    if (query.length > 0) history.push("/shop/?q=" + query);
+    if (query.length > 0) window.location = "/shop/search/?q=" + query;
   };
 
   var handleKeyDown = function handleKeyDown(event) {
@@ -201887,9 +202536,14 @@ var Navbar = function Navbar(_ref) {
   }, "0"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Divider"], null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Box"], {
     p: "10px"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Link"], {
-    href: "/account",
+    href: "/login",
     className: "link textLink"
-  }, "My Account")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Divider"], null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Box"], {
+  }, "Login")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Divider"], null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Box"], {
+    p: "10px"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Link"], {
+    href: "/register",
+    className: "link textLink"
+  }, "Register")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Divider"], null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Box"], {
     p: "10px"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Link"], {
     href: "/checkout",
@@ -202101,6 +202755,16 @@ var Navbar = function Navbar(_ref) {
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Icon"], {
     as: react_icons_io5__WEBPACK_IMPORTED_MODULE_4__["IoPersonOutline"]
   })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["MenuList"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["MenuItem"], {
+    minH: "48px"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Link"], {
+    href: "/login",
+    w: "100%"
+  }, "Login")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["MenuItem"], {
+    minH: "48px"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Link"], {
+    href: "/signup",
+    w: "100%"
+  }, "Register")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["MenuItem"], {
     minH: "48px"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Link"], {
     href: "/account",
@@ -202547,6 +203211,85 @@ var Invoice = function Invoice(_ref) {
 };
 
 /* harmony default export */ __webpack_exports__["default"] = (Invoice);
+
+/***/ }),
+
+/***/ "./resources/js/containers/Login/index.js":
+/*!************************************************!*\
+  !*** ./resources/js/containers/Login/index.js ***!
+  \************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @chakra-ui/react */ "./node_modules/@chakra-ui/react/dist/esm/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
+
+
+
+var Login = function Login() {
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Box"], null);
+};
+
+/* harmony default export */ __webpack_exports__["default"] = (Login);
+
+/***/ }),
+
+/***/ "./resources/js/containers/NotFound/index.js":
+/*!***************************************************!*\
+  !*** ./resources/js/containers/NotFound/index.js ***!
+  \***************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @chakra-ui/react */ "./node_modules/@chakra-ui/react/dist/esm/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _components_Breadcrumb__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../components/Breadcrumb */ "./resources/js/components/Breadcrumb/index.js");
+
+
+
+
+var NotFound = function NotFound(_ref) {
+  var crumbs = _ref.crumbs;
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Box"], {
+    mx: "20px",
+    mb: "200px"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_components_Breadcrumb__WEBPACK_IMPORTED_MODULE_2__["default"], {
+    crumbs: crumbs,
+    margin: "20px 0"
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Flex"], {
+    w: "100%",
+    alignItems: "center",
+    direction: "column",
+    my: "150px"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Heading"], {
+    as: "h6",
+    letterSpacing: "10px",
+    mb: "30px",
+    color: "secondary"
+  }, "404"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Heading"], {
+    as: "h1",
+    mb: "50px",
+    fontSize: {
+      base: "xl",
+      md: "xxx-large"
+    }
+  }, "Page Not Found!"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Link"], {
+    href: "/",
+    color: "secondary",
+    _hover: {
+      color: "var(--chakra-colors-gray) !important",
+      textDecor: "underline !important"
+    }
+  }, "Go home")));
+};
+
+/* harmony default export */ __webpack_exports__["default"] = (NotFound);
 
 /***/ }),
 
@@ -203185,6 +203928,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
 /* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_10___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_10__);
 /* harmony import */ var _utilities__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../../utilities */ "./resources/js/utilities/index.js");
+/* harmony import */ var query_string__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! query-string */ "./node_modules/query-string/index.js");
+/* harmony import */ var query_string__WEBPACK_IMPORTED_MODULE_12___default = /*#__PURE__*/__webpack_require__.n(query_string__WEBPACK_IMPORTED_MODULE_12__);
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
 
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -203204,6 +203949,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 function _iterableToArrayLimit(arr, i) { var _i = arr && (typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"]); if (_i == null) return; var _arr = []; var _n = true; var _d = false; var _s, _e; try { for (_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
 
 
 
@@ -203273,8 +204019,27 @@ var Shop = function Shop(_ref) {
       activeTags = _useState16[0],
       setActiveTags = _useState16[1];
 
+  var _useState17 = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])(null),
+      _useState18 = _slicedToArray(_useState17, 2),
+      query = _useState18[0],
+      setQuery = _useState18[1];
+
   Object(react__WEBPACK_IMPORTED_MODULE_1__["useEffect"])(function () {
-    if (products.length) {
+    if (location.pathname === "/shop/search/") {
+      setLoading(true);
+      var q = query_string__WEBPACK_IMPORTED_MODULE_12___default.a.parse(location.search);
+      setQuery(q);
+
+      if (categories.length) {
+        var index = q.cat ? categories.findIndex(function (category) {
+          return category.title === q.cat;
+        }) : null;
+        handleFilter(value, index, null, q.q);
+      }
+    }
+  }, [categories]);
+  Object(react__WEBPACK_IMPORTED_MODULE_1__["useEffect"])(function () {
+    if (location.pathname !== "/shop/search/" && products.length) {
       setLoading(true);
       setFilteredProducts(products);
       setLoading(false);
@@ -203284,13 +204049,16 @@ var Shop = function Shop(_ref) {
   var handleFilter = function handleFilter(v) {
     var index = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
     var tags = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
+    var q = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : null;
     setLoading(true);
+    var fp = [];
+    if (q) fp = Object(_utilities__WEBPACK_IMPORTED_MODULE_11__["searchQuery"])(products, q);
 
     if (index !== null) {
       setActiveCategory(index === activeCategory ? null : index);
     }
 
-    var fp = products.filter(function (product) {
+    if (v.length) fp = products.filter(function (product) {
       return Object(_utilities__WEBPACK_IMPORTED_MODULE_11__["getFinalPrice"])(product) >= v[0] && Object(_utilities__WEBPACK_IMPORTED_MODULE_11__["getFinalPrice"])(product) <= v[1];
     });
     fp = index === activeCategory ? fp : fp.filter(function (product) {
@@ -203315,7 +204083,7 @@ var Shop = function Shop(_ref) {
       return t !== tag;
     }) : [].concat(_toConsumableArray(activeTags), [tag]);
     setActiveTags(tags);
-    handleFilter(value, activeCategory, tags);
+    handleFilter(value, null, tags);
   };
 
   var handleChangeProductN = function handleChangeProductN(index) {
@@ -203337,7 +204105,8 @@ var Shop = function Shop(_ref) {
     mb: "100px"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_components_Breadcrumb__WEBPACK_IMPORTED_MODULE_3__["default"], {
     crumbs: crumbs,
-    margin: "20px 0"
+    margin: "20px 0",
+    customPageName: query ? "Search Results for \"".concat(query.q, "\"") : null
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Stack"], {
     direction: {
       base: "column",
@@ -203457,7 +204226,7 @@ var Shop = function Shop(_ref) {
     }, n);
   }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Text"], {
     color: "gray"
-  }, pageIndex[0] === 0 && pageIndex[1] > filteredProducts.length ? "Showing all ".concat(filteredProducts.length, " item(s)") : "Showing ".concat(pageIndex[0] + 1, "-\n                                ").concat(pageIndex[1] >= filteredProducts.length ? filteredProducts.length : pageIndex[1], " of ").concat(filteredProducts.length, " item(s)"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Spacer"], null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_components_Sorter__WEBPACK_IMPORTED_MODULE_6__["default"], {
+  }, pageIndex[0] === 0 && pageIndex[1] > filteredProducts.length ? "Showing all ".concat(filteredProducts.length, " ").concat(query ? "result" : "item", "(s)") : "Showing ".concat(pageIndex[0] + 1, "-\n                                ").concat(pageIndex[1] >= filteredProducts.length ? filteredProducts.length : pageIndex[1], " of ").concat(filteredProducts.length, " ").concat(query ? "result" : "item", "(s)"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Spacer"], null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_components_Sorter__WEBPACK_IMPORTED_MODULE_6__["default"], {
     sortBy: sortBy,
     setSortBy: setSortBy,
     setLoading: setLoading,
@@ -204240,6 +205009,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _containers_Wishlist__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./containers/Wishlist */ "./resources/js/containers/Wishlist/index.js");
 /* harmony import */ var _containers_Vendors__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./containers/Vendors */ "./resources/js/containers/Vendors/index.js");
 /* harmony import */ var _containers_Shop__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./containers/Shop */ "./resources/js/containers/Shop/index.js");
+/* harmony import */ var _containers_Login__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./containers/Login */ "./resources/js/containers/Login/index.js");
+/* harmony import */ var _containers_NotFound__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./containers/NotFound */ "./resources/js/containers/NotFound/index.js");
+
+
 
 
 
@@ -204255,15 +205028,15 @@ __webpack_require__.r(__webpack_exports__);
   exact: true,
   name: "Home"
 }, {
-  path: "/search",
-  Component: _containers_Shop__WEBPACK_IMPORTED_MODULE_8__["default"],
-  exact: false,
-  name: "Search results"
-}, {
   path: "/shop",
   Component: _containers_Shop__WEBPACK_IMPORTED_MODULE_8__["default"],
   exact: true,
   name: "Shop"
+}, {
+  path: "/shop/search",
+  Component: _containers_Shop__WEBPACK_IMPORTED_MODULE_8__["default"],
+  exact: false,
+  name: "Search results"
 }, {
   path: "/shop/:title",
   Component: _containers_Product__WEBPACK_IMPORTED_MODULE_2__["default"],
@@ -204299,6 +205072,16 @@ __webpack_require__.r(__webpack_exports__);
   Component: _containers_Vendors__WEBPACK_IMPORTED_MODULE_7__["default"],
   exact: true,
   name: "Shop Listing"
+}, {
+  path: "/login",
+  Component: _containers_Login__WEBPACK_IMPORTED_MODULE_9__["default"],
+  exact: true,
+  name: "Login"
+}, {
+  path: "/*",
+  Component: _containers_NotFound__WEBPACK_IMPORTED_MODULE_10__["default"],
+  exact: true,
+  name: "Page Not Found"
 }]);
 
 /***/ }),

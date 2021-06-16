@@ -124,7 +124,6 @@ const Navbar = ({ showSearch, products, categories }) => {
     const [query, setQuery] = useState("");
 
     useEffect(() => {
-        setQuery("");
         if (products.length) setFilteredProducts(products);
     }, [products]);
 
@@ -134,15 +133,15 @@ const Navbar = ({ showSearch, products, categories }) => {
     };
 
     const handleSubmit = () => {
-        if (query.length > 0)
-            history.push(
-                "/shop/?q=" +
-                    query +
-                    "&cat=" +
-                    (selectedCategory !== null
-                        ? categories[selectedCategory].title
-                        : "")
-            );
+        if (query.length > 0) {
+            window.location =
+                "/shop/search/?q=" +
+                query +
+                "&cat=" +
+                (selectedCategory !== null
+                    ? encodeURIComponent(categories[selectedCategory].title)
+                    : "");
+        }
     };
 
     const handleKeyDown = event => {
@@ -510,6 +509,16 @@ const Navbar = ({ showSearch, products, categories }) => {
                                 <Icon as={IoPersonOutline} />
                             </MenuButton>
                             <MenuList>
+                                <MenuItem minH="48px">
+                                    <Link href="/login" w="100%">
+                                        Login
+                                    </Link>
+                                </MenuItem>
+                                <MenuItem minH="48px">
+                                    <Link href="/signup" w="100%">
+                                        Register
+                                    </Link>
+                                </MenuItem>
                                 <MenuItem minH="48px">
                                     <Link href="/account" w="100%">
                                         My Account
