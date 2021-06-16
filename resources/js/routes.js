@@ -67,12 +67,6 @@ export default [
         name: "Shop Listing"
     },
     {
-        path: "/login",
-        Component: Login,
-        exact: true,
-        name: "Login"
-    },
-    {
         path: "/*",
         Component: NotFound,
         exact: true,

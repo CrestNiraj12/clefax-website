@@ -1,8 +1,12 @@
-import { Box } from "@chakra-ui/react";
+import { Box, Flex } from "@chakra-ui/react";
 import React from "react";
 
 const Login = () => {
-    return <Box></Box>;
+    return (
+        <Flex w="100%" h="100vh" justifyContent="center" alignItems="center">
+            Hellow
+        </Flex>
+    );
 };
 
 export default Login;

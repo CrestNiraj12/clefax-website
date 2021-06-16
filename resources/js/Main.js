@@ -11,6 +11,7 @@ import Navbar from "./components/Navbar";
 import { HOME_PAGE } from "./constants";
 import Search from "./components/Search";
 import Cookies from "../images/cookies.png";
+import Login from "./containers/Login";
 
 const mapDispatchToProps = dispatch => ({
     setProducts: products => dispatch(setProducts(products)),
@@ -182,6 +183,7 @@ const Main = ({ setProducts, setPage, page, showSearch, setCategories }) => {
             {desktop && <ScrollToTopButton condition={showScrollBtn} />}
 
             <Switch>
+                <Route path="/login" component={Login} exact />
                 {routes.map(({ path, Component, exact }) => (
                     <Route
                         exact={exact}
@@ -212,13 +214,13 @@ const Main = ({ setProducts, setPage, page, showSearch, setCategories }) => {
                                 <>
                                     {page !== HOME_PAGE && <Navbar />}
                                     <Component {...props} crumbs={crumbs} />
+                                    <Footer />
                                 </>
                             );
                         }}
                     />
                 ))}
             </Switch>
-            <Footer />
         </>
     );
 };

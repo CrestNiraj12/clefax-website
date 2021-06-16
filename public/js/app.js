@@ -197922,6 +197922,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_Search__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./components/Search */ "./resources/js/components/Search/index.js");
 /* harmony import */ var _images_cookies_png__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ../images/cookies.png */ "./resources/images/cookies.png");
 /* harmony import */ var _images_cookies_png__WEBPACK_IMPORTED_MODULE_12___default = /*#__PURE__*/__webpack_require__.n(_images_cookies_png__WEBPACK_IMPORTED_MODULE_12__);
+/* harmony import */ var _containers_Login__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./containers/Login */ "./resources/js/containers/Login/index.js");
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
@@ -197945,6 +197946,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 function _iterableToArrayLimit(arr, i) { var _i = arr && (typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"]); if (_i == null) return; var _arr = []; var _n = true; var _d = false; var _s, _e; try { for (_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
 
 
 
@@ -198122,7 +198124,11 @@ var Main = function Main(_ref) {
   }, []);
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_1___default.a.Fragment, null, showSearch && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_components_Search__WEBPACK_IMPORTED_MODULE_11__["default"], null), desktop && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_components_ScrollToTopButton__WEBPACK_IMPORTED_MODULE_5__["default"], {
     condition: showScrollBtn
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_3__["Switch"], null, _routes__WEBPACK_IMPORTED_MODULE_7__["default"].map(function (_ref2) {
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_3__["Switch"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_3__["Route"], {
+    path: "/login",
+    component: _containers_Login__WEBPACK_IMPORTED_MODULE_13__["default"],
+    exact: true
+  }), _routes__WEBPACK_IMPORTED_MODULE_7__["default"].map(function (_ref2) {
     var path = _ref2.path,
         Component = _ref2.Component,
         exact = _ref2.exact;
@@ -198146,10 +198152,10 @@ var Main = function Main(_ref) {
         });
         return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_1___default.a.Fragment, null, page !== _constants__WEBPACK_IMPORTED_MODULE_10__["HOME_PAGE"] && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_components_Navbar__WEBPACK_IMPORTED_MODULE_9__["default"], null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(Component, _extends({}, props, {
           crumbs: crumbs
-        })));
+        })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_components_Footer__WEBPACK_IMPORTED_MODULE_4__["default"], null));
       }
     });
-  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_components_Footer__WEBPACK_IMPORTED_MODULE_4__["default"], null));
+  })));
 };
 
 /* harmony default export */ __webpack_exports__["default"] = (Object(react_redux__WEBPACK_IMPORTED_MODULE_2__["connect"])(mapStateToProps, mapDispatchToProps)(Main));
@@ -203230,7 +203236,12 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var Login = function Login() {
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Box"], null);
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Flex"], {
+    w: "100%",
+    h: "100vh",
+    justifyContent: "center",
+    alignItems: "center"
+  }, "Hellow");
 };
 
 /* harmony default export */ __webpack_exports__["default"] = (Login);
@@ -205072,11 +205083,6 @@ __webpack_require__.r(__webpack_exports__);
   Component: _containers_Vendors__WEBPACK_IMPORTED_MODULE_7__["default"],
   exact: true,
   name: "Shop Listing"
-}, {
-  path: "/login",
-  Component: _containers_Login__WEBPACK_IMPORTED_MODULE_9__["default"],
-  exact: true,
-  name: "Login"
 }, {
   path: "/*",
   Component: _containers_NotFound__WEBPACK_IMPORTED_MODULE_10__["default"],
