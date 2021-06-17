@@ -52,6 +52,9 @@ const theme = extendTheme({
                 "&:hover": {
                     color: "secondary",
                     textDecoration: "none"
+                },
+                "&:focus": {
+                    boxShadow: "none"
                 }
             }
         }

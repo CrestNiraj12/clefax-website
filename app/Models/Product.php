@@ -14,7 +14,6 @@ class Product extends Model
         'description',
         'price',
         'qty',
-        'offer_id',
         'shop_id',
         'category_id',
     ];

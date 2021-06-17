@@ -12,6 +12,8 @@ import { HOME_PAGE } from "./constants";
 import Search from "./components/Search";
 import Cookies from "../images/cookies.png";
 import Login from "./containers/Login";
+import Signup from "./containers/Signup";
+import ForgotPassword from "./containers/ForgotPassword";
 
 const mapDispatchToProps = dispatch => ({
     setProducts: products => dispatch(setProducts(products)),
@@ -184,6 +186,12 @@ const Main = ({ setProducts, setPage, page, showSearch, setCategories }) => {
 
             <Switch>
                 <Route path="/login" component={Login} exact />
+                <Route path="/signup" component={Signup} exact />
+                <Route
+                    path="/forgot-password"
+                    component={ForgotPassword}
+                    exact
+                />
                 {routes.map(({ path, Component, exact }) => (
                     <Route
                         exact={exact}

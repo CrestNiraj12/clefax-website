@@ -1,3 +1,14 @@
+export const validateEmail = values => {
+    const errors = {};
+
+    if (!values.email) errors.email = "Email address is required";
+    else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)) {
+        errors.email = "Email address is invalid";
+    }
+
+    return errors;
+};
+
 export const validateForm = values => {
     const errors = {};
     if (!values.fullname) errors.fullname = "Name is required";
@@ -44,4 +55,30 @@ export const isValidDate = date => {
         date >= new Date(year, month, day) &&
         (date.getDay() == 3 || date.getDay() == 4 || date.getDay() == 5)
     );
+};
+
+export const validateLogin = values => {
+    const errors = {};
+
+    if (!values.email) errors.email = "Email address is required";
+
+    if (!values.password) errors.password = "Password is required";
+    return errors;
+};
+
+export const validateSignup = values => {
+    const errors = {};
+
+    if (!values.fullname) errors.fullname = "Fullname is required";
+    if (!values.email) errors.email = "Email address is required";
+    else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)) {
+        errors.email = "Email address is invalid";
+    }
+    if (!values.password) errors.password = "Password is required";
+    else if (!/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/i.test(values.password)) {
+        errors.password = "Password format is invalid";
+    }
+    if (!values.terms)
+        errors.terms = "Please agree to our terms and conditions";
+    return errors;
 };

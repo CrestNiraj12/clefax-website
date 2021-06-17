@@ -14,7 +14,6 @@ import {
 } from "@chakra-ui/react";
 import React, { useEffect, useRef, useState } from "react";
 import "rc-slider/assets/index.css";
-import { AddIcon } from "@chakra-ui/icons";
 import { BiX, BiSliderAlt } from "react-icons/bi";
 import "@fontsource/rubik/500.css";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
@@ -151,7 +150,6 @@ const Products = ({ products, categories }) => {
                                                 }
                                                 spacing={4}
                                                 colorScheme="red"
-                                                icon={<AddIcon />}
                                                 color="blackAlpha.700"
                                                 onChange={() =>
                                                     handleFilter(value, index)
