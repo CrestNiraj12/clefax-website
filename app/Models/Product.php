@@ -19,7 +19,7 @@ class Product extends Model
     ];
 
     public function offer() {
-        return $this->belongsTo(Offer::class);
+        return $this->belongsToMany(Offer::class, 'product_has_offers');
     }
 
     public function shop() {

@@ -20,10 +20,8 @@ class CreateProductsTable extends Migration
             $table->longText('description');
             $table->decimal('price');
             $table->integer('qty');
-            $table->unsignedBigInteger('offer_id');
             $table->unsignedBigInteger('shop_id');
             $table->unsignedBigInteger('category_id');
-            $table->foreign('offer_id')->references('id')->on('offers');
             $table->foreign('shop_id')->references('id')->on('shops');
             $table->foreign('category_id')->references('id')->on('categories');
             $table->timestamps();

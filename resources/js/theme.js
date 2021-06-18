@@ -2,6 +2,7 @@ import { extendTheme } from "@chakra-ui/react";
 import "@fontsource/archivo";
 import "@fontsource/archivo/300.css";
 import "@fontsource/rubik/700.css";
+import { StepsStyleConfig as Steps } from "chakra-ui-steps";
 
 const theme = extendTheme({
     fonts: {
@@ -57,7 +58,8 @@ const theme = extendTheme({
                     boxShadow: "none"
                 }
             }
-        }
+        },
+        Steps
     }
 });
 export default theme;

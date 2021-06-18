@@ -80,6 +80,11 @@ const Signup = () => {
                                     setTimeout(() => {
                                         alert(JSON.stringify(values, null, 2));
                                         actions.setSubmitting(false);
+                                        if (values.isTrader === "1") {
+                                            history.push(
+                                                "/trader-signup/?id=1"
+                                            );
+                                        }
                                     }, 1000);
                                 }}
                             >

@@ -11716,6 +11716,25 @@ h3 {
   overflow: hidden;
 }
 
+.css-xu4e61 {
+  background: var(--chakra-colors-secondary) !important;
+  color: #fff;
+}
+
+.flex-form {
+  display: flex;
+  align-items: center;
+}
+
+.flex-form > label {
+  width: 50%;
+}
+
+.css-4bxqfv,
+.css-avy531 {
+  width: 95%;
+}
+
 html {
   scroll-behavior: smooth;
 }

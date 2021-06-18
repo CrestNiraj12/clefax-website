@@ -14,6 +14,7 @@ import Cookies from "../images/cookies.png";
 import Login from "./containers/Login";
 import Signup from "./containers/Signup";
 import ForgotPassword from "./containers/ForgotPassword";
+import TraderSignup from "./containers/TraderSignup";
 
 const mapDispatchToProps = dispatch => ({
     setProducts: products => dispatch(setProducts(products)),
@@ -192,6 +193,7 @@ const Main = ({ setProducts, setPage, page, showSearch, setCategories }) => {
                     component={ForgotPassword}
                     exact
                 />
+                <Route path="/trader-signup" component={TraderSignup} exact />
                 {routes.map(({ path, Component, exact }) => (
                     <Route
                         exact={exact}

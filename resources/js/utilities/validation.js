@@ -9,6 +9,28 @@ export const validateEmail = values => {
     return errors;
 };
 
+export const validatePaymentEmails = values => {
+    const errors = {};
+
+    if (!values.paypal_email)
+        errors.paypal_email = "Paypal account is required";
+    else if (
+        !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.paypal_email)
+    ) {
+        errors.paypal_email = "Email address is invalid";
+    }
+
+    if (!values.stripe_email)
+        errors.stripe_email = "Stripe account is required";
+    else if (
+        !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.stripe_email)
+    ) {
+        errors.stripe_email = "Email address is invalid";
+    }
+
+    return errors;
+};
+
 export const validateForm = values => {
     const errors = {};
     if (!values.fullname) errors.fullname = "Name is required";
@@ -80,5 +102,18 @@ export const validateSignup = values => {
     }
     if (!values.terms)
         errors.terms = "Please agree to our terms and conditions";
+    return errors;
+};
+
+export const validateShop = values => {
+    const errors = {};
+
+    if (!values.name) errors.name = "Shop name is required";
+    if (!values.street_no) errors.street_no = "Street address is required";
+    if (!values.city) errors.city = "City is required";
+
+    if (!values.PAN) errors.PAN = "Registration number is required";
+    if (!values.logo) errors.logo = "Logo is required";
+    if (!values.user_id) errors.user_id = "Error occured while signup!";
     return errors;
 };
