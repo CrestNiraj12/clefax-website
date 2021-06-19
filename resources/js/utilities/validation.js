@@ -117,3 +117,29 @@ export const validateShop = values => {
     if (!values.user_id) errors.user_id = "Error occured while signup!";
     return errors;
 };
+
+export const validateDetails = values => {
+    const errors = {};
+
+    if (
+        values.email &&
+        !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)
+    ) {
+        errors.email = "Email address is invalid";
+    }
+
+    if (values.old_password) {
+        if (!values.password) errors.password = "Password is required";
+        if (!/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/i.test(values.password)) {
+            errors.password = "Password format is invalid";
+        }
+        if (!values.password_confirmation)
+            errors.password = "Password confirmation is required";
+        if (values.password !== values.password_confirmation) {
+            errors.password_confirmation =
+                "Please make sure your passwords match";
+        }
+    }
+
+    return errors;
+};

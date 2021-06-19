@@ -9,6 +9,7 @@ import Vendors from "./containers/Vendors";
 import Shop from "./containers/Shop";
 import Login from "./containers/Login";
 import NotFound from "./containers/NotFound";
+import Account from "./containers/Account";
 
 export default [
     { path: "/", Component: Home, exact: true, name: "Home" },
@@ -65,6 +66,12 @@ export default [
         Component: Vendors,
         exact: true,
         name: "Shop Listing"
+    },
+    {
+        path: "/account",
+        Component: Account,
+        exact: true,
+        name: "My Account"
     },
     {
         path: "/*",

@@ -135,15 +135,21 @@ body {
     width: 8px;
 }
 
-.scrollable::-webkit-scrollbar-track {
+.scrollableX::-webkit-scrollbar {
+    height: 4px;
+}
+
+.scrollable::-webkit-scrollbar-track,
+.scrollableX::-webkit-scrollbar-track {
     background: transparent; /* color of the tracking area */
 }
 
-.scrollable::-webkit-scrollbar-thumb {
+.scrollable::-webkit-scrollbar-thumb,
+.scrollableX::-webkit-scrollbar-thumb {
     background-color: var(
         --chakra-colors-secondary
     ); /* color of the scroll thumb */
-    border-radius: 10px; /* roundness of the scroll thumb */
+    border-radius: 50px; /* roundness of the scroll thumb */
     border: none; /* creates padding around scroll thumb */
 }
 

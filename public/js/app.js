@@ -206127,6 +206127,454 @@ var MAPS_API_KEY = "AIzaSyDkdfRfa5j9YuZy0FB-jZFtv5TYpQdZhdM";
 
 /***/ }),
 
+/***/ "./resources/js/containers/Account/Details.js":
+/*!****************************************************!*\
+  !*** ./resources/js/containers/Account/Details.js ***!
+  \****************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var formik__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! formik */ "./node_modules/formik/dist/formik.esm.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _utilities_validation__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../utilities/validation */ "./resources/js/utilities/validation.js");
+/* harmony import */ var react_images_upload__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-images-upload */ "./node_modules/react-images-upload/compiled.js");
+/* harmony import */ var react_images_upload__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(react_images_upload__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _chakra_ui_react__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @chakra-ui/react */ "./node_modules/@chakra-ui/react/dist/esm/index.js");
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
+
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _iterableToArrayLimit(arr, i) { var _i = arr && (typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"]); if (_i == null) return; var _arr = []; var _n = true; var _d = false; var _s, _e; try { for (_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+
+
+
+
+
+var details = [{
+  name: "fullname",
+  label: "Full Name"
+}, {
+  name: "email",
+  label: "Email Address"
+}, {
+  name: "phone",
+  label: "Phone no."
+}, {
+  name: "address",
+  label: "Address"
+}];
+var passwords = [{
+  name: "old_password",
+  label: "Current Password (Leave blank to leave unchanged)"
+}, {
+  name: "password",
+  label: "New Password"
+}, {
+  name: "password_confirmation",
+  label: "Confirm Password"
+}];
+
+var Details = function Details() {
+  var toast = Object(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_4__["useToast"])();
+
+  var _useState = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])({
+    old_password: false,
+    password: false,
+    password_confirmation: false
+  }),
+      _useState2 = _slicedToArray(_useState, 2),
+      show = _useState2[0],
+      setShow = _useState2[1];
+
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_0__["Formik"], {
+    validate: _utilities_validation__WEBPACK_IMPORTED_MODULE_2__["validateDetails"],
+    initialValues: {
+      avatar: null,
+      fullname: "",
+      email: "",
+      phone: "",
+      address: "",
+      dob: "",
+      gender: "",
+      old_password: "",
+      password: "",
+      password_confirmation: ""
+    },
+    onSubmit: function onSubmit(values, actions) {
+      setTimeout(function () {
+        alert(JSON.stringify(values, null, 2));
+        actions.setSubmitting(false);
+        toast({
+          title: "Account details updated",
+          description: "Successfully updated your account details.",
+          status: "success",
+          duration: 2000,
+          isClosable: true,
+          position: "top"
+        });
+      }, 1000);
+    }
+  }, function (props) {
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_0__["Form"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_4__["VStack"], {
+      alignItems: "flex-start",
+      w: "100%",
+      mr: "20px"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_0__["Field"], {
+      name: "avatar",
+      w: "100%"
+    }, function (_ref) {
+      var field = _ref.field,
+          form = _ref.form;
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_4__["FormControl"], {
+        isInvalid: form.errors.avatar && form.touched.avatar,
+        mb: "10px !important"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_4__["FormLabel"], null, "Avatar"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_4__["Box"], {
+        w: {
+          base: "100%",
+          md: "40%"
+        }
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(react_images_upload__WEBPACK_IMPORTED_MODULE_3___default.a, {
+        withPreview: true,
+        withIcon: true,
+        buttonText: "Browse avatar",
+        onChange: function onChange(files, urls) {
+          return form.setFieldValue("avatar", files[0]);
+        },
+        imgExtension: [".jpg", ".gif", ".png", ".gif"],
+        maxFileSize: 5242880
+      })));
+    }), details.map(function (_ref2, index) {
+      var name = _ref2.name,
+          label = _ref2.label;
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_0__["Field"], {
+        name: name,
+        key: index
+      }, function (_ref3) {
+        var field = _ref3.field,
+            form = _ref3.form;
+        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_4__["FormControl"], {
+          isInvalid: form.errors[name] && form.touched[name],
+          mb: "10px !important"
+        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_4__["FormLabel"], null, label), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_4__["Input"], _extends({}, field, {
+          id: name,
+          size: "sm"
+        })));
+      });
+    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_0__["Field"], {
+      name: "dob"
+    }, function (_ref4) {
+      var field = _ref4.field,
+          form = _ref4.form;
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_4__["FormControl"], {
+        isInvalid: form.errors.dob && form.touched.dob,
+        mb: "10px !important"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_4__["FormLabel"], null, "Date of birth"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_4__["Input"], _extends({
+        type: "date"
+      }, field, {
+        id: "dob",
+        size: "sm"
+      })));
+    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_0__["Field"], {
+      name: "gender"
+    }, function (_ref5) {
+      var field = _ref5.field,
+          form = _ref5.form;
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_4__["FormControl"], {
+        isInvalid: form.errors.gender && form.touched.gender,
+        mb: "10px !important"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_4__["FormLabel"], null, "Gender"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_4__["Select"], _extends({}, field, {
+        placeholder: "Select gender",
+        size: "sm",
+        id: "gender"
+      }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("option", {
+        value: "M"
+      }, "Male"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("option", {
+        value: "F"
+      }, "Female"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("option", {
+        value: "O"
+      }, "Other")));
+    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_4__["Heading"], {
+      as: "h6",
+      fontSize: "lg",
+      my: "20px !important"
+    }, "Password Change"), passwords.map(function (_ref6, index) {
+      var name = _ref6.name,
+          label = _ref6.label;
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_0__["Field"], {
+        name: name,
+        key: index
+      }, function (_ref7) {
+        var field = _ref7.field,
+            form = _ref7.form;
+        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_4__["FormControl"], {
+          isInvalid: form.errors[name] && form.touched[name],
+          mb: "10px !important"
+        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_4__["FormLabel"], null, label), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_4__["InputGroup"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_4__["Input"], _extends({}, field, {
+          id: name,
+          pr: "4.5rem",
+          type: show[name] ? "text" : "password"
+        })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_4__["InputRightElement"], {
+          width: "4.5rem"
+        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_4__["Button"], {
+          fontSize: "xs",
+          p: "10px !important",
+          h: "1.75rem",
+          borderRadius: "md",
+          letterSpacing: "0.5px !important",
+          fontWeight: "bold",
+          textTransform: "none !important",
+          size: "sm",
+          onClick: function onClick() {
+            return setShow(_objectSpread(_objectSpread({}, show), {}, _defineProperty({}, name, !show[name])));
+          }
+        }, show[name] ? "Hide" : "Show"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_4__["FormErrorMessage"], null, form.errors[name]));
+      });
+    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_4__["Button"], {
+      mt: "30px !important",
+      isLoading: props.isSubmitting,
+      background: "primary",
+      color: "#fff",
+      fontSize: "smaller",
+      letterSpacing: "3px",
+      fontWeight: "bold",
+      px: "25px !important",
+      type: "submit"
+    }, "Save Changes")));
+  });
+};
+
+/* harmony default export */ __webpack_exports__["default"] = (Details);
+
+/***/ }),
+
+/***/ "./resources/js/containers/Account/Orders.js":
+/*!***************************************************!*\
+  !*** ./resources/js/containers/Account/Orders.js ***!
+  \***************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @chakra-ui/react */ "./node_modules/@chakra-ui/react/dist/esm/index.js");
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
+
+
+
+var orders = [{
+  id: "0001",
+  date: "2021/01/01",
+  status: 1,
+  total: 1000.0
+}];
+
+var Orders = function Orders() {
+  var history = Object(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["useHistory"])();
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, orders && orders.length ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Table"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Thead"], {
+    bg: "lightgray"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Tr"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Th"], null, "Order No."), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Th"], null, "Date"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Th"], null, "Status"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Th"], null, "Total"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Th"], null, "Actions"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Tbody"], null, orders.map(function (_ref, index) {
+    var id = _ref.id,
+        date = _ref.date,
+        status = _ref.status,
+        total = _ref.total;
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Tr"], {
+      key: index
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Td"], null, id), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Td"], null, date), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Td"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Badge"], {
+      ml: "1",
+      fontSize: "0.8em",
+      colorScheme: status === 1 ? "green" : "yellow"
+    }, status === 1 ? "Delivered" : "Processing")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Td"], null, "\xA3", total), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Td"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Button"], {
+      h: "auto",
+      p: "10px 20px !important",
+      fontSize: "xs",
+      onClick: function onClick() {
+        return history.push("/invoice?id=1");
+      }
+    }, "View")));
+  }))) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Heading"], {
+    as: "h6",
+    fontSize: "lg",
+    mb: "20px"
+  }, "No orders has been made yet."), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Link"], {
+    href: "/shop",
+    color: "secondary",
+    _hover: {
+      textDecor: "underline !important"
+    }
+  }, "Browse products")));
+};
+
+/* harmony default export */ __webpack_exports__["default"] = (Orders);
+
+/***/ }),
+
+/***/ "./resources/js/containers/Account/index.js":
+/*!**************************************************!*\
+  !*** ./resources/js/containers/Account/index.js ***!
+  \**************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _chakra_ui_layout__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @chakra-ui/layout */ "./node_modules/@chakra-ui/layout/dist/esm/index.js");
+/* harmony import */ var _chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @chakra-ui/react */ "./node_modules/@chakra-ui/react/dist/esm/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
+/* harmony import */ var _components_Breadcrumb__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../components/Breadcrumb */ "./resources/js/components/Breadcrumb/index.js");
+/* harmony import */ var _Details__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Details */ "./resources/js/containers/Account/Details.js");
+/* harmony import */ var _Orders__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./Orders */ "./resources/js/containers/Account/Orders.js");
+
+
+
+
+
+
+
+
+var tabs = ["Dashboard", "Orders", "Account Details", "Logout"];
+
+var Account = function Account(_ref) {
+  var crumbs = _ref.crumbs;
+  var history = Object(react_router_dom__WEBPACK_IMPORTED_MODULE_3__["useHistory"])();
+
+  var _useDisclosure = Object(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["useDisclosure"])(),
+      isOpen = _useDisclosure.isOpen,
+      onOpen = _useDisclosure.onOpen,
+      onClose = _useDisclosure.onClose;
+
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_layout__WEBPACK_IMPORTED_MODULE_0__["Box"], {
+    mx: "20px",
+    mb: "100px"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_components_Breadcrumb__WEBPACK_IMPORTED_MODULE_4__["default"], {
+    crumbs: crumbs,
+    margin: "20px 0"
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Modal"], {
+    isOpen: isOpen,
+    onClose: onClose
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["ModalOverlay"], null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["ModalContent"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["ModalHeader"], null, "Logout"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["ModalCloseButton"], null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["ModalBody"], null, "Are you sure you want to logout?"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["ModalFooter"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Button"], {
+    bg: "primary",
+    color: "#fff",
+    fontSize: "sm",
+    textTransform: "none",
+    p: "0 20px !important",
+    mr: 3,
+    onClick: onClose,
+    _hover: {
+      bg: "var(--chakra-colors-gray) !important"
+    }
+  }, "Cancel"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Button"], {
+    variant: "ghost",
+    fontSize: "sm",
+    textTransform: "none",
+    p: "0 20px !important",
+    onClick: function onClick() {
+      return history.push("/logout");
+    }
+  }, "Logout")))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Tabs"], {
+    variant: "unstyled",
+    orientation: "vertical",
+    flexDir: {
+      base: "column",
+      lg: "row"
+    },
+    isLazy: true
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["TabList"], {
+    w: {
+      base: "100%",
+      lg: "300px"
+    },
+    bg: "lightgray",
+    py: "3",
+    px: "30px",
+    h: {
+      base: "auto",
+      lg: "300px"
+    },
+    mb: {
+      base: "50px",
+      lg: 0
+    },
+    maxH: "300px",
+    alignItems: "flex-start"
+  }, tabs.map(function (tab, index) {
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_2__["Fragment"], {
+      key: index
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Tab"], {
+      px: "0 !important",
+      py: "10px !important",
+      color: "gray",
+      fontSize: "sm",
+      _hover: {
+        color: "secondary"
+      },
+      _selected: {
+        color: "secondary"
+      },
+      _focus: {
+        boxShadow: "none"
+      },
+      onClick: function onClick() {
+        if (tab === "Logout") onOpen();
+      }
+    }, tab), index !== tabs.length - 1 && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Divider"], {
+      borderColor: "#dadada"
+    }));
+  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["TabPanels"], {
+    ml: {
+      base: 0,
+      lg: "50px"
+    }
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["TabPanel"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_layout__WEBPACK_IMPORTED_MODULE_0__["Box"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Text"], null, "Hello ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement("b", null, "Niraj Shrestha"), " (Not", " ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement("b", null, "Niraj Shrestha"), "?", " ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Button"], {
+    variant: "link",
+    letterSpacing: "0 !important",
+    textTransform: "none",
+    onClick: onOpen,
+    textDecor: "underline",
+    color: "gray",
+    fontSize: "sm",
+    _hover: {
+      bg: "transparent !important",
+      color: "var(--chakra-colors-secondary) !important"
+    }
+  }, "Logout"), ")"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Text"], {
+    mt: "20px",
+    color: "gray"
+  }, "From your account dashboard, you can view your order history, edit your password and your account details."))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["TabPanel"], {
+    py: "0",
+    overflowX: "auto",
+    px: "0",
+    pb: "30px"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_Orders__WEBPACK_IMPORTED_MODULE_6__["default"], null)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["TabPanel"], {
+    py: "0"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_Details__WEBPACK_IMPORTED_MODULE_5__["default"], null)))));
+};
+
+/* harmony default export */ __webpack_exports__["default"] = (Account);
+
+/***/ }),
+
 /***/ "./resources/js/containers/Cart/index.js":
 /*!***********************************************!*\
   !*** ./resources/js/containers/Cart/index.js ***!
@@ -211673,6 +212121,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _containers_Shop__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./containers/Shop */ "./resources/js/containers/Shop/index.js");
 /* harmony import */ var _containers_Login__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./containers/Login */ "./resources/js/containers/Login/index.js");
 /* harmony import */ var _containers_NotFound__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./containers/NotFound */ "./resources/js/containers/NotFound/index.js");
+/* harmony import */ var _containers_Account__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./containers/Account */ "./resources/js/containers/Account/index.js");
+
 
 
 
@@ -211734,6 +212184,11 @@ __webpack_require__.r(__webpack_exports__);
   Component: _containers_Vendors__WEBPACK_IMPORTED_MODULE_7__["default"],
   exact: true,
   name: "Shop Listing"
+}, {
+  path: "/account",
+  Component: _containers_Account__WEBPACK_IMPORTED_MODULE_11__["default"],
+  exact: true,
+  name: "My Account"
 }, {
   path: "/*",
   Component: _containers_NotFound__WEBPACK_IMPORTED_MODULE_10__["default"],
@@ -211875,7 +212330,7 @@ var searchQuery = function searchQuery(arr, q) {
 /*!**********************************************!*\
   !*** ./resources/js/utilities/validation.js ***!
   \**********************************************/
-/*! exports provided: validateEmail, validatePaymentEmails, validateForm, validateContactForm, isValidDate, validateLogin, validateSignup, validateShop */
+/*! exports provided: validateEmail, validatePaymentEmails, validateForm, validateContactForm, isValidDate, validateLogin, validateSignup, validateShop, validateDetails */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -211888,6 +212343,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "validateLogin", function() { return validateLogin; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "validateSignup", function() { return validateSignup; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "validateShop", function() { return validateShop; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "validateDetails", function() { return validateDetails; });
 var validateEmail = function validateEmail(values) {
   var errors = {};
   if (!values.email) errors.email = "Email address is required";else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)) {
@@ -211963,6 +212419,29 @@ var validateShop = function validateShop(values) {
   if (!values.PAN) errors.PAN = "Registration number is required";
   if (!values.logo) errors.logo = "Logo is required";
   if (!values.user_id) errors.user_id = "Error occured while signup!";
+  return errors;
+};
+var validateDetails = function validateDetails(values) {
+  var errors = {};
+
+  if (values.email && !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)) {
+    errors.email = "Email address is invalid";
+  }
+
+  if (values.old_password) {
+    if (!values.password) errors.password = "Password is required";
+
+    if (!/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/i.test(values.password)) {
+      errors.password = "Password format is invalid";
+    }
+
+    if (!values.password_confirmation) errors.password = "Password confirmation is required";
+
+    if (values.password !== values.password_confirmation) {
+      errors.password_confirmation = "Please make sure your passwords match";
+    }
+  }
+
   return errors;
 };
 
