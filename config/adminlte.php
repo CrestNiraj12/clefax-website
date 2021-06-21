@@ -187,13 +187,13 @@ return [
     */
 
     'use_route_url' => false,
-    'dashboard_url' => '/admin/dashboard',
-    'logout_url' => '/admin/logout',
-    'login_url' => '/admin/login',
-    'register_url' => '/admin/login',
+    'dashboard_url' => '/trader/dashboard',
+    'logout_url' => '/trader/logout',
+    'login_url' => '/login',
+    'register_url' => '/signup',
     'password_reset_url' => 'password/reset',
     'password_email_url' => 'password/email',
-    'profile_url' => '/admin/profile',
+    'profile_url' => '/trader/profile',
 
     /*
     |--------------------------------------------------------------------------

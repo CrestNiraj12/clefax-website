@@ -18,7 +18,8 @@
                 {{ __('auth.fields.password') }}
                 @if(Route::has('password.request'))
                 <span class="form-label-description">
-                    <a href="{{ route('password.request') }}">{{ __('auth.placeholder.forgotpassword') }}</a>
+                    <a href="{{ route('password.request') }}"
+                        style="color: red">{{ __('auth.placeholder.forgotpassword') }}</a>
                 </span>
                 @endif
             </label>
@@ -45,11 +46,11 @@
             <label class="form-check">
                 <input type="checkbox" name="remember" class="form-check-input" tabindex="3" />
                 <span class="form-check-label">{{ __('auth.rememberme') }}</span>
-            </label>
-        </div> --}}
-        <div class="form-footer">
-            <button type="submit" class="btn btn-primary w-100" tabindex="4">{{ __('auth.loginbutton') }}</button>
-        </div>
+        </label>
+    </div> --}}
+    <div class="form-footer">
+        <button type="submit" class="btn btn-danger w-100" tabindex="4">{{ __('auth.loginbutton') }}</button>
+    </div>
     </div>
 </form>
 

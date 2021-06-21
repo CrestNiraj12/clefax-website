@@ -51,6 +51,10 @@ const mapDispatchToProps = dispatch => ({
     showSearch: show => dispatch(showSearch(show))
 });
 
+const mapStateToProps = state => ({
+    auth: state.auth
+});
+
 const headings = [
     {
         title: "Products",
@@ -92,7 +96,7 @@ const headings = [
     }
 ];
 
-const Navbar = ({ showSearch }) => {
+const Navbar = ({ showSearch, auth }) => {
     var history = useHistory();
     const [hovered, setHovered] = useState(false);
     const [smallerThan1100] = useMediaQuery("(max-width: 1100px)");
@@ -178,31 +182,37 @@ const Navbar = ({ showSearch }) => {
                                             </Link>
                                         </Box>
                                         <Divider />
-                                        <Box p="10px">
-                                            <Link
-                                                href="/login"
-                                                className="link textLink"
-                                            >
-                                                Login
-                                            </Link>
-                                        </Box>
-                                        <Divider />
-                                        <Box p="10px">
-                                            <Link
-                                                href="/register"
-                                                className="link textLink"
-                                            >
-                                                Register
-                                            </Link>
-                                        </Box>
-                                        {/* <Box p="10px">
-                                            <Link
-                                                href="/account"
-                                                className="link textLink"
-                                            >
-                                                My Account
-                                            </Link>
-                                        </Box> */}
+                                        {!auth.logged_in && (
+                                            <>
+                                                <Box p="10px">
+                                                    <Link
+                                                        href="/login"
+                                                        className="link textLink"
+                                                    >
+                                                        Login
+                                                    </Link>
+                                                </Box>
+                                                <Divider />
+                                                <Box p="10px">
+                                                    <Link
+                                                        href="/register"
+                                                        className="link textLink"
+                                                    >
+                                                        Register
+                                                    </Link>
+                                                </Box>
+                                            </>
+                                        )}
+                                        {auth.logged_in && (
+                                            <Box p="10px">
+                                                <Link
+                                                    href="/account"
+                                                    className="link textLink"
+                                                >
+                                                    My Account
+                                                </Link>
+                                            </Box>
+                                        )}
                                         <Divider />
                                         <Box p="10px">
                                             <Link
@@ -502,21 +512,27 @@ const Navbar = ({ showSearch }) => {
                                     <Icon as={IoPersonOutline} />
                                 </MenuButton>
                                 <MenuList>
-                                    <MenuItem minH="48px">
-                                        <Link href="/login" w="100%">
-                                            Login
-                                        </Link>
-                                    </MenuItem>
-                                    <MenuItem minH="48px">
-                                        <Link href="/signup" w="100%">
-                                            Register
-                                        </Link>
-                                    </MenuItem>
-                                    <MenuItem minH="48px">
-                                        <Link href="/account" w="100%">
-                                            My Account
-                                        </Link>
-                                    </MenuItem>
+                                    {!auth.logged_in && (
+                                        <>
+                                            <MenuItem minH="48px">
+                                                <Link href="/login" w="100%">
+                                                    Login
+                                                </Link>
+                                            </MenuItem>
+                                            <MenuItem minH="48px">
+                                                <Link href="/signup" w="100%">
+                                                    Register
+                                                </Link>
+                                            </MenuItem>
+                                        </>
+                                    )}
+                                    {auth.logged_in && (
+                                        <MenuItem minH="48px">
+                                            <Link href="/account" w="100%">
+                                                My Account
+                                            </Link>
+                                        </MenuItem>
+                                    )}
                                     <MenuItem minH="40px">
                                         <Link href="/checkout" w="100%">
                                             Checkout
@@ -576,4 +592,4 @@ const Navbar = ({ showSearch }) => {
     );
 };
 
-export default connect(null, mapDispatchToProps)(Navbar);
+export default connect(mapStateToProps, mapDispatchToProps)(Navbar);

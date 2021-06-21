@@ -1,4 +1,5 @@
 import {
+    SET_AUTH,
     SET_CATEGORIES,
     SET_PAGE,
     SET_PRODUCTS,
@@ -23,4 +24,9 @@ export const setPage = page => ({
 export const showSearch = show => ({
     type: SHOW_SEARCH,
     payload: show
+});
+
+export const setAuth = auth => ({
+    type: SET_AUTH,
+    payload: auth
 });

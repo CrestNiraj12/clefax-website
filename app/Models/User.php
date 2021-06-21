@@ -21,7 +21,6 @@ class User extends Authenticatable
     protected $fillable = [
         'fullname',
         'email',
-        'password',
         'role',
         'address',
         'phone',
@@ -52,12 +51,12 @@ class User extends Authenticatable
 
     public function adminlte_image()
     {
-        return Auth::user()->avatar ? asset('storage/avatars/'.Auth::user()->avatar) : 'https://api.proxeuse.com/avatars/api/?name='.urlencode(Auth::user()->name).'&color=fff&background='.substr(md5(Auth::user()->name), 0, 6).'&size=300';
+        return Auth::user()->avatar ? asset('storage/avatars/'.Auth::user()->avatar) : 'https://api.proxeuse.com/avatars/api/?name='.urlencode(Auth::user()->name).'&color=fff&background='.substr(md5(Auth::user()->fullname), 0, 6).'&size=300';
     }
 
     public function adminlte_profile_url()
     {
-        return '/admin/profile';
+        return '/trader/profile';
     }
 
     public function cart() {

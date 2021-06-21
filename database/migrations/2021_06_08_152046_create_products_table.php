@@ -18,8 +18,11 @@ class CreateProductsTable extends Migration
             $table->string('name');
             $table->longText('images');
             $table->longText('description');
+            $table->longText('allergy_information');
             $table->decimal('price');
             $table->integer('qty');
+            $table->integer('max_order');
+            $table->string('unit')->default('pc');
             $table->unsignedBigInteger('shop_id');
             $table->unsignedBigInteger('category_id');
             $table->foreign('shop_id')->references('id')->on('shops');

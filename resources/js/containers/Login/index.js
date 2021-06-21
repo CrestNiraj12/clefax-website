@@ -13,21 +13,37 @@ import {
     VStack,
     InputRightElement,
     InputGroup,
-    useMediaQuery
+    useMediaQuery,
+    useToast
 } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { Formik, Form, Field } from "formik";
 import { validateLogin } from "../../utilities/validation";
 import Wine from "../../../images/wine.png";
 import Logo from "../../../images/logo-black.png";
-import { useHistory } from "react-router-dom";
+import { Redirect, useHistory } from "react-router-dom";
+import { apiClient } from "../../utilities";
+import { DEFAULT_TOAST } from "../../constants";
+import { connect } from "react-redux";
+import { setAuth } from "../../actions";
 
-const Login = () => {
+const mapDispatchToProps = dispatch => ({
+    setAuth: auth => dispatch(setAuth(auth))
+});
+
+const mapStateToProps = state => ({
+    auth: state.auth
+});
+
+const Login = ({ setAuth, auth }) => {
+    const toast = useToast(DEFAULT_TOAST);
     var history = useHistory();
     const [show, setShow] = useState(false);
     const [isSmallerThan768] = useMediaQuery("(max-width: 768px)");
 
-    return (
+    return auth.logged_in ? (
+        <Redirect to="/" />
+    ) : (
         <Flex
             alignItems={{ base: "center", md: "flex-start" }}
             direction="column"
@@ -79,10 +95,60 @@ const Login = () => {
                                     password: ""
                                 }}
                                 onSubmit={(values, actions) => {
-                                    setTimeout(() => {
-                                        alert(JSON.stringify(values, null, 2));
-                                        actions.setSubmitting(false);
-                                    }, 1000);
+                                    apiClient
+                                        .get("/sanctum/csrf-cookie")
+                                        .then(res =>
+                                            apiClient
+                                                .post("/api/login", values)
+                                                .then(res => {
+                                                    console.log(res);
+                                                    toast({
+                                                        title: "Login Success",
+                                                        description:
+                                                            "User was logged in successfully!",
+                                                        status: "success"
+                                                    });
+                                                    localStorage.setItem(
+                                                        "user",
+                                                        JSON.stringify(
+                                                            res.data.user
+                                                        )
+                                                    );
+                                                    setAuth({
+                                                        logged_in: true,
+                                                        user: res.data.user
+                                                    });
+                                                    actions.setSubmitting(
+                                                        false
+                                                    );
+
+                                                    history.push("/");
+                                                })
+                                                .catch(err => {
+                                                    console.log(err.response);
+                                                    toast({
+                                                        title:
+                                                            "Error while logging in",
+                                                        description: err
+                                                            .response.data
+                                                            ? err.response.data
+                                                                  .message
+                                                            : "Error occured! Please try again!",
+                                                        status: "error"
+                                                    });
+                                                    actions.setSubmitting(
+                                                        false
+                                                    );
+                                                })
+                                        )
+                                        .catch(err => {
+                                            toast({
+                                                title: "Error while signup",
+                                                description:
+                                                    "Error occured! Please try again!",
+                                                status: "error"
+                                            });
+                                        });
                                 }}
                             >
                                 {props => (
@@ -241,4 +307,4 @@ const Login = () => {
     );
 };
 
-export default Login;
+export default connect(mapStateToProps, mapDispatchToProps)(Login);

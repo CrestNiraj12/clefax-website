@@ -19,16 +19,34 @@ import {
 } from "@chakra-ui/react";
 import React from "react";
 import { Fragment } from "react";
+import { connect } from "react-redux";
 import { useHistory } from "react-router-dom";
+import { setAuth } from "../../actions";
 import Breadcrumb from "../../components/Breadcrumb";
+import { apiClient } from "../../utilities";
 import Details from "./Details";
 import Orders from "./Orders";
 
 const tabs = ["Dashboard", "Orders", "Account Details", "Logout"];
 
-const Account = ({ crumbs }) => {
+const mapDispatchToProps = dispatch => ({
+    setAuth: auth => dispatch(setAuth(auth))
+});
+
+const Account = ({ crumbs, setAuth }) => {
     var history = useHistory();
     const { isOpen, onOpen, onClose } = useDisclosure();
+
+    const handleLogout = () => {
+        apiClient
+            .get("/api/logout")
+            .then(res => {
+                localStorage.removeItem("user");
+                setAuth({ logged_in: false, user: null });
+                history.push("/");
+            })
+            .catch(err => console.log(err));
+    };
 
     return (
         <Box mx="20px" mb="100px">
@@ -60,7 +78,7 @@ const Account = ({ crumbs }) => {
                             fontSize="sm"
                             textTransform="none"
                             p="0 20px !important"
-                            onClick={() => history.push("/logout")}
+                            onClick={handleLogout}
                         >
                             Logout
                         </Button>
@@ -148,4 +166,4 @@ const Account = ({ crumbs }) => {
     );
 };
 
-export default Account;
+export default connect(null, mapDispatchToProps)(Account);

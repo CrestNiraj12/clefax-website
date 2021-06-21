@@ -14,6 +14,8 @@ class Product extends Model
         'description',
         'price',
         'qty',
+        'max_order',
+        'unit',
         'shop_id',
         'category_id',
     ];

@@ -106,10 +106,11 @@ const headings = [
 
 const mapStateToProps = state => ({
     products: state.products,
-    categories: state.categories
+    categories: state.categories,
+    auth: state.auth
 });
 
-const Navbar = ({ showSearch, products, categories }) => {
+const Navbar = ({ showSearch, products, categories, auth }) => {
     var history = useHistory();
     const [selectedCategory, setSelectedCategory] = useState(null);
     const [hovered, setHovered] = useState(false);
@@ -509,21 +510,27 @@ const Navbar = ({ showSearch, products, categories }) => {
                                 <Icon as={IoPersonOutline} />
                             </MenuButton>
                             <MenuList>
-                                <MenuItem minH="48px">
-                                    <Link href="/login" w="100%">
-                                        Login
-                                    </Link>
-                                </MenuItem>
-                                <MenuItem minH="48px">
-                                    <Link href="/signup" w="100%">
-                                        Register
-                                    </Link>
-                                </MenuItem>
-                                <MenuItem minH="48px">
-                                    <Link href="/account" w="100%">
-                                        My Account
-                                    </Link>
-                                </MenuItem>
+                                {!auth.logged_in && (
+                                    <>
+                                        <MenuItem minH="48px">
+                                            <Link href="/login" w="100%">
+                                                Login
+                                            </Link>
+                                        </MenuItem>
+                                        <MenuItem minH="48px">
+                                            <Link href="/signup" w="100%">
+                                                Register
+                                            </Link>
+                                        </MenuItem>
+                                    </>
+                                )}
+                                {auth.logged_in && (
+                                    <MenuItem minH="48px">
+                                        <Link href="/account" w="100%">
+                                            My Account
+                                        </Link>
+                                    </MenuItem>
+                                )}
                                 <MenuItem minH="40px">
                                     <Link href="/checkout" w="100%">
                                         Checkout

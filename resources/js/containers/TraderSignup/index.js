@@ -12,7 +12,8 @@ import {
     Input,
     Button,
     Icon,
-    Heading
+    Heading,
+    useToast
 } from "@chakra-ui/react";
 import Logo from "../../../images/logo-black.png";
 import {
@@ -22,14 +23,14 @@ import {
     AiFillCheckCircle
 } from "react-icons/ai";
 import { Formik, Form, Field } from "formik";
-import { useEffect } from "react";
-import qs from "query-string";
 import {
     validatePaymentEmails,
     validateShop
 } from "../../utilities/validation";
 import ImageUploader from "react-images-upload";
 import { useHistory } from "react-router-dom";
+import { apiClient } from "../../utilities";
+import { DEFAULT_TOAST } from "../../constants";
 
 const shop_details = [
     { name: "name", label: "Shop Name" },
@@ -45,6 +46,7 @@ const payment_details = [
 
 const TraderSignup = () => {
     var history = useHistory();
+    const toast = useToast(DEFAULT_TOAST);
     const { nextStep, activeStep } = useSteps({
         initialStep: 0
     });
@@ -94,23 +96,57 @@ const TraderSignup = () => {
                                             street_no: "",
                                             city: "",
                                             PAN: "",
-                                            logo: null,
-                                            user_id: qs.parse(location.search)
-                                                .id
+                                            logo: null
                                         }}
                                         onSubmit={(values, actions) => {
-                                            setTimeout(() => {
-                                                alert(
-                                                    JSON.stringify(
-                                                        values,
-                                                        null,
-                                                        2
-                                                    )
-                                                );
-                                                actions.setSubmitting(false);
+                                            apiClient
+                                                .get("/sanctum/csrf-cookie")
+                                                .then(res =>
+                                                    apiClient
+                                                        .post(
+                                                            "/api/shop/create",
+                                                            values
+                                                        )
+                                                        .then(res => {
+                                                            actions.setSubmitting(
+                                                                false
+                                                            );
 
-                                                nextStep();
-                                            }, 1000);
+                                                            nextStep();
+                                                        })
+                                                        .catch(err => {
+                                                            console.log(
+                                                                err.response
+                                                            );
+                                                            actions.setSubmitting(
+                                                                false
+                                                            );
+
+                                                            toast({
+                                                                title:
+                                                                    "Error while adding shop",
+                                                                description: err
+                                                                    .response
+                                                                    .data.errors
+                                                                    ? err
+                                                                          .response
+                                                                          .data
+                                                                          .errors
+                                                                          .email
+                                                                    : "Error occured! Please try again!",
+                                                                status: "error"
+                                                            });
+                                                        })
+                                                )
+                                                .catch(err => {
+                                                    toast({
+                                                        title:
+                                                            "Error while adding shop",
+                                                        description:
+                                                            "Error occured! Please try again!",
+                                                        status: "error"
+                                                    });
+                                                });
                                         }}
                                     >
                                         {props => (
@@ -230,7 +266,9 @@ const TraderSignup = () => {
                                                 </Field>
                                                 <Flex
                                                     w="100%"
+                                                    flexDir="column"
                                                     justifyContent="center"
+                                                    alignItems="center"
                                                 >
                                                     <Button
                                                         isLoading={
@@ -249,6 +287,21 @@ const TraderSignup = () => {
                                                     >
                                                         Continue
                                                     </Button>
+                                                    <Link
+                                                        href="/trader/dashboard"
+                                                        fontSize="xs"
+                                                        mt="10px"
+                                                        color="secondary"
+                                                        textDecor="underline"
+                                                        _hover={{
+                                                            color:
+                                                                "var(--chakra-colors-primary) !important",
+                                                            textDecor:
+                                                                "underline !important"
+                                                        }}
+                                                    >
+                                                        Skip for now
+                                                    </Link>
                                                 </Flex>
                                             </Form>
                                         )}
@@ -262,22 +315,56 @@ const TraderSignup = () => {
                                         validate={validatePaymentEmails}
                                         initialValues={{
                                             paypal_email: "",
-                                            stripe_email: "",
-                                            user_id: qs.parse(location.search)
-                                                .id
+                                            stripe_email: ""
                                         }}
                                         onSubmit={(values, actions) => {
-                                            setTimeout(() => {
-                                                alert(
-                                                    JSON.stringify(
-                                                        values,
-                                                        null,
-                                                        2
-                                                    )
-                                                );
-                                                actions.setSubmitting(false);
-                                                nextStep();
-                                            }, 1000);
+                                            apiClient
+                                                .get("/sanctum/csrf-cookie")
+                                                .then(res =>
+                                                    apiClient
+                                                        .post(
+                                                            "/api/user/update/null/1",
+                                                            values
+                                                        )
+                                                        .then(res => {
+                                                            actions.setSubmitting(
+                                                                false
+                                                            );
+
+                                                            nextStep();
+                                                        })
+                                                        .catch(err => {
+                                                            console.log(
+                                                                err.response
+                                                            );
+                                                            actions.setSubmitting(
+                                                                false
+                                                            );
+
+                                                            toast({
+                                                                title:
+                                                                    "Error while adding payment details",
+                                                                description: err
+                                                                    .response
+                                                                    .data.errors
+                                                                    ? err
+                                                                          .response
+                                                                          .data
+                                                                          .errors
+                                                                    : "Error occured! Please try again!",
+                                                                status: "error"
+                                                            });
+                                                        })
+                                                )
+                                                .catch(err => {
+                                                    toast({
+                                                        title:
+                                                            "Error while adding payment details",
+                                                        description:
+                                                            "Error occured! Please try again!",
+                                                        status: "error"
+                                                    });
+                                                });
                                         }}
                                     >
                                         {props => (
@@ -394,7 +481,11 @@ const TraderSignup = () => {
                                                 bg:
                                                     "var(--chakra-colors-primary) !important"
                                             }}
-                                            onClick={() => history.push("#")}
+                                            onClick={() =>
+                                                history.push(
+                                                    "/trader/dashboard"
+                                                )
+                                            }
                                         >
                                             Go to Dashboard
                                         </Button>

@@ -33,11 +33,12 @@
     <title>{{ config('app.name', 'Laravel') }}</title>
 </head>
 
-<body class="antialiased border-top-wide border-primary d-flex flex-column">
+<body class="antialiased d-flex flex-column">
     <div class="flex-fill d-flex flex-column justify-content-center">
         <div class="container-tight py-6">
             <div class="text-center mb-4">
-                <img src="{{ asset('static/logo.svg') }}" height="36" alt="">
+                <img src="{{ asset('images/logo-black.png') }}" width="200" height="70" style="object-fit: cover"
+                    alt="">
             </div>
             @if ($errors->any())
             <div class="alert alert-danger" role="alert">

@@ -203621,6 +203621,9 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch) {
     },
     setCategories: function setCategories(category) {
       return dispatch(Object(_actions__WEBPACK_IMPORTED_MODULE_6__["setCategories"])(category));
+    },
+    setAuth: function setAuth(auth) {
+      return dispatch(Object(_actions__WEBPACK_IMPORTED_MODULE_6__["setAuth"])(auth));
     }
   };
 };
@@ -203743,7 +203746,8 @@ var Main = function Main(_ref) {
       setPage = _ref.setPage,
       page = _ref.page,
       showSearch = _ref.showSearch,
-      setCategories = _ref.setCategories;
+      setCategories = _ref.setCategories,
+      setAuth = _ref.setAuth;
   var location = Object(react_router_dom__WEBPACK_IMPORTED_MODULE_3__["useLocation"])();
 
   var _useMediaQuery = Object(_chakra_ui_media_query__WEBPACK_IMPORTED_MODULE_8__["useMediaQuery"])("(min-width: 1100px)"),
@@ -203758,6 +203762,15 @@ var Main = function Main(_ref) {
   Object(react__WEBPACK_IMPORTED_MODULE_1__["useEffect"])(function () {
     setPage(window.location.pathname === "/" ? _constants__WEBPACK_IMPORTED_MODULE_10__["HOME_PAGE"] : "");
   }, [location]);
+  Object(react__WEBPACK_IMPORTED_MODULE_1__["useEffect"])(function () {
+    setAuth(localStorage.getItem("user") ? {
+      logged_in: true,
+      user: JSON.parse(localStorage.getItem("user"))
+    } : {
+      logged_in: false,
+      user: null
+    });
+  }, []);
   Object(react__WEBPACK_IMPORTED_MODULE_1__["useEffect"])(function () {
     /*axios
         .get("/api/products")
@@ -203827,7 +203840,7 @@ var Main = function Main(_ref) {
 /*!***************************************!*\
   !*** ./resources/js/actions/index.js ***!
   \***************************************/
-/*! exports provided: setProducts, setCategories, setPage, showSearch */
+/*! exports provided: setProducts, setCategories, setPage, showSearch, setAuth */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -203836,6 +203849,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setCategories", function() { return setCategories; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setPage", function() { return setPage; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "showSearch", function() { return showSearch; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setAuth", function() { return setAuth; });
 /* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../constants */ "./resources/js/constants.js");
 
 var setProducts = function setProducts(products) {
@@ -203860,6 +203874,12 @@ var showSearch = function showSearch(show) {
   return {
     type: _constants__WEBPACK_IMPORTED_MODULE_0__["SHOW_SEARCH"],
     payload: show
+  };
+};
+var setAuth = function setAuth(auth) {
+  return {
+    type: _constants__WEBPACK_IMPORTED_MODULE_0__["SET_AUTH"],
+    payload: auth
   };
 };
 
@@ -204556,14 +204576,16 @@ var headings = [{
 var mapStateToProps = function mapStateToProps(state) {
   return {
     products: state.products,
-    categories: state.categories
+    categories: state.categories,
+    auth: state.auth
   };
 };
 
 var Navbar = function Navbar(_ref) {
   var showSearch = _ref.showSearch,
       products = _ref.products,
-      categories = _ref.categories;
+      categories = _ref.categories,
+      auth = _ref.auth;
   var history = Object(react_router__WEBPACK_IMPORTED_MODULE_9__["useHistory"])();
 
   var _useState = Object(react__WEBPACK_IMPORTED_MODULE_2__["useState"])(null),
@@ -204930,7 +204952,7 @@ var Navbar = function Navbar(_ref) {
     minW: "0"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Icon"], {
     as: react_icons_io5__WEBPACK_IMPORTED_MODULE_4__["IoPersonOutline"]
-  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["MenuList"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["MenuItem"], {
+  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["MenuList"], null, !auth.logged_in && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_2___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["MenuItem"], {
     minH: "48px"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Link"], {
     href: "/login",
@@ -204940,7 +204962,7 @@ var Navbar = function Navbar(_ref) {
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Link"], {
     href: "/signup",
     w: "100%"
-  }, "Register")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["MenuItem"], {
+  }, "Register"))), auth.logged_in && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["MenuItem"], {
     minH: "48px"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Link"], {
     href: "/account",
@@ -206105,7 +206127,7 @@ var handleSortBy = function handleSortBy(index, setSortBy, setFilteredProducts, 
 /*!***********************************!*\
   !*** ./resources/js/constants.js ***!
   \***********************************/
-/*! exports provided: MONTHS, SET_PRODUCTS, SET_CATEGORIES, SET_PAGE, HOME_PAGE, SHOW_SEARCH, MAPS_API_KEY */
+/*! exports provided: MONTHS, SET_PRODUCTS, SET_CATEGORIES, SET_PAGE, HOME_PAGE, SHOW_SEARCH, SET_AUTH, MAPS_API_KEY, DEFAULT_TOAST */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -206116,14 +206138,23 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SET_PAGE", function() { return SET_PAGE; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "HOME_PAGE", function() { return HOME_PAGE; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SHOW_SEARCH", function() { return SHOW_SEARCH; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SET_AUTH", function() { return SET_AUTH; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MAPS_API_KEY", function() { return MAPS_API_KEY; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DEFAULT_TOAST", function() { return DEFAULT_TOAST; });
 var MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 var SET_PRODUCTS = "SET_PRODUCTS";
 var SET_CATEGORIES = "SET_CATEGORIES";
 var SET_PAGE = "SET_PAGE";
 var HOME_PAGE = "HOME_PAGE";
 var SHOW_SEARCH = "SHOW_SEARCH";
+var SET_AUTH = "SET_AUTH";
 var MAPS_API_KEY = "AIzaSyDkdfRfa5j9YuZy0FB-jZFtv5TYpQdZhdM";
+var DEFAULT_TOAST = {
+  position: "top-right",
+  variant: "left-accent",
+  duration: 3500,
+  isClosable: true
+};
 
 /***/ }),
 
@@ -206441,10 +206472,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @chakra-ui/react */ "./node_modules/@chakra-ui/react/dist/esm/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
-/* harmony import */ var _components_Breadcrumb__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../components/Breadcrumb */ "./resources/js/components/Breadcrumb/index.js");
-/* harmony import */ var _Details__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Details */ "./resources/js/containers/Account/Details.js");
-/* harmony import */ var _Orders__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./Orders */ "./resources/js/containers/Account/Orders.js");
+/* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
+/* harmony import */ var _actions__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../actions */ "./resources/js/actions/index.js");
+/* harmony import */ var _components_Breadcrumb__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../components/Breadcrumb */ "./resources/js/components/Breadcrumb/index.js");
+/* harmony import */ var _utilities__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../utilities */ "./resources/js/utilities/index.js");
+/* harmony import */ var _Details__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./Details */ "./resources/js/containers/Account/Details.js");
+/* harmony import */ var _Orders__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./Orders */ "./resources/js/containers/Account/Orders.js");
+
+
+
 
 
 
@@ -206455,19 +206492,41 @@ __webpack_require__.r(__webpack_exports__);
 
 var tabs = ["Dashboard", "Orders", "Account Details", "Logout"];
 
+var mapDispatchToProps = function mapDispatchToProps(dispatch) {
+  return {
+    setAuth: function setAuth(auth) {
+      return dispatch(Object(_actions__WEBPACK_IMPORTED_MODULE_5__["setAuth"])(auth));
+    }
+  };
+};
+
 var Account = function Account(_ref) {
-  var crumbs = _ref.crumbs;
-  var history = Object(react_router_dom__WEBPACK_IMPORTED_MODULE_3__["useHistory"])();
+  var crumbs = _ref.crumbs,
+      setAuth = _ref.setAuth;
+  var history = Object(react_router_dom__WEBPACK_IMPORTED_MODULE_4__["useHistory"])();
 
   var _useDisclosure = Object(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["useDisclosure"])(),
       isOpen = _useDisclosure.isOpen,
       onOpen = _useDisclosure.onOpen,
       onClose = _useDisclosure.onClose;
 
+  var handleLogout = function handleLogout() {
+    _utilities__WEBPACK_IMPORTED_MODULE_7__["apiClient"].get("/api/logout").then(function (res) {
+      localStorage.removeItem("user");
+      setAuth({
+        logged_in: false,
+        user: null
+      });
+      history.push("/");
+    })["catch"](function (err) {
+      return console.log(err);
+    });
+  };
+
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_layout__WEBPACK_IMPORTED_MODULE_0__["Box"], {
     mx: "20px",
     mb: "100px"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_components_Breadcrumb__WEBPACK_IMPORTED_MODULE_4__["default"], {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_components_Breadcrumb__WEBPACK_IMPORTED_MODULE_6__["default"], {
     crumbs: crumbs,
     margin: "20px 0"
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Modal"], {
@@ -206489,9 +206548,7 @@ var Account = function Account(_ref) {
     fontSize: "sm",
     textTransform: "none",
     p: "0 20px !important",
-    onClick: function onClick() {
-      return history.push("/logout");
-    }
+    onClick: handleLogout
   }, "Logout")))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Tabs"], {
     variant: "unstyled",
     orientation: "vertical",
@@ -206566,12 +206623,12 @@ var Account = function Account(_ref) {
     overflowX: "auto",
     px: "0",
     pb: "30px"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_Orders__WEBPACK_IMPORTED_MODULE_6__["default"], null)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["TabPanel"], {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_Orders__WEBPACK_IMPORTED_MODULE_9__["default"], null)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["TabPanel"], {
     py: "0"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_Details__WEBPACK_IMPORTED_MODULE_5__["default"], null)))));
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_Details__WEBPACK_IMPORTED_MODULE_8__["default"], null)))));
 };
 
-/* harmony default export */ __webpack_exports__["default"] = (Account);
+/* harmony default export */ __webpack_exports__["default"] = (Object(react_redux__WEBPACK_IMPORTED_MODULE_3__["connect"])(null, mapDispatchToProps)(Account));
 
 /***/ }),
 
@@ -208662,6 +208719,12 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch) {
   };
 };
 
+var mapStateToProps = function mapStateToProps(state) {
+  return {
+    auth: state.auth
+  };
+};
+
 var headings = [{
   title: "Products",
   content: [{
@@ -208731,7 +208794,8 @@ var headings = [{
 }];
 
 var Navbar = function Navbar(_ref) {
-  var showSearch = _ref.showSearch;
+  var showSearch = _ref.showSearch,
+      auth = _ref.auth;
   var history = Object(react_router_dom__WEBPACK_IMPORTED_MODULE_10__["useHistory"])();
 
   var _useState = Object(react__WEBPACK_IMPORTED_MODULE_2__["useState"])(false),
@@ -208822,7 +208886,7 @@ var Navbar = function Navbar(_ref) {
   }, "Cart", " ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Badge"], {
     variant: "solid",
     colorScheme: "red"
-  }, "0"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Divider"], null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Box"], {
+  }, "0"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Divider"], null), !auth.logged_in && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_2___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Box"], {
     p: "10px"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Link"], {
     href: "/login",
@@ -208832,7 +208896,12 @@ var Navbar = function Navbar(_ref) {
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Link"], {
     href: "/register",
     className: "link textLink"
-  }, "Register")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Divider"], null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Box"], {
+  }, "Register"))), auth.logged_in && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Box"], {
+    p: "10px"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Link"], {
+    href: "/account",
+    className: "link textLink"
+  }, "My Account")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Divider"], null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Box"], {
     p: "10px"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Link"], {
     href: "/checkout",
@@ -209043,7 +209112,7 @@ var Navbar = function Navbar(_ref) {
     paddingInlineEnd: "0"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Icon"], {
     as: react_icons_io5__WEBPACK_IMPORTED_MODULE_4__["IoPersonOutline"]
-  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["MenuList"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["MenuItem"], {
+  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["MenuList"], null, !auth.logged_in && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_2___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["MenuItem"], {
     minH: "48px"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Link"], {
     href: "/login",
@@ -209053,7 +209122,7 @@ var Navbar = function Navbar(_ref) {
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Link"], {
     href: "/signup",
     w: "100%"
-  }, "Register")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["MenuItem"], {
+  }, "Register"))), auth.logged_in && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["MenuItem"], {
     minH: "48px"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Link"], {
     href: "/account",
@@ -209107,7 +209176,7 @@ var Navbar = function Navbar(_ref) {
   })));
 };
 
-/* harmony default export */ __webpack_exports__["default"] = (Object(react_redux__WEBPACK_IMPORTED_MODULE_9__["connect"])(null, mapDispatchToProps)(Navbar));
+/* harmony default export */ __webpack_exports__["default"] = (Object(react_redux__WEBPACK_IMPORTED_MODULE_9__["connect"])(mapStateToProps, mapDispatchToProps)(Navbar));
 
 /***/ }),
 
@@ -209519,6 +209588,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _images_logo_black_png__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../images/logo-black.png */ "./resources/images/logo-black.png");
 /* harmony import */ var _images_logo_black_png__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_images_logo_black_png__WEBPACK_IMPORTED_MODULE_5__);
 /* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
+/* harmony import */ var _utilities__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../utilities */ "./resources/js/utilities/index.js");
+/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../constants */ "./resources/js/constants.js");
+/* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+/* harmony import */ var _actions__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../../actions */ "./resources/js/actions/index.js");
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
@@ -209543,7 +209616,28 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 
-var Login = function Login() {
+
+
+
+
+var mapDispatchToProps = function mapDispatchToProps(dispatch) {
+  return {
+    setAuth: function setAuth(auth) {
+      return dispatch(Object(_actions__WEBPACK_IMPORTED_MODULE_10__["setAuth"])(auth));
+    }
+  };
+};
+
+var mapStateToProps = function mapStateToProps(state) {
+  return {
+    auth: state.auth
+  };
+};
+
+var Login = function Login(_ref) {
+  var setAuth = _ref.setAuth,
+      auth = _ref.auth;
+  var toast = Object(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["useToast"])(_constants__WEBPACK_IMPORTED_MODULE_8__["DEFAULT_TOAST"]);
   var history = Object(react_router_dom__WEBPACK_IMPORTED_MODULE_6__["useHistory"])();
 
   var _useState = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])(false),
@@ -209555,7 +209649,9 @@ var Login = function Login() {
       _useMediaQuery2 = _slicedToArray(_useMediaQuery, 1),
       isSmallerThan768 = _useMediaQuery2[0];
 
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Flex"], {
+  return auth.logged_in ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_6__["Redirect"], {
+    to: "/"
+  }) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Flex"], {
     alignItems: {
       base: "center",
       md: "flex-start"
@@ -209635,10 +209731,37 @@ var Login = function Login() {
       password: ""
     },
     onSubmit: function onSubmit(values, actions) {
-      setTimeout(function () {
-        alert(JSON.stringify(values, null, 2));
-        actions.setSubmitting(false);
-      }, 1000);
+      _utilities__WEBPACK_IMPORTED_MODULE_7__["apiClient"].get("/sanctum/csrf-cookie").then(function (res) {
+        return _utilities__WEBPACK_IMPORTED_MODULE_7__["apiClient"].post("/api/login", values).then(function (res) {
+          console.log(res);
+          toast({
+            title: "Login Success",
+            description: "User was logged in successfully!",
+            status: "success"
+          });
+          localStorage.setItem("user", JSON.stringify(res.data.user));
+          setAuth({
+            logged_in: true,
+            user: res.data.user
+          });
+          actions.setSubmitting(false);
+          history.push("/");
+        })["catch"](function (err) {
+          console.log(err.response);
+          toast({
+            title: "Error while logging in",
+            description: err.response.data ? err.response.data.message : "Error occured! Please try again!",
+            status: "error"
+          });
+          actions.setSubmitting(false);
+        });
+      })["catch"](function (err) {
+        toast({
+          title: "Error while signup",
+          description: "Error occured! Please try again!",
+          status: "error"
+        });
+      });
     }
   }, function (props) {
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_2__["Form"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["VStack"], {
@@ -209650,9 +209773,9 @@ var Login = function Login() {
       mb: "30px"
     }, "Sign in"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_2__["Field"], {
       name: "email"
-    }, function (_ref) {
-      var field = _ref.field,
-          form = _ref.form;
+    }, function (_ref2) {
+      var field = _ref2.field,
+          form = _ref2.form;
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["FormControl"], {
         isInvalid: form.errors.email && form.touched.email,
         mb: "10px !important",
@@ -209663,9 +209786,9 @@ var Login = function Login() {
       })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["FormErrorMessage"], null, form.errors.email));
     }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_2__["Field"], {
       name: "password"
-    }, function (_ref2) {
-      var field = _ref2.field,
-          form = _ref2.form;
+    }, function (_ref3) {
+      var field = _ref3.field,
+          form = _ref3.form;
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["FormControl"], {
         isInvalid: form.errors.password && form.touched.password,
         mb: "10px !important",
@@ -209732,7 +209855,7 @@ var Login = function Login() {
   }))))));
 };
 
-/* harmony default export */ __webpack_exports__["default"] = (Login);
+/* harmony default export */ __webpack_exports__["default"] = (Object(react_redux__WEBPACK_IMPORTED_MODULE_9__["connect"])(mapStateToProps, mapDispatchToProps)(Login));
 
 /***/ }),
 
@@ -210798,6 +210921,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _images_logo_black_png__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../images/logo-black.png */ "./resources/images/logo-black.png");
 /* harmony import */ var _images_logo_black_png__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_images_logo_black_png__WEBPACK_IMPORTED_MODULE_5__);
 /* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
+/* harmony import */ var _utilities__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../utilities */ "./resources/js/utilities/index.js");
+/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../constants */ "./resources/js/constants.js");
+/* harmony import */ var _actions__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../../actions */ "./resources/js/actions/index.js");
+/* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
@@ -210822,7 +210949,28 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 
-var Signup = function Signup() {
+
+
+
+
+var mapDispatchToProps = function mapDispatchToProps(dispatch) {
+  return {
+    setAuth: function setAuth(auth) {
+      return dispatch(Object(_actions__WEBPACK_IMPORTED_MODULE_9__["setAuth"])(auth));
+    }
+  };
+};
+
+var mapStateToProps = function mapStateToProps(state) {
+  return {
+    auth: state.auth
+  };
+};
+
+var Signup = function Signup(_ref) {
+  var setAuth = _ref.setAuth,
+      auth = _ref.auth;
+  var toast = Object(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["useToast"])(_constants__WEBPACK_IMPORTED_MODULE_8__["DEFAULT_TOAST"]);
   var history = Object(react_router_dom__WEBPACK_IMPORTED_MODULE_6__["useHistory"])();
 
   var _useState = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])(false),
@@ -210834,7 +210982,9 @@ var Signup = function Signup() {
       _useMediaQuery2 = _slicedToArray(_useMediaQuery, 1),
       isSmallerThan768 = _useMediaQuery2[0];
 
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Flex"], {
+  return auth.logged_in ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_6__["Redirect"], {
+    to: "/"
+  }) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Flex"], {
     alignItems: {
       base: "center",
       md: "flex-start"
@@ -210905,14 +211055,43 @@ var Signup = function Signup() {
       terms: ""
     },
     onSubmit: function onSubmit(values, actions) {
-      setTimeout(function () {
-        alert(JSON.stringify(values, null, 2));
-        actions.setSubmitting(false);
-
-        if (values.isTrader === "1") {
-          history.push("/trader-signup/?id=1");
-        }
-      }, 1000);
+      _utilities__WEBPACK_IMPORTED_MODULE_7__["apiClient"].get("/sanctum/csrf-cookie").then(function (res) {
+        return _utilities__WEBPACK_IMPORTED_MODULE_7__["apiClient"].post("/api/signup", {
+          fullname: values.fullname,
+          email: values.email,
+          password: values.password,
+          role: values.isTrader === "1" ? "Trader" : "Customer"
+        }).then(function (res) {
+          toast({
+            title: "Successfully registered",
+            description: "You account has been created successfully!",
+            status: "success",
+            isClosable: true
+          });
+          localStorage.setItem("user", JSON.stringify(res.data.user));
+          setAuth({
+            logged_in: true,
+            user: res.data.user
+          });
+          actions.setSubmitting(false);
+          history.push(values.isTrader === "1" ? "/trader-signup" : "/");
+        })["catch"](function (err) {
+          actions.setSubmitting(false);
+          toast({
+            title: "Error while signup",
+            description: err.response.data.errors ? err.response.data.errors.email : "Error occured! Please try again!",
+            status: "error",
+            isClosable: true
+          });
+        });
+      })["catch"](function (err) {
+        toast({
+          title: "Error while signup",
+          description: "Error occured! Please try again!",
+          status: "error",
+          isClosable: true
+        });
+      });
     }
   }, function (props) {
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_2__["Form"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["VStack"], {
@@ -210925,9 +211104,9 @@ var Signup = function Signup() {
       color: "secondary"
     }, "Create an account"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_2__["Field"], {
       name: "fullname"
-    }, function (_ref) {
-      var field = _ref.field,
-          form = _ref.form;
+    }, function (_ref2) {
+      var field = _ref2.field,
+          form = _ref2.form;
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["FormControl"], {
         isInvalid: form.errors.fullname && form.touched.fullname,
         mb: "10px !important",
@@ -210938,9 +211117,9 @@ var Signup = function Signup() {
       })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["FormErrorMessage"], null, form.errors.fullname));
     }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_2__["Field"], {
       name: "email"
-    }, function (_ref2) {
-      var field = _ref2.field,
-          form = _ref2.form;
+    }, function (_ref3) {
+      var field = _ref3.field,
+          form = _ref3.form;
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["FormControl"], {
         isInvalid: form.errors.email && form.touched.email,
         mb: "10px !important",
@@ -210951,9 +211130,9 @@ var Signup = function Signup() {
       })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["FormErrorMessage"], null, form.errors.email));
     }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_2__["Field"], {
       name: "password"
-    }, function (_ref3) {
-      var field = _ref3.field,
-          form = _ref3.form;
+    }, function (_ref4) {
+      var field = _ref4.field,
+          form = _ref4.form;
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["FormControl"], {
         isInvalid: form.errors.password && form.touched.password,
         mb: "10px !important",
@@ -210983,9 +211162,9 @@ var Signup = function Signup() {
       }, "Password must be 8 characters long, must contain at least one letter and one number"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["FormErrorMessage"], null, form.errors.password));
     }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_2__["Field"], {
       name: "isTrader"
-    }, function (_ref4) {
-      var field = _ref4.field,
-          form = _ref4.form;
+    }, function (_ref5) {
+      var field = _ref5.field,
+          form = _ref5.form;
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["FormControl"], {
         mt: "20px !important",
         mb: "10px !important",
@@ -211011,9 +211190,9 @@ var Signup = function Signup() {
       }, "I'm a Trader"))));
     }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_2__["Field"], {
       name: "terms"
-    }, function (_ref5) {
-      var field = _ref5.field,
-          form = _ref5.form;
+    }, function (_ref6) {
+      var field = _ref6.field,
+          form = _ref6.form;
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["FormControl"], {
         isInvalid: form.errors.terms && form.touched.terms,
         mb: "10px !important",
@@ -211075,7 +211254,7 @@ var Signup = function Signup() {
   })))));
 };
 
-/* harmony default export */ __webpack_exports__["default"] = (Signup);
+/* harmony default export */ __webpack_exports__["default"] = (Object(react_redux__WEBPACK_IMPORTED_MODULE_10__["connect"])(mapStateToProps, mapDispatchToProps)(Signup));
 
 /***/ }),
 
@@ -211096,12 +211275,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _images_logo_black_png__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_images_logo_black_png__WEBPACK_IMPORTED_MODULE_3__);
 /* harmony import */ var react_icons_ai__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-icons/ai */ "./node_modules/react-icons/ai/index.esm.js");
 /* harmony import */ var formik__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! formik */ "./node_modules/formik/dist/formik.esm.js");
-/* harmony import */ var query_string__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! query-string */ "./node_modules/query-string/index.js");
-/* harmony import */ var query_string__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(query_string__WEBPACK_IMPORTED_MODULE_6__);
-/* harmony import */ var _utilities_validation__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../utilities/validation */ "./resources/js/utilities/validation.js");
-/* harmony import */ var react_images_upload__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! react-images-upload */ "./node_modules/react-images-upload/compiled.js");
-/* harmony import */ var react_images_upload__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(react_images_upload__WEBPACK_IMPORTED_MODULE_8__);
-/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
+/* harmony import */ var _utilities_validation__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../utilities/validation */ "./resources/js/utilities/validation.js");
+/* harmony import */ var react_images_upload__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! react-images-upload */ "./node_modules/react-images-upload/compiled.js");
+/* harmony import */ var react_images_upload__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(react_images_upload__WEBPACK_IMPORTED_MODULE_7__);
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
+/* harmony import */ var _utilities__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../../utilities */ "./resources/js/utilities/index.js");
+/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../../constants */ "./resources/js/constants.js");
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 
 
@@ -211137,7 +211316,8 @@ var payment_details = [{
 }];
 
 var TraderSignup = function TraderSignup() {
-  var history = Object(react_router_dom__WEBPACK_IMPORTED_MODULE_9__["useHistory"])();
+  var history = Object(react_router_dom__WEBPACK_IMPORTED_MODULE_8__["useHistory"])();
+  var toast = Object(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_2__["useToast"])(_constants__WEBPACK_IMPORTED_MODULE_10__["DEFAULT_TOAST"]);
 
   var _useSteps = Object(chakra_ui_steps__WEBPACK_IMPORTED_MODULE_1__["useSteps"])({
     initialStep: 0
@@ -211210,21 +211390,35 @@ var TraderSignup = function TraderSignup() {
     label: "Store",
     icon: react_icons_ai__WEBPACK_IMPORTED_MODULE_4__["AiOutlineShop"]
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_5__["Formik"], {
-    validate: _utilities_validation__WEBPACK_IMPORTED_MODULE_7__["validateShop"],
+    validate: _utilities_validation__WEBPACK_IMPORTED_MODULE_6__["validateShop"],
     initialValues: {
       name: "",
       street_no: "",
       city: "",
       PAN: "",
-      logo: null,
-      user_id: query_string__WEBPACK_IMPORTED_MODULE_6___default.a.parse(location.search).id
+      logo: null
     },
     onSubmit: function onSubmit(values, actions) {
-      setTimeout(function () {
-        alert(JSON.stringify(values, null, 2));
-        actions.setSubmitting(false);
-        nextStep();
-      }, 1000);
+      _utilities__WEBPACK_IMPORTED_MODULE_9__["apiClient"].get("/sanctum/csrf-cookie").then(function (res) {
+        return _utilities__WEBPACK_IMPORTED_MODULE_9__["apiClient"].post("/api/shop/create", values).then(function (res) {
+          actions.setSubmitting(false);
+          nextStep();
+        })["catch"](function (err) {
+          console.log(err.response);
+          actions.setSubmitting(false);
+          toast({
+            title: "Error while adding shop",
+            description: err.response.data.errors ? err.response.data.errors.email : "Error occured! Please try again!",
+            status: "error"
+          });
+        });
+      })["catch"](function (err) {
+        toast({
+          title: "Error while adding shop",
+          description: "Error occured! Please try again!",
+          status: "error"
+        });
+      });
     }
   }, function (props) {
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_5__["Form"], {
@@ -211267,7 +211461,7 @@ var TraderSignup = function TraderSignup() {
         isRequired: true
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_2__["FormLabel"], null, "Logo"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_2__["Box"], {
         w: "100%"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_images_upload__WEBPACK_IMPORTED_MODULE_8___default.a, {
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_images_upload__WEBPACK_IMPORTED_MODULE_7___default.a, {
         withPreview: true,
         withIcon: true,
         buttonText: "Browse logo",
@@ -211281,7 +211475,9 @@ var TraderSignup = function TraderSignup() {
       }, form.errors.logo)));
     }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_2__["Flex"], {
       w: "100%",
-      justifyContent: "center"
+      flexDir: "column",
+      justifyContent: "center",
+      alignItems: "center"
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_2__["Button"], {
       isLoading: props.isSubmitting,
       type: "submit",
@@ -211293,23 +211489,47 @@ var TraderSignup = function TraderSignup() {
       _hover: {
         bg: "var(--chakra-colors-primary) !important"
       }
-    }, "Continue")));
+    }, "Continue"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_2__["Link"], {
+      href: "/trader/dashboard",
+      fontSize: "xs",
+      mt: "10px",
+      color: "secondary",
+      textDecor: "underline",
+      _hover: {
+        color: "var(--chakra-colors-primary) !important",
+        textDecor: "underline !important"
+      }
+    }, "Skip for now")));
   })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(chakra_ui_steps__WEBPACK_IMPORTED_MODULE_1__["Step"], {
     label: "Payment",
     icon: react_icons_ai__WEBPACK_IMPORTED_MODULE_4__["AiOutlineDollarCircle"]
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_5__["Formik"], {
-    validate: _utilities_validation__WEBPACK_IMPORTED_MODULE_7__["validatePaymentEmails"],
+    validate: _utilities_validation__WEBPACK_IMPORTED_MODULE_6__["validatePaymentEmails"],
     initialValues: {
       paypal_email: "",
-      stripe_email: "",
-      user_id: query_string__WEBPACK_IMPORTED_MODULE_6___default.a.parse(location.search).id
+      stripe_email: ""
     },
     onSubmit: function onSubmit(values, actions) {
-      setTimeout(function () {
-        alert(JSON.stringify(values, null, 2));
-        actions.setSubmitting(false);
-        nextStep();
-      }, 1000);
+      _utilities__WEBPACK_IMPORTED_MODULE_9__["apiClient"].get("/sanctum/csrf-cookie").then(function (res) {
+        return _utilities__WEBPACK_IMPORTED_MODULE_9__["apiClient"].post("/api/user/update/null/1", values).then(function (res) {
+          actions.setSubmitting(false);
+          nextStep();
+        })["catch"](function (err) {
+          console.log(err.response);
+          actions.setSubmitting(false);
+          toast({
+            title: "Error while adding payment details",
+            description: err.response.data.errors ? err.response.data.errors : "Error occured! Please try again!",
+            status: "error"
+          });
+        });
+      })["catch"](function (err) {
+        toast({
+          title: "Error while adding payment details",
+          description: "Error occured! Please try again!",
+          status: "error"
+        });
+      });
     }
   }, function (props) {
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_5__["Form"], {
@@ -211381,7 +211601,7 @@ var TraderSignup = function TraderSignup() {
       bg: "var(--chakra-colors-primary) !important"
     },
     onClick: function onClick() {
-      return history.push("#");
+      return history.push("/trader/dashboard");
     }
   }, "Go to Dashboard")))))))));
 };
@@ -211983,17 +212203,49 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _setPage__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./setPage */ "./resources/js/reducers/setPage.js");
 /* harmony import */ var _setCategories__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./setCategories */ "./resources/js/reducers/setCategories.js");
 /* harmony import */ var _showSearch__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./showSearch */ "./resources/js/reducers/showSearch.js");
+/* harmony import */ var _setAuth__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./setAuth */ "./resources/js/reducers/setAuth.js");
+
 
 
 
 
 
 /* harmony default export */ __webpack_exports__["default"] = (Object(redux__WEBPACK_IMPORTED_MODULE_0__["combineReducers"])({
+  auth: _setAuth__WEBPACK_IMPORTED_MODULE_5__["default"],
   products: _setProducts__WEBPACK_IMPORTED_MODULE_1__["default"],
   categories: _setCategories__WEBPACK_IMPORTED_MODULE_3__["default"],
   page: _setPage__WEBPACK_IMPORTED_MODULE_2__["default"],
   showSearch: _showSearch__WEBPACK_IMPORTED_MODULE_4__["default"]
 }));
+
+/***/ }),
+
+/***/ "./resources/js/reducers/setAuth.js":
+/*!******************************************!*\
+  !*** ./resources/js/reducers/setAuth.js ***!
+  \******************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../constants */ "./resources/js/constants.js");
+
+/* harmony default export */ __webpack_exports__["default"] = (function () {
+  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {
+    logged_in: false,
+    user: null
+  };
+  var action = arguments.length > 1 ? arguments[1] : undefined;
+
+  switch (action.type) {
+    case _constants__WEBPACK_IMPORTED_MODULE_0__["SET_AUTH"]:
+      return action.payload;
+
+    default:
+      return state;
+  }
+});
 
 /***/ }),
 
@@ -212305,13 +212557,17 @@ var theme = Object(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["extendTheme"])
 /*!*****************************************!*\
   !*** ./resources/js/utilities/index.js ***!
   \*****************************************/
-/*! exports provided: getFinalPrice, searchQuery */
+/*! exports provided: getFinalPrice, searchQuery, apiClient */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getFinalPrice", function() { return getFinalPrice; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "searchQuery", function() { return searchQuery; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "apiClient", function() { return apiClient; });
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
+
 var getFinalPrice = function getFinalPrice(product) {
   return product.discount && product.discount > 0 ? product.price - product.discount / 100 * product.price : product.price;
 };
@@ -212323,6 +212579,9 @@ var searchQuery = function searchQuery(arr, q) {
     });
   });
 };
+var apiClient = axios__WEBPACK_IMPORTED_MODULE_0___default.a.create({
+  withCredentials: true
+});
 
 /***/ }),
 
@@ -212447,17 +212706,6 @@ var validateDetails = function validateDetails(values) {
 
 /***/ }),
 
-/***/ "./resources/sass/admin.scss":
-/*!***********************************!*\
-  !*** ./resources/sass/admin.scss ***!
-  \***********************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-
 /***/ "./resources/sass/app.scss":
 /*!*********************************!*\
   !*** ./resources/sass/app.scss ***!
@@ -212469,16 +212717,27 @@ var validateDetails = function validateDetails(values) {
 
 /***/ }),
 
+/***/ "./resources/sass/trader.scss":
+/*!************************************!*\
+  !*** ./resources/sass/trader.scss ***!
+  \************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+
 /***/ 0:
-/*!*****************************************************************************************!*\
-  !*** multi ./resources/js/app.js ./resources/sass/app.scss ./resources/sass/admin.scss ***!
-  \*****************************************************************************************/
+/*!******************************************************************************************!*\
+  !*** multi ./resources/js/app.js ./resources/sass/app.scss ./resources/sass/trader.scss ***!
+  \******************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(/*! D:\Projects\clefax-website\resources\js\app.js */"./resources/js/app.js");
 __webpack_require__(/*! D:\Projects\clefax-website\resources\sass\app.scss */"./resources/sass/app.scss");
-module.exports = __webpack_require__(/*! D:\Projects\clefax-website\resources\sass\admin.scss */"./resources/sass/admin.scss");
+module.exports = __webpack_require__(/*! D:\Projects\clefax-website\resources\sass\trader.scss */"./resources/sass/trader.scss");
 
 
 /***/ })

@@ -17,21 +17,37 @@ import {
     RadioGroup,
     Radio,
     Checkbox,
-    useMediaQuery
+    useMediaQuery,
+    useToast
 } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { Formik, Form, Field } from "formik";
 import { validateSignup } from "../../utilities/validation";
 import Wine from "../../../images/wine.png";
 import Logo from "../../../images/logo-black.png";
-import { useHistory } from "react-router-dom";
+import { Redirect, useHistory } from "react-router-dom";
+import { apiClient } from "../../utilities";
+import { DEFAULT_TOAST } from "../../constants";
+import { setAuth } from "../../actions";
+import { connect } from "react-redux";
 
-const Signup = () => {
+const mapDispatchToProps = dispatch => ({
+    setAuth: auth => dispatch(setAuth(auth))
+});
+
+const mapStateToProps = state => ({
+    auth: state.auth
+});
+
+const Signup = ({ setAuth, auth }) => {
+    const toast = useToast(DEFAULT_TOAST);
     var history = useHistory();
     const [show, setShow] = useState(false);
     const [isSmallerThan768] = useMediaQuery("(max-width: 768px)");
 
-    return (
+    return auth.logged_in ? (
+        <Redirect to="/" />
+    ) : (
         <Flex
             alignItems={{ base: "center", md: "flex-start" }}
             direction="column"
@@ -77,15 +93,77 @@ const Signup = () => {
                                     terms: ""
                                 }}
                                 onSubmit={(values, actions) => {
-                                    setTimeout(() => {
-                                        alert(JSON.stringify(values, null, 2));
-                                        actions.setSubmitting(false);
-                                        if (values.isTrader === "1") {
-                                            history.push(
-                                                "/trader-signup/?id=1"
-                                            );
-                                        }
-                                    }, 1000);
+                                    apiClient
+                                        .get("/sanctum/csrf-cookie")
+                                        .then(res =>
+                                            apiClient
+                                                .post("/api/signup", {
+                                                    fullname: values.fullname,
+                                                    email: values.email,
+                                                    password: values.password,
+                                                    role:
+                                                        values.isTrader === "1"
+                                                            ? "Trader"
+                                                            : "Customer"
+                                                })
+                                                .then(res => {
+                                                    toast({
+                                                        title:
+                                                            "Successfully registered",
+                                                        description:
+                                                            "You account has been created successfully!",
+                                                        status: "success",
+                                                        isClosable: true
+                                                    });
+
+                                                    localStorage.setItem(
+                                                        "user",
+                                                        JSON.stringify(
+                                                            res.data.user
+                                                        )
+                                                    );
+                                                    setAuth({
+                                                        logged_in: true,
+                                                        user: res.data.user
+                                                    });
+                                                    actions.setSubmitting(
+                                                        false
+                                                    );
+
+                                                    history.push(
+                                                        values.isTrader === "1"
+                                                            ? `/trader-signup`
+                                                            : "/"
+                                                    );
+                                                })
+                                                .catch(err => {
+                                                    actions.setSubmitting(
+                                                        false
+                                                    );
+
+                                                    toast({
+                                                        title:
+                                                            "Error while signup",
+                                                        description: err
+                                                            .response.data
+                                                            .errors
+                                                            ? err.response.data
+                                                                  .errors.email
+                                                            : "Error occured! Please try again!",
+                                                        status: "error",
+                                                        isClosable: true
+                                                    });
+                                                })
+                                        )
+                                        .catch(err => {
+                                            toast({
+                                                title: "Error while signup",
+                                                description:
+                                                    "Error occured! Please try again!",
+                                                status: "error",
+                                                isClosable: true
+                                            });
+                                        });
                                 }}
                             >
                                 {props => (
@@ -376,4 +454,4 @@ const Signup = () => {
     );
 };
 
-export default Signup;
+export default connect(mapStateToProps, mapDispatchToProps)(Signup);

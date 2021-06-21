@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use Laravel\Fortify\Features;
+use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,8 +15,11 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::middleware(['auth'])->group(function() {
-    Route::prefix('admin')->group(function () {
+
+
+		
+Route::middleware(['auth:sanctum'])->group(function() {
+    Route::prefix('trader')->group(function () {
 		//Route::resource('dashboard', DashboardController::class);
 		Route::prefix('profile')->group(function () {
 			Route::get('/', [ProfileController::class, 'editProfile'])->name('profile');
@@ -27,7 +32,9 @@ Route::middleware(['auth'])->group(function() {
 	});
 });
 
-Route::view('/admin/dashboard', 'admin.dashboard')
+
+
+Route::view('/trader/dashboard', 'admin.dashboard')
 	->name('dashboard')
 	->middleware(['auth', 'verified']);
 
