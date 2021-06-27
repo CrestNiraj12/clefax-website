@@ -16,6 +16,10 @@ class Review extends Model
         'product_id'
     ];
 
+    protected $casts = [
+        'rating' => "float"
+    ];
+
     public function user() {
         return $this->belongsTo(User::class);
     }

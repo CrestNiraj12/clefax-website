@@ -2,7 +2,7 @@ import { Button } from "@chakra-ui/button";
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import { Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/menu";
 import React from "react";
-import { getFinalPrice } from "../../utilities";
+import { getAvgReviews, getFinalPrice } from "../../utilities";
 
 const sortingOptions = [
     "Default sorting",
@@ -77,7 +77,10 @@ export const handleSortBy = (
         fp = p.sort((a, b) =>
             a.name.toLowerCase() < b.name.toLowerCase() ? -1 : 1
         );
-    else if (index === 1) fp = p.sort((a, b) => b.rating - a.rating);
+    else if (index === 1)
+        fp = p.sort(
+            (a, b) => getAvgReviews(b.reviews) - getAvgReviews(a.reviews)
+        );
     else if (index === 2)
         fp = p.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
     else if (index === 3)

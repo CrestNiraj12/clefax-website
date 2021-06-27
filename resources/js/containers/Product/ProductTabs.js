@@ -8,26 +8,39 @@ import {
     ListItem,
     Spacer,
     Text,
-    VStack
-} from "@chakra-ui/layout";
+    IconButton,
+    VStack,
+    useDisclosure
+} from "@chakra-ui/react";
 import { Tabs, TabList, Tab, TabPanels, TabPanel } from "@chakra-ui/tabs";
 import { FaRegStar, FaStar, FaStarHalfAlt } from "react-icons/fa";
-import { CheckIcon, Icon } from "@chakra-ui/icons";
-import React from "react";
+import { CheckIcon, DeleteIcon, EditIcon, Icon } from "@chakra-ui/icons";
+import React, { useState } from "react";
 import ReactStars from "react-rating-stars-component";
 import { Textarea } from "@chakra-ui/textarea";
 import { Button } from "@chakra-ui/button";
 import { useMediaQuery } from "@chakra-ui/media-query";
 import { connect } from "react-redux";
-import { Link } from "@chakra-ui/react";
-import { getLoginRedirection } from "../../utilities";
+import {
+    FormControl,
+    FormErrorMessage,
+    FormLabel,
+    Image,
+    Link,
+    useToast
+} from "@chakra-ui/react";
+import { apiClient, getAvgReviews, getLoginRedirection } from "../../utilities";
+import { Field, Form, Formik } from "formik";
+import { validateReview } from "../../utilities/validation";
+import { DEFAULT_TOAST } from "../../constants";
+import RemoveModal from "../../components/RemoveModal";
 
 const mapStateToProps = state => ({
     auth: state.auth
 });
 
 const ProductTabs = ({ product, auth }) => {
-    const [value, setValue] = React.useState("");
+    const toast = useToast(DEFAULT_TOAST);
     const [baseScreen] = useMediaQuery("(max-width:48em)");
 
     return (
@@ -53,7 +66,7 @@ const ProductTabs = ({ product, auth }) => {
                             color: "secondary"
                         }}
                     >
-                        Reviews (0)
+                        Reviews ({product.reviews.length})
                     </Tab>
                     <Tab
                         className="product-tab"
@@ -74,11 +87,35 @@ const ProductTabs = ({ product, auth }) => {
                     </TabPanel>
                     <TabPanel>
                         <Flex direction={{ base: "column", md: "row" }}>
-                            <Box>
+                            <Box w={{ base: "100%", lg: "50%" }}>
                                 <Heading as="h6" fontSize="xl" mb="20px">
                                     Reviews
                                 </Heading>
-                                <Text>There are no reviews yet.</Text>
+                                <Box
+                                    overflowY="auto"
+                                    maxH="340px"
+                                    className="scrollable"
+                                    mr={{ base: "0px", md: "50px" }}
+                                >
+                                    {product.reviews.length ? (
+                                        product.reviews
+                                            .sort(
+                                                (a, b) =>
+                                                    new Date(b.created_at) -
+                                                    new Date(a.created_at)
+                                            )
+                                            .map((review, id) => (
+                                                <ReviewCard
+                                                    key={id}
+                                                    review={review}
+                                                    auth={auth}
+                                                    product_id={product.id}
+                                                />
+                                            ))
+                                    ) : (
+                                        <Text>There are no reviews yet.</Text>
+                                    )}
+                                </Box>
                             </Box>
                             <Spacer />
                             <VStack
@@ -88,57 +125,197 @@ const ProductTabs = ({ product, auth }) => {
                                 w={{ base: "100%", md: "50%" }}
                             >
                                 <Heading as="h6" fontSize="xl">
-                                    BE THE FIRST TO REVIEW “{product.name}”
+                                    {`${
+                                        product.reviews.length
+                                            ? ""
+                                            : "BE THE FIRST TO "
+                                    }REVIEW “${product.name}”`}
                                 </Heading>
                                 <Text color="gray">
                                     Your email address will not be published.
                                     Required fields are marked *
                                 </Text>
                                 {auth.logged_in ? (
-                                    <>
-                                        {" "}
-                                        <HStack alignItems="flex-end">
-                                            <Text color="gray">
-                                                Your Rating
-                                            </Text>
-                                            <ReactStars
-                                                edit
-                                                size={18}
-                                                emptyIcon={
-                                                    <Icon as={FaRegStar} />
-                                                }
-                                                filledIcon={
-                                                    <Icon as={FaStar} />
-                                                }
-                                                halfIcon={
-                                                    <Icon as={FaStarHalfAlt} />
-                                                }
-                                            />
-                                        </HStack>
-                                        <Textarea
-                                            h="150px"
-                                            borderRadius="0"
-                                            value={value}
-                                            onChange={e =>
-                                                setValue(e.target.value)
-                                            }
-                                            placeholder="Your review*"
-                                            size="md"
-                                        />
-                                        <Button
-                                            textTransform="uppercase"
-                                            letterSpacing="1px"
-                                            fontSize="medium"
-                                            w="100%"
-                                            backgroundColor="secondary"
-                                            color="#fff"
-                                            _hover={{
-                                                opacity: 0.8
-                                            }}
-                                        >
-                                            Submit
-                                        </Button>
-                                    </>
+                                    <Formik
+                                        validate={validateReview}
+                                        initialValues={{
+                                            rating: 0,
+                                            comment: "",
+                                            product_id: product.id
+                                        }}
+                                        onSubmit={(values, actions) => {
+                                            apiClient
+                                                .get("/sanctum/csrf-cookie")
+                                                .then(res =>
+                                                    apiClient
+                                                        .post(
+                                                            "/api/review/create",
+                                                            values
+                                                        )
+                                                        .then(res => {
+                                                            toast({
+                                                                title:
+                                                                    "Review posted!",
+                                                                description:
+                                                                    res.data
+                                                                        .message,
+                                                                status:
+                                                                    "success"
+                                                            });
+                                                            actions.setSubmitting(
+                                                                false
+                                                            );
+                                                            window.location.reload();
+                                                        })
+                                                        .catch(err => {
+                                                            console.log(
+                                                                err.response
+                                                            );
+                                                            toast({
+                                                                title:
+                                                                    "Error while posting review",
+                                                                description: err
+                                                                    .response
+                                                                    .data
+                                                                    ? err
+                                                                          .response
+                                                                          .data
+                                                                          .message
+                                                                    : "Error occured! Please try again!",
+                                                                status: "error"
+                                                            });
+                                                            actions.setSubmitting(
+                                                                false
+                                                            );
+                                                        })
+                                                )
+                                                .catch(err => {
+                                                    console.log(err.response);
+                                                    toast({
+                                                        title:
+                                                            "Error while posting review",
+                                                        description: err
+                                                            .response.data
+                                                            ? err.response.data
+                                                                  .message
+                                                            : "Error occured! Please try again!",
+                                                        status: "error"
+                                                    });
+                                                    actions.setSubmitting(
+                                                        false
+                                                    );
+                                                });
+                                        }}
+                                    >
+                                        {props => (
+                                            <Form style={{ width: "100%" }}>
+                                                <Field name="rating">
+                                                    {({ field, form }) => (
+                                                        <FormControl
+                                                            isInvalid={
+                                                                form.errors
+                                                                    .rating &&
+                                                                form.touched
+                                                                    .rating
+                                                            }
+                                                        >
+                                                            <HStack alignItems="flex-end">
+                                                                <FormLabel color="gray">
+                                                                    Your Rating
+                                                                </FormLabel>
+                                                                <ReactStars
+                                                                    edit
+                                                                    value={
+                                                                        props
+                                                                            .values[
+                                                                            "rating"
+                                                                        ]
+                                                                    }
+                                                                    onChange={v =>
+                                                                        form.setFieldValue(
+                                                                            "rating",
+                                                                            v
+                                                                        )
+                                                                    }
+                                                                    size={18}
+                                                                    emptyIcon={
+                                                                        <Icon
+                                                                            as={
+                                                                                FaRegStar
+                                                                            }
+                                                                        />
+                                                                    }
+                                                                    filledIcon={
+                                                                        <Icon
+                                                                            as={
+                                                                                FaStar
+                                                                            }
+                                                                        />
+                                                                    }
+                                                                    halfIcon={
+                                                                        <Icon
+                                                                            as={
+                                                                                FaStarHalfAlt
+                                                                            }
+                                                                        />
+                                                                    }
+                                                                />
+                                                            </HStack>
+                                                            <FormErrorMessage>
+                                                                {
+                                                                    form.errors
+                                                                        .rating
+                                                                }
+                                                            </FormErrorMessage>
+                                                        </FormControl>
+                                                    )}
+                                                </Field>
+                                                <Field name="comment">
+                                                    {({ field, form }) => (
+                                                        <FormControl
+                                                            isInvalid={
+                                                                form.errors
+                                                                    .comment &&
+                                                                form.touched
+                                                                    .comment
+                                                            }
+                                                        >
+                                                            <Textarea
+                                                                h="150px"
+                                                                borderRadius="0"
+                                                                {...field}
+                                                                placeholder="Your review*"
+                                                                size="md"
+                                                            />
+                                                            <FormErrorMessage>
+                                                                {
+                                                                    form.errors
+                                                                        .comment
+                                                                }
+                                                            </FormErrorMessage>
+                                                        </FormControl>
+                                                    )}
+                                                </Field>
+                                                <Button
+                                                    type="submit"
+                                                    isLoading={
+                                                        props.isSubmitting
+                                                    }
+                                                    textTransform="uppercase"
+                                                    letterSpacing="1px"
+                                                    fontSize="medium"
+                                                    w="100%"
+                                                    backgroundColor="secondary"
+                                                    color="#fff"
+                                                    _hover={{
+                                                        opacity: 0.8
+                                                    }}
+                                                >
+                                                    Submit
+                                                </Button>
+                                            </Form>
+                                        )}
+                                    </Formik>
                                 ) : (
                                     <Text>
                                         You need to be logged in to be able to
@@ -186,9 +363,7 @@ const ProductTabs = ({ product, auth }) => {
                                         as={CheckIcon}
                                         color="secondary"
                                     />
-                                    {product.reviews.reduce(
-                                        (r1, r2) => r1 + r2
-                                    ) / product.reviews.length}{" "}
+                                    {getAvgReviews(product.reviews).toFixed(2)}{" "}
                                     rating from {product.reviews.length}{" "}
                                     review(s)
                                 </ListItem>
@@ -198,6 +373,261 @@ const ProductTabs = ({ product, auth }) => {
                 </TabPanels>
             </Tabs>
         )
+    );
+};
+
+const ReviewCard = ({
+    review: { id, rating, comment, user },
+    auth,
+    product_id
+}) => {
+    const toast = useToast(DEFAULT_TOAST);
+    const [show, setShow] = useState(false);
+    const [edit, setEdit] = useState(false);
+    const { isOpen, onOpen, onClose } = useDisclosure();
+
+    const handleShowUpdate = isShow => {
+        if (user.id === auth.user.id) setShow(isShow);
+    };
+
+    const onSuccess = res => {
+        toast({
+            title: "Review deleted!",
+            description: res.data.message,
+            status: "success"
+        });
+        window.location.reload();
+    };
+
+    const onError = err => {
+        console.log(err.response);
+        toast({
+            title: "Error while deleting review",
+            description: err.response.data
+                ? err.response.data.message
+                : "Error occured! Please try again!",
+            status: "error"
+        });
+    };
+
+    return (
+        <>
+            <RemoveModal
+                isOpen={isOpen}
+                onClose={onClose}
+                apiUrl={`/review/${id}`}
+                title="Delete Review"
+                words="the review?"
+                onSuccess={onSuccess}
+                onError={onError}
+            />
+            <HStack
+                onMouseEnter={() => handleShowUpdate(true)}
+                onMouseLeave={() => handleShowUpdate(false)}
+                my="20px"
+                pos="relative"
+            >
+                {show && !edit && (
+                    <>
+                        <IconButton
+                            icon={
+                                <EditIcon
+                                    color="gray"
+                                    _hover={{ color: "secondary" }}
+                                />
+                            }
+                            onClick={() => setEdit(true)}
+                            pos="absolute"
+                            right="50px"
+                            minW="0"
+                            bg="transparent"
+                            top="0"
+                            p="0 !important"
+                            _hover={{ bg: "transparent !important" }}
+                        />
+                        <IconButton
+                            icon={
+                                <DeleteIcon
+                                    color="gray"
+                                    _hover={{ color: "secondary" }}
+                                />
+                            }
+                            p="0 !important"
+                            minW="0"
+                            pos="absolute"
+                            right="20px"
+                            bg="transparent"
+                            top="0"
+                            _hover={{ bg: "transparent !important" }}
+                            onClick={onOpen}
+                        />
+                    </>
+                )}
+                <Image src={user.avatar} />
+                <VStack alignItems="flex-start" w="80% !important">
+                    <Text>
+                        <b>{user.fullname}</b>
+                    </Text>
+                    {!edit ? (
+                        <>
+                            <ReactStars
+                                edit={false}
+                                size={18}
+                                emptyIcon={<Icon as={FaRegStar} />}
+                                filledIcon={<Icon as={FaStar} />}
+                                halfIcon={<Icon as={FaStarHalfAlt} />}
+                                value={rating}
+                            />
+                            <Text>{comment}</Text>
+                        </>
+                    ) : (
+                        <Formik
+                            validate={validateReview}
+                            initialValues={{
+                                rating,
+                                comment,
+                                product_id
+                            }}
+                            onSubmit={(values, actions) => {
+                                console.log(values);
+                                apiClient
+                                    .get("/sanctum/csrf-cookie")
+                                    .then(res =>
+                                        apiClient
+                                            .put(`/api/review/${id}`, values)
+                                            .then(res => {
+                                                toast({
+                                                    title: "Review updated!",
+                                                    description:
+                                                        res.data.message,
+                                                    status: "success"
+                                                });
+                                                actions.setSubmitting(false);
+                                                window.location.reload();
+                                            })
+                                            .catch(err => {
+                                                console.log(err.response);
+                                                toast({
+                                                    title:
+                                                        "Error while updating review",
+                                                    description: err.response
+                                                        .data
+                                                        ? err.response.data
+                                                              .message
+                                                        : "Error occured! Please try again!",
+                                                    status: "error"
+                                                });
+                                                actions.setSubmitting(false);
+                                            })
+                                    )
+                                    .catch(err => {
+                                        console.log(err.response);
+                                        toast({
+                                            title:
+                                                "Error while updating review",
+                                            description: err.response.data
+                                                ? err.response.data.message
+                                                : "Error occured! Please try again!",
+                                            status: "error"
+                                        });
+                                        actions.setSubmitting(false);
+                                    });
+                            }}
+                        >
+                            {props => (
+                                <Form style={{ width: "100%" }}>
+                                    <Field name="rating">
+                                        {({ field, form }) => (
+                                            <FormControl
+                                                isInvalid={
+                                                    form.errors.rating &&
+                                                    form.touched.rating
+                                                }
+                                            >
+                                                <HStack alignItems="flex-end">
+                                                    <FormLabel color="gray">
+                                                        Your Rating
+                                                    </FormLabel>
+                                                    <ReactStars
+                                                        edit
+                                                        value={
+                                                            props.values[
+                                                                "rating"
+                                                            ]
+                                                        }
+                                                        onChange={v =>
+                                                            form.setFieldValue(
+                                                                "rating",
+                                                                v
+                                                            )
+                                                        }
+                                                        size={18}
+                                                        emptyIcon={
+                                                            <Icon
+                                                                as={FaRegStar}
+                                                            />
+                                                        }
+                                                        filledIcon={
+                                                            <Icon as={FaStar} />
+                                                        }
+                                                        halfIcon={
+                                                            <Icon
+                                                                as={
+                                                                    FaStarHalfAlt
+                                                                }
+                                                            />
+                                                        }
+                                                    />
+                                                </HStack>
+                                                <FormErrorMessage>
+                                                    {form.errors.rating}
+                                                </FormErrorMessage>
+                                            </FormControl>
+                                        )}
+                                    </Field>
+                                    <Field name="comment">
+                                        {({ field, form }) => (
+                                            <FormControl
+                                                isInvalid={
+                                                    form.errors.comment &&
+                                                    form.touched.comment
+                                                }
+                                            >
+                                                <Textarea
+                                                    h="150px"
+                                                    borderRadius="0"
+                                                    {...field}
+                                                    placeholder="Your review*"
+                                                    size="md"
+                                                />
+                                                <FormErrorMessage>
+                                                    {form.errors.comment}
+                                                </FormErrorMessage>
+                                            </FormControl>
+                                        )}
+                                    </Field>
+                                    <Button
+                                        type="submit"
+                                        isLoading={props.isSubmitting}
+                                        textTransform="uppercase"
+                                        letterSpacing="1px"
+                                        fontSize="medium"
+                                        w="100%"
+                                        backgroundColor="secondary"
+                                        color="#fff"
+                                        _hover={{
+                                            opacity: 0.8
+                                        }}
+                                    >
+                                        Submit
+                                    </Button>
+                                </Form>
+                            )}
+                        </Formik>
+                    )}
+                </VStack>
+            </HStack>
+        </>
     );
 };
 

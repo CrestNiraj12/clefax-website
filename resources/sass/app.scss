@@ -146,11 +146,17 @@ body {
 
 .scrollable::-webkit-scrollbar-thumb,
 .scrollableX::-webkit-scrollbar-thumb {
+    visibility: hidden;
     background-color: var(
         --chakra-colors-secondary
     ); /* color of the scroll thumb */
     border-radius: 50px; /* roundness of the scroll thumb */
     border: none; /* creates padding around scroll thumb */
+}
+
+.scrollable:hover::-webkit-scrollbar-thumb,
+.scrollableX:hover::-webkit-scrollbar-thumb {
+    visibility: visible;
 }
 
 .chakra-button,

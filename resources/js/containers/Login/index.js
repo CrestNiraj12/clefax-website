@@ -108,7 +108,6 @@ const Login = ({ setAuth, auth }) => {
                                             apiClient
                                                 .post("/api/login", values)
                                                 .then(res => {
-                                                    console.log(res);
                                                     toast({
                                                         title: "Login Success",
                                                         description:
@@ -149,12 +148,14 @@ const Login = ({ setAuth, auth }) => {
                                                 })
                                         )
                                         .catch(err => {
+                                            console.log(err.response);
                                             toast({
                                                 title: "Error while signup",
                                                 description:
                                                     "Error occured! Please try again!",
                                                 status: "error"
                                             });
+                                            actions.setSubmitting(false);
                                         });
                                 }}
                             >

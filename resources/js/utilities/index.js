@@ -22,7 +22,7 @@ export const getIdFromUrl = url => {
     return url.split("-").pop();
 };
 
-export const searchQuery = (arr, q, key = "title") => {
+export const searchQuery = (arr, q, key = "name") => {
     return arr.filter(elem =>
         q.split(" ").some(word => {
             if (word.length)
@@ -53,4 +53,11 @@ export const sendMail = (templateId, data) => {
 
 export const getLoginRedirection = () => {
     return `/login?r=${location.pathname}`;
+};
+
+export const getAvgReviews = reviews => {
+    return reviews && reviews.length
+        ? reviews.map(r => r.rating).reduce((r1, r2) => r1 + r2) /
+              reviews.length
+        : 0;
 };

@@ -15,7 +15,7 @@ import {
     Icon
 } from "@chakra-ui/react";
 import { CSSTransition } from "react-transition-group";
-import { generateUrl } from "../../utilities";
+import { generateUrl, getAvgReviews } from "../../utilities";
 
 const ProductCardColumn = ({
     product: { id, name, images, reviews, price, discount },
@@ -122,8 +122,7 @@ const ProductCardColumn = ({
                             edit={false}
                             value={
                                 reviews && reviews.length
-                                    ? reviews.reduce((r1, r2) => r1 + r2) /
-                                      reviews.length
+                                    ? getAvgReviews(reviews)
                                     : 0
                             }
                             size={16}

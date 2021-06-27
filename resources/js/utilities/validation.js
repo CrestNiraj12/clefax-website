@@ -147,3 +147,10 @@ export const validateDetails = values => {
 
     return errors;
 };
+
+export const validateReview = values => {
+    const errors = {};
+    if (!values.rating) errors.rating = "Please provide a rating";
+    if (!values.comment) errors.comment = "Say something about the product";
+    return errors;
+};

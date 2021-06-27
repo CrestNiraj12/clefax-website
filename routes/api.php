@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ReportController;
+use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SecurityQuestionController;
 use App\Http\Controllers\ShopController;
@@ -38,6 +40,10 @@ Route::get('/categories', [CategoryController::class, "getAllCategories"]);
 Route::get('/categories/{id}', [CategoryController::class, "getCategory"]);
 
 Route::middleware(['auth:sanctum'])->group(function() {
+    Route::post('/report/create', [ReportController::class, 'store']);
+    Route::post('/review/create', [ReviewController::class, 'store']);
+    Route::put('/review/{id}', [ReviewController::class, 'update']);
+    Route::delete('/review/{id}', [ReviewController::class, 'destroy']);
     Route::post('/shop/create', [ShopController::class, 'addShopFromApi']);
     Route::post('/user/update', [UserController::class, "update"]);
 });

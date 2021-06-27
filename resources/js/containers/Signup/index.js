@@ -181,6 +181,8 @@ const Signup = ({ setAuth, auth }) => {
                                                 })
                                         )
                                         .catch(err => {
+                                            console.log(err.response);
+                                            actions.setSubmitting(false);
                                             toast({
                                                 title: "Error while signup",
                                                 description:

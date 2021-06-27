@@ -206630,9 +206630,7 @@ var ProductCardColumn = function ProductCardColumn(_ref) {
     mx: "20px"
   }, !hideRatings && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_rating_stars_component__WEBPACK_IMPORTED_MODULE_1___default.a, {
     edit: false,
-    value: reviews && reviews.length ? reviews.reduce(function (r1, r2) {
-      return r1 + r2;
-    }) / reviews.length : 0,
+    value: reviews && reviews.length ? Object(_utilities__WEBPACK_IMPORTED_MODULE_5__["getAvgReviews"])(reviews) : 0,
     size: 16,
     emptyIcon: /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_3__["Icon"], {
       as: react_icons_fa__WEBPACK_IMPORTED_MODULE_2__["FaRegStar"]
@@ -206834,9 +206832,7 @@ var ProductCardRow = function ProductCardRow(_ref) {
     justifyContent: "center"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_rating_stars_component__WEBPACK_IMPORTED_MODULE_2___default.a, {
     edit: false,
-    value: reviews && reviews.length ? reviews.reduce(function (r1, r2) {
-      return r1 + r2;
-    }) / reviews.length : 0,
+    value: reviews && reviews.length ? Object(_utilities__WEBPACK_IMPORTED_MODULE_5__["getAvgReviews"])(reviews) : 0,
     size: 13,
     emptyIcon: /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_3__["Icon"], {
       as: react_icons_fa__WEBPACK_IMPORTED_MODULE_1__["FaRegStar"]
@@ -206981,6 +206977,71 @@ var ProductCardRowSmall = function ProductCardRowSmall(_ref) {
 };
 
 /* harmony default export */ __webpack_exports__["default"] = (ProductCardRowSmall);
+
+/***/ }),
+
+/***/ "./resources/js/components/RemoveModal/index.js":
+/*!******************************************************!*\
+  !*** ./resources/js/components/RemoveModal/index.js ***!
+  \******************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @chakra-ui/react */ "./node_modules/@chakra-ui/react/dist/esm/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _utilities__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../utilities */ "./resources/js/utilities/index.js");
+
+
+
+
+var RemoveModal = function RemoveModal(_ref) {
+  var isOpen = _ref.isOpen,
+      onClose = _ref.onClose,
+      apiUrl = _ref.apiUrl,
+      title = _ref.title,
+      words = _ref.words,
+      onSuccess = _ref.onSuccess,
+      onError = _ref.onError;
+
+  var handleDeleteItem = function handleDeleteItem() {
+    _utilities__WEBPACK_IMPORTED_MODULE_2__["apiClient"].get("/sanctum/csrf-cookie").then(function (res) {
+      return _utilities__WEBPACK_IMPORTED_MODULE_2__["apiClient"]["delete"]("/api/".concat(apiUrl)).then(function (res) {
+        onSuccess(res);
+      })["catch"](function (err) {
+        onError(err);
+      });
+    })["catch"](function (err) {
+      onError(err);
+    });
+  };
+
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Modal"], {
+    isOpen: isOpen,
+    onClose: onClose
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["ModalOverlay"], null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["ModalContent"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["ModalHeader"], null, title), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["ModalCloseButton"], null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["ModalBody"], null, "Are you sure you want to delete ", words, "?"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["ModalFooter"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Button"], {
+    bg: "primary",
+    color: "#fff",
+    fontSize: "sm",
+    textTransform: "none",
+    p: "0 20px !important",
+    mr: 3,
+    onClick: onClose,
+    _hover: {
+      bg: "var(--chakra-colors-gray) !important"
+    }
+  }, "Cancel"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Button"], {
+    variant: "ghost",
+    fontSize: "sm",
+    textTransform: "none",
+    p: "0 20px !important",
+    onClick: handleDeleteItem
+  }, "Delete"))));
+};
+
+/* harmony default export */ __webpack_exports__["default"] = (RemoveModal);
 
 /***/ }),
 
@@ -207318,7 +207379,7 @@ var handleSortBy = function handleSortBy(index, setSortBy, setFilteredProducts, 
   if (index === 0) fp = p.sort(function (a, b) {
     return a.name.toLowerCase() < b.name.toLowerCase() ? -1 : 1;
   });else if (index === 1) fp = p.sort(function (a, b) {
-    return b.rating - a.rating;
+    return Object(_utilities__WEBPACK_IMPORTED_MODULE_4__["getAvgReviews"])(b.reviews) - Object(_utilities__WEBPACK_IMPORTED_MODULE_4__["getAvgReviews"])(a.reviews);
   });else if (index === 2) fp = p.sort(function (a, b) {
     return new Date(b.created_at) - new Date(a.created_at);
   });else if (index === 3) fp = p.sort(function (a, b) {
@@ -210984,7 +211045,6 @@ var Login = function Login(_ref) {
     onSubmit: function onSubmit(values, actions) {
       _utilities__WEBPACK_IMPORTED_MODULE_7__["apiClient"].get("/sanctum/csrf-cookie").then(function (res) {
         return _utilities__WEBPACK_IMPORTED_MODULE_7__["apiClient"].post("/api/login", values).then(function (res) {
-          console.log(res);
           toast({
             title: "Login Success",
             description: "User was logged in successfully!",
@@ -211007,11 +211067,13 @@ var Login = function Login(_ref) {
           actions.setSubmitting(false);
         });
       })["catch"](function (err) {
+        console.log(err.response);
         toast({
           title: "Error while signup",
           description: "Error occured! Please try again!",
           status: "error"
         });
+        actions.setSubmitting(false);
       });
     }
   }, function (props) {
@@ -211175,7 +211237,7 @@ var NotFound = function NotFound(_ref) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _chakra_ui_layout__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @chakra-ui/layout */ "./node_modules/@chakra-ui/layout/dist/esm/index.js");
+/* harmony import */ var _chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @chakra-ui/react */ "./node_modules/@chakra-ui/react/dist/esm/index.js");
 /* harmony import */ var _chakra_ui_tabs__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @chakra-ui/tabs */ "./node_modules/@chakra-ui/tabs/dist/esm/index.js");
 /* harmony import */ var react_icons_fa__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-icons/fa */ "./node_modules/react-icons/fa/index.esm.js");
 /* harmony import */ var _chakra_ui_icons__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @chakra-ui/icons */ "./node_modules/@chakra-ui/icons/dist/esm/index.js");
@@ -211187,8 +211249,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _chakra_ui_button__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @chakra-ui/button */ "./node_modules/@chakra-ui/button/dist/esm/index.js");
 /* harmony import */ var _chakra_ui_media_query__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @chakra-ui/media-query */ "./node_modules/@chakra-ui/media-query/dist/esm/index.js");
 /* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
-/* harmony import */ var _chakra_ui_react__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @chakra-ui/react */ "./node_modules/@chakra-ui/react/dist/esm/index.js");
-/* harmony import */ var _utilities__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../../utilities */ "./resources/js/utilities/index.js");
+/* harmony import */ var _utilities__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../../utilities */ "./resources/js/utilities/index.js");
+/* harmony import */ var formik__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! formik */ "./node_modules/formik/dist/formik.esm.js");
+/* harmony import */ var _utilities_validation__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ../../utilities/validation */ "./resources/js/utilities/validation.js");
+/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ../../constants */ "./resources/js/constants.js");
+/* harmony import */ var _components_RemoveModal__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ../../components/RemoveModal */ "./resources/js/components/RemoveModal/index.js");
+function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
+
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -211214,6 +211281,10 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 
+
+
+
+
 var mapStateToProps = function mapStateToProps(state) {
   return {
     auth: state.auth
@@ -211223,11 +211294,7 @@ var mapStateToProps = function mapStateToProps(state) {
 var ProductTabs = function ProductTabs(_ref) {
   var product = _ref.product,
       auth = _ref.auth;
-
-  var _React$useState = react__WEBPACK_IMPORTED_MODULE_4___default.a.useState(""),
-      _React$useState2 = _slicedToArray(_React$useState, 2),
-      value = _React$useState2[0],
-      setValue = _React$useState2[1];
+  var toast = Object(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["useToast"])(_constants__WEBPACK_IMPORTED_MODULE_13__["DEFAULT_TOAST"]);
 
   var _useMediaQuery = Object(_chakra_ui_media_query__WEBPACK_IMPORTED_MODULE_8__["useMediaQuery"])("(max-width:48em)"),
       _useMediaQuery2 = _slicedToArray(_useMediaQuery, 1),
@@ -211250,29 +211317,51 @@ var ProductTabs = function ProductTabs(_ref) {
     _selected: {
       color: "secondary"
     }
-  }, "Reviews (0)"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_chakra_ui_tabs__WEBPACK_IMPORTED_MODULE_1__["Tab"], {
+  }, "Reviews (", product.reviews.length, ")"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_chakra_ui_tabs__WEBPACK_IMPORTED_MODULE_1__["Tab"], {
     className: "product-tab",
     _selected: {
       color: "secondary"
     }
   }, "Vendor info")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_chakra_ui_tabs__WEBPACK_IMPORTED_MODULE_1__["TabPanels"], {
     mt: "30px"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_chakra_ui_tabs__WEBPACK_IMPORTED_MODULE_1__["TabPanel"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_chakra_ui_layout__WEBPACK_IMPORTED_MODULE_0__["Text"], {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_chakra_ui_tabs__WEBPACK_IMPORTED_MODULE_1__["TabPanel"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Text"], {
     lineHeight: "2"
-  }, product.description), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_chakra_ui_layout__WEBPACK_IMPORTED_MODULE_0__["Heading"], {
+  }, product.description), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Heading"], {
     as: "h6",
     fontSize: "lg",
     my: "20px"
-  }, "Allergy Information"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_chakra_ui_layout__WEBPACK_IMPORTED_MODULE_0__["Text"], null, product.allergy_information)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_chakra_ui_tabs__WEBPACK_IMPORTED_MODULE_1__["TabPanel"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_chakra_ui_layout__WEBPACK_IMPORTED_MODULE_0__["Flex"], {
+  }, "Allergy Information"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Text"], null, product.allergy_information)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_chakra_ui_tabs__WEBPACK_IMPORTED_MODULE_1__["TabPanel"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Flex"], {
     direction: {
       base: "column",
       md: "row"
     }
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_chakra_ui_layout__WEBPACK_IMPORTED_MODULE_0__["Box"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_chakra_ui_layout__WEBPACK_IMPORTED_MODULE_0__["Heading"], {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Box"], {
+    w: {
+      base: "100%",
+      lg: "50%"
+    }
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Heading"], {
     as: "h6",
     fontSize: "xl",
     mb: "20px"
-  }, "Reviews"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_chakra_ui_layout__WEBPACK_IMPORTED_MODULE_0__["Text"], null, "There are no reviews yet.")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_chakra_ui_layout__WEBPACK_IMPORTED_MODULE_0__["Spacer"], null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_chakra_ui_layout__WEBPACK_IMPORTED_MODULE_0__["VStack"], {
+  }, "Reviews"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Box"], {
+    overflowY: "auto",
+    maxH: "340px",
+    className: "scrollable",
+    mr: {
+      base: "0px",
+      md: "50px"
+    }
+  }, product.reviews.length ? product.reviews.sort(function (a, b) {
+    return new Date(b.created_at) - new Date(a.created_at);
+  }).map(function (review, id) {
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(ReviewCard, {
+      key: id,
+      review: review,
+      auth: auth,
+      product_id: product.id
+    });
+  }) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Text"], null, "There are no reviews yet."))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Spacer"], null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["VStack"], {
     spacing: 5,
     mt: {
       base: "20px",
@@ -211283,17 +211372,243 @@ var ProductTabs = function ProductTabs(_ref) {
       base: "100%",
       md: "50%"
     }
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_chakra_ui_layout__WEBPACK_IMPORTED_MODULE_0__["Heading"], {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Heading"], {
     as: "h6",
     fontSize: "xl"
-  }, "BE THE FIRST TO REVIEW \u201C", product.name, "\u201D"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_chakra_ui_layout__WEBPACK_IMPORTED_MODULE_0__["Text"], {
+  }, "".concat(product.reviews.length ? "" : "BE THE FIRST TO ", "REVIEW \u201C").concat(product.name, "\u201D")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Text"], {
     color: "gray"
-  }, "Your email address will not be published. Required fields are marked *"), auth.logged_in ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_4___default.a.Fragment, null, " ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_chakra_ui_layout__WEBPACK_IMPORTED_MODULE_0__["HStack"], {
-    alignItems: "flex-end"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_chakra_ui_layout__WEBPACK_IMPORTED_MODULE_0__["Text"], {
-    color: "gray"
-  }, "Your Rating"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(react_rating_stars_component__WEBPACK_IMPORTED_MODULE_5___default.a, {
-    edit: true,
+  }, "Your email address will not be published. Required fields are marked *"), auth.logged_in ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_11__["Formik"], {
+    validate: _utilities_validation__WEBPACK_IMPORTED_MODULE_12__["validateReview"],
+    initialValues: {
+      rating: 0,
+      comment: "",
+      product_id: product.id
+    },
+    onSubmit: function onSubmit(values, actions) {
+      _utilities__WEBPACK_IMPORTED_MODULE_10__["apiClient"].get("/sanctum/csrf-cookie").then(function (res) {
+        return _utilities__WEBPACK_IMPORTED_MODULE_10__["apiClient"].post("/api/review/create", values).then(function (res) {
+          toast({
+            title: "Review posted!",
+            description: res.data.message,
+            status: "success"
+          });
+          actions.setSubmitting(false);
+          window.location.reload();
+        })["catch"](function (err) {
+          console.log(err.response);
+          toast({
+            title: "Error while posting review",
+            description: err.response.data ? err.response.data.message : "Error occured! Please try again!",
+            status: "error"
+          });
+          actions.setSubmitting(false);
+        });
+      })["catch"](function (err) {
+        console.log(err.response);
+        toast({
+          title: "Error while posting review",
+          description: err.response.data ? err.response.data.message : "Error occured! Please try again!",
+          status: "error"
+        });
+        actions.setSubmitting(false);
+      });
+    }
+  }, function (props) {
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_11__["Form"], {
+      style: {
+        width: "100%"
+      }
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_11__["Field"], {
+      name: "rating"
+    }, function (_ref2) {
+      var field = _ref2.field,
+          form = _ref2.form;
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["FormControl"], {
+        isInvalid: form.errors.rating && form.touched.rating
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["HStack"], {
+        alignItems: "flex-end"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["FormLabel"], {
+        color: "gray"
+      }, "Your Rating"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(react_rating_stars_component__WEBPACK_IMPORTED_MODULE_5___default.a, {
+        edit: true,
+        value: props.values["rating"],
+        onChange: function onChange(v) {
+          return form.setFieldValue("rating", v);
+        },
+        size: 18,
+        emptyIcon: /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_chakra_ui_icons__WEBPACK_IMPORTED_MODULE_3__["Icon"], {
+          as: react_icons_fa__WEBPACK_IMPORTED_MODULE_2__["FaRegStar"]
+        }),
+        filledIcon: /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_chakra_ui_icons__WEBPACK_IMPORTED_MODULE_3__["Icon"], {
+          as: react_icons_fa__WEBPACK_IMPORTED_MODULE_2__["FaStar"]
+        }),
+        halfIcon: /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_chakra_ui_icons__WEBPACK_IMPORTED_MODULE_3__["Icon"], {
+          as: react_icons_fa__WEBPACK_IMPORTED_MODULE_2__["FaStarHalfAlt"]
+        })
+      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["FormErrorMessage"], null, form.errors.rating));
+    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_11__["Field"], {
+      name: "comment"
+    }, function (_ref3) {
+      var field = _ref3.field,
+          form = _ref3.form;
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["FormControl"], {
+        isInvalid: form.errors.comment && form.touched.comment
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_chakra_ui_textarea__WEBPACK_IMPORTED_MODULE_6__["Textarea"], _extends({
+        h: "150px",
+        borderRadius: "0"
+      }, field, {
+        placeholder: "Your review*",
+        size: "md"
+      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["FormErrorMessage"], null, form.errors.comment));
+    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_chakra_ui_button__WEBPACK_IMPORTED_MODULE_7__["Button"], {
+      type: "submit",
+      isLoading: props.isSubmitting,
+      textTransform: "uppercase",
+      letterSpacing: "1px",
+      fontSize: "medium",
+      w: "100%",
+      backgroundColor: "secondary",
+      color: "#fff",
+      _hover: {
+        opacity: 0.8
+      }
+    }, "Submit"));
+  }) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Text"], null, "You need to be logged in to be able to review the product. Please", " ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Link"], {
+    href: Object(_utilities__WEBPACK_IMPORTED_MODULE_10__["getLoginRedirection"])(),
+    color: "secondary",
+    textDecor: "underline",
+    _hover: {
+      color: "var(--chakra-colors-primary) !important",
+      textDecor: "underline !important"
+    }
+  }, "login here"), ".")))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_chakra_ui_tabs__WEBPACK_IMPORTED_MODULE_1__["TabPanel"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Heading"], {
+    as: "h6",
+    fontSize: "xl"
+  }, "VENDOR INFORMATION"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["List"], {
+    spacing: 5,
+    my: "30px"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["ListItem"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["ListIcon"], {
+    as: _chakra_ui_icons__WEBPACK_IMPORTED_MODULE_3__["CheckIcon"],
+    color: "secondary"
+  }), "Shop Name: ", product.shop.name), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["ListItem"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["ListIcon"], {
+    as: _chakra_ui_icons__WEBPACK_IMPORTED_MODULE_3__["CheckIcon"],
+    color: "secondary"
+  }), "Trader: ", product.shop.user.fullname), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["ListItem"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["ListIcon"], {
+    as: _chakra_ui_icons__WEBPACK_IMPORTED_MODULE_3__["CheckIcon"],
+    color: "secondary"
+  }), "Address:", " ", "".concat(product.shop.street_no, ", ").concat(product.shop.city)), product.reviews.length && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["ListItem"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["ListIcon"], {
+    as: _chakra_ui_icons__WEBPACK_IMPORTED_MODULE_3__["CheckIcon"],
+    color: "secondary"
+  }), Object(_utilities__WEBPACK_IMPORTED_MODULE_10__["getAvgReviews"])(product.reviews).toFixed(2), " ", "rating from ", product.reviews.length, " ", "review(s)")))));
+};
+
+var ReviewCard = function ReviewCard(_ref4) {
+  var _ref4$review = _ref4.review,
+      id = _ref4$review.id,
+      rating = _ref4$review.rating,
+      comment = _ref4$review.comment,
+      user = _ref4$review.user,
+      auth = _ref4.auth,
+      product_id = _ref4.product_id;
+  var toast = Object(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["useToast"])(_constants__WEBPACK_IMPORTED_MODULE_13__["DEFAULT_TOAST"]);
+
+  var _useState = Object(react__WEBPACK_IMPORTED_MODULE_4__["useState"])(false),
+      _useState2 = _slicedToArray(_useState, 2),
+      show = _useState2[0],
+      setShow = _useState2[1];
+
+  var _useState3 = Object(react__WEBPACK_IMPORTED_MODULE_4__["useState"])(false),
+      _useState4 = _slicedToArray(_useState3, 2),
+      edit = _useState4[0],
+      setEdit = _useState4[1];
+
+  var _useDisclosure = Object(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["useDisclosure"])(),
+      isOpen = _useDisclosure.isOpen,
+      onOpen = _useDisclosure.onOpen,
+      onClose = _useDisclosure.onClose;
+
+  var handleShowUpdate = function handleShowUpdate(isShow) {
+    if (user.id === auth.user.id) setShow(isShow);
+  };
+
+  var onSuccess = function onSuccess(res) {
+    toast({
+      title: "Review deleted!",
+      description: res.data.message,
+      status: "success"
+    });
+    window.location.reload();
+  };
+
+  var onError = function onError(err) {
+    console.log(err.response);
+    toast({
+      title: "Error while deleting review",
+      description: err.response.data ? err.response.data.message : "Error occured! Please try again!",
+      status: "error"
+    });
+  };
+
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_4___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_components_RemoveModal__WEBPACK_IMPORTED_MODULE_14__["default"], {
+    isOpen: isOpen,
+    onClose: onClose,
+    apiUrl: "/review/".concat(id),
+    title: "Delete Review",
+    words: "the review?",
+    onSuccess: onSuccess,
+    onError: onError
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["HStack"], {
+    onMouseEnter: function onMouseEnter() {
+      return handleShowUpdate(true);
+    },
+    onMouseLeave: function onMouseLeave() {
+      return handleShowUpdate(false);
+    },
+    my: "20px",
+    pos: "relative"
+  }, show && !edit && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_4___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["IconButton"], {
+    icon: /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_chakra_ui_icons__WEBPACK_IMPORTED_MODULE_3__["EditIcon"], {
+      color: "gray",
+      _hover: {
+        color: "secondary"
+      }
+    }),
+    onClick: function onClick() {
+      return setEdit(true);
+    },
+    pos: "absolute",
+    right: "50px",
+    minW: "0",
+    bg: "transparent",
+    top: "0",
+    p: "0 !important",
+    _hover: {
+      bg: "transparent !important"
+    }
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["IconButton"], {
+    icon: /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_chakra_ui_icons__WEBPACK_IMPORTED_MODULE_3__["DeleteIcon"], {
+      color: "gray",
+      _hover: {
+        color: "secondary"
+      }
+    }),
+    p: "0 !important",
+    minW: "0",
+    pos: "absolute",
+    right: "20px",
+    bg: "transparent",
+    top: "0",
+    _hover: {
+      bg: "transparent !important"
+    },
+    onClick: onOpen
+  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Image"], {
+    src: user.avatar
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["VStack"], {
+    alignItems: "flex-start",
+    w: "80% !important"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Text"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement("b", null, user.fullname)), !edit ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_4___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(react_rating_stars_component__WEBPACK_IMPORTED_MODULE_5___default.a, {
+    edit: false,
     size: 18,
     emptyIcon: /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_chakra_ui_icons__WEBPACK_IMPORTED_MODULE_3__["Icon"], {
       as: react_icons_fa__WEBPACK_IMPORTED_MODULE_2__["FaRegStar"]
@@ -211303,55 +211618,106 @@ var ProductTabs = function ProductTabs(_ref) {
     }),
     halfIcon: /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_chakra_ui_icons__WEBPACK_IMPORTED_MODULE_3__["Icon"], {
       as: react_icons_fa__WEBPACK_IMPORTED_MODULE_2__["FaStarHalfAlt"]
-    })
-  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_chakra_ui_textarea__WEBPACK_IMPORTED_MODULE_6__["Textarea"], {
-    h: "150px",
-    borderRadius: "0",
-    value: value,
-    onChange: function onChange(e) {
-      return setValue(e.target.value);
+    }),
+    value: rating
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Text"], null, comment)) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_11__["Formik"], {
+    validate: _utilities_validation__WEBPACK_IMPORTED_MODULE_12__["validateReview"],
+    initialValues: {
+      rating: rating,
+      comment: comment,
+      product_id: product_id
     },
-    placeholder: "Your review*",
-    size: "md"
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_chakra_ui_button__WEBPACK_IMPORTED_MODULE_7__["Button"], {
-    textTransform: "uppercase",
-    letterSpacing: "1px",
-    fontSize: "medium",
-    w: "100%",
-    backgroundColor: "secondary",
-    color: "#fff",
-    _hover: {
-      opacity: 0.8
+    onSubmit: function onSubmit(values, actions) {
+      console.log(values);
+      _utilities__WEBPACK_IMPORTED_MODULE_10__["apiClient"].get("/sanctum/csrf-cookie").then(function (res) {
+        return _utilities__WEBPACK_IMPORTED_MODULE_10__["apiClient"].put("/api/review/".concat(id), values).then(function (res) {
+          toast({
+            title: "Review updated!",
+            description: res.data.message,
+            status: "success"
+          });
+          actions.setSubmitting(false);
+          window.location.reload();
+        })["catch"](function (err) {
+          console.log(err.response);
+          toast({
+            title: "Error while updating review",
+            description: err.response.data ? err.response.data.message : "Error occured! Please try again!",
+            status: "error"
+          });
+          actions.setSubmitting(false);
+        });
+      })["catch"](function (err) {
+        console.log(err.response);
+        toast({
+          title: "Error while updating review",
+          description: err.response.data ? err.response.data.message : "Error occured! Please try again!",
+          status: "error"
+        });
+        actions.setSubmitting(false);
+      });
     }
-  }, "Submit")) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_chakra_ui_layout__WEBPACK_IMPORTED_MODULE_0__["Text"], null, "You need to be logged in to be able to review the product. Please", " ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_10__["Link"], {
-    href: Object(_utilities__WEBPACK_IMPORTED_MODULE_11__["getLoginRedirection"])(),
-    color: "secondary",
-    textDecor: "underline",
-    _hover: {
-      color: "var(--chakra-colors-primary) !important",
-      textDecor: "underline !important"
-    }
-  }, "login here"), ".")))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_chakra_ui_tabs__WEBPACK_IMPORTED_MODULE_1__["TabPanel"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_chakra_ui_layout__WEBPACK_IMPORTED_MODULE_0__["Heading"], {
-    as: "h6",
-    fontSize: "xl"
-  }, "VENDOR INFORMATION"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_chakra_ui_layout__WEBPACK_IMPORTED_MODULE_0__["List"], {
-    spacing: 5,
-    my: "30px"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_chakra_ui_layout__WEBPACK_IMPORTED_MODULE_0__["ListItem"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_chakra_ui_layout__WEBPACK_IMPORTED_MODULE_0__["ListIcon"], {
-    as: _chakra_ui_icons__WEBPACK_IMPORTED_MODULE_3__["CheckIcon"],
-    color: "secondary"
-  }), "Shop Name: ", product.shop.name), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_chakra_ui_layout__WEBPACK_IMPORTED_MODULE_0__["ListItem"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_chakra_ui_layout__WEBPACK_IMPORTED_MODULE_0__["ListIcon"], {
-    as: _chakra_ui_icons__WEBPACK_IMPORTED_MODULE_3__["CheckIcon"],
-    color: "secondary"
-  }), "Trader: ", product.shop.user.fullname), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_chakra_ui_layout__WEBPACK_IMPORTED_MODULE_0__["ListItem"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_chakra_ui_layout__WEBPACK_IMPORTED_MODULE_0__["ListIcon"], {
-    as: _chakra_ui_icons__WEBPACK_IMPORTED_MODULE_3__["CheckIcon"],
-    color: "secondary"
-  }), "Address:", " ", "".concat(product.shop.street_no, ", ").concat(product.shop.city)), product.reviews.length && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_chakra_ui_layout__WEBPACK_IMPORTED_MODULE_0__["ListItem"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_chakra_ui_layout__WEBPACK_IMPORTED_MODULE_0__["ListIcon"], {
-    as: _chakra_ui_icons__WEBPACK_IMPORTED_MODULE_3__["CheckIcon"],
-    color: "secondary"
-  }), product.reviews.reduce(function (r1, r2) {
-    return r1 + r2;
-  }) / product.reviews.length, " ", "rating from ", product.reviews.length, " ", "review(s)")))));
+  }, function (props) {
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_11__["Form"], {
+      style: {
+        width: "100%"
+      }
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_11__["Field"], {
+      name: "rating"
+    }, function (_ref5) {
+      var field = _ref5.field,
+          form = _ref5.form;
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["FormControl"], {
+        isInvalid: form.errors.rating && form.touched.rating
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["HStack"], {
+        alignItems: "flex-end"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["FormLabel"], {
+        color: "gray"
+      }, "Your Rating"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(react_rating_stars_component__WEBPACK_IMPORTED_MODULE_5___default.a, {
+        edit: true,
+        value: props.values["rating"],
+        onChange: function onChange(v) {
+          return form.setFieldValue("rating", v);
+        },
+        size: 18,
+        emptyIcon: /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_chakra_ui_icons__WEBPACK_IMPORTED_MODULE_3__["Icon"], {
+          as: react_icons_fa__WEBPACK_IMPORTED_MODULE_2__["FaRegStar"]
+        }),
+        filledIcon: /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_chakra_ui_icons__WEBPACK_IMPORTED_MODULE_3__["Icon"], {
+          as: react_icons_fa__WEBPACK_IMPORTED_MODULE_2__["FaStar"]
+        }),
+        halfIcon: /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_chakra_ui_icons__WEBPACK_IMPORTED_MODULE_3__["Icon"], {
+          as: react_icons_fa__WEBPACK_IMPORTED_MODULE_2__["FaStarHalfAlt"]
+        })
+      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["FormErrorMessage"], null, form.errors.rating));
+    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_11__["Field"], {
+      name: "comment"
+    }, function (_ref6) {
+      var field = _ref6.field,
+          form = _ref6.form;
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["FormControl"], {
+        isInvalid: form.errors.comment && form.touched.comment
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_chakra_ui_textarea__WEBPACK_IMPORTED_MODULE_6__["Textarea"], _extends({
+        h: "150px",
+        borderRadius: "0"
+      }, field, {
+        placeholder: "Your review*",
+        size: "md"
+      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["FormErrorMessage"], null, form.errors.comment));
+    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_chakra_ui_button__WEBPACK_IMPORTED_MODULE_7__["Button"], {
+      type: "submit",
+      isLoading: props.isSubmitting,
+      textTransform: "uppercase",
+      letterSpacing: "1px",
+      fontSize: "medium",
+      w: "100%",
+      backgroundColor: "secondary",
+      color: "#fff",
+      _hover: {
+        opacity: 0.8
+      }
+    }, "Submit"));
+  }))));
 };
 
 /* harmony default export */ __webpack_exports__["default"] = (Object(react_redux__WEBPACK_IMPORTED_MODULE_9__["connect"])(mapStateToProps)(ProductTabs));
@@ -211370,23 +211736,87 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @chakra-ui/react */ "./node_modules/@chakra-ui/react/dist/esm/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _utilities__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../utilities */ "./resources/js/utilities/index.js");
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _iterableToArrayLimit(arr, i) { var _i = arr && (typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"]); if (_i == null) return; var _arr = []; var _n = true; var _d = false; var _s, _e; try { for (_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+
 
 
 
 var Report = function Report(_ref) {
   var isOpen = _ref.isOpen,
-      onClose = _ref.onClose;
+      onClose = _ref.onClose,
+      product_id = _ref.product_id;
+
+  var _useState = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])(""),
+      _useState2 = _slicedToArray(_useState, 2),
+      reason = _useState2[0],
+      setReason = _useState2[1];
+
+  var _useState3 = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])(false),
+      _useState4 = _slicedToArray(_useState3, 2),
+      reported = _useState4[0],
+      setReported = _useState4[1];
+
+  var handleReport = function handleReport() {
+    _utilities__WEBPACK_IMPORTED_MODULE_2__["apiClient"].get("/sanctum/csrf-cookie").then(function (res) {
+      return _utilities__WEBPACK_IMPORTED_MODULE_2__["apiClient"].post("/api/report/create", {
+        details: reason,
+        product_id: product_id
+      }).then(function (res) {
+        setReported(true);
+      })["catch"](function (err) {
+        console.log(err.response);
+        toast({
+          title: "Error while report",
+          description: err.response.data ? err.response.data.message : "Error occured! Please try again!",
+          status: "error"
+        });
+      });
+    })["catch"](function (err) {
+      console.log(err.response);
+      toast({
+        title: "Error while report",
+        description: "Error occured! Please try again!",
+        status: "error"
+      });
+    });
+  };
+
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Modal"], {
     isOpen: isOpen,
     onClose: onClose
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["ModalOverlay"], null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["ModalContent"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["ModalHeader"], null, "Report this product"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["ModalCloseButton"], null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["ModalBody"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["FormControl"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Textarea"], {
-    placeholder: "Reason"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["ModalOverlay"], null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["ModalContent"], null, reported ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_1___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["ModalHeader"], null, "Reported!"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["ModalCloseButton"], null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["ModalBody"], null, "We will monitor the product and take necessary action if required and we will get back to you as soon as possible!"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["ModalFooter"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Button"], {
+    onClick: onClose,
+    letterSpacing: 0,
+    textTransform: "none",
+    px: "20px !important",
+    _hover: {
+      background: "gray !important"
+    }
+  }, "Ok"))) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_1___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["ModalHeader"], null, "Report this product"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["ModalCloseButton"], null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["ModalBody"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["FormControl"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Textarea"], {
+    placeholder: "Please provide your reason",
+    value: reason,
+    onChange: function onChange(e) {
+      return setReason(e.target.value);
+    }
   }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["ModalFooter"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Button"], {
     mr: 3,
     variant: "unstyled",
     letterSpacing: 0,
     textTransform: "none",
-    px: "20px !important"
+    px: "20px !important",
+    onClick: handleReport
   }, "Report"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Button"], {
     onClick: onClose,
     letterSpacing: 0,
@@ -211395,7 +211825,7 @@ var Report = function Report(_ref) {
     _hover: {
       background: "gray !important"
     }
-  }, "Cancel"))));
+  }, "Cancel")))));
 };
 
 /* harmony default export */ __webpack_exports__["default"] = (Report);
@@ -211524,7 +211954,8 @@ var Product = function Product(_ref) {
     }
   }, product && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_1___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_Report__WEBPACK_IMPORTED_MODULE_13__["default"], {
     isOpen: isOpen,
-    onClose: onClose
+    onClose: onClose,
+    product_id: product.id
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_components_Breadcrumb__WEBPACK_IMPORTED_MODULE_8__["default"], {
     crumbs: crumbs,
     customPageName: product.name,
@@ -211568,7 +211999,7 @@ var Product = function Product(_ref) {
     alignItems: "flex-end"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(react_rating_stars_component__WEBPACK_IMPORTED_MODULE_5___default.a, {
     edit: false,
-    value: product.rating,
+    value: Object(_utilities__WEBPACK_IMPORTED_MODULE_15__["getAvgReviews"])(product.reviews),
     size: 18,
     emptyIcon: /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Icon"], {
       as: react_icons_fa__WEBPACK_IMPORTED_MODULE_2__["FaRegStar"]
@@ -212363,6 +212794,8 @@ var Signup = function Signup(_ref) {
           });
         });
       })["catch"](function (err) {
+        console.log(err.response);
+        actions.setSubmitting(false);
         toast({
           title: "Error while signup",
           description: "Error occured! Please try again!",
@@ -213905,7 +214338,7 @@ var theme = Object(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["extendTheme"])
 /*!*****************************************!*\
   !*** ./resources/js/utilities/index.js ***!
   \*****************************************/
-/*! exports provided: getFinalPrice, generateUrl, getIdFromUrl, searchQuery, apiClient, sendMail, getLoginRedirection */
+/*! exports provided: getFinalPrice, generateUrl, getIdFromUrl, searchQuery, apiClient, sendMail, getLoginRedirection, getAvgReviews */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -213917,6 +214350,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "apiClient", function() { return apiClient; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "sendMail", function() { return sendMail; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getLoginRedirection", function() { return getLoginRedirection; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getAvgReviews", function() { return getAvgReviews; });
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
 
@@ -213932,7 +214366,7 @@ var getIdFromUrl = function getIdFromUrl(url) {
   return url.split("-").pop();
 };
 var searchQuery = function searchQuery(arr, q) {
-  var key = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "title";
+  var key = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "name";
   return arr.filter(function (elem) {
     return q.split(" ").some(function (word) {
       if (word.length) return elem[key].toLowerCase().includes(word.toLowerCase());
@@ -213954,6 +214388,13 @@ var sendMail = function sendMail(templateId, data) {
 var getLoginRedirection = function getLoginRedirection() {
   return "/login?r=".concat(location.pathname);
 };
+var getAvgReviews = function getAvgReviews(reviews) {
+  return reviews && reviews.length ? reviews.map(function (r) {
+    return r.rating;
+  }).reduce(function (r1, r2) {
+    return r1 + r2;
+  }) / reviews.length : 0;
+};
 
 /***/ }),
 
@@ -213961,7 +214402,7 @@ var getLoginRedirection = function getLoginRedirection() {
 /*!**********************************************!*\
   !*** ./resources/js/utilities/validation.js ***!
   \**********************************************/
-/*! exports provided: validateEmail, validatePaymentEmails, validateForm, validateContactForm, isValidDate, validateLogin, validateSignup, validateShop, validateDetails */
+/*! exports provided: validateEmail, validatePaymentEmails, validateForm, validateContactForm, isValidDate, validateLogin, validateSignup, validateShop, validateDetails, validateReview */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -213975,6 +214416,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "validateSignup", function() { return validateSignup; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "validateShop", function() { return validateShop; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "validateDetails", function() { return validateDetails; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "validateReview", function() { return validateReview; });
 var validateEmail = function validateEmail(values) {
   var errors = {};
   if (!values.email) errors.email = "Email address is required";else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)) {
@@ -214075,6 +214517,12 @@ var validateDetails = function validateDetails(values) {
     }
   }
 
+  return errors;
+};
+var validateReview = function validateReview(values) {
+  var errors = {};
+  if (!values.rating) errors.rating = "Please provide a rating";
+  if (!values.comment) errors.comment = "Say something about the product";
   return errors;
 };
 

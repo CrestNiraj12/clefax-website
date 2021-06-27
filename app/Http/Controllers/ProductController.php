@@ -18,7 +18,7 @@ class ProductController extends Controller
 
     public function show($id) {
         $product = Product::find($id);
-        return $product->load('offer', 'shop.user', 'category', 'reports', 'reviews');
+        return $product->load('offer', 'shop.user', 'category', 'reports', 'reviews.user');
     }
 
     public function getProduct($id) {

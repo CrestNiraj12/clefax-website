@@ -40,7 +40,7 @@ import ProductCardColumn from "../../components/ProductCardColumn";
 import { connect } from "react-redux";
 import Report from "./Report";
 import axios from "axios";
-import { getIdFromUrl } from "../../utilities";
+import { getAvgReviews, getIdFromUrl } from "../../utilities";
 
 const mapStateToProps = state => ({
     products: state.products
@@ -84,7 +84,11 @@ const Product = ({ match, crumbs, products }) => {
             <Box mb={{ base: "0", md: "150px" }}>
                 {product && (
                     <>
-                        <Report isOpen={isOpen} onClose={onClose} />
+                        <Report
+                            isOpen={isOpen}
+                            onClose={onClose}
+                            product_id={product.id}
+                        />
                         <Breadcrumb
                             crumbs={crumbs}
                             customPageName={product.name}
@@ -140,7 +144,7 @@ const Product = ({ match, crumbs, products }) => {
                                 <HStack alignItems="flex-end">
                                     <ReactStars
                                         edit={false}
-                                        value={product.rating}
+                                        value={getAvgReviews(product.reviews)}
                                         size={18}
                                         emptyIcon={<Icon as={FaRegStar} />}
                                         filledIcon={<Icon as={FaStar} />}
