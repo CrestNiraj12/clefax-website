@@ -16,7 +16,7 @@ import {
     useMediaQuery,
     useToast
 } from "@chakra-ui/react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Formik, Form, Field } from "formik";
 import { validateLogin } from "../../utilities/validation";
 import Wine from "../../../images/wine.png";
@@ -26,6 +26,7 @@ import { apiClient } from "../../utilities";
 import { DEFAULT_TOAST } from "../../constants";
 import { connect } from "react-redux";
 import { setAuth } from "../../actions";
+import qs from "query-string";
 
 const mapDispatchToProps = dispatch => ({
     setAuth: auth => dispatch(setAuth(auth))
@@ -40,6 +41,12 @@ const Login = ({ setAuth, auth }) => {
     var history = useHistory();
     const [show, setShow] = useState(false);
     const [isSmallerThan768] = useMediaQuery("(max-width: 768px)");
+    const [redir, setRedir] = useState("/");
+
+    useEffect(() => {
+        const q = qs.parse(location.search);
+        if (q && q.r) setRedir(q.r);
+    }, []);
 
     return auth.logged_in ? (
         <Redirect to="/" />
@@ -122,7 +129,7 @@ const Login = ({ setAuth, auth }) => {
                                                         false
                                                     );
 
-                                                    history.push("/");
+                                                    window.location = redir;
                                                 })
                                                 .catch(err => {
                                                     console.log(err.response);

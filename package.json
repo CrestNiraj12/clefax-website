@@ -37,6 +37,7 @@
         "@fontsource/archivo": "^4.3.0",
         "@fontsource/rubik": "^4.3.0",
         "chakra-ui-steps": "^1.0.3",
+        "emailjs-com": "^3.1.0",
         "formik": "^2.2.9",
         "framer-motion": "^4.1.16",
         "google-maps-react": "^2.0.6",

@@ -21,6 +21,7 @@ class User extends Authenticatable
     protected $fillable = [
         'fullname',
         'email',
+        'password',
         'role',
         'address',
         'phone',
@@ -28,6 +29,8 @@ class User extends Authenticatable
         'gender',
         'paypal_email',
         'stripe_email',
+        'sq_id',
+        'sq_answer'
     ];
 
     /**
@@ -60,6 +63,10 @@ class User extends Authenticatable
     }
 
     public function cart() {
+        return $this->hasOne(Cart::class);
+    }
+
+    public function user() {
         return $this->hasOne(Cart::class);
     }
 

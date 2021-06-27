@@ -18,7 +18,8 @@ import {
     Radio,
     Checkbox,
     useMediaQuery,
-    useToast
+    useToast,
+    Select
 } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { Formik, Form, Field } from "formik";
@@ -30,6 +31,7 @@ import { apiClient } from "../../utilities";
 import { DEFAULT_TOAST } from "../../constants";
 import { setAuth } from "../../actions";
 import { connect } from "react-redux";
+import { useEffect } from "react";
 
 const mapDispatchToProps = dispatch => ({
     setAuth: auth => dispatch(setAuth(auth))
@@ -44,6 +46,14 @@ const Signup = ({ setAuth, auth }) => {
     var history = useHistory();
     const [show, setShow] = useState(false);
     const [isSmallerThan768] = useMediaQuery("(max-width: 768px)");
+    const [questions, setQuestions] = useState([]);
+
+    useEffect(() => {
+        apiClient
+            .get("/api/security-questions")
+            .then(res => setQuestions(res.data))
+            .catch(err => console.log(err));
+    }, []);
 
     return auth.logged_in ? (
         <Redirect to="/" />
@@ -90,6 +100,8 @@ const Signup = ({ setAuth, auth }) => {
                                     email: "",
                                     password: "",
                                     isTrader: "0",
+                                    sq_id: "",
+                                    sq_answer: "",
                                     terms: ""
                                 }}
                                 onSubmit={(values, actions) => {
@@ -104,32 +116,44 @@ const Signup = ({ setAuth, auth }) => {
                                                     role:
                                                         values.isTrader === "1"
                                                             ? "Trader"
-                                                            : "Customer"
+                                                            : "Customer",
+                                                    sq_id: values.sq_id,
+                                                    sq_answer: values.sq_answer
                                                 })
                                                 .then(res => {
                                                     toast({
                                                         title:
-                                                            "Successfully registered",
+                                                            values.isTrader ===
+                                                            "1"
+                                                                ? "Verification requested"
+                                                                : "Successfully registered",
                                                         description:
-                                                            "You account has been created successfully!",
+                                                            values.isTrader ===
+                                                            "1"
+                                                                ? "Your account has sent for verification"
+                                                                : "You account has been created successfully!",
                                                         status: "success",
                                                         isClosable: true
                                                     });
 
-                                                    localStorage.setItem(
-                                                        "user",
-                                                        JSON.stringify(
-                                                            res.data.user
-                                                        )
-                                                    );
-                                                    setAuth({
-                                                        logged_in: true,
-                                                        user: res.data.user
-                                                    });
+                                                    if (
+                                                        values.isTrader === "0"
+                                                    ) {
+                                                        localStorage.setItem(
+                                                            "user",
+                                                            JSON.stringify(
+                                                                res.data.user
+                                                            )
+                                                        );
+                                                        setAuth({
+                                                            logged_in: true,
+                                                            user: res.data.user
+                                                        });
+                                                    }
+
                                                     actions.setSubmitting(
                                                         false
                                                     );
-
                                                     history.push(
                                                         values.isTrader === "1"
                                                             ? `/trader-signup`
@@ -137,6 +161,7 @@ const Signup = ({ setAuth, auth }) => {
                                                     );
                                                 })
                                                 .catch(err => {
+                                                    console.log(err.response);
                                                     actions.setSubmitting(
                                                         false
                                                     );
@@ -193,6 +218,7 @@ const Signup = ({ setAuth, auth }) => {
                                                         isRequired
                                                     >
                                                         <Input
+                                                            size="sm"
                                                             {...field}
                                                             placeholder="Full Name"
                                                             id="fullname"
@@ -217,6 +243,7 @@ const Signup = ({ setAuth, auth }) => {
                                                         isRequired
                                                     >
                                                         <Input
+                                                            size="sm"
                                                             {...field}
                                                             placeholder="Email Address"
                                                             id="email"
@@ -241,6 +268,7 @@ const Signup = ({ setAuth, auth }) => {
                                                     >
                                                         <InputGroup>
                                                             <Input
+                                                                size="sm"
                                                                 {...field}
                                                                 placeholder="Password"
                                                                 id="password"
@@ -252,16 +280,19 @@ const Signup = ({ setAuth, auth }) => {
                                                                 }
                                                                 placeholder="Password"
                                                             />
-                                                            <InputRightElement width="4.5rem">
+                                                            <InputRightElement
+                                                                width="4.5rem"
+                                                                h="8"
+                                                            >
                                                                 <Button
                                                                     fontSize="xs"
-                                                                    p="10px !important"
-                                                                    h="1.75rem"
+                                                                    p="5px !important"
+                                                                    h="1.2rem"
+                                                                    fontSize="xx-small"
                                                                     borderRadius="md"
                                                                     letterSpacing="0.5px !important"
                                                                     fontWeight="bold"
                                                                     textTransform="none !important"
-                                                                    size="sm"
                                                                     onClick={() =>
                                                                         setShow(
                                                                             !show
@@ -293,11 +324,79 @@ const Signup = ({ setAuth, auth }) => {
                                                     </FormControl>
                                                 )}
                                             </Field>
+                                            <Field name="sq_id">
+                                                {({ field, form }) => (
+                                                    <FormControl
+                                                        isInvalid={
+                                                            form.errors.sq_id &&
+                                                            form.touched.sq_id
+                                                        }
+                                                        mb="10px !important"
+                                                        isRequired
+                                                    >
+                                                        <Select
+                                                            {...field}
+                                                            size="sm"
+                                                            placeholder="Select security question"
+                                                            id="sq_id"
+                                                        >
+                                                            {questions.map(
+                                                                (
+                                                                    {
+                                                                        id,
+                                                                        question
+                                                                    },
+                                                                    index
+                                                                ) => (
+                                                                    <option
+                                                                        value={
+                                                                            id
+                                                                        }
+                                                                    >
+                                                                        {
+                                                                            question
+                                                                        }
+                                                                    </option>
+                                                                )
+                                                            )}
+                                                        </Select>
+                                                        <FormErrorMessage>
+                                                            {form.errors.sq_id}
+                                                        </FormErrorMessage>
+                                                    </FormControl>
+                                                )}
+                                            </Field>
+                                            <Field name="sq_answer">
+                                                {({ field, form }) => (
+                                                    <FormControl
+                                                        isInvalid={
+                                                            form.errors
+                                                                .sq_answer &&
+                                                            form.touched
+                                                                .sq_answer
+                                                        }
+                                                        mb="10px !important"
+                                                        isRequired
+                                                    >
+                                                        <Input
+                                                            size="sm"
+                                                            {...field}
+                                                            placeholder="Your Answer"
+                                                            id="sq_answer"
+                                                        />
+                                                        <FormErrorMessage>
+                                                            {
+                                                                form.errors
+                                                                    .sq_answer
+                                                            }
+                                                        </FormErrorMessage>
+                                                    </FormControl>
+                                                )}
+                                            </Field>
                                             <Field name="isTrader">
                                                 {({ field, form }) => (
                                                     <FormControl
-                                                        mt="20px !important"
-                                                        mb="10px !important"
+                                                        mb="5px !important"
                                                         isRequired
                                                     >
                                                         <RadioGroup
@@ -350,7 +449,7 @@ const Signup = ({ setAuth, auth }) => {
                                                         isRequired
                                                     >
                                                         <Checkbox
-                                                            my="10px !important"
+                                                            my="5px !important"
                                                             size="sm"
                                                             onChange={e =>
                                                                 form.setFieldValue(

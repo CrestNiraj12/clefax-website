@@ -58,6 +58,13 @@ import ProductCardRowSmall from "../ProductCardRowSmall";
 import { showSearch } from "../../actions";
 import ShopLocal from "../../../images/shoplocal.jpg";
 import { searchQuery } from "../../utilities";
+import Logout from "../Logout";
+import { FiLogOut, FiShoppingBag } from "react-icons/fi";
+import {
+    AiOutlineDashboard,
+    AiOutlineLogin,
+    AiOutlineUser
+} from "react-icons/ai";
 
 const mapDispatchToProps = dispatch => ({
     showSearch: show => dispatch(showSearch(show))
@@ -119,6 +126,11 @@ const Navbar = ({ showSearch, products, categories, auth }) => {
     const [smallerThan1100] = useMediaQuery("(max-width: 1100px)");
     const [smallerThan1024] = useMediaQuery("(max-width: 1024px)");
     const { isOpen, onOpen, onClose } = useDisclosure();
+    const {
+        isOpen: isOpenModal,
+        onOpen: openModal,
+        onClose: closeModal
+    } = useDisclosure();
     const btnRef = React.useRef();
     const [changeDrawer, setChangeDrawer] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -176,6 +188,7 @@ const Navbar = ({ showSearch, products, categories, auth }) => {
 
     return (
         <>
+            <Logout isOpen={isOpenModal} onClose={closeModal} />
             <Drawer
                 isOpen={isOpen}
                 placement="left"
@@ -317,14 +330,17 @@ const Navbar = ({ showSearch, products, categories, auth }) => {
                 >
                     <Text>Email: support@domain.com</Text>
                     <Spacer />
-                    <Link
-                        className="link"
-                        href="/"
-                        fontSize="12px"
-                        _focus={{ boxShadow: "none" }}
-                    >
-                        Order Tracking
-                    </Link>
+                    {(!auth.logged_in ||
+                        (auth.logged_in && auth.user.role === "Customer")) && (
+                        <Link
+                            className="link"
+                            href="/"
+                            fontSize="12px"
+                            _focus={{ boxShadow: "none" }}
+                        >
+                            Order Tracking
+                        </Link>
+                    )}
                 </Flex>
                 <Flex
                     p={smallerThan1100 ? "20px" : "10px 30px"}
@@ -512,75 +528,185 @@ const Navbar = ({ showSearch, products, categories, auth }) => {
                             <MenuList>
                                 {!auth.logged_in && (
                                     <>
-                                        <MenuItem minH="48px">
-                                            <Link href="/login" w="100%">
-                                                Login
-                                            </Link>
+                                        <MenuItem
+                                            icon={
+                                                <Icon
+                                                    fontSize="16px"
+                                                    as={AiOutlineLogin}
+                                                />
+                                            }
+                                            _hover={{
+                                                color:
+                                                    "var(--chakra-colors-secondary) !important"
+                                            }}
+                                            onClick={() =>
+                                                history.push("/login")
+                                            }
+                                            minH="48px"
+                                        >
+                                            Login
                                         </MenuItem>
-                                        <MenuItem minH="48px">
-                                            <Link href="/signup" w="100%">
-                                                Register
-                                            </Link>
+                                        <MenuItem
+                                            icon={
+                                                <Icon
+                                                    fontSize="16px"
+                                                    as={AiOutlineUser}
+                                                />
+                                            }
+                                            _hover={{
+                                                color:
+                                                    "var(--chakra-colors-secondary) !important"
+                                            }}
+                                            onClick={() =>
+                                                history.push("/signup")
+                                            }
+                                            minH="48px"
+                                        >
+                                            Register
                                         </MenuItem>
                                     </>
                                 )}
                                 {auth.logged_in && (
-                                    <MenuItem minH="48px">
-                                        <Link href="/account" w="100%">
-                                            My Account
-                                        </Link>
+                                    <MenuItem
+                                        icon={
+                                            <Icon
+                                                fontSize="16px"
+                                                as={AiOutlineDashboard}
+                                            />
+                                        }
+                                        _hover={{
+                                            color:
+                                                "var(--chakra-colors-secondary) !important"
+                                        }}
+                                        onClick={() =>
+                                            auth.logged_in &&
+                                            auth.user.role === "Trader"
+                                                ? (window.location =
+                                                      "/trader/dashboard")
+                                                : history.push("/account")
+                                        }
+                                        minH="48px"
+                                    >
+                                        {auth.logged_in &&
+                                        auth.user.role === "Trader"
+                                            ? "Dashboard"
+                                            : "My Account"}
                                     </MenuItem>
                                 )}
-                                <MenuItem minH="40px">
-                                    <Link href="/checkout" w="100%">
-                                        Checkout
-                                    </Link>
-                                </MenuItem>
-                                <MenuItem minH="40px">
-                                    <Link href="/wishlist" w="100%">
-                                        Wishlist
-                                    </Link>
-                                </MenuItem>
+                                {auth.logged_in && auth.user.role === "Trader" && (
+                                    <MenuItem
+                                        icon={
+                                            <Icon
+                                                fontSize="16px"
+                                                as={FiLogOut}
+                                            />
+                                        }
+                                        onClick={openModal}
+                                        minH="40px"
+                                        _hover={{
+                                            color:
+                                                "var(--chakra-colors-secondary) !important"
+                                        }}
+                                    >
+                                        Logout
+                                    </MenuItem>
+                                )}
+                                {(!auth.logged_in ||
+                                    (auth.logged_in &&
+                                        auth.user.role === "Customer")) && (
+                                    <>
+                                        <MenuItem
+                                            icon={
+                                                <Icon
+                                                    fontSize="16px"
+                                                    as={FiShoppingBag}
+                                                />
+                                            }
+                                            onClick={() =>
+                                                history.push("/checkout")
+                                            }
+                                            _hover={{
+                                                color:
+                                                    "var(--chakra-colors-secondary) !important"
+                                            }}
+                                            minH="40px"
+                                        >
+                                            Checkout
+                                        </MenuItem>
+
+                                        <MenuItem
+                                            icon={
+                                                <Icon
+                                                    fontSize="16px"
+                                                    as={IoHeartOutline}
+                                                />
+                                            }
+                                            onClick={() =>
+                                                history.push("/wishlist")
+                                            }
+                                            _hover={{
+                                                color:
+                                                    "var(--chakra-colors-secondary) !important"
+                                            }}
+                                            minH="40px"
+                                        >
+                                            Wishlist
+                                        </MenuItem>
+                                    </>
+                                )}
                             </MenuList>
                         </Menu>
 
-                        {!smallerThan1024 && (
-                            <Stack className="iconBadgeContainer" margin="0">
-                                <IconButton
-                                    className="link"
-                                    fontSize="23px"
-                                    aria-label="Wishlist"
-                                    icon={<Icon as={IoHeartOutline} />}
-                                    variant="unstyled"
-                                    onClick={() => history.push("/wishlist")}
-                                />
-                                <Badge
-                                    variant="solid"
-                                    colorScheme="red"
-                                    className="badge"
+                        {(!auth.logged_in ||
+                            (auth.logged_in &&
+                                auth.user.role === "Customer")) && (
+                            <>
+                                {!smallerThan1024 && (
+                                    <Stack
+                                        className="iconBadgeContainer"
+                                        margin="0"
+                                    >
+                                        <IconButton
+                                            className="link"
+                                            fontSize="23px"
+                                            aria-label="Wishlist"
+                                            icon={<Icon as={IoHeartOutline} />}
+                                            variant="unstyled"
+                                            onClick={() =>
+                                                history.push("/wishlist")
+                                            }
+                                        />
+                                        <Badge
+                                            variant="solid"
+                                            colorScheme="red"
+                                            className="badge"
+                                        >
+                                            0
+                                        </Badge>
+                                    </Stack>
+                                )}
+                                <Stack
+                                    className="iconBadgeContainer"
+                                    margin="0"
                                 >
-                                    0
-                                </Badge>
-                            </Stack>
+                                    <IconButton
+                                        fontSize="25px"
+                                        className="link"
+                                        aria-label="Cart"
+                                        icon={<Icon as={IoCartOutline} />}
+                                        variant="unstyled"
+                                        onClick={() => history.push("/cart")}
+                                    />
+                                    <Badge
+                                        variant="solid"
+                                        colorScheme="red"
+                                        className="badge"
+                                    >
+                                        0
+                                    </Badge>
+                                </Stack>
+                            </>
                         )}
-
-                        <Stack className="iconBadgeContainer" margin="0">
-                            <IconButton
-                                fontSize="25px"
-                                className="link"
-                                aria-label="Cart"
-                                icon={<Icon as={IoCartOutline} />}
-                                variant="unstyled"
-                                onClick={() => history.push("/cart")}
-                            />
-                            <Badge
-                                variant="solid"
-                                colorScheme="red"
-                                className="badge"
-                            >
-                                0
-                            </Badge>
-                        </Stack>
                     </Stack>
                 </Flex>
                 <Flex marginX="20px" background="primary">

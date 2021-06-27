@@ -26,9 +26,13 @@ import { Formik, Form, Field } from "formik";
 import { isValidDate, validateForm } from "../../utilities/validation";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { Redirect } from "react-router-dom";
 
 const Checkout = ({ crumbs }) => {
-    return (
+    return !localStorage.getItem("user") ||
+        JSON.parse(localStorage.getItem("user")).role !== "Customer" ? (
+        <Redirect to="/login" />
+    ) : (
         <Box mx="20px" mb="100px">
             <Breadcrumb crumbs={crumbs} margin="20px 0" />
             <Formik

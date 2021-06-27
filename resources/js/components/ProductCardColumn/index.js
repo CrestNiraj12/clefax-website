@@ -15,9 +15,10 @@ import {
     Icon
 } from "@chakra-ui/react";
 import { CSSTransition } from "react-transition-group";
+import { generateUrl } from "../../utilities";
 
 const ProductCardColumn = ({
-    product: { title, url, images, rating, price, discount },
+    product: { id, name, images, reviews, price, discount },
     hideRatings = false
 }) => {
     const [src, setSrc] = useState(images[0]);
@@ -48,7 +49,7 @@ const ProductCardColumn = ({
                 </Box>
             )}
             <Flex direction="column">
-                <Link href={url} pos="relative">
+                <Link href={generateUrl(id, name)} pos="relative">
                     <CSSTransition
                         in={imageLoaded && src === images[0]}
                         classNames="container-load"
@@ -56,7 +57,7 @@ const ProductCardColumn = ({
                     >
                         <Image
                             src={src}
-                            alt={title}
+                            alt={name}
                             w="100%"
                             minH="22vw"
                             outline="none"
@@ -79,7 +80,7 @@ const ProductCardColumn = ({
                     >
                         <Image
                             src={src}
-                            alt={title}
+                            alt={name}
                             w="100%"
                             minH="22vw"
                             pos="absolute"
@@ -119,7 +120,12 @@ const ProductCardColumn = ({
                     {!hideRatings && (
                         <ReactStars
                             edit={false}
-                            value={rating}
+                            value={
+                                reviews && reviews.length
+                                    ? reviews.reduce((r1, r2) => r1 + r2) /
+                                      reviews.length
+                                    : 0
+                            }
                             size={16}
                             emptyIcon={<Icon as={FaRegStar} />}
                             filledIcon={<Icon as={FaStar} />}
@@ -127,14 +133,14 @@ const ProductCardColumn = ({
                         />
                     )}
                     <Link
-                        href={url}
+                        href={generateUrl(id, name)}
                         _hover={{
                             color: "secondary",
                             textDecoration: "none"
                         }}
                     >
                         <Heading as="h4" fontSize="lg" fontWeight="500">
-                            {title}
+                            {name}
                         </Heading>
                     </Link>
                     <HStack spacing={2}>

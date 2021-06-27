@@ -20,7 +20,9 @@ class CreateProductsTable extends Migration
             $table->longText('description');
             $table->longText('allergy_information');
             $table->decimal('price');
+            $table->decimal('discount', 5)->default(0);
             $table->integer('qty');
+            $table->longText('tags')->nullable();
             $table->integer('max_order');
             $table->string('unit')->default('pc');
             $table->unsignedBigInteger('shop_id');

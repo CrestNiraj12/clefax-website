@@ -62,12 +62,10 @@ const Products = ({ products, categories }) => {
                 ? fp
                 : fp.filter(
                       product =>
-                          product.category ===
+                          product.category.name ===
                           categories[index === null ? activeCategory : index]
-                              .title
+                              .name
                   );
-        console.log(index);
-        console.log(activeCategory);
         handleSortBy(sortBy, setSortBy, setFilteredProducts, fp);
         setTimeout(() => setLoading(false), 0);
     };
@@ -142,7 +140,7 @@ const Products = ({ products, categories }) => {
                                         columnGap={10}
                                         rowGap={2}
                                     >
-                                        {categories.map(({ title }, index) => (
+                                        {categories.map(({ name }, index) => (
                                             <Checkbox
                                                 key={index}
                                                 isChecked={
@@ -155,7 +153,7 @@ const Products = ({ products, categories }) => {
                                                     handleFilter(value, index)
                                                 }
                                             >
-                                                {title}
+                                                {name}
                                             </Checkbox>
                                         ))}
                                     </SimpleGrid>
@@ -211,7 +209,6 @@ const Products = ({ products, categories }) => {
                 position="relative"
                 bg="#fff"
                 overflow="hidden"
-                maxH={{ lg: "1040px" }}
             >
                 <TransitionGroup component={null}>
                     {loading

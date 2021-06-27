@@ -10,7 +10,6 @@ import { useMediaQuery } from "@chakra-ui/media-query";
 import Navbar from "./components/Navbar";
 import { HOME_PAGE } from "./constants";
 import Search from "./components/Search";
-import Cookies from "../images/cookies.png";
 import Login from "./containers/Login";
 import Signup from "./containers/Signup";
 import ForgotPassword from "./containers/ForgotPassword";
@@ -27,134 +26,6 @@ const mapStateToProps = state => ({
     page: state.page,
     showSearch: state.showSearch
 });
-
-const products = [
-    {
-        title: "Cookies",
-        images: [
-            Cookies,
-            "https://wpbingosite.com/wordpress/dimita/wp-content/uploads/2019/04/Image-1.jpg"
-        ],
-        rating: 4,
-        url: "/shop/product-title-1",
-        price: 46.0,
-        discount: 25,
-        category: "Hello & Mellow",
-        tags: ["meat", "poultry"],
-        created_at: "2021/01/01"
-    },
-    {
-        id: 1,
-        title: "Cookies",
-        images: [
-            Cookies,
-            "https://wpbingosite.com/wordpress/dimita/wp-content/uploads/2019/04/Image-23.jpg"
-        ],
-        rating: 0,
-        url: "/shop/product-title-1",
-        price: 100.0,
-        discount: 13,
-        category: "Audio & Home",
-        tags: ["meat", "lamb"],
-        created_at: "2022/01/01"
-    },
-    {
-        id: 1,
-        title: "Cookies",
-        images: [
-            Cookies,
-            "https://wpbingosite.com/wordpress/dimita/wp-content/uploads/2019/04/Image-1.jpg"
-        ],
-        rating: 2,
-        url: "/shop/product-title-1",
-        price: 46.0,
-        discount: 13,
-        category: "Hello & Mellow",
-        tags: ["vegetables"],
-        created_at: "2021/01/01"
-    },
-    {
-        id: 1,
-        title: "Cookies",
-        images: [
-            Cookies,
-            "https://wpbingosite.com/wordpress/dimita/wp-content/uploads/2019/04/Image-1.jpg"
-        ],
-        rating: 4,
-        url: "/shop/product-title-1",
-        price: 46.0,
-        category: "Hello & Mellow",
-        tags: ["vegetables"],
-        created_at: "2021/02/01"
-    },
-    {
-        id: 1,
-        title: "Cookies",
-        images: [
-            Cookies,
-            "https://wpbingosite.com/wordpress/dimita/wp-content/uploads/2019/04/Image-1.jpg"
-        ],
-        rating: 3.86,
-        url: "/shop/product-title-1",
-        price: 46.0,
-        category: "Hello & Mellow",
-        tags: ["meat"],
-        created_at: "2021/01/01"
-    },
-    {
-        id: 1,
-        title: "Cookies",
-        images: [
-            Cookies,
-            "https://wpbingosite.com/wordpress/dimita/wp-content/uploads/2019/04/Image-1.jpg"
-        ],
-        rating: 4,
-        url: "/shop/product-title-1",
-        price: 46.0,
-        discount: 13,
-        category: "Hello & Mellow",
-        tags: ["cake"],
-        created_at: "2021/01/01"
-    },
-    {
-        id: 1,
-        title: "Cookies",
-        images: [
-            Cookies,
-            "https://wpbingosite.com/wordpress/dimita/wp-content/uploads/2019/04/Image-1.jpg"
-        ],
-        rating: 4,
-        url: "/shop/product-title-1",
-        price: 46.0,
-        discount: 13,
-        category: "Camera & Photo",
-        tags: ["chocolate"],
-        created_at: "2021/01/02"
-    },
-    {
-        id: 1,
-        title: "Cookies",
-        images: [
-            Cookies,
-            "https://wpbingosite.com/wordpress/dimita/wp-content/uploads/2019/04/Image-1.jpg"
-        ],
-        rating: 4,
-        url: "/shop/product-title-1",
-        price: 46.0,
-        category: "Hello & Mellow",
-        tags: ["vegetables"],
-        created_at: "2021/01/01"
-    }
-];
-
-const categories = [
-    { title: "Hello & Mellow", products: [{ name: "hello" }] },
-    { title: "Audio & Home", products: [{ name: "hello" }, { name: "hello" }] },
-    {
-        title: "Camera & Photo",
-        products: [{ name: "hello" }, { name: "hello" }]
-    }
-];
 
 const Main = ({
     setProducts,
@@ -185,12 +56,19 @@ const Main = ({
     }, []);
 
     useEffect(() => {
-        /*axios
+        axios
             .get("/api/products")
-            .then((res) => setProducts(res.data))
-            .catch((err) => console.log(err));*/
-        setProducts(products);
-        setCategories(categories);
+            .then(res => {
+                setProducts(res.data);
+            })
+            .catch(err => console.log(err));
+    }, []);
+
+    useEffect(() => {
+        axios
+            .get("/api/categories")
+            .then(res => setCategories(res.data))
+            .catch(err => console.log(err));
     }, []);
 
     useEffect(() => {

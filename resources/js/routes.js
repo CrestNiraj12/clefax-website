@@ -7,7 +7,6 @@ import Cart from "./containers/Cart";
 import Wishlist from "./containers/Wishlist";
 import Vendors from "./containers/Vendors";
 import Shop from "./containers/Shop";
-import Login from "./containers/Login";
 import NotFound from "./containers/NotFound";
 import Account from "./containers/Account";
 
@@ -26,7 +25,7 @@ export default [
         name: "Search results"
     },
     {
-        path: "/shop/:title",
+        path: "/shop/:name",
         Component: Product,
         exact: false,
         name: "Product"

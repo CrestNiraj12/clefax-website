@@ -75,7 +75,7 @@ export const handleSortBy = (
     var fp = [];
     if (index === 0)
         fp = p.sort((a, b) =>
-            a.title.toLowerCase() < b.title.toLowerCase() ? -1 : 1
+            a.name.toLowerCase() < b.name.toLowerCase() ? -1 : 1
         );
     else if (index === 1) fp = p.sort((a, b) => b.rating - a.rating);
     else if (index === 2)

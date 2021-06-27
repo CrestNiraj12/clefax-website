@@ -50,6 +50,7 @@ const TraderSignup = () => {
     const { nextStep, activeStep } = useSteps({
         initialStep: 0
     });
+    const [logo, setLogo] = useState(null);
 
     return (
         <Flex
@@ -99,15 +100,31 @@ const TraderSignup = () => {
                                             logo: null
                                         }}
                                         onSubmit={(values, actions) => {
+                                            const data = new FormData();
+
+                                            for (var key in values) {
+                                                data.append(key, values[key]);
+                                            }
+
+                                            data.append("logo", logo);
                                             apiClient
                                                 .get("/sanctum/csrf-cookie")
                                                 .then(res =>
                                                     apiClient
                                                         .post(
                                                             "/api/shop/create",
-                                                            values
+                                                            data
                                                         )
                                                         .then(res => {
+                                                            toast({
+                                                                title:
+                                                                    "Success",
+                                                                description:
+                                                                    res.data
+                                                                        .message,
+                                                                status:
+                                                                    "success"
+                                                            });
                                                             actions.setSubmitting(
                                                                 false
                                                             );
@@ -128,11 +145,12 @@ const TraderSignup = () => {
                                                                 description: err
                                                                     .response
                                                                     .data.errors
-                                                                    ? err
-                                                                          .response
-                                                                          .data
-                                                                          .errors
-                                                                          .email
+                                                                    ? Object.values(
+                                                                          err
+                                                                              .response
+                                                                              .data
+                                                                              .errors
+                                                                      )[0]
                                                                     : "Error occured! Please try again!",
                                                                 status: "error"
                                                             });
@@ -237,12 +255,18 @@ const TraderSignup = () => {
                                                                     onChange={(
                                                                         files,
                                                                         urls
-                                                                    ) =>
+                                                                    ) => {
+                                                                        setLogo(
+                                                                            files[0]
+                                                                        );
                                                                         form.setFieldValue(
                                                                             "logo",
                                                                             files[0]
-                                                                        )
-                                                                    }
+                                                                                ? files[0]
+                                                                                      .type
+                                                                                : null
+                                                                        );
+                                                                    }}
                                                                     imgExtension={[
                                                                         ".jpg",
                                                                         ".gif",
@@ -288,7 +312,7 @@ const TraderSignup = () => {
                                                         Continue
                                                     </Button>
                                                     <Link
-                                                        href="/trader/dashboard"
+                                                        href="/"
                                                         fontSize="xs"
                                                         mt="10px"
                                                         color="secondary"
@@ -323,10 +347,18 @@ const TraderSignup = () => {
                                                 .then(res =>
                                                     apiClient
                                                         .post(
-                                                            "/api/user/update/null/1",
+                                                            "/api/user/update",
                                                             values
                                                         )
                                                         .then(res => {
+                                                            toast({
+                                                                title:
+                                                                    "Success",
+                                                                description:
+                                                                    "Shop has been created successfully!",
+                                                                status:
+                                                                    "success"
+                                                            });
                                                             actions.setSubmitting(
                                                                 false
                                                             );
@@ -455,7 +487,7 @@ const TraderSignup = () => {
                                         )}
                                     </Formik>
                                 </Step>
-                                <Step label="Ready" icon={AiOutlineLike}>
+                                <Step label="Complete" icon={AiOutlineLike}>
                                     <VStack w="100%">
                                         <Icon
                                             as={AiFillCheckCircle}
@@ -468,7 +500,7 @@ const TraderSignup = () => {
                                             fontSize="xl"
                                             my="30px !important"
                                         >
-                                            Your shop is ready!
+                                            Your request has been sent!
                                         </Heading>
                                         <Button
                                             mt="30px !important"
@@ -481,13 +513,9 @@ const TraderSignup = () => {
                                                 bg:
                                                     "var(--chakra-colors-primary) !important"
                                             }}
-                                            onClick={() =>
-                                                history.push(
-                                                    "/trader/dashboard"
-                                                )
-                                            }
+                                            onClick={() => history.push("/")}
                                         >
-                                            Go to Dashboard
+                                            Go to home
                                         </Button>
                                     </VStack>
                                 </Step>

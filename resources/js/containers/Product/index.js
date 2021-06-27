@@ -39,22 +39,8 @@ import ProductTabs from "./ProductTabs";
 import ProductCardColumn from "../../components/ProductCardColumn";
 import { connect } from "react-redux";
 import Report from "./Report";
-import Cookies from "../../../images/cookies.png";
-
-const in_product = {
-    id: "0001",
-    title: "Choco Chip Cookies",
-    images: [Cookies, Cookies],
-    rating: 4,
-    url: "/shop/product-title-1",
-    qty: 10,
-    price: 46.0,
-    discount: 25,
-    category: "Cookies",
-    created_at: "2021/01/01",
-    coupon: null,
-    tags: ["Cookies", "Bakery", "Food"]
-};
+import axios from "axios";
+import { getIdFromUrl } from "../../utilities";
 
 const mapStateToProps = state => ({
     products: state.products
@@ -72,7 +58,11 @@ const Product = ({ match, crumbs, products }) => {
         step: 1,
         defaultValue: 1,
         min: 1,
-        max: in_product.qty > 20 ? 20 : in_product.qty
+        max: product
+            ? product.qty > product.max_order
+                ? product.max_order
+                : product.qty
+            : null
     });
 
     const inc = getIncrementButtonProps();
@@ -80,8 +70,13 @@ const Product = ({ match, crumbs, products }) => {
     const input = getInputProps({ isReadOnly: false });
 
     useEffect(() => {
-        const id = match.params.title.split("-").pop();
-        setProduct(in_product);
+        const id = getIdFromUrl(match.params.name);
+        axios
+            .get(`/api/products/${id}`)
+            .then(res => {
+                setProduct(res.data);
+            })
+            .catch(err => console.log(err));
     }, []);
 
     return (
@@ -92,7 +87,7 @@ const Product = ({ match, crumbs, products }) => {
                         <Report isOpen={isOpen} onClose={onClose} />
                         <Breadcrumb
                             crumbs={crumbs}
-                            customPageName="Bluetooth Hismart"
+                            customPageName={product.name}
                             margin="20px 0"
                         />
 
@@ -104,8 +99,8 @@ const Product = ({ match, crumbs, products }) => {
                             direction={{ base: "column", md: "row" }}
                         >
                             <ImageMagnifier
-                                images={product.images}
-                                title={product.title}
+                                // images={product.images}
+                                title={product.name}
                             />
 
                             <Box
@@ -115,7 +110,7 @@ const Product = ({ match, crumbs, products }) => {
                                     md: "0 !important"
                                 }}
                             >
-                                <Heading as="h1">{product.title}</Heading>
+                                <Heading as="h1">{product.name}</Heading>
                                 <HStack spacing={2} my="20px">
                                     {product.discount && product.discount > 0 && (
                                         <Heading
@@ -152,7 +147,15 @@ const Product = ({ match, crumbs, products }) => {
                                         halfIcon={<Icon as={FaStarHalfAlt} />}
                                     />
                                     <Text color="gray">
-                                        (1 Customer Review)
+                                        {`(${
+                                            product.reviews.length
+                                                ? product.reviews.length
+                                                : "No"
+                                        } Customer Review${
+                                            product.reviews.length === 1
+                                                ? ""
+                                                : "s"
+                                        })`}
                                     </Text>
                                 </HStack>
                                 <Box my="20px" fontSize="16px" color="gray">
@@ -180,16 +183,7 @@ const Product = ({ match, crumbs, products }) => {
                                     )}{" "}
                                     stock
                                 </Box>
-                                <Text color="gray">
-                                    Lorem ipsum dolor sit amet, consectetur
-                                    adipiscing elit, sed do eiusmod tempor
-                                    incididunt ut labore et dolore magna aliqua.
-                                    Ut enim ad minim veniam, quis nostrud
-                                    exercitation ullamco laboris nisi ut aliquip
-                                    ex ea commodo consequat. Duis aute irure
-                                    dolor in reprehenderit in voluptate velit
-                                    esse cillum dolore eu fugiat nulla pariatur.
-                                </Text>
+                                <Text color="gray">{product.description}</Text>
                                 {product.coupon && (
                                     <Text
                                         color="green.400"
@@ -235,6 +229,7 @@ const Product = ({ match, crumbs, products }) => {
                                                 minW="60px"
                                                 {...input}
                                             />
+
                                             <IconButton
                                                 borderRadius="0"
                                                 aria-label="Increase quantity"
@@ -253,6 +248,7 @@ const Product = ({ match, crumbs, products }) => {
                                             bgColor="primary"
                                             color="#fff"
                                             w="100%"
+                                            disabled={!product.qty}
                                         >
                                             Add To Cart
                                         </Button>
@@ -269,6 +265,7 @@ const Product = ({ match, crumbs, products }) => {
                                         _hover={{
                                             bgColor: "#ca282d !important"
                                         }}
+                                        disabled={!product.qty}
                                     >
                                         Buy Now
                                     </Button>
@@ -329,13 +326,14 @@ const Product = ({ match, crumbs, products }) => {
                                     color="gray"
                                 >
                                     <Text py="5px">
-                                        <b>SKU:</b> U{product.id}
+                                        <b>SKU:</b> U
+                                        {String(product.id).padStart(5, "0")}
                                     </Text>
                                     <Text py="5px">
-                                        <b>Category:</b> {product.category}
+                                        <b>Category:</b> {product.category.name}
                                     </Text>
                                     <Text py="5px">
-                                        <b>Tags:</b> {product.tags.join(", ")}
+                                        <b>Tags:</b> {product.tags}
                                     </Text>
                                     <HStack py="5px">
                                         <b>Share:</b>{" "}
@@ -391,7 +389,7 @@ const Product = ({ match, crumbs, products }) => {
                 )}
             </Box>
             <Box>
-                <ProductTabs title={product ? product.title : ""} />
+                <ProductTabs product={product} />
             </Box>
             <Box my="50px">
                 <Heading>Related Products</Heading>
@@ -401,12 +399,7 @@ const Product = ({ match, crumbs, products }) => {
                     mt="50px"
                     columns={{ base: 1, sm: 2, md: 3, lg: 5 }}
                 >
-                    {[
-                        ...products.filter(
-                            p => p.category === product.category
-                        ),
-                        ...products
-                    ]
+                    {getRelatedProducts(products, product)
                         .slice(0, 5)
                         .map((p, index) => (
                             <ProductCardColumn
@@ -419,6 +412,18 @@ const Product = ({ match, crumbs, products }) => {
             </Box>
         </Box>
     );
+};
+
+const getRelatedProducts = (products, product) => {
+    const related = products.filter(
+        p =>
+            p.category.name === product.category.name && p.name !== product.name
+    );
+
+    const unrelated = products.filter(
+        p => p.name !== product.name && related.every(pr => pr.name !== p.name)
+    );
+    return [...related, ...unrelated.sort(() => 0.5 - Math.random())];
 };
 
 export default connect(mapStateToProps)(Product);

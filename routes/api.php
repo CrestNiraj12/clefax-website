@@ -1,6 +1,9 @@
 <?php
 
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\SecurityQuestionController;
 use App\Http\Controllers\ShopController;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\UserController;
@@ -28,12 +31,17 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::post('/login', [UserController::class, "login"]);
 Route::post('/signup', [UserController::class, "signup"]);
-Route::post('/logout', [UserController::class, "logout"]);
+Route::post('/logout', [UserController::class, "logout"])->name('logout');
+Route::get('/products', [ProductController::class, "getAllProducts"]);
+Route::get('/products/{id}', [ProductController::class, "getProduct"]);
+Route::get('/categories', [CategoryController::class, "getAllCategories"]);
+Route::get('/categories/{id}', [CategoryController::class, "getCategory"]);
 
 Route::middleware(['auth:sanctum'])->group(function() {
-    Route::post('shop', [ShopController::class, 'addShopFromApi']);
-    Route::post('/user/update/{id}/{self}', [UserController::class, "updateUserFromApi"]);
+    Route::post('/shop/create', [ShopController::class, 'addShopFromApi']);
+    Route::post('/user/update', [UserController::class, "update"]);
 });
 
+Route::resource('security-questions', SecurityQuestionController::class);
 
 

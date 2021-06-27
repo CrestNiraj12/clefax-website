@@ -8,83 +8,33 @@ import {
     Divider,
     Text,
     useDisclosure,
-    Modal,
-    ModalOverlay,
-    ModalContent,
-    ModalHeader,
-    ModalCloseButton,
-    ModalBody,
-    ModalFooter,
     Button
 } from "@chakra-ui/react";
 import React from "react";
 import { Fragment } from "react";
 import { connect } from "react-redux";
-import { useHistory } from "react-router-dom";
-import { setAuth } from "../../actions";
+import { Redirect } from "react-router-dom";
 import Breadcrumb from "../../components/Breadcrumb";
-import { apiClient } from "../../utilities";
+import Logout from "../../components/Logout";
 import Details from "./Details";
 import Orders from "./Orders";
 
 const tabs = ["Dashboard", "Orders", "Account Details", "Logout"];
 
-const mapDispatchToProps = dispatch => ({
-    setAuth: auth => dispatch(setAuth(auth))
+const mapStateToProps = state => ({
+    auth: state.auth
 });
 
-const Account = ({ crumbs, setAuth }) => {
-    var history = useHistory();
+const Account = ({ crumbs, auth }) => {
     const { isOpen, onOpen, onClose } = useDisclosure();
 
-    const handleLogout = () => {
-        apiClient
-            .get("/api/logout")
-            .then(res => {
-                localStorage.removeItem("user");
-                setAuth({ logged_in: false, user: null });
-                history.push("/");
-            })
-            .catch(err => console.log(err));
-    };
-
-    return (
+    return !localStorage.getItem("user") ||
+        JSON.parse(localStorage.getItem("user")).role !== "Customer" ? (
+        <Redirect to="/" />
+    ) : (
         <Box mx="20px" mb="100px">
             <Breadcrumb crumbs={crumbs} margin="20px 0" />
-            <Modal isOpen={isOpen} onClose={onClose}>
-                <ModalOverlay />
-                <ModalContent>
-                    <ModalHeader>Logout</ModalHeader>
-                    <ModalCloseButton />
-                    <ModalBody>Are you sure you want to logout?</ModalBody>
-
-                    <ModalFooter>
-                        <Button
-                            bg="primary"
-                            color="#fff"
-                            fontSize="sm"
-                            textTransform="none"
-                            p="0 20px !important"
-                            mr={3}
-                            onClick={onClose}
-                            _hover={{
-                                bg: "var(--chakra-colors-gray) !important"
-                            }}
-                        >
-                            Cancel
-                        </Button>
-                        <Button
-                            variant="ghost"
-                            fontSize="sm"
-                            textTransform="none"
-                            p="0 20px !important"
-                            onClick={handleLogout}
-                        >
-                            Logout
-                        </Button>
-                    </ModalFooter>
-                </ModalContent>
-            </Modal>
+            <Logout isOpen={isOpen} onClose={onClose} />
             <Tabs
                 variant="unstyled"
                 orientation="vertical"
@@ -166,4 +116,4 @@ const Account = ({ crumbs, setAuth }) => {
     );
 };
 
-export default connect(null, mapDispatchToProps)(Account);
+export default connect(mapStateToProps)(Account);

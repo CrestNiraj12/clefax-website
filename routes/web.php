@@ -34,7 +34,7 @@ Route::middleware(['auth:sanctum'])->group(function() {
 
 
 
-Route::view('/trader/dashboard', 'admin.dashboard')
+Route::view('/trader/dashboard', 'trader.dashboard')
 	->name('dashboard')
 	->middleware(['auth', 'verified']);
 

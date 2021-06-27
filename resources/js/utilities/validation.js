@@ -100,6 +100,11 @@ export const validateSignup = values => {
     else if (!/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/i.test(values.password)) {
         errors.password = "Password format is invalid";
     }
+    if (!values.sq_id) errors.sq_id = "Please select a security question";
+    if (!values.sq_id && values.sq_answer)
+        errors.sq_answer = "Please select a security question first";
+    if (values.sq_id && !values.sq_answer)
+        errors.sq_answer = "Please answer your security question";
     if (!values.terms)
         errors.terms = "Please agree to our terms and conditions";
     return errors;
@@ -114,7 +119,6 @@ export const validateShop = values => {
 
     if (!values.PAN) errors.PAN = "Registration number is required";
     if (!values.logo) errors.logo = "Logo is required";
-    if (!values.user_id) errors.user_id = "Error occured while signup!";
     return errors;
 };
 

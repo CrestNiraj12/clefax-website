@@ -14,7 +14,7 @@ class Order extends Model
         'status',
         'subtotal',
         'total',
-        'cart_id',
+        'user_id',
         'collection_id'
     ];
 
@@ -24,5 +24,13 @@ class Order extends Model
 
     public function collection_slot() {
         return $this->belongsTo(CollectionSlot::class, 'collection_id');
+    }
+
+    public function products() {
+        return $this->hasMany(Product::class, 'order_has_products');
+    }
+
+    public function user() {
+        return $this->belongsTo(User::class);
     }
 }

@@ -21,8 +21,8 @@ export const SHOW_SEARCH = "SHOW_SEARCH";
 export const SET_AUTH = "SET_AUTH";
 export const MAPS_API_KEY = "AIzaSyDkdfRfa5j9YuZy0FB-jZFtv5TYpQdZhdM";
 export const DEFAULT_TOAST = {
-    position: "top-right",
-    variant: "left-accent",
+    position: window.innerWidth < 1100 ? "bottom" : "top-right",
+    variant: window.innerWidth < 1100 ? "solid" : "left-accent",
     duration: 3500,
     isClosable: true
 };

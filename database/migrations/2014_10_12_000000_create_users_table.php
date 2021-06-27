@@ -26,6 +26,9 @@ class CreateUsersTable extends Migration
             $table->string('stripe_email')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->unsignedBigInteger('sq_id');
+            $table->string('sq_answer');
+            $table->foreign('sq_id')->references('id')->on('security_questions');
             $table->rememberToken();
             $table->timestamps();
         });

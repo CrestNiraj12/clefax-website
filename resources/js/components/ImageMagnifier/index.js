@@ -18,11 +18,13 @@ const ImageMagnifier = ({ images, title }) => {
     const customDots = i => <Image src={images[i]} alt={title} w="100%" />;
     return (
         <Slider customPaging={customDots} renderDotsOutside {...settings}>
-            {images.map((image, index) => (
-                <Box key={index}>
-                    <Image src={image} w="100%" />
-                </Box>
-            ))}
+            {images &&
+                images.length &&
+                images.map((image, index) => (
+                    <Box key={index}>
+                        <Image src={image} w="100%" />
+                    </Box>
+                ))}
         </Slider>
     );
 };

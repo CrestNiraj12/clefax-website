@@ -10,7 +10,7 @@ class ShopController extends Controller
 {
     use UploadTrait;
 
-     public function index()
+    public function index()
     {
         $shops = Shop::all();
         return view("admin.shop.shop", ['page_title' => 'Shops', 'shops' => $shops]);
@@ -25,34 +25,27 @@ class ShopController extends Controller
         return response()->json($this->show($id));
     }
 
-    public function store(Request $request) {
-        $request->validate([
-            'name' => 'required',
+    public function addShop(Request $request) {
+         $request->validate([
+            'name' => 'required|unique:shops',
             'logo' =>  'required|image|mimes:jpeg,png,jpg,gif,svg',
             'street_no' => 'required',
             'city' => 'required',
-            'PAN' => 'required',
-            'user_id' => 'required'
+            'PAN' => 'required'
         ]);
         
         $imageName = $this->imageUpload($request->logo, 'shops');
-        $shop = Shop::create($request->except('logo') + ['logo' => $imageName]);
+        $shop = Shop::create($request->except('logo') + ['logo' => $imageName, 'user_id' => auth()->user()->id]);
+    }
+
+    public function store(Request $request) {
+        $this->addShop($request);
         return redirect("/trader/shops")->with('success', 'Shop Added!');
     }
 
     public function addShopFromApi(Request $request) {
-        $request->validate([
-            'name' => 'required',
-            'logo' =>  'required|image|mimes:jpeg,png,jpg,gif,svg',
-            'street_no' => 'required',
-            'city' => 'required',
-            'PAN' => 'required',
-            'user_id' => 'required'
-        ]);
-        
-        $imageName = $this->imageUpload($request->logo, 'shops');
-        $shop = Shop::create($request->except('logo') + ['logo' => $imageName]);
-        return response()->json('Shop Added!');
+        $this->addShop($request);
+        return response()->json(['message' => 'Shop Added!']);
     }
    
     public function getAllShops() {
@@ -66,7 +59,7 @@ class ShopController extends Controller
     }
 
 
-    public function updateFunc(Request $request, $id)
+    public function update(Request $request, $id)
     {
         $imageName = null;
         if ($request->hasFile('logo')) {
@@ -74,16 +67,6 @@ class ShopController extends Controller
             $imageName = $this->imageUpload($request->logo, 'shops');
         }
         Shop::where('id', $id)->update($request->except('logo') + isset($imageName) ? ['logo' => $imageName] : []);
-    }
-
-    public function updateShopFromApi(Request $request, $id, $self="0")
-    {
-        $this->update($request, $self == "0" ? $id :  auth()->user()->id);
-        return response()->json('User updated successfully!');
-    }
-
-    public function update(Request $request, $id, $self=null) {
-        $this->update($request, $self == "0" ? $id :  auth()->user()->id);
         return redirect("/trader/shops")->with('success', 'Shop Updated!');
     }
 

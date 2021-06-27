@@ -19,9 +19,9 @@ class CreateOrdersTable extends Migration
             $table->boolean('status')->default('0');
             $table->decimal('subtotal');
             $table->decimal('total');
-            $table->unsignedBigInteger('cart_id');
+            $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('collection_id');
-            $table->foreign('cart_id')->references('id')->on('carts');
+            $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('collection_id')->references('id')->on('collection_slots');
             $table->timestamps();
         });

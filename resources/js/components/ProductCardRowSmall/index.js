@@ -1,16 +1,17 @@
 import { Box, Heading, HStack, Image, Link, VStack } from "@chakra-ui/react";
 import React from "react";
+import { generateUrl } from "../../utilities";
 
 const ProductCardRowSmall = ({
-    product: { title, url, images, discount, price }
+    product: { id, name, images, price, discount }
 }) => {
     return (
         <HStack pos="relative" spacing={5} marginLeft="20px">
-            <Link href={url}>
+            <Link href={generateUrl(id, name)}>
                 <Box h="80px" w="80px">
                     <Image
                         src={images[0]}
-                        alt={title}
+                        alt={name}
                         w="100%"
                         h="100%"
                         objectFit="contain"
@@ -31,14 +32,14 @@ const ProductCardRowSmall = ({
                 justifyContent="center"
             >
                 <Link
-                    href={url}
+                    href={generateUrl(id, name)}
                     _hover={{
                         color: "secondary",
                         textDecoration: "none"
                     }}
                 >
                     <Heading as="h6" fontSize="1rem" fontWeight="500">
-                        {title}
+                        {name}
                     </Heading>
                 </Link>
                 <HStack spacing={2}>

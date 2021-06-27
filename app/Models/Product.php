@@ -11,13 +11,24 @@ class Product extends Model
     
     protected $fillable = [
         'name',
+        'images',
         'description',
+        'allergy_information',
+        'discount',
         'price',
+        'tags',
         'qty',
         'max_order',
         'unit',
         'shop_id',
         'category_id',
+    ];
+
+    protected $casts = [
+        'discount' => 'float',
+        'price' => 'float',
+        'qty' => 'integer',
+        'max_order' => 'integer',
     ];
 
     public function offer() {
@@ -38,5 +49,9 @@ class Product extends Model
 
     public function reviews() {
         return $this->hasMany(Review::class);
+    }
+
+    public function orders() {
+        return $this->hasMany(Order::class, 'order_has_products');
     }
 }

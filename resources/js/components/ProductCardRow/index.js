@@ -14,9 +14,10 @@ import {
     VStack
 } from "@chakra-ui/react";
 import { CSSTransition } from "react-transition-group";
+import { generateUrl } from "../../utilities";
 
 const ProductCardRow = ({
-    product: { title, url, images, rating, price, discount }
+    product: { id, name, images, reviews, price, discount }
 }) => {
     const [src, setSrc] = useState(images[0]);
     const [imageLoaded, setImageLoaded] = useState(false);
@@ -30,7 +31,7 @@ const ProductCardRow = ({
             pos="relative"
         >
             <Flex pos="relative">
-                <Link href={url} pos="relative">
+                <Link href={generateUrl(id, name)} pos="relative">
                     <CSSTransition
                         in={imageLoaded && src === images[0]}
                         classNames="container-load"
@@ -39,7 +40,7 @@ const ProductCardRow = ({
                         <Box h="150px" w="150px" className="container-load">
                             <Image
                                 src={src}
-                                alt={title}
+                                alt={name}
                                 w="100%"
                                 h="100%"
                                 objectFit="contain"
@@ -69,7 +70,7 @@ const ProductCardRow = ({
                         >
                             <Image
                                 src={src}
-                                alt={title}
+                                alt={name}
                                 w="100%"
                                 h="100%"
                                 objectFit="contain"
@@ -111,21 +112,26 @@ const ProductCardRow = ({
                 >
                     <ReactStars
                         edit={false}
-                        value={rating}
+                        value={
+                            reviews && reviews.length
+                                ? reviews.reduce((r1, r2) => r1 + r2) /
+                                  reviews.length
+                                : 0
+                        }
                         size={13}
                         emptyIcon={<Icon as={FaRegStar} />}
                         filledIcon={<Icon as={FaStar} />}
                         halfIcon={<Icon as={FaStarHalfAlt} />}
                     />
                     <Link
-                        href={url}
+                        href={generateUrl(id, name)}
                         _hover={{
                             color: "secondary",
                             textDecoration: "none"
                         }}
                     >
                         <Heading as="h4" fontSize="1.1rem" fontWeight="500">
-                            {title}
+                            {name}
                         </Heading>
                     </Link>
                     <HStack spacing={2}>
