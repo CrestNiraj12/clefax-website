@@ -23,6 +23,7 @@ import ProductCardRow, {
     SkeletonCardRow
 } from "../../components/ProductCardRow";
 import Deli from "../../../images/deli-serve.jpg";
+import { useHistory } from "react-router-dom";
 
 const mapStateToProps = state => ({
     products: state.products
@@ -54,6 +55,7 @@ const benefits = [
 ];
 
 const Featured = ({ products }) => {
+    var history = useHistory();
     const [filteredProducts, setFilteredProducts] = useState([]);
     const [loading, setLoading] = useState(false);
     const [activeFilter, setActiveFilter] = useState(0);
@@ -202,6 +204,7 @@ const Featured = ({ products }) => {
                             fontSize="1em"
                             borderColor="#fff"
                             p="0px 10px !important"
+                            onClick={() => history.push("/shop")}
                         >
                             Shop now
                         </Button>

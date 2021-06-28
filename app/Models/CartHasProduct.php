@@ -11,7 +11,9 @@ class CartHasProduct extends Model
 
     protected $fillable = [
         "cart_id",
-        "product_id"
+        "product_id", 
+        "qty",
+        "subtotal"
     ];
 
     public function cart()

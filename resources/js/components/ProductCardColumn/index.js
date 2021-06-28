@@ -32,7 +32,7 @@ const ProductCardColumn = ({
             onMouseLeave={() => (images.length > 1 ? setSrc(images[0]) : null)}
             pos="relative"
         >
-            {discount && discount > 0 && (
+            {discount > 0 && (
                 <Box
                     borderWidth="1px"
                     borderColor="secondary"
@@ -143,7 +143,7 @@ const ProductCardColumn = ({
                         </Heading>
                     </Link>
                     <HStack spacing={2}>
-                        {discount && discount > 0 && (
+                        {discount > 0 && (
                             <Heading
                                 as="h2"
                                 fontSize="lg"
@@ -155,7 +155,7 @@ const ProductCardColumn = ({
                         )}
                         <Heading as="h2" fontSize="lg" color="secondary">
                             £
-                            {(discount && discount > 0
+                            {(discount > 0
                                 ? price - price * (discount / 100)
                                 : price
                             ).toFixed(2)}

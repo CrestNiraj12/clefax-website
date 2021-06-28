@@ -13,7 +13,8 @@ import {
     StackDivider,
     Stack,
     SimpleGrid,
-    useDisclosure
+    useDisclosure,
+    useToast
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import {
@@ -29,7 +30,7 @@ import {
     LinkedinShareButton,
     TwitterShareButton
 } from "react-share";
-import { IoHeartOutline, IoWarningOutline } from "react-icons/io5";
+import { IoHeart, IoHeartOutline, IoWarningOutline } from "react-icons/io5";
 import ReactStars from "react-rating-stars-component";
 import { BsCheckBox, BsXSquare } from "react-icons/bs";
 import { MinusIcon, AddIcon } from "@chakra-ui/icons";
@@ -40,17 +41,28 @@ import ProductCardColumn from "../../components/ProductCardColumn";
 import { connect } from "react-redux";
 import Report from "./Report";
 import axios from "axios";
-import { getAvgReviews, getIdFromUrl } from "../../utilities";
+import {
+    apiClient,
+    getAvgReviews,
+    getFinalPrice,
+    getIdFromUrl
+} from "../../utilities";
+import { DEFAULT_TOAST } from "../../constants";
+import { useHistory } from "react-router-dom";
 
 const mapStateToProps = state => ({
-    products: state.products
+    products: state.products,
+    auth: state.auth
 });
 
-const Product = ({ match, crumbs, products }) => {
+const Product = ({ match, crumbs, products, auth }) => {
+    var history = useHistory();
+    const toast = useToast(DEFAULT_TOAST);
     const [product, setProduct] = useState(null);
+    const [inWishlist, setInWishlist] = useState(null);
     const { isOpen, onOpen, onClose } = useDisclosure();
     const {
-        value,
+        valueAsNumber,
         getInputProps,
         getIncrementButtonProps,
         getDecrementButtonProps
@@ -78,6 +90,235 @@ const Product = ({ match, crumbs, products }) => {
             })
             .catch(err => console.log(err));
     }, []);
+
+    useEffect(() => {
+        if (product) {
+            if (auth.logged_in)
+                setInWishlist(
+                    product.wishlists.filter(w => w.user_id == auth.user.id)
+                        .length > 0
+                );
+            else
+                setInWishlist(
+                    localStorage.getItem("wishlist")
+                        ? JSON.parse(localStorage.getItem("wishlist")).includes(
+                              product.id
+                          )
+                        : false
+                );
+        }
+    }, [auth, product]);
+
+    const addToWishlist = () => {
+        if (product) {
+            if (auth.logged_in)
+                apiClient
+                    .get("/sanctum/csrf-cookie")
+                    .then(res =>
+                        apiClient
+                            .post("/api/wishlist/product/add", {
+                                product_id: product.id
+                            })
+                            .then(res => {
+                                setInWishlist(true);
+                                toast({
+                                    title: "Added to wishlist",
+                                    description:
+                                        "Product has been successfully added to wishlist!",
+                                    status: "success"
+                                });
+                            })
+                            .catch(err => {
+                                console.log(err.response);
+                                toast({
+                                    title: "Error",
+                                    description: err.response.data
+                                        ? err.response.data.message
+                                        : "Error occured! Please try again!",
+                                    status: "error"
+                                });
+                            })
+                    )
+                    .catch(err => {
+                        console.log(err.response);
+                        toast({
+                            title: "Error",
+                            description: "Error occured! Please try again!",
+                            status: "error"
+                        });
+                    });
+            else {
+                localStorage.setItem(
+                    "wishlist",
+                    JSON.stringify([
+                        ...new Set([
+                            product.id,
+                            ...(localStorage.getItem("wishlist")
+                                ? JSON.parse(localStorage.getItem("wishlist"))
+                                : [])
+                        ])
+                    ])
+                );
+                toast({
+                    title: "Added to wishlist",
+                    description:
+                        "Product has been successfully added to wishlist!",
+                    status: "success"
+                });
+                setInWishlist(
+                    localStorage.getItem("wishlist")
+                        ? JSON.parse(localStorage.getItem("wishlist")).includes(
+                              product.id
+                          )
+                        : false
+                );
+            }
+        }
+    };
+
+    const addToCart = () => {
+        if (product) {
+            if (auth.logged_in)
+                apiClient
+                    .get("/sanctum/csrf-cookie")
+                    .then(res =>
+                        apiClient
+                            .post("/api/cart/product/add", {
+                                product_id: product.id,
+                                qty: valueAsNumber,
+                                subtotal: getFinalPrice(product) * valueAsNumber
+                            })
+                            .then(res => {
+                                history.push("/cart");
+                                toast({
+                                    title: "Added to cart",
+                                    description:
+                                        "Product has been successfully added to cart!",
+                                    status: "success"
+                                });
+                            })
+                            .catch(err => {
+                                console.log(err.response);
+                                toast({
+                                    title: "Error",
+                                    description: err.response.data
+                                        ? err.response.data.message
+                                        : "Error occured! Please try again!",
+                                    status: "error"
+                                });
+                            })
+                    )
+                    .catch(err => {
+                        console.log(err);
+                        toast({
+                            title: "Error",
+                            description: "Error occured! Please try again!",
+                            status: "error"
+                        });
+                    });
+            else {
+                const stored = JSON.parse(localStorage.getItem("cart"));
+                if (localStorage.getItem("cart") && stored.length > 0) {
+                    if (stored.map(p => p.product_id).includes(product.id)) {
+                        const storedProduct = stored.filter(
+                            p => p.product_id === product.id
+                        )[0];
+                        localStorage.setItem(
+                            "cart",
+                            JSON.stringify([
+                                {
+                                    product_id: product.id,
+                                    qty: storedProduct.qty + valueAsNumber,
+                                    subtotal:
+                                        storedProduct.subtotal +
+                                        getFinalPrice(product) * valueAsNumber
+                                },
+                                ...stored.filter(
+                                    p => p.product_id !== product.id
+                                )
+                            ])
+                        );
+                    } else
+                        localStorage.setItem(
+                            "cart",
+                            JSON.stringify([
+                                {
+                                    product_id: product.id,
+                                    qty: valueAsNumber,
+                                    subtotal:
+                                        getFinalPrice(product) * valueAsNumber
+                                },
+                                ...stored
+                            ])
+                        );
+                } else
+                    localStorage.setItem(
+                        "cart",
+                        JSON.stringify([
+                            {
+                                product_id: product.id,
+                                qty: valueAsNumber,
+                                subtotal: getFinalPrice(product) * valueAsNumber
+                            }
+                        ])
+                    );
+                history.push("/cart");
+                toast({
+                    title: "Added to cart",
+                    description: "Product has been successfully added to cart!",
+                    status: "success"
+                });
+            }
+        }
+    };
+
+    const removeFromWishlist = id => {
+        if (product) {
+            if (auth.logged_in)
+                apiClient
+                    .get("/sanctum/csrf-cookie")
+                    .then(res =>
+                        apiClient
+                            .delete(`/api/wishlist/product/${product.id}`)
+                            .then(res => {
+                                setInWishlist(false);
+                                toast({
+                                    title: "Removed",
+                                    description: res.data.message,
+                                    status: "success"
+                                });
+                            })
+                            .catch(err => console.log(err.response))
+                    )
+                    .catch(err => console.log(err.response));
+            else {
+                localStorage.setItem(
+                    "wishlist",
+                    JSON.stringify(
+                        JSON.parse(localStorage.getItem("wishlist")).filter(
+                            id => id !== product.id
+                        )
+                    )
+                );
+                setInWishlist(false);
+                toast({
+                    title: "Removed",
+                    description: "Successfully deleted product from wishlist!",
+                    status: "success"
+                });
+            }
+        }
+    };
+
+    const handleReport = () => {
+        if (auth.logged_in) onOpen();
+        else
+            toast({
+                title: "Login required",
+                description: "You need to be logged in to report a product",
+                status: "info"
+            });
+    };
 
     return (
         <Box mx="20px" mb="100px">
@@ -197,95 +438,110 @@ const Product = ({ match, crumbs, products }) => {
                                         Sale 30% Off Use Code : Neoo20
                                     </Text>
                                 )}
-                                <Stack
-                                    direction={{
-                                        base: "column",
-                                        sm: "row",
-                                        md: "column",
-                                        lg: "row"
-                                    }}
-                                    mt="30px"
-                                    spacing={5}
-                                    justifyContent="space-between"
-                                >
-                                    <HStack w="100%" spacing={5}>
-                                        <ButtonGroup
-                                            size="md"
-                                            isAttached
-                                            variant="outline"
-                                        >
-                                            <IconButton
-                                                aria-label="Decrease quantity"
-                                                borderRadius="0"
-                                                icon={<MinusIcon />}
-                                                _hover={{
-                                                    backgroundColor:
-                                                        "transparent !important",
-                                                    color:
-                                                        "var(--chakra-colors-secondary) !important"
-                                                }}
-                                                {...dec}
-                                            />
-                                            <Input
-                                                borderRadius="0"
-                                                textAlign="center"
-                                                w="60px"
-                                                minW="60px"
-                                                {...input}
-                                            />
-
-                                            <IconButton
-                                                borderRadius="0"
-                                                aria-label="Increase quantity"
-                                                icon={<AddIcon />}
-                                                _hover={{
-                                                    backgroundColor:
-                                                        "transparent !important",
-                                                    color:
-                                                        "var(--chakra-colors-secondary) !important"
-                                                }}
-                                                {...inc}
-                                            />
-                                        </ButtonGroup>
-
-                                        <Button
-                                            bgColor="primary"
-                                            color="#fff"
-                                            w="100%"
-                                            disabled={!product.qty}
-                                        >
-                                            Add To Cart
-                                        </Button>
-                                    </HStack>
-                                    <Button
-                                        bgColor="secondary"
-                                        color="#fff"
-                                        w={{
-                                            base: "100%",
-                                            sm: "50%",
-                                            md: "100%",
-                                            lg: "50%"
+                                {(!auth.logged_in ||
+                                    (auth.logged_in &&
+                                        auth.user.role !== "Trader")) && (
+                                    <Stack
+                                        direction={{
+                                            base: "column",
+                                            sm: "row",
+                                            md: "column",
+                                            lg: "row"
                                         }}
-                                        _hover={{
-                                            bgColor: "#ca282d !important"
-                                        }}
-                                        disabled={!product.qty}
+                                        mt="30px"
+                                        spacing={5}
+                                        justifyContent="space-between"
                                     >
-                                        Buy Now
-                                    </Button>
-                                </Stack>
+                                        <HStack w="100%" spacing={5}>
+                                            <ButtonGroup
+                                                size="md"
+                                                isAttached
+                                                variant="outline"
+                                            >
+                                                <IconButton
+                                                    aria-label="Decrease quantity"
+                                                    borderRadius="0"
+                                                    icon={<MinusIcon />}
+                                                    _hover={{
+                                                        backgroundColor:
+                                                            "transparent !important",
+                                                        color:
+                                                            "var(--chakra-colors-secondary) !important"
+                                                    }}
+                                                    {...dec}
+                                                />
+                                                <Input
+                                                    borderRadius="0"
+                                                    textAlign="center"
+                                                    w="60px"
+                                                    minW="60px"
+                                                    {...input}
+                                                />
+
+                                                <IconButton
+                                                    borderRadius="0"
+                                                    aria-label="Increase quantity"
+                                                    icon={<AddIcon />}
+                                                    _hover={{
+                                                        backgroundColor:
+                                                            "transparent !important",
+                                                        color:
+                                                            "var(--chakra-colors-secondary) !important"
+                                                    }}
+                                                    {...inc}
+                                                />
+                                            </ButtonGroup>
+
+                                            <Button
+                                                bgColor="primary"
+                                                color="#fff"
+                                                w="100%"
+                                                disabled={!product.qty}
+                                                onClick={addToCart}
+                                            >
+                                                Add To Cart
+                                            </Button>
+                                        </HStack>
+                                        <Button
+                                            bgColor="secondary"
+                                            color="#fff"
+                                            w={{
+                                                base: "100%",
+                                                sm: "50%",
+                                                md: "100%",
+                                                lg: "50%"
+                                            }}
+                                            _hover={{
+                                                bgColor: "#ca282d !important"
+                                            }}
+                                            disabled={!product.qty}
+                                            onClick={() => {
+                                                addToCart();
+                                                history.push("/checkout");
+                                            }}
+                                        >
+                                            Buy Now
+                                        </Button>
+                                    </Stack>
+                                )}
                                 <HStack alignItems="baseline" spacing={5}>
                                     <Button
                                         mt="20px"
                                         mb="30px"
+                                        color={
+                                            inWishlist ? "secondary" : "gray"
+                                        }
                                         leftIcon={
                                             <Icon
-                                                as={IoHeartOutline}
+                                                as={
+                                                    inWishlist
+                                                        ? IoHeart
+                                                        : IoHeartOutline
+                                                }
                                                 boxSize="22px"
                                                 mr="5px"
                                             />
                                         }
-                                        color="gray"
                                         variant="link"
                                         textTransform="none"
                                         letterSpacing="0"
@@ -295,8 +551,15 @@ const Product = ({ match, crumbs, products }) => {
                                             color:
                                                 "var(--chakra-colors-secondary) !important"
                                         }}
+                                        onClick={
+                                            inWishlist
+                                                ? removeFromWishlist
+                                                : addToWishlist
+                                        }
                                     >
-                                        Add to Wishlist
+                                        {inWishlist
+                                            ? "Added to Wishlist!"
+                                            : "Add to Wishlist"}
                                     </Button>
                                     <Button
                                         mt="20px"
@@ -312,7 +575,7 @@ const Product = ({ match, crumbs, products }) => {
                                         variant="link"
                                         textTransform="none"
                                         letterSpacing="0"
-                                        onClick={onOpen}
+                                        onClick={handleReport}
                                         _hover={{
                                             background:
                                                 "transparent !important",
@@ -419,15 +682,20 @@ const Product = ({ match, crumbs, products }) => {
 };
 
 const getRelatedProducts = (products, product) => {
-    const related = products.filter(
-        p =>
-            p.category.name === product.category.name && p.name !== product.name
-    );
+    if (products && product) {
+        const related = products.filter(
+            p =>
+                p.category.name === product.category.name &&
+                p.name !== product.name
+        );
 
-    const unrelated = products.filter(
-        p => p.name !== product.name && related.every(pr => pr.name !== p.name)
-    );
-    return [...related, ...unrelated.sort(() => 0.5 - Math.random())];
+        const unrelated = products.filter(
+            p =>
+                p.name !== product.name &&
+                related.every(pr => pr.name !== p.name)
+        );
+        return [...related, ...unrelated.sort(() => 0.5 - Math.random())];
+    } else return [];
 };
 
 export default connect(mapStateToProps)(Product);

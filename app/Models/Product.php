@@ -54,4 +54,8 @@ class Product extends Model
     public function orders() {
         return $this->hasMany(Order::class, 'order_has_products');
     }
+
+    public function wishlists() {
+        return $this->belongsToMany(Wishlist::class, 'wishlist_has_products');
+    }
 }

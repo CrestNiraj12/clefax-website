@@ -3,19 +3,23 @@ import React, { useState } from "react";
 import { validateDetails } from "../../utilities/validation";
 import ImageUploader from "react-images-upload";
 import {
+    Avatar,
     Box,
     Button,
     FormControl,
     FormErrorMessage,
     FormLabel,
     Heading,
+    HStack,
     Input,
     InputGroup,
     InputRightElement,
     Select,
+    Stack,
     useToast,
     VStack
 } from "@chakra-ui/react";
+import { connect } from "react-redux";
 
 const details = [
     { name: "fullname", label: "Full Name" },
@@ -33,7 +37,11 @@ const passwords = [
     { name: "password_confirmation", label: "Confirm Password" }
 ];
 
-const Details = () => {
+const mapStateToProps = state => ({
+    auth: state.auth
+});
+
+const Details = ({ auth }) => {
     const toast = useToast();
     const [show, setShow] = useState({
         old_password: false,
@@ -45,13 +53,13 @@ const Details = () => {
         <Formik
             validate={validateDetails}
             initialValues={{
-                avatar: null,
-                fullname: "",
-                email: "",
-                phone: "",
-                address: "",
-                dob: "",
-                gender: "",
+                avatar: auth.user.avatar,
+                fullname: auth.user.fullname,
+                email: auth.user.email,
+                phone: auth.user.phone,
+                address: auth.user.address,
+                dob: new Date(auth.user.dob).toISOString().substr(0, 10),
+                gender: auth.user.gender,
                 old_password: "",
                 password: "",
                 password_confirmation: ""
@@ -84,27 +92,43 @@ const Details = () => {
                                     }
                                     mb="10px !important"
                                 >
-                                    <FormLabel>Avatar</FormLabel>
-                                    <Box w={{ base: "100%", md: "40%" }}>
-                                        <ImageUploader
-                                            withPreview={true}
-                                            withIcon={true}
-                                            buttonText="Browse avatar"
-                                            onChange={(files, urls) =>
-                                                form.setFieldValue(
-                                                    "avatar",
-                                                    files[0]
-                                                )
-                                            }
-                                            imgExtension={[
-                                                ".jpg",
-                                                ".gif",
-                                                ".png",
-                                                ".gif"
-                                            ]}
-                                            maxFileSize={5242880}
+                                    <Stack
+                                        direction="column"
+                                        spacing={10}
+                                        alignItems={{
+                                            base: "center",
+                                            md: "flex-start"
+                                        }}
+                                    >
+                                        <Avatar
+                                            size="2xl"
+                                            name={auth.user.fullname}
+                                            src={auth.user.avatar}
                                         />
-                                    </Box>
+                                        <Box w={{ base: "100%", md: "40%" }}>
+                                            <FormLabel>Avatar</FormLabel>
+                                            <Box>
+                                                <ImageUploader
+                                                    withPreview={true}
+                                                    withIcon={true}
+                                                    buttonText="Browse avatar"
+                                                    onChange={(files, urls) =>
+                                                        form.setFieldValue(
+                                                            "avatar",
+                                                            files[0]
+                                                        )
+                                                    }
+                                                    imgExtension={[
+                                                        ".jpg",
+                                                        ".gif",
+                                                        ".png",
+                                                        ".gif"
+                                                    ]}
+                                                    maxFileSize={5242880}
+                                                />
+                                            </Box>
+                                        </Box>
+                                    </Stack>
                                 </FormControl>
                             )}
                         </Field>
@@ -245,4 +269,4 @@ const Details = () => {
     );
 };
 
-export default Details;
+export default connect(mapStateToProps)(Details);

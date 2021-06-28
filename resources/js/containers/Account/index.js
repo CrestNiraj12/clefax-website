@@ -29,7 +29,7 @@ const Account = ({ crumbs, auth }) => {
     const { isOpen, onOpen, onClose } = useDisclosure();
 
     return !localStorage.getItem("user") ||
-        JSON.parse(localStorage.getItem("user")).role !== "Customer" ? (
+        JSON.parse(localStorage.getItem("user")).role === "Trader" ? (
         <Redirect to="/" />
     ) : (
         <Box mx="20px" mb="100px">
@@ -77,8 +77,10 @@ const Account = ({ crumbs, auth }) => {
                     <TabPanel>
                         <Box>
                             <Text>
-                                Hello <b>Niraj Shrestha</b> (Not{" "}
-                                <b>Niraj Shrestha</b>?{" "}
+                                Hello{" "}
+                                <b>{auth.logged_in && auth.user.fullname}</b>{" "}
+                                (Not{" "}
+                                <b>{auth.logged_in && auth.user.fullname}</b>?{" "}
                                 <Button
                                     variant="link"
                                     letterSpacing="0 !important"

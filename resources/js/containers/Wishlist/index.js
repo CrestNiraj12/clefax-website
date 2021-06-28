@@ -23,71 +23,103 @@ import {
     NumberIncrementStepper,
     NumberDecrementStepper,
     useMediaQuery,
-    Badge
+    Badge,
+    useToast
 } from "@chakra-ui/react";
+import { uniqBy } from "lodash";
 import React, { useState, useEffect } from "react";
 import { BsXCircle } from "react-icons/bs";
-import Cookies from "../../../images/cookies.png";
+import { connect } from "react-redux";
 import { useHistory } from "react-router-dom";
 import Breadcrumb from "../../components/Breadcrumb";
+import { DEFAULT_TOAST } from "../../constants";
+import { apiClient, generateUrl } from "../../utilities";
 
-const ps = [
-    {
-        id: "0001",
-        title: "Choco Chip Cookies",
-        images: [Cookies, Cookies],
-        rating: 4,
-        url: "/shop/product-title-1",
-        qty: 10,
-        ordered_qty: 5,
-        price: 46.0,
-        discount: 25,
-        categories: ["Cookies"],
-        created_at: "2021/01/01",
-        coupon: null,
-        tags: ["Cookies", "Bakery", "Food"],
-        shop: {
-            name: "Raju prods"
-        }
-    },
-    {
-        id: "0002",
-        title: "Oreo Cookies",
-        images: [Cookies, Cookies],
-        rating: 4,
-        url: "/shop/product-title-1",
-        qty: 0,
-        ordered_qty: 1,
-        price: 46.0,
-        discount: 25,
-        categories: ["Cookies"],
-        created_at: "2021/01/01",
-        coupon: null,
-        tags: ["Cookies", "Bakery", "Food"],
-        shop: {
-            name: "Suresh prods"
-        }
-    }
-];
+const mapStateToProps = state => ({
+    products: state.products,
+    auth: state.auth
+});
 
-const Wishlist = ({ crumbs }) => {
+const Wishlist = ({ crumbs, auth, products }) => {
+    const toast = useToast(DEFAULT_TOAST);
     var history = useHistory();
-    const [products, setProducts] = useState([]);
+    const [wishlistProducts, setProducts] = useState([]);
     const [smallerThan1024] = useMediaQuery("(max-width:1024px)");
 
     useEffect(() => {
-        setProducts(ps);
-    }, []);
+        var tempProducts = [];
+        if (auth.logged_in)
+            apiClient
+                .get("/sanctum/csrf-cookie")
+                .then(res =>
+                    apiClient
+                        .get("/api/wishlist")
+                        .then(res => {
+                            tempProducts = uniqBy(res.data.products, "id");
+                            setProducts(
+                                tempProducts
+                                    ? tempProducts.map(ps => {
+                                          return { ...ps, ordered_qty: 1 };
+                                      })
+                                    : []
+                            );
+                        })
+                        .catch(err => console.log(err))
+                )
+                .catch(err => console.log(err.response));
+        else {
+            if (localStorage.getItem("wishlist")) {
+                const ps = JSON.parse(localStorage.getItem("wishlist"));
+                tempProducts = products.filter(p => ps.includes(p.id));
+                setProducts(
+                    tempProducts
+                        ? tempProducts.map(ps => {
+                              return { ...ps, ordered_qty: 1 };
+                          })
+                        : []
+                );
+            }
+        }
+    }, [products]);
 
     const handleRemoveProduct = id => {
-        setProducts(products.filter(p => p.id !== id));
+        const removed = wishlistProducts.filter(p => p.id !== id);
+        if (auth.logged_in)
+            apiClient
+                .get("/sanctum/csrf-cookie")
+                .then(res =>
+                    apiClient
+                        .delete(`/api/wishlist/product/${id}`)
+                        .then(res => {
+                            setProducts(removed);
+                            toast({
+                                title: "Removed",
+                                description: res.data.message,
+                                status: "success"
+                            });
+                        })
+                        .catch(err => console.log(err.response))
+                )
+                .catch(err => console.log(err.response));
+        else {
+            localStorage.setItem(
+                "wishlist",
+                JSON.stringify(removed.map(p => p.id))
+            );
+            toast({
+                title: "Removed",
+                description: "Successfully deleted product from wishlist!",
+                status: "success"
+            });
+            setProducts(removed);
+        }
     };
 
     return (
         <Box mx="20px" mb="150px">
             <Breadcrumb crumbs={crumbs} margin="20px 0" />
 
-            {products && products.length ? (
+            {wishlistProducts.length ? (
                 <Box my="50px" overflow="hidden">
                     <Box overflowX="auto">
                         <Table minW="768px">
@@ -102,13 +134,14 @@ const Wishlist = ({ crumbs }) => {
                                 </Tr>
                             </Thead>
                             <Tbody>
-                                {products.map(
+                                {wishlistProducts.map(
                                     (
                                         {
                                             id,
-                                            title,
+                                            name: title,
                                             discount,
                                             images,
+                                            max_order,
                                             qty,
                                             price,
                                             ordered_qty,
@@ -116,13 +149,13 @@ const Wishlist = ({ crumbs }) => {
                                         },
                                         index
                                     ) => (
-                                        <Tr key={index}>
+                                        <Tr key={id}>
                                             <Td>
                                                 <IconButton
                                                     minW="0"
                                                     h="0"
                                                     bg="transparent"
-                                                    aria-label="Remove from cart"
+                                                    aria-label="Remove from wishlist"
                                                     icon={
                                                         <Icon as={BsXCircle} />
                                                     }
@@ -135,7 +168,15 @@ const Wishlist = ({ crumbs }) => {
                                                     }
                                                 />
                                             </Td>
-                                            <Td>
+                                            <Td
+                                                onClick={() =>
+                                                    history.push(
+                                                        generateUrl(id, title)
+                                                    )
+                                                }
+                                                cursor="pointer"
+                                                _hover={{ color: "secondary" }}
+                                            >
                                                 <HStack spacing={10}>
                                                     {!smallerThan1024 && (
                                                         <Image
@@ -154,7 +195,7 @@ const Wishlist = ({ crumbs }) => {
                                                 </HStack>
                                             </Td>
                                             <Td>
-                                                {discount && discount > 0 && (
+                                                {discount > 0 && (
                                                     <Text
                                                         color="gray"
                                                         fontSize="md"
@@ -169,7 +210,7 @@ const Wishlist = ({ crumbs }) => {
                                                     color="secondary"
                                                 >
                                                     £
-                                                    {(discount && discount > 0
+                                                    {(discount > 0
                                                         ? price -
                                                           price *
                                                               (discount / 100)
@@ -200,19 +241,20 @@ const Wishlist = ({ crumbs }) => {
                                                         max={qty}
                                                         isDisabled={qty <= 0}
                                                         value={
-                                                            products[index]
-                                                                .ordered_qty
+                                                            wishlistProducts[
+                                                                index
+                                                            ].ordered_qty
                                                         }
                                                         defaultValue={
                                                             ordered_qty
                                                         }
                                                         min={1}
                                                         onChange={(_, v) => {
-                                                            products[
+                                                            wishlistProducts[
                                                                 index
                                                             ].ordered_qty = v;
                                                             setProducts([
-                                                                ...products
+                                                                ...wishlistProducts
                                                             ]);
                                                             if (
                                                                 ordered_qty !==
@@ -230,14 +272,20 @@ const Wishlist = ({ crumbs }) => {
                                                         </NumberInputStepper>
                                                     </NumberInput>
                                                 ) : (
-                                                    <CartQtyInput
+                                                    <WishlistQtyInput
                                                         orderedQty={ordered_qty}
-                                                        maxQty={qty}
+                                                        maxQty={
+                                                            qty < max_order
+                                                                ? qty
+                                                                : max_order
+                                                        }
                                                         setProducts={
                                                             setProducts
                                                         }
                                                         inStock={qty > 0}
-                                                        products={products}
+                                                        products={
+                                                            wishlistProducts
+                                                        }
                                                         index={index}
                                                     />
                                                 )}
@@ -249,7 +297,9 @@ const Wishlist = ({ crumbs }) => {
                                                     px="20px !important"
                                                     fontSize="xs"
                                                     color="#fff"
-                                                    disabled={qty <= 0}
+                                                    disabled={
+                                                        qty <= 0 || !ordered_qty
+                                                    }
                                                 >
                                                     Add to Cart
                                                 </Button>
@@ -264,7 +314,7 @@ const Wishlist = ({ crumbs }) => {
             ) : (
                 <Box my="30px">
                     <Text mb="30px" color="gray">
-                        Your cart is currently empty.
+                        Your wishlist is currently empty.
                     </Text>
                     <Button
                         bg="primary"
@@ -282,7 +332,7 @@ const Wishlist = ({ crumbs }) => {
     );
 };
 
-const CartQtyInput = ({
+const WishlistQtyInput = ({
     orderedQty,
     maxQty,
     setProducts,
@@ -345,4 +395,4 @@ const CartQtyInput = ({
     );
 };
 
-export default Wishlist;
+export default connect(mapStateToProps)(Wishlist);

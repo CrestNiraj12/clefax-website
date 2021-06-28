@@ -18,7 +18,7 @@ class ProductController extends Controller
 
     public function show($id) {
         $product = Product::find($id);
-        return $product->load('offer', 'shop.user', 'category', 'reports', 'reviews.user');
+        return $product->load('offer', 'shop.user', 'category', 'reports', 'reviews.user', 'wishlists');
     }
 
     public function getProduct($id) {
@@ -33,7 +33,7 @@ class ProductController extends Controller
             'allergy_information' => 'nullable',
             'price' => 'required|gt:1',
             'qty' => 'required|min:1',
-            'max_order' => 'required',
+            'max_order' => 'required|max:20',
             'unit' => 'nullable',
             'shop_id' => 'required',
             'category_id' => 'required'

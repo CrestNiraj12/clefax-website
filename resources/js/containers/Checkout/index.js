@@ -18,7 +18,8 @@ import {
     RadioGroup,
     Radio,
     StackDivider,
-    Select
+    Select,
+    useToast
 } from "@chakra-ui/react";
 import React from "react";
 import Breadcrumb from "../../components/Breadcrumb";
@@ -27,10 +28,29 @@ import { isValidDate, validateForm } from "../../utilities/validation";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { Redirect } from "react-router-dom";
+import { useEffect } from "react";
+import { DEFAULT_TOAST } from "../../constants";
 
 const Checkout = ({ crumbs }) => {
+    const toast = useToast(DEFAULT_TOAST);
+
+    useEffect(() => {
+        if (!localStorage.getItem("user"))
+            toast({
+                title: "Login required",
+                description: "Please login to continue",
+                status: "info"
+            });
+        else if (JSON.parse(localStorage.getItem("user")).role === "Trader")
+            toast({
+                title: "Permission not granted",
+                description: "You are not allowed to proceed to the page",
+                status: "info"
+            });
+    }, []);
+
     return !localStorage.getItem("user") ||
-        JSON.parse(localStorage.getItem("user")).role !== "Customer" ? (
+        JSON.parse(localStorage.getItem("user")).role === "Trader" ? (
         <Redirect to="/login" />
     ) : (
         <Box mx="20px" mb="100px">

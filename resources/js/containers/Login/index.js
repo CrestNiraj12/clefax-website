@@ -27,6 +27,7 @@ import { DEFAULT_TOAST } from "../../constants";
 import { connect } from "react-redux";
 import { setAuth } from "../../actions";
 import qs from "query-string";
+import { loadWishlist } from "../../utilities/data";
 
 const mapDispatchToProps = dispatch => ({
     setAuth: auth => dispatch(setAuth(auth))
@@ -47,6 +48,20 @@ const Login = ({ setAuth, auth }) => {
         const q = qs.parse(location.search);
         if (q && q.r) setRedir(q.r);
     }, []);
+
+    const onSuccess = () => {
+        history.push(redir);
+    };
+
+    const onError = () => {
+        toast({
+            title: "Error while processing",
+            description: err.response.data
+                ? err.response.data.message
+                : "Data couldnt be loaded!",
+            status: "warning"
+        });
+    };
 
     return auth.logged_in ? (
         <Redirect to="/" />
@@ -124,14 +139,16 @@ const Login = ({ setAuth, auth }) => {
                                                         logged_in: true,
                                                         user: res.data.user
                                                     });
+                                                    loadWishlist(
+                                                        onSuccess,
+                                                        onError
+                                                    );
                                                     actions.setSubmitting(
                                                         false
                                                     );
-
-                                                    window.location = redir;
                                                 })
                                                 .catch(err => {
-                                                    console.log(err.response);
+                                                    console.log(err);
                                                     toast({
                                                         title:
                                                             "Error while logging in",

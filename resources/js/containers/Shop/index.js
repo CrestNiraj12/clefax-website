@@ -29,8 +29,6 @@ import { ceil } from "lodash";
 import { getFinalPrice, searchQuery } from "../../utilities";
 import qs from "query-string";
 
-const tags = ["meat", "vegetables", "lamb", "cake", "bakery"];
-
 const mapStateToProps = state => ({
     products: state.products,
     categories: state.categories
@@ -47,7 +45,21 @@ const Shop = ({ crumbs, products, categories }) => {
     const [activeN, setActiveN] = useState(0);
     const [pageIndex, setPageIndex] = useState([0, options[activeN]]);
     const [activeTags, setActiveTags] = useState([]);
+    const [tags, setTags] = useState([]);
     const [query, setQuery] = useState(null);
+
+    useEffect(() => {
+        if (products) {
+            var temp = [];
+            products.forEach(p => {
+                temp = temp.concat(
+                    p.tags ? p.tags.split(",").map(t => t.trim()) : []
+                );
+            });
+
+            setTags(temp);
+        }
+    }, [products]);
 
     useEffect(() => {
         if (location.pathname === "/shop/search/") {
@@ -56,7 +68,7 @@ const Shop = ({ crumbs, products, categories }) => {
             setQuery(q);
             if (categories.length) {
                 const index = q.cat
-                    ? categories.findIndex(category => category.title === q.cat)
+                    ? categories.findIndex(category => category.name === q.cat)
                     : null;
                 handleFilter(value, index, null, q.q);
             }
@@ -94,21 +106,26 @@ const Shop = ({ crumbs, products, categories }) => {
                 ? fp
                 : fp.filter(
                       product =>
-                          product.category ===
+                          product.category.name ===
                           categories[index === null ? activeCategory : index]
-                              .title
+                              .name
                   );
 
         fp =
             (tags === null && !activeTags.length) || (tags && !tags.length)
                 ? fp
                 : fp.filter(product =>
-                      product.tags.some(t => {
-                          tags = tags === null ? activeTags : tags;
-                          return tags
-                              .map(tag => tag.toLowerCase())
-                              .includes(t.toLowerCase());
-                      })
+                      product.tags
+                          ? product.tags
+                                .split(",")
+                                .map(p => p.trim())
+                                .some(t => {
+                                    tags = tags === null ? activeTags : tags;
+                                    return tags
+                                        .map(tag => tag.toLowerCase())
+                                        .includes(t.toLowerCase());
+                                })
+                          : false
                   );
 
         handleSortBy(sortBy, setSortBy, setFilteredProducts, fp);
@@ -154,7 +171,7 @@ const Shop = ({ crumbs, products, categories }) => {
                 mt="50px"
                 spacing={10}
             >
-                <VStack alignItems="stretch" spacing={12}>
+                <VStack alignItems="stretch" spacing={12} minW="25%">
                     <Box>
                         <Heading as="h6" fontSize="xl" mb="10px">
                             Categories
@@ -162,7 +179,7 @@ const Shop = ({ crumbs, products, categories }) => {
                         <hr className="line" />
                         <Divider borderColor="#66666663" />
                         <List spacing={3} mt="30px">
-                            {categories.map(({ title, products }, index) => (
+                            {categories.map(({ name, products }, index) => (
                                 <ListItem
                                     key={index}
                                     fontSize="md"
@@ -178,7 +195,7 @@ const Shop = ({ crumbs, products, categories }) => {
                                     onClick={() => handleFilter(value, index)}
                                 >
                                     <ListIcon as={ChevronRightIcon} />
-                                    {title} ({products.length})
+                                    {name} ({products.length})
                                 </ListItem>
                             ))}
                         </List>
@@ -198,39 +215,43 @@ const Shop = ({ crumbs, products, categories }) => {
                             margin="40px 0"
                         />
                     </Box>
-                    <Box>
-                        <Heading as="h6" fontSize="xl" mb="10px">
-                            Product Tags
-                        </Heading>
-                        <hr className="line" />
-                        <Divider borderColor="#66666663" mb="20px" />
-                        {tags.map((tag, index) => (
-                            <Button
-                                onClick={() => handleTagFilter(tag)}
-                                variant="outline"
-                                key={index}
-                                fontSize="sm"
-                                p="0 20px !important"
-                                m="0 10px 10px 0"
-                                color={
-                                    activeTags.includes(tag) ? "#fff" : "gray"
-                                }
-                                borderColor={
-                                    activeTags.includes(tag)
-                                        ? "secondary"
-                                        : "gray"
-                                }
-                                background={
-                                    activeTags.includes(tag)
-                                        ? "secondary"
-                                        : "transparent"
-                                }
-                                className="ignoreHover"
-                            >
-                                {tag}
-                            </Button>
-                        ))}
-                    </Box>
+                    {tags.length && (
+                        <Box>
+                            <Heading as="h6" fontSize="xl" mb="10px">
+                                Product Tags
+                            </Heading>
+                            <hr className="line" />
+                            <Divider borderColor="#66666663" mb="20px" />
+                            {tags.map((tag, index) => (
+                                <Button
+                                    onClick={() => handleTagFilter(tag)}
+                                    variant="outline"
+                                    key={index}
+                                    fontSize="sm"
+                                    p="0 20px !important"
+                                    m="0 10px 10px 0"
+                                    color={
+                                        activeTags.includes(tag)
+                                            ? "#fff"
+                                            : "gray"
+                                    }
+                                    borderColor={
+                                        activeTags.includes(tag)
+                                            ? "secondary"
+                                            : "gray"
+                                    }
+                                    background={
+                                        activeTags.includes(tag)
+                                            ? "secondary"
+                                            : "transparent"
+                                    }
+                                    className="ignoreHover"
+                                >
+                                    {tag}
+                                </Button>
+                            ))}
+                        </Box>
+                    )}{" "}
                 </VStack>
                 <Box w="100%">
                     <Stack

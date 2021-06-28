@@ -20,7 +20,7 @@ class UserController extends Controller
             
             Auth::login($user);
             $authuser = auth()->user();
-            return response()->json(['message' => 'Login successful!', 'user' => $authuser], 200);
+            return response()->json(['message' => 'Login successful!', 'user' => $authuser->load('wishlist.products', 'cart.products')], 200);
         } else {
             return response()->json(['message' => 'Invalid email or password!'], 401);
         }
@@ -37,7 +37,7 @@ class UserController extends Controller
         $user = User::create($request->all());
         $this->guard()->login($user);
         return response()->json([
-            'user' => $user,
+            'user' => $user->load('wishlist.products', 'cart.products'),
             'message' => 'Registration Successful!'
         ], 200);
     }

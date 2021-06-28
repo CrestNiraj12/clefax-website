@@ -65,6 +65,7 @@ import {
     AiOutlineLogin,
     AiOutlineUser
 } from "react-icons/ai";
+import { uniqBy } from "lodash";
 
 const mapDispatchToProps = dispatch => ({
     showSearch: show => dispatch(showSearch(show))
@@ -152,7 +153,7 @@ const Navbar = ({ showSearch, products, categories, auth }) => {
                 query +
                 "&cat=" +
                 (selectedCategory !== null
-                    ? encodeURIComponent(categories[selectedCategory].title)
+                    ? encodeURIComponent(categories[selectedCategory].name)
                     : "");
         }
     };
@@ -174,7 +175,9 @@ const Navbar = ({ showSearch, products, categories, auth }) => {
         setSelectedCategory(index);
         var fp = [];
         if (index !== null)
-            fp = products.filter(p => p.category === categories[index].title);
+            fp = products.filter(
+                p => p.category.name === categories[index].name
+            );
         else fp = products;
         setFilteredProducts(fp);
         handleSearch(query, fp);
@@ -386,7 +389,7 @@ const Navbar = ({ showSearch, products, categories, auth }) => {
                                         p="0 10px !important"
                                     >
                                         {selectedCategory !== null
-                                            ? categories[selectedCategory].title
+                                            ? categories[selectedCategory].name
                                             : "All Categories"}
                                     </MenuButton>
                                     <MenuList
@@ -406,7 +409,7 @@ const Navbar = ({ showSearch, products, categories, auth }) => {
                                         >
                                             All Categories
                                         </MenuItem>
-                                        {categories.map(({ title }, index) => (
+                                        {categories.map(({ name }, index) => (
                                             <MenuItem
                                                 color="gray"
                                                 _hover={{
@@ -418,7 +421,7 @@ const Navbar = ({ showSearch, products, categories, auth }) => {
                                                     handleFilterProducts(index)
                                                 }
                                             >
-                                                {title}
+                                                {name}
                                             </MenuItem>
                                         ))}
                                     </MenuList>
@@ -681,7 +684,25 @@ const Navbar = ({ showSearch, products, categories, auth }) => {
                                             colorScheme="red"
                                             className="badge"
                                         >
-                                            0
+                                            {auth.logged_in
+                                                ? uniqBy(
+                                                      auth.user.wishlist
+                                                          .products,
+                                                      "id"
+                                                  ).length
+                                                : localStorage.getItem(
+                                                      "wishlist"
+                                                  )
+                                                ? [
+                                                      ...new Set(
+                                                          JSON.parse(
+                                                              localStorage.getItem(
+                                                                  "wishlist"
+                                                              )
+                                                          )
+                                                      )
+                                                  ].length
+                                                : 0}
                                         </Badge>
                                     </Stack>
                                 )}

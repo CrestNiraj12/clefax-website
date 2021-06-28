@@ -53,6 +53,7 @@ import {
     AiOutlineLogin,
     AiOutlineUser
 } from "react-icons/ai";
+import { uniqBy } from "lodash";
 
 const mapDispatchToProps = dispatch => ({
     showSearch: show => dispatch(showSearch(show))
@@ -726,7 +727,25 @@ const Navbar = ({ showSearch, auth }) => {
                                             colorScheme="red"
                                             className="badge"
                                         >
-                                            0
+                                            {auth.logged_in
+                                                ? uniqBy(
+                                                      auth.user.wishlist
+                                                          .products,
+                                                      "id"
+                                                  ).length
+                                                : localStorage.getItem(
+                                                      "wishlist"
+                                                  )
+                                                ? [
+                                                      ...new Set(
+                                                          JSON.parse(
+                                                              localStorage.getItem(
+                                                                  "wishlist"
+                                                              )
+                                                          )
+                                                      )
+                                                  ].length
+                                                : 0}
                                         </Badge>
                                     </Stack>
                                 )}
