@@ -24,15 +24,12 @@ class WishlistHasProductController extends Controller
         $wishlist = Wishlist::firstOrCreate(["user_id" => auth()->user()->id]);
         $products = $request->products;
         $wishlistHasProduct = new WishlistHasProduct;
-        foreach ($products as $i => $p) {
-            $products[$i] = [
-                "wishlist_id" => $wishlist->id, 
-                "product_id" => $p, 
-                'created_at' => $wishlistHasProduct->freshTimestamp(),
-                'updated_at' => $wishlistHasProduct->freshTimestamp()
-            ]; 
+        foreach ($products as $p) {
+            $wishlistHasProduct->firstOrCreate([
+                'wishlist_id' => $wishlist->id, 
+                'product_id' => $p["product_id"]
+            ]);
         }
-        $wishlistHasProduct::insert($products);
         return response()->json(['message' => 'Successfully added products to wishlist!']);
     }
 
@@ -40,5 +37,11 @@ class WishlistHasProductController extends Controller
         $wishlist_id = Wishlist::where('user_id', auth()->user()->id)->first()->id;
         WishlistHasProduct::where(["wishlist_id" => $wishlist_id, "product_id" => $id])->delete();
         return response()->json(['message' => 'Successfully deleted product from wishlist!']);
+    }
+
+    public function getWishlistHasProducts() {
+        $wishlist = Wishlist::firstOrCreate(["user_id" => auth()->user()->id]);
+        $wishlistHasProduct = WishlistHasProduct::where("wishlist_id", $wishlist->id)->get();
+        return response()->json(isset($wishlistHasProduct) ? $wishlistHasProduct->load('wishlist', 'product') : $wishlistHasProduct);
     }
 }

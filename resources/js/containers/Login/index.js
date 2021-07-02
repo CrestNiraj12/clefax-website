@@ -25,19 +25,21 @@ import { Redirect, useHistory } from "react-router-dom";
 import { apiClient } from "../../utilities";
 import { DEFAULT_TOAST } from "../../constants";
 import { connect } from "react-redux";
-import { setAuth } from "../../actions";
+import { setAuth, setCartProducts, setWishlistProducts } from "../../actions";
 import qs from "query-string";
-import { loadWishlist } from "../../utilities/data";
+import { loadWishlist, loadCart } from "../../utilities/data";
 
 const mapDispatchToProps = dispatch => ({
-    setAuth: auth => dispatch(setAuth(auth))
+    setAuth: auth => dispatch(setAuth(auth)),
+    setCartProducts: cart => dispatch(setCartProducts(cart)),
+    setWishlistProducts: wishlist => dispatch(setWishlistProducts(wishlist))
 });
 
 const mapStateToProps = state => ({
     auth: state.auth
 });
 
-const Login = ({ setAuth, auth }) => {
+const Login = ({ setAuth, auth, setCartProducts, setWishlistProducts }) => {
     const toast = useToast(DEFAULT_TOAST);
     var history = useHistory();
     const [show, setShow] = useState(false);
@@ -49,18 +51,25 @@ const Login = ({ setAuth, auth }) => {
         if (q && q.r) setRedir(q.r);
     }, []);
 
+    const onSuccessWishlist = () => {
+        loadCart(setCartProducts, onSuccess, onError);
+    };
+
     const onSuccess = () => {
         history.push(redir);
     };
 
-    const onError = () => {
-        toast({
-            title: "Error while processing",
-            description: err.response.data
-                ? err.response.data.message
-                : "Data couldnt be loaded!",
-            status: "warning"
-        });
+    const onError = err => {
+        const errors = err.response.data.message;
+        if (errors && errors.length > 0) {
+            errors.forEach(msg =>
+                toast({
+                    title: "Error occured!",
+                    description: msg,
+                    status: "error"
+                })
+            );
+        }
     };
 
     return auth.logged_in ? (
@@ -140,11 +149,9 @@ const Login = ({ setAuth, auth }) => {
                                                         user: res.data.user
                                                     });
                                                     loadWishlist(
-                                                        onSuccess,
+                                                        setWishlistProducts,
+                                                        onSuccessWishlist,
                                                         onError
-                                                    );
-                                                    actions.setSubmitting(
-                                                        false
                                                     );
                                                 })
                                                 .catch(err => {

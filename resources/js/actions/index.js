@@ -1,8 +1,10 @@
 import {
     SET_AUTH,
+    SET_CART_PRODUCTS,
     SET_CATEGORIES,
     SET_PAGE,
     SET_PRODUCTS,
+    SET_WISHLIST_PRODUCTS,
     SHOW_SEARCH
 } from "../constants";
 
@@ -29,4 +31,14 @@ export const showSearch = show => ({
 export const setAuth = auth => ({
     type: SET_AUTH,
     payload: auth
+});
+
+export const setCartProducts = cart => ({
+    type: SET_CART_PRODUCTS,
+    payload: cart
+});
+
+export const setWishlistProducts = wishlist => ({
+    type: SET_WISHLIST_PRODUCTS,
+    payload: wishlist
 });

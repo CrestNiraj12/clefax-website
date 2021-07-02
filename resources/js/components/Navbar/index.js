@@ -115,10 +115,12 @@ const headings = [
 const mapStateToProps = state => ({
     products: state.products,
     categories: state.categories,
-    auth: state.auth
+    auth: state.auth,
+    cart: state.cart,
+    wishlist: state.wishlist
 });
 
-const Navbar = ({ showSearch, products, categories, auth }) => {
+const Navbar = ({ showSearch, products, categories, auth, cart, wishlist }) => {
     var history = useHistory();
     const [selectedCategory, setSelectedCategory] = useState(null);
     const [hovered, setHovered] = useState(false);
@@ -684,25 +686,7 @@ const Navbar = ({ showSearch, products, categories, auth }) => {
                                             colorScheme="red"
                                             className="badge"
                                         >
-                                            {auth.logged_in
-                                                ? uniqBy(
-                                                      auth.user.wishlist
-                                                          .products,
-                                                      "id"
-                                                  ).length
-                                                : localStorage.getItem(
-                                                      "wishlist"
-                                                  )
-                                                ? [
-                                                      ...new Set(
-                                                          JSON.parse(
-                                                              localStorage.getItem(
-                                                                  "wishlist"
-                                                              )
-                                                          )
-                                                      )
-                                                  ].length
-                                                : 0}
+                                            {wishlist.length}
                                         </Badge>
                                     </Stack>
                                 )}
@@ -723,7 +707,7 @@ const Navbar = ({ showSearch, products, categories, auth }) => {
                                         colorScheme="red"
                                         className="badge"
                                     >
-                                        0
+                                        {cart.length}
                                     </Badge>
                                 </Stack>
                             </>

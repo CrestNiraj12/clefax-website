@@ -19,20 +19,56 @@ import {
     Radio,
     StackDivider,
     Select,
-    useToast
+    useToast,
+    Spinner,
+    Flex
 } from "@chakra-ui/react";
-import React from "react";
+import React, { useState } from "react";
 import Breadcrumb from "../../components/Breadcrumb";
 import { Formik, Form, Field } from "formik";
 import { isValidDate, validateForm } from "../../utilities/validation";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { Redirect } from "react-router-dom";
+import { Redirect, useHistory } from "react-router-dom";
 import { useEffect } from "react";
 import { DEFAULT_TOAST } from "../../constants";
+import { connect } from "react-redux";
+import { apiClient, getLoginRedirection } from "../../utilities";
+
+const mapStateToProps = state => ({
+    products: state.products
+});
 
 const Checkout = ({ crumbs }) => {
+    const history = useHistory();
     const toast = useToast(DEFAULT_TOAST);
+    const [loading, setLoading] = useState(false);
+    const [cart, setCart] = useState([]);
+
+    useEffect(() => {
+        setLoading(true);
+        apiClient
+            .get("/sanctum/csrf-cookie")
+            .then(res =>
+                apiClient
+                    .get("/api/cart")
+                    .then(res => {
+                        if (!res.data || !res.data.length) {
+                            toast({
+                                title: "Cart is empty",
+                                description:
+                                    "Please add some products to the cart before checking out!",
+                                status: "warning"
+                            });
+                            history.push("/cart");
+                        }
+                        setCart(res.data);
+                        setLoading(false);
+                    })
+                    .catch(err => console.log(err))
+            )
+            .catch(err => console.log(err.response));
+    }, []);
 
     useEffect(() => {
         if (!localStorage.getItem("user"))
@@ -51,7 +87,11 @@ const Checkout = ({ crumbs }) => {
 
     return !localStorage.getItem("user") ||
         JSON.parse(localStorage.getItem("user")).role === "Trader" ? (
-        <Redirect to="/login" />
+        <Redirect to={getLoginRedirection()} />
+    ) : loading ? (
+        <Flex h="100vh" w="100%" justifyContent="center" alignItems="center">
+            <Spinner color="secondary" />
+        </Flex>
     ) : (
         <Box mx="20px" mb="100px">
             <Breadcrumb crumbs={crumbs} margin="20px 0" />
@@ -272,30 +312,65 @@ const Checkout = ({ crumbs }) => {
                                             </Tr>
                                         </Thead>
                                         <Tbody>
-                                            <Tr>
-                                                <Td>
-                                                    <VStack alignItems="flex-start">
-                                                        <Text>
-                                                            Cookies ×{" "}
-                                                            <span>1</span>
-                                                        </Text>
-                                                        <Text>
-                                                            <b>Vendor:</b> Niraj
-                                                            Shrestha
-                                                        </Text>
-                                                    </VStack>
-                                                </Td>
-                                                <Td>
-                                                    <Text fontWeight="bold">
-                                                        £100.0
-                                                    </Text>
-                                                </Td>
-                                            </Tr>
+                                            {cart.map(
+                                                (
+                                                    {
+                                                        id,
+                                                        qty,
+                                                        product: {
+                                                            name: title,
+                                                            shop: { name }
+                                                        },
+                                                        subtotal
+                                                    },
+                                                    index
+                                                ) => (
+                                                    <Tr key={index + id}>
+                                                        <Td>
+                                                            <VStack alignItems="flex-start">
+                                                                <Text>
+                                                                    {title} ×{" "}
+                                                                    <span>
+                                                                        {qty}
+                                                                    </span>
+                                                                </Text>
+                                                                <Text>
+                                                                    <b>
+                                                                        Vendor:
+                                                                    </b>{" "}
+                                                                    {name}
+                                                                </Text>
+                                                            </VStack>
+                                                        </Td>
+                                                        <Td>
+                                                            <Text fontWeight="bold">
+                                                                £
+                                                                {subtotal.toFixed(
+                                                                    2
+                                                                )}
+                                                            </Text>
+                                                        </Td>
+                                                    </Tr>
+                                                )
+                                            )}
                                             <Tr>
                                                 <Td>Subtotal</Td>
                                                 <Td>
                                                     <Text fontWeight="bold">
-                                                        £100.0
+                                                        £
+                                                        {cart
+                                                            .map(
+                                                                p => p.subtotal
+                                                            )
+                                                            .reduce(
+                                                                (a, b) => a + b,
+                                                                0
+                                                            )
+                                                            .toFixed(2)
+                                                            .replace(
+                                                                /\B(?=(\d{3})+(?!\d))/g,
+                                                                ","
+                                                            )}
                                                     </Text>
                                                 </Td>
                                             </Tr>
@@ -307,7 +382,20 @@ const Checkout = ({ crumbs }) => {
                                                         fontWeight="bold"
                                                         fontSize="xl"
                                                     >
-                                                        £100.0
+                                                        £
+                                                        {cart
+                                                            .map(
+                                                                p => p.subtotal
+                                                            )
+                                                            .reduce(
+                                                                (a, b) => a + b,
+                                                                0
+                                                            )
+                                                            .toFixed(2)
+                                                            .replace(
+                                                                /\B(?=(\d{3})+(?!\d))/g,
+                                                                ","
+                                                            )}
                                                     </Text>
                                                 </Td>
                                             </Tr>
@@ -373,4 +461,4 @@ const Checkout = ({ crumbs }) => {
     );
 };
 
-export default Checkout;
+export default connect(mapStateToProps)(Checkout);

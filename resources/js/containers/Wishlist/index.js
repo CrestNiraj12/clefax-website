@@ -24,66 +24,62 @@ import {
     NumberDecrementStepper,
     useMediaQuery,
     Badge,
-    useToast
+    useToast,
+    Flex,
+    Spinner
 } from "@chakra-ui/react";
-import { uniqBy } from "lodash";
 import React, { useState, useEffect } from "react";
 import { BsXCircle } from "react-icons/bs";
 import { connect } from "react-redux";
 import { useHistory } from "react-router-dom";
+import { setCartProducts, setWishlistProducts } from "../../actions";
 import Breadcrumb from "../../components/Breadcrumb";
 import { DEFAULT_TOAST } from "../../constants";
 import { apiClient, generateUrl } from "../../utilities";
+import { addToCart } from "../../utilities/data";
 
 const mapStateToProps = state => ({
+    auth: state.auth,
+    wishlist: state.wishlist,
     products: state.products,
-    auth: state.auth
+    cart: state.cart
 });
 
-const Wishlist = ({ crumbs, auth, products }) => {
+const mapDispatchToProps = dispatch => ({
+    setWishlistProducts: ps => dispatch(setWishlistProducts(ps)),
+    setCartProducts: ps => dispatch(setCartProducts(ps))
+});
+
+const Wishlist = ({
+    crumbs,
+    auth,
+    wishlist,
+    products,
+    setWishlistProducts,
+    setCartProducts,
+    cart
+}) => {
     const toast = useToast(DEFAULT_TOAST);
     var history = useHistory();
     const [wishlistProducts, setProducts] = useState([]);
     const [smallerThan1024] = useMediaQuery("(max-width:1024px)");
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-        var tempProducts = [];
-        if (auth.logged_in)
-            apiClient
-                .get("/sanctum/csrf-cookie")
-                .then(res =>
-                    apiClient
-                        .get("/api/wishlist")
-                        .then(res => {
-                            tempProducts = uniqBy(res.data.products, "id");
-                            setProducts(
-                                tempProducts
-                                    ? tempProducts.map(ps => {
-                                          return { ...ps, ordered_qty: 1 };
-                                      })
-                                    : []
-                            );
-                        })
-                        .catch(err => console.log(err))
-                )
-                .catch(err => console.log(err.response));
-        else {
-            if (localStorage.getItem("wishlist")) {
-                const ps = JSON.parse(localStorage.getItem("wishlist"));
-                tempProducts = products.filter(p => ps.includes(p.id));
-                setProducts(
-                    tempProducts
-                        ? tempProducts.map(ps => {
-                              return { ...ps, ordered_qty: 1 };
-                          })
-                        : []
-                );
-            }
-        }
-    }, [products]);
+        setLoading(true);
+        setProducts(
+            products
+                .filter(p => wishlist.includes(p.id))
+                .map(p => {
+                    return { ...p, ordered_qty: 1 };
+                })
+        );
+        setLoading(false);
+    }, [wishlist]);
 
-    const handleRemoveProduct = id => {
+    const handleRemoveProduct = (id, showToast = true) => {
         const removed = wishlistProducts.filter(p => p.id !== id);
+        const removedWishlist = wishlist.filter(pid => pid !== id);
         if (auth.logged_in)
             apiClient
                 .get("/sanctum/csrf-cookie")
@@ -92,30 +88,73 @@ const Wishlist = ({ crumbs, auth, products }) => {
                         .delete(`/api/wishlist/product/${id}`)
                         .then(res => {
                             setProducts(removed);
-                            toast({
-                                title: "Removed",
-                                description: res.data.message,
-                                status: "success"
-                            });
+                            setWishlistProducts(removedWishlist);
+                            if (showToast)
+                                toast({
+                                    title: "Removed",
+                                    description: res.data.message,
+                                    status: "success"
+                                });
                         })
                         .catch(err => console.log(err.response))
                 )
                 .catch(err => console.log(err.response));
         else {
-            localStorage.setItem(
-                "wishlist",
-                JSON.stringify(removed.map(p => p.id))
-            );
-            toast({
-                title: "Removed",
-                description: "Successfully deleted product from wishlist!",
-                status: "success"
-            });
+            localStorage.setItem("wishlist", JSON.stringify(removedWishlist));
+            setWishlistProducts(removedWishlist);
             setProducts(removed);
+            if (showToast)
+                toast({
+                    title: "Removed",
+                    description: "Successfully deleted product from wishlist!",
+                    status: "success"
+                });
         }
     };
 
-    return (
+    const onSuccess = id => {
+        handleRemoveProduct(id, false);
+        toast({
+            title: "Added to cart",
+            description: "Product has been successfully added to cart!",
+            status: "success"
+        });
+        history.push("/cart");
+    };
+
+    const onError = err => {
+        console.log(err.response);
+        toast({
+            title: "Error occurred",
+            description: err.response
+                ? err.response.data.message
+                : "Something wrong happened! Please try again!",
+            status: "error"
+        });
+    };
+
+    const logicError = () => {
+        toast({
+            title: "Error",
+            description:
+                "Maximum product qty limit exceeded in the cart i.e, 20!",
+            status: "error"
+        });
+    };
+
+    const maxOrderExceedError = (max_order, unit) => {
+        toast({
+            title: "Error",
+            description: `You can only buy ${max_order} ${unit}(s) in one slot!`,
+            status: "error"
+        });
+    };
+
+    return loading ? (
+        <Flex h="100vh" w="100%" justifyContent="center" alignItems="center">
+            <Spinner color="secondary" />
+        </Flex>
+    ) : (
         <Box mx="20px" mb="150px">
             <Breadcrumb crumbs={crumbs} margin="20px 0" />
 
@@ -143,6 +182,7 @@ const Wishlist = ({ crumbs, auth, products }) => {
                                             images,
                                             max_order,
                                             qty,
+                                            unit,
                                             price,
                                             ordered_qty,
                                             shop: { name }
@@ -300,6 +340,26 @@ const Wishlist = ({ crumbs, auth, products }) => {
                                                     disabled={
                                                         qty <= 0 || !ordered_qty
                                                     }
+                                                    onClick={() =>
+                                                        addToCart(
+                                                            {
+                                                                id,
+                                                                discount,
+                                                                price,
+                                                                max_order,
+                                                                unit,
+                                                                qty
+                                                            },
+                                                            auth,
+                                                            ordered_qty,
+                                                            onSuccess,
+                                                            onError,
+                                                            logicError,
+                                                            setCartProducts,
+                                                            cart,
+                                                            maxOrderExceedError
+                                                        )
+                                                    }
                                                 >
                                                     Add to Cart
                                                 </Button>
@@ -395,4 +455,4 @@ const WishlistQtyInput = ({
     );
 };
 
-export default connect(mapStateToProps)(Wishlist);
+export default connect(mapStateToProps, mapDispatchToProps)(Wishlist);

@@ -4,7 +4,14 @@ import { connect } from "react-redux";
 import { Switch, Route, useLocation } from "react-router-dom";
 import Footer from "./components/Footer";
 import ScrollToTopButton from "./components/ScrollToTopButton";
-import { setPage, setProducts, setCategories, setAuth } from "./actions";
+import {
+    setPage,
+    setProducts,
+    setCategories,
+    setAuth,
+    setCartProducts,
+    setWishlistProducts
+} from "./actions";
 import routes from "./routes";
 import { useMediaQuery } from "@chakra-ui/media-query";
 import Navbar from "./components/Navbar";
@@ -14,12 +21,16 @@ import Login from "./containers/Login";
 import Signup from "./containers/Signup";
 import ForgotPassword from "./containers/ForgotPassword";
 import TraderSignup from "./containers/TraderSignup";
+import { apiClient, getFinalPrice } from "./utilities";
+import { uniqBy } from "lodash";
 
 const mapDispatchToProps = dispatch => ({
     setProducts: products => dispatch(setProducts(products)),
     setPage: page => dispatch(setPage(page)),
     setCategories: category => dispatch(setCategories(category)),
-    setAuth: auth => dispatch(setAuth(auth))
+    setAuth: auth => dispatch(setAuth(auth)),
+    setCartProducts: cart => dispatch(setCartProducts(cart)),
+    setWishlistProducts: wishlist => dispatch(setWishlistProducts(wishlist))
 });
 
 const mapStateToProps = state => ({
@@ -33,16 +44,23 @@ const Main = ({
     page,
     showSearch,
     setCategories,
-    setAuth
+    setAuth,
+    setCartProducts,
+    setWishlistProducts
 }) => {
     const location = useLocation();
-
     const [desktop] = useMediaQuery("(min-width: 1100px)");
     const [showScrollBtn, setShowScrollBtn] = useState(false);
 
     useEffect(() => {
         setPage(window.location.pathname === "/" ? HOME_PAGE : "");
     }, [location]);
+
+    useEffect(() => {
+        apiClient
+            .get("/sanctum/csrf-cookie")
+            .catch(err => localStorage.removeItem("user"));
+    }, []);
 
     useEffect(() => {
         setAuth(
@@ -60,6 +78,59 @@ const Main = ({
             .get("/api/products")
             .then(res => {
                 setProducts(res.data);
+                var tempProducts = [];
+                if (localStorage.getItem("user"))
+                    apiClient
+                        .get("/sanctum/csrf-cookie")
+                        .then(res =>
+                            apiClient
+                                .get("/api/wishlist")
+                                .then(res => {
+                                    setWishlistProducts([
+                                        ...new Set(
+                                            res.data.map(p => p.product_id)
+                                        )
+                                    ]);
+                                    apiClient
+                                        .get("/sanctum/csrf-cookie")
+                                        .then(res =>
+                                            apiClient
+                                                .get("/api/cart")
+                                                .then(res => {
+                                                    setCartProducts(
+                                                        res.data.map(
+                                                            details => {
+                                                                return {
+                                                                    product_id:
+                                                                        details.product_id,
+                                                                    qty:
+                                                                        details.qty,
+                                                                    subtotal:
+                                                                        details.subtotal
+                                                                };
+                                                            }
+                                                        )
+                                                    );
+                                                })
+                                                .catch(err => console.log(err))
+                                        )
+                                        .catch(err =>
+                                            console.log(err.response)
+                                        );
+                                })
+                                .catch(err => console.log(err))
+                        )
+                        .catch(err => console.log(err.response));
+                else {
+                    if (localStorage.getItem("wishlist")) {
+                        const ps = JSON.parse(localStorage.getItem("wishlist"));
+                        setWishlistProducts(ps);
+                    }
+                    if (localStorage.getItem("cart")) {
+                        const stored = JSON.parse(localStorage.getItem("cart"));
+                        setCartProducts(stored);
+                    }
+                }
             })
             .catch(err => console.log(err));
     }, []);

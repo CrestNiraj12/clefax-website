@@ -16,6 +16,12 @@ class CartHasProduct extends Model
         "subtotal"
     ];
 
+    protected $casts = [
+        "qty" => "float",
+        "subtotal" => "float",
+        "product_id" => "integer",
+    ];
+
     public function cart()
     {
         return $this->belongsTo(Cart::class, 'cart_id');

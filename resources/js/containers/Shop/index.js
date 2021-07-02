@@ -86,16 +86,16 @@ const Shop = ({ crumbs, products, categories }) => {
     const handleFilter = (v, index = null, tags = null, q = null) => {
         setLoading(true);
 
-        var fp = [];
+        var fp = products;
 
-        if (q) fp = searchQuery(products, q);
+        if (q) fp = searchQuery(fp, q);
 
         if (index !== null) {
             setActiveCategory(index === activeCategory ? null : index);
         }
 
         if (v.length)
-            fp = products.filter(
+            fp = fp.filter(
                 product =>
                     getFinalPrice(product) >= v[0] &&
                     getFinalPrice(product) <= v[1]
@@ -110,7 +110,6 @@ const Shop = ({ crumbs, products, categories }) => {
                           categories[index === null ? activeCategory : index]
                               .name
                   );
-
         fp =
             (tags === null && !activeTags.length) || (tags && !tags.length)
                 ? fp
@@ -127,7 +126,6 @@ const Shop = ({ crumbs, products, categories }) => {
                                 })
                           : false
                   );
-
         handleSortBy(sortBy, setSortBy, setFilteredProducts, fp);
         setTimeout(() => setLoading(false), 0);
     };
@@ -192,10 +190,17 @@ const Shop = ({ crumbs, products, categories }) => {
                                     _hover={{
                                         color: "red"
                                     }}
-                                    onClick={() => handleFilter(value, index)}
+                                    onClick={() =>
+                                        handleFilter(
+                                            value,
+                                            index,
+                                            activeTags,
+                                            query ? query.q : null
+                                        )
+                                    }
                                 >
                                     <ListIcon as={ChevronRightIcon} />
-                                    {name} ({products.length})
+                                    {name} {!query && `(${products.length})`}
                                 </ListItem>
                             ))}
                         </List>

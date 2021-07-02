@@ -24,68 +24,217 @@ import {
     NumberInputStepper,
     NumberIncrementStepper,
     NumberDecrementStepper,
-    useMediaQuery
+    useMediaQuery,
+    useToast,
+    Spinner,
+    Flex
 } from "@chakra-ui/react";
 import React, { useState, useEffect } from "react";
 import { BsXCircle } from "react-icons/bs";
-import Cookies from "../../../images/cookies.png";
+import { connect } from "react-redux";
 import { useHistory } from "react-router-dom";
+import { setCartProducts } from "../../actions";
 import Breadcrumb from "../../components/Breadcrumb";
+import { DEFAULT_TOAST } from "../../constants";
+import { apiClient, generateUrl, getFinalPrice } from "../../utilities";
 
-const ps = [
-    {
-        id: "0001",
-        title: "Choco Chip Cookies",
-        images: [Cookies, Cookies],
-        rating: 4,
-        url: "/shop/product-title-1",
-        qty: 10,
-        ordered_qty: 5,
-        price: 46.0,
-        discount: 25,
-        categories: ["Cookies"],
-        created_at: "2021/01/01",
-        coupon: null,
-        tags: ["Cookies", "Bakery", "Food"],
-        shop: {
-            name: "Raju prods"
-        }
-    },
-    {
-        id: "0002",
-        title: "Oreo Cookies",
-        images: [Cookies, Cookies],
-        rating: 4,
-        url: "/shop/product-title-1",
-        qty: 10,
-        ordered_qty: 1,
-        price: 46.0,
-        discount: 25,
-        categories: ["Cookies"],
-        created_at: "2021/01/01",
-        coupon: null,
-        tags: ["Cookies", "Bakery", "Food"],
-        shop: {
-            name: "Suresh prods"
-        }
-    }
-];
+const mapStateToProps = state => ({
+    products: state.products,
+    cart: state.cart,
+    auth: state.auth
+});
 
-const Cart = ({ crumbs }) => {
+const mapDispatchToProps = dispatch => ({
+    setCartProducts: ps => dispatch(setCartProducts(ps))
+});
+
+const Cart = ({ crumbs, auth, products, cart, setCartProducts }) => {
+    const toast = useToast(DEFAULT_TOAST);
     var history = useHistory();
-    const [products, setProducts] = useState([]);
+    const [cartProducts, setProducts] = useState([]);
+    const [updatedProducts, setUpdatedProducts] = useState([]);
     const [qtyChanged, setQtyChanged] = useState(false);
     const [smallerThan768] = useMediaQuery("(max-width:768px)");
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-        setProducts(ps);
-    }, []);
+        setLoading(true);
+        setProducts(
+            products
+                .filter(p => cart.map(c => c.product_id).includes(p.id))
+                .map(p => {
+                    const cartProduct = cart.filter(
+                        cp => cp.product_id === p.id
+                    )[0];
+                    return {
+                        ...p,
+                        ordered_qty: cartProduct.qty,
+                        subtotal: cartProduct.subtotal
+                    };
+                })
+        );
+        setLoading(false);
+    }, [cart, products]);
 
-    const handleRemoveProduct = id => {
-        setProducts(products.filter(p => p.id !== id));
+    const handleRemoveProduct = (id, showToast = true) => {
+        const removed = cartProducts.filter(p => p.id !== id);
+        const removedCart = cart.filter(p => p.product_id !== id);
+        if (auth.logged_in)
+            apiClient
+                .get("/sanctum/csrf-cookie")
+                .then(res =>
+                    apiClient
+                        .delete(`/api/cart/product/${id}`)
+                        .then(res => {
+                            setProducts(removed);
+                            setCartProducts(removedCart);
+                            if (showToast)
+                                toast({
+                                    title: "Removed",
+                                    description: res.data.message,
+                                    status: "success"
+                                });
+                        })
+                        .catch(err => console.log(err.response))
+                )
+                .catch(err => console.log(err.response));
+        else {
+            localStorage.setItem("cart", JSON.stringify(removedCart));
+            setCartProducts(removedCart);
+            setProducts(removed);
+            if (showToast)
+                toast({
+                    title: "Removed",
+                    description: "Successfully deleted product from the cart!",
+                    status: "success"
+                });
+        }
     };
 
-    return (
+    const handleBulkUpdate = () => {
+        const totalProducts =
+            cartProducts
+                .filter(p => !updatedProducts.map(ps => ps.id).includes(p.id))
+                .map(p => p.ordered_qty)
+                .reduce((a, b) => a + b, 0) +
+            updatedProducts.map(p => p.qty).reduce((a, b) => a + b, 0);
+        if (totalProducts > 20) {
+            toast({
+                title: "Error occurred",
+                description:
+                    "Maximum product qty limit exceeded in the cart i.e, 20!",
+                status: "error"
+            });
+            return;
+        }
+        const updates = [];
+        updatedProducts.forEach(p => {
+            const fp = cartProducts.filter(cp => cp.id === p.id)[0];
+            updates.push({
+                product_id: p.id,
+                qty: p.qty,
+                subtotal: getFinalPrice(fp) * p.qty
+            });
+        });
+        if (auth.logged_in)
+            apiClient
+                .get("/sanctum/csrf-cookie")
+                .then(res => {
+                    apiClient
+                        .put("/api/cart/product/bulk-update", updates)
+                        .then(res => {
+                            console.log(res.data);
+                            setCartProducts([
+                                ...updates,
+                                ...cartProducts
+                                    .filter(
+                                        cp =>
+                                            !updates
+                                                .map(p => p.product_id)
+                                                .includes(cp.id)
+                                    )
+                                    .map(p => {
+                                        return {
+                                            product_id: p.id,
+                                            qty: p.ordered_qty,
+                                            subtotal:
+                                                getFinalPrice(p) * p.ordered_qty
+                                        };
+                                    })
+                            ]);
+                            setQtyChanged(false);
+                            toast({
+                                title: "Success",
+                                description: res.data.message,
+                                status: "info"
+                            });
+                        })
+                        .catch(err => {
+                            console.log(err);
+                            toast({
+                                title: "Error occurred",
+                                description: err.response
+                                    ? err.response.data.message
+                                    : "Something went wrong! Please try again!",
+                                status: "error"
+                            });
+                        });
+                })
+                .catch(err => {
+                    console.log(err);
+                    toast({
+                        title: "Error occurred",
+                        description: "Something went wrong! Please try again!",
+                        status: "error"
+                    });
+                });
+        else {
+            localStorage.setItem(
+                "cart",
+                JSON.stringify([
+                    ...updates,
+                    ...cartProducts
+                        .filter(
+                            cp =>
+                                !updates.map(p => p.product_id).includes(cp.id)
+                        )
+                        .map(p => {
+                            return {
+                                product_id: p.id,
+                                qty: p.ordered_qty,
+                                subtotal: getFinalPrice(p) * p.ordered_qty
+                            };
+                        })
+                ])
+            );
+            setCartProducts([
+                ...updates,
+                ...cartProducts
+                    .filter(
+                        cp => !updates.map(p => p.product_id).includes(cp.id)
+                    )
+                    .map(p => {
+                        return {
+                            product_id: p.id,
+                            qty: p.ordered_qty,
+                            subtotal: getFinalPrice(p) * p.ordered_qty
+                        };
+                    })
+            ]);
+            setQtyChanged(false);
+            toast({
+                title: "Success",
+                description: "Cart Updated!",
+                status: "info"
+            });
+        }
+    };
+
+    return loading ? (
+        <Flex h="100vh" w="100%" justifyContent="center" alignItems="center">
+            <Spinner color="secondary" />
+        </Flex>
+    ) : (
         <Box mx="20px" mb="150px">
             <Breadcrumb crumbs={crumbs} margin="20px 0" />
 
@@ -95,9 +244,9 @@ const Cart = ({ crumbs }) => {
                 my="50px"
                 overflow="hidden"
             >
-                {products && products.length ? (
+                {cartProducts && cartProducts.length ? (
                     <>
-                        <Box overflowX="auto">
+                        <Box overflowX={{ base: "auto", lg: "visible" }}>
                             <Table minW="578px">
                                 <Thead bg="lightgray">
                                     <Tr>
@@ -109,15 +258,18 @@ const Cart = ({ crumbs }) => {
                                     </Tr>
                                 </Thead>
                                 <Tbody>
-                                    {products.map(
+                                    {cartProducts.map(
                                         (
                                             {
                                                 id,
-                                                title,
+                                                name: title,
                                                 images,
                                                 qty,
+                                                discount,
                                                 price,
                                                 ordered_qty,
+                                                subtotal,
+                                                max_order,
                                                 shop: { name }
                                             },
                                             index
@@ -145,7 +297,20 @@ const Cart = ({ crumbs }) => {
                                                         }
                                                     />
                                                 </Td>
-                                                <Td>
+                                                <Td
+                                                    onClick={() =>
+                                                        history.push(
+                                                            generateUrl(
+                                                                id,
+                                                                title
+                                                            )
+                                                        )
+                                                    }
+                                                    cursor="pointer"
+                                                    _hover={{
+                                                        color: "secondary"
+                                                    }}
+                                                >
                                                     <HStack spacing={10}>
                                                         {!smallerThan768 && (
                                                             <Image
@@ -156,14 +321,27 @@ const Cart = ({ crumbs }) => {
                                                         )}
                                                         <VStack alignItems="flex-start">
                                                             <Text>{title}</Text>
-                                                            <Text>
+                                                            <Text fontSize="xs">
                                                                 <b>Vendor:</b>{" "}
                                                                 {name}
                                                             </Text>
                                                         </VStack>
                                                     </HStack>
                                                 </Td>
-                                                <Td>£{price.toFixed(2)}</Td>
+                                                <Td>
+                                                    <Text
+                                                        fontSize="xs"
+                                                        textDecor="line-through"
+                                                        color="gray !important"
+                                                    >
+                                                        {price.toFixed(2)}
+                                                    </Text>
+                                                    £
+                                                    {getFinalPrice({
+                                                        discount,
+                                                        price
+                                                    }).toFixed(2)}
+                                                </Td>
                                                 <Td>
                                                     {smallerThan768 ? (
                                                         <NumberInput
@@ -171,8 +349,9 @@ const Cart = ({ crumbs }) => {
                                                             maxW={16}
                                                             max={qty}
                                                             value={
-                                                                products[index]
-                                                                    .ordered_qty
+                                                                cartProducts[
+                                                                    index
+                                                                ].ordered_qty
                                                             }
                                                             defaultValue={
                                                                 ordered_qty
@@ -182,11 +361,11 @@ const Cart = ({ crumbs }) => {
                                                                 _,
                                                                 v
                                                             ) => {
-                                                                products[
+                                                                cartProducts[
                                                                     index
                                                                 ].ordered_qty = v;
                                                                 setProducts([
-                                                                    ...products
+                                                                    ...cartProducts
                                                                 ]);
                                                                 if (
                                                                     ordered_qty !==
@@ -208,11 +387,20 @@ const Cart = ({ crumbs }) => {
                                                             orderedQty={
                                                                 ordered_qty
                                                             }
-                                                            maxQty={qty}
-                                                            setProducts={
-                                                                setProducts
+                                                            maxQty={
+                                                                qty < max_order
+                                                                    ? qty
+                                                                    : max_order
                                                             }
-                                                            products={products}
+                                                            updatedProducts={
+                                                                updatedProducts
+                                                            }
+                                                            setUpdatedProducts={
+                                                                setUpdatedProducts
+                                                            }
+                                                            products={
+                                                                cartProducts
+                                                            }
                                                             index={index}
                                                             setQtyChanged={
                                                                 setQtyChanged
@@ -220,28 +408,25 @@ const Cart = ({ crumbs }) => {
                                                         />
                                                     )}
                                                 </Td>
-                                                <Td>£{price.toFixed(2)}</Td>
+                                                <Td>£{subtotal.toFixed(2)}</Td>
                                             </Tr>
                                         )
                                     )}
                                 </Tbody>
-                                <Tfoot>
-                                    <Tr>
-                                        <Td colSpan={5}>
-                                            <Button
-                                                bg="primary"
-                                                px="20px !important"
-                                                fontSize="sm"
-                                                color="#fff"
-                                                disabled={!qtyChanged}
-                                            >
-                                                Update Cart
-                                            </Button>
-                                        </Td>
-                                    </Tr>
-                                </Tfoot>
                             </Table>
+                            <Button
+                                bg="primary"
+                                px="20px !important"
+                                fontSize="sm"
+                                color="#fff"
+                                mt="10px"
+                                disabled={!qtyChanged}
+                                onClick={handleBulkUpdate}
+                            >
+                                Update Cart
+                            </Button>
                         </Box>
+
                         <VStack
                             alignItems="flex-start"
                             w={{ base: "100%", lg: "50%" }}
@@ -259,7 +444,21 @@ const Cart = ({ crumbs }) => {
                                     <Tr>
                                         <Td>Subtotal</Td>
                                         <Td>
-                                            <Text fontSize="md">£100.00</Text>
+                                            <Text fontSize="md">
+                                                £
+                                                {cartProducts.length &&
+                                                    cartProducts
+                                                        .map(p => p.subtotal)
+                                                        .reduce(
+                                                            (a, b) => a + b,
+                                                            0
+                                                        )
+                                                        .toFixed(2)
+                                                        .replace(
+                                                            /\B(?=(\d{3})+(?!\d))/g,
+                                                            ","
+                                                        )}
+                                            </Text>
                                         </Td>
                                     </Tr>
                                     <Tr>
@@ -270,7 +469,19 @@ const Cart = ({ crumbs }) => {
                                                 color="secondary"
                                                 fontWeight="bold"
                                             >
-                                                £100.00
+                                                £
+                                                {cartProducts.length &&
+                                                    cartProducts
+                                                        .map(p => p.subtotal)
+                                                        .reduce(
+                                                            (a, b) => a + b,
+                                                            0
+                                                        )
+                                                        .toFixed(2)
+                                                        .replace(
+                                                            /\B(?=(\d{3})+(?!\d))/g,
+                                                            ","
+                                                        )}
                                             </Text>
                                         </Td>
                                     </Tr>
@@ -318,10 +529,11 @@ const Cart = ({ crumbs }) => {
 const CartQtyInput = ({
     orderedQty,
     maxQty,
-    setProducts,
     products,
     index,
-    setQtyChanged
+    setQtyChanged,
+    setUpdatedProducts,
+    updatedProducts
 }) => {
     const {
         valueAsNumber,
@@ -336,8 +548,20 @@ const CartQtyInput = ({
     });
 
     useEffect(() => {
-        products[index].ordered_qty = valueAsNumber;
-        setProducts([...products]);
+        if (updatedProducts.map(p => p.id).includes(products[index].id)) {
+            const filter = p => p.id === products[index].id;
+            setUpdatedProducts([
+                {
+                    ...updatedProducts.filter(p => filter(p))[0],
+                    qty: valueAsNumber
+                },
+                ...updatedProducts.filter(p => !filter(p))
+            ]);
+        } else
+            setUpdatedProducts([
+                { id: products[index].id, qty: valueAsNumber },
+                ...updatedProducts
+            ]);
         if (orderedQty !== valueAsNumber) setQtyChanged(true);
     }, [valueAsNumber]);
 
@@ -378,4 +602,4 @@ const CartQtyInput = ({
     );
 };
 
-export default Cart;
+export default connect(mapStateToProps, mapDispatchToProps)(Cart);

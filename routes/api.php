@@ -48,11 +48,12 @@ Route::middleware(['auth:sanctum'])->group(function() {
     Route::post('/cart/add', [CartHasProductController::class, 'store']);
     Route::post('/wishlist/product/add', [WishlistHasProductController::class, 'store']);
     Route::post('/wishlist/product/bulk-add', [WishlistHasProductController::class, 'storeBulk']);
-    Route::get('/wishlist', [WishlistController::class, 'getWishlist']);
+    Route::get('/wishlist', [WishlistHasProductController::class, 'getWishlistHasProducts']);
     Route::delete('/wishlist/product/{id}', [WishlistHasProductController::class, 'destroy']);
     Route::post('/cart/product/add', [CartHasProductController::class, 'store']);
     Route::post('/cart/product/bulk-add', [CartHasProductController::class, 'storeBulk']);
-    Route::get('/cart', [CartController::class, 'getCart']);
+    Route::put('/cart/product/bulk-update', [CartHasProductController::class, 'updateBulk']);
+    Route::get('/cart', [CartHasProductController::class, 'getCartHasProducts']);
     Route::delete('/cart/product/{id}', [CartHasProductController::class, 'destroy']);
 });
 

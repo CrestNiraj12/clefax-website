@@ -13,7 +13,7 @@ class WishlistController extends Controller
     }
 
     public function getWishlist() {
-        $wishlist = Wishlist::where('user_id', auth()->user()->id)->first();
+        $wishlist = Wishlist::firstOrCreate(["user_id" => auth()->user()->id]);
         return response()->json($wishlist->load('products.shop'));
     }
 }

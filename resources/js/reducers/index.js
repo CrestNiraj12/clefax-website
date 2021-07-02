@@ -4,11 +4,15 @@ import page from "./setPage";
 import categories from "./setCategories";
 import showSearch from "./showSearch";
 import auth from "./setAuth";
+import cart from "./setCartProducts";
+import wishlist from "./setWishlistProducts";
 
 export default combineReducers({
     auth,
     products,
     categories,
     page,
-    showSearch
+    showSearch,
+    cart,
+    wishlist
 });

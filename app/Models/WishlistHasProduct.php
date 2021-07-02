@@ -14,6 +14,10 @@ class WishlistHasProduct extends Model
         "product_id",
     ];
 
+    protected $casts = [
+        "product_id" => "integer",
+    ];
+
     public function wishlist()
     {
         return $this->belongsTo(Wishlist::class, 'wishlist_id');

@@ -60,7 +60,9 @@ const mapDispatchToProps = dispatch => ({
 });
 
 const mapStateToProps = state => ({
-    auth: state.auth
+    auth: state.auth,
+    cart: state.cart,
+    wishlist: state.wishlist
 });
 
 const headings = [
@@ -104,7 +106,7 @@ const headings = [
     }
 ];
 
-const Navbar = ({ showSearch, auth }) => {
+const Navbar = ({ showSearch, auth, cart, wishlist }) => {
     var history = useHistory();
     const [hovered, setHovered] = useState(false);
     const [smallerThan1100] = useMediaQuery("(max-width: 1100px)");
@@ -196,7 +198,7 @@ const Navbar = ({ showSearch, auth }) => {
                                                             variant="solid"
                                                             colorScheme="red"
                                                         >
-                                                            0
+                                                            {cart.length}
                                                         </Badge>
                                                     </Link>
                                                 </Box>
@@ -243,7 +245,7 @@ const Navbar = ({ showSearch, auth }) => {
                                                             variant="solid"
                                                             colorScheme="red"
                                                         >
-                                                            0
+                                                            {wishlist.length}
                                                         </Badge>
                                                     </Link>
                                                 </Box>
@@ -727,25 +729,7 @@ const Navbar = ({ showSearch, auth }) => {
                                             colorScheme="red"
                                             className="badge"
                                         >
-                                            {auth.logged_in
-                                                ? uniqBy(
-                                                      auth.user.wishlist
-                                                          .products,
-                                                      "id"
-                                                  ).length
-                                                : localStorage.getItem(
-                                                      "wishlist"
-                                                  )
-                                                ? [
-                                                      ...new Set(
-                                                          JSON.parse(
-                                                              localStorage.getItem(
-                                                                  "wishlist"
-                                                              )
-                                                          )
-                                                      )
-                                                  ].length
-                                                : 0}
+                                            {wishlist.length}
                                         </Badge>
                                     </Stack>
                                 )}
@@ -766,7 +750,7 @@ const Navbar = ({ showSearch, auth }) => {
                                             colorScheme="red"
                                             className="badge"
                                         >
-                                            0
+                                            {cart.length}
                                         </Badge>
                                     </Stack>
                                 )}

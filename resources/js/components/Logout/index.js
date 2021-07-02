@@ -12,14 +12,22 @@ import {
 import React from "react";
 import { connect } from "react-redux";
 import { apiClient } from "../../utilities";
-import { setAuth } from "../../actions";
+import { setAuth, setCartProducts, setWishlistProducts } from "../../actions";
 import { DEFAULT_TOAST } from "../../constants";
 
 const mapDispatchToProps = dispatch => ({
-    setAuth: auth => dispatch(setAuth(auth))
+    setAuth: auth => dispatch(setAuth(auth)),
+    setCartProducts: cart => dispatch(setCartProducts(cart)),
+    setWishlistProducts: wishlist => dispatch(setWishlistProducts(wishlist))
 });
 
-const Logout = ({ isOpen, onClose, setAuth }) => {
+const Logout = ({
+    isOpen,
+    onClose,
+    setAuth,
+    setCartProducts,
+    setWishlistProducts
+}) => {
     const toast = useToast(DEFAULT_TOAST);
 
     const handleLogout = () => {
@@ -28,6 +36,17 @@ const Logout = ({ isOpen, onClose, setAuth }) => {
             .then(res => {
                 localStorage.removeItem("user");
                 setAuth({ logged_in: false, user: null });
+
+                if (localStorage.getItem("wishlist")) {
+                    const ps = JSON.parse(localStorage.getItem("wishlist"));
+                    setWishlistProducts(ps);
+                } else setWishlistProducts([]);
+
+                if (localStorage.getItem("cart")) {
+                    const stored = JSON.parse(localStorage.getItem("cart"));
+                    setCartProducts(stored);
+                } else setCartProducts([]);
+
                 toast({
                     title: "Logout success",
                     description: res.data.message,

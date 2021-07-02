@@ -41,21 +41,34 @@ import ProductCardColumn from "../../components/ProductCardColumn";
 import { connect } from "react-redux";
 import Report from "./Report";
 import axios from "axios";
-import {
-    apiClient,
-    getAvgReviews,
-    getFinalPrice,
-    getIdFromUrl
-} from "../../utilities";
+import { apiClient, getAvgReviews, getIdFromUrl } from "../../utilities";
 import { DEFAULT_TOAST } from "../../constants";
 import { useHistory } from "react-router-dom";
+import { addToCart } from "../../utilities/data";
+import { setCartProducts, setWishlistProducts } from "../../actions";
 
 const mapStateToProps = state => ({
     products: state.products,
-    auth: state.auth
+    auth: state.auth,
+    wishlist: state.wishlist,
+    cart: state.cart
 });
 
-const Product = ({ match, crumbs, products, auth }) => {
+const mapDispatchToProps = dispatch => ({
+    setCartProducts: cart => dispatch(setCartProducts(cart)),
+    setWishlistProducts: wishlist => dispatch(setWishlistProducts(wishlist))
+});
+
+const Product = ({
+    match,
+    crumbs,
+    products,
+    auth,
+    wishlist,
+    setWishlistProducts,
+    setCartProducts,
+    cart
+}) => {
     var history = useHistory();
     const toast = useToast(DEFAULT_TOAST);
     const [product, setProduct] = useState(null);
@@ -92,22 +105,8 @@ const Product = ({ match, crumbs, products, auth }) => {
     }, []);
 
     useEffect(() => {
-        if (product) {
-            if (auth.logged_in)
-                setInWishlist(
-                    product.wishlists.filter(w => w.user_id == auth.user.id)
-                        .length > 0
-                );
-            else
-                setInWishlist(
-                    localStorage.getItem("wishlist")
-                        ? JSON.parse(localStorage.getItem("wishlist")).includes(
-                              product.id
-                          )
-                        : false
-                );
-        }
-    }, [auth, product]);
+        if (product) setInWishlist(wishlist.includes(product.id));
+    }, [product, wishlist]);
 
     const addToWishlist = () => {
         if (product) {
@@ -120,6 +119,9 @@ const Product = ({ match, crumbs, products, auth }) => {
                                 product_id: product.id
                             })
                             .then(res => {
+                                setWishlistProducts([
+                                    ...new Set([product.id, ...wishlist])
+                                ]);
                                 setInWishlist(true);
                                 toast({
                                     title: "Added to wishlist",
@@ -150,124 +152,16 @@ const Product = ({ match, crumbs, products, auth }) => {
             else {
                 localStorage.setItem(
                     "wishlist",
-                    JSON.stringify([
-                        ...new Set([
-                            product.id,
-                            ...(localStorage.getItem("wishlist")
-                                ? JSON.parse(localStorage.getItem("wishlist"))
-                                : [])
-                        ])
-                    ])
+                    JSON.stringify([...new Set([product.id, ...wishlist])])
                 );
+                setWishlistProducts([...new Set([product.id, ...wishlist])]);
                 toast({
                     title: "Added to wishlist",
                     description:
                         "Product has been successfully added to wishlist!",
                     status: "success"
                 });
-                setInWishlist(
-                    localStorage.getItem("wishlist")
-                        ? JSON.parse(localStorage.getItem("wishlist")).includes(
-                              product.id
-                          )
-                        : false
-                );
-            }
-        }
-    };
-
-    const addToCart = () => {
-        if (product) {
-            if (auth.logged_in)
-                apiClient
-                    .get("/sanctum/csrf-cookie")
-                    .then(res =>
-                        apiClient
-                            .post("/api/cart/product/add", {
-                                product_id: product.id,
-                                qty: valueAsNumber,
-                                subtotal: getFinalPrice(product) * valueAsNumber
-                            })
-                            .then(res => {
-                                history.push("/cart");
-                                toast({
-                                    title: "Added to cart",
-                                    description:
-                                        "Product has been successfully added to cart!",
-                                    status: "success"
-                                });
-                            })
-                            .catch(err => {
-                                console.log(err.response);
-                                toast({
-                                    title: "Error",
-                                    description: err.response.data
-                                        ? err.response.data.message
-                                        : "Error occured! Please try again!",
-                                    status: "error"
-                                });
-                            })
-                    )
-                    .catch(err => {
-                        console.log(err);
-                        toast({
-                            title: "Error",
-                            description: "Error occured! Please try again!",
-                            status: "error"
-                        });
-                    });
-            else {
-                const stored = JSON.parse(localStorage.getItem("cart"));
-                if (localStorage.getItem("cart") && stored.length > 0) {
-                    if (stored.map(p => p.product_id).includes(product.id)) {
-                        const storedProduct = stored.filter(
-                            p => p.product_id === product.id
-                        )[0];
-                        localStorage.setItem(
-                            "cart",
-                            JSON.stringify([
-                                {
-                                    product_id: product.id,
-                                    qty: storedProduct.qty + valueAsNumber,
-                                    subtotal:
-                                        storedProduct.subtotal +
-                                        getFinalPrice(product) * valueAsNumber
-                                },
-                                ...stored.filter(
-                                    p => p.product_id !== product.id
-                                )
-                            ])
-                        );
-                    } else
-                        localStorage.setItem(
-                            "cart",
-                            JSON.stringify([
-                                {
-                                    product_id: product.id,
-                                    qty: valueAsNumber,
-                                    subtotal:
-                                        getFinalPrice(product) * valueAsNumber
-                                },
-                                ...stored
-                            ])
-                        );
-                } else
-                    localStorage.setItem(
-                        "cart",
-                        JSON.stringify([
-                            {
-                                product_id: product.id,
-                                qty: valueAsNumber,
-                                subtotal: getFinalPrice(product) * valueAsNumber
-                            }
-                        ])
-                    );
-                history.push("/cart");
-                toast({
-                    title: "Added to cart",
-                    description: "Product has been successfully added to cart!",
-                    status: "success"
-                });
+                setInWishlist(true);
             }
         }
     };
@@ -281,6 +175,9 @@ const Product = ({ match, crumbs, products, auth }) => {
                         apiClient
                             .delete(`/api/wishlist/product/${product.id}`)
                             .then(res => {
+                                setWishlistProducts(
+                                    wishlist.filter(id => id !== product.id)
+                                );
                                 setInWishlist(false);
                                 toast({
                                     title: "Removed",
@@ -294,12 +191,9 @@ const Product = ({ match, crumbs, products, auth }) => {
             else {
                 localStorage.setItem(
                     "wishlist",
-                    JSON.stringify(
-                        JSON.parse(localStorage.getItem("wishlist")).filter(
-                            id => id !== product.id
-                        )
-                    )
+                    JSON.stringify(wishlist.filter(id => id !== product.id))
                 );
+                setWishlistProducts(wishlist.filter(id => id !== product.id));
                 setInWishlist(false);
                 toast({
                     title: "Removed",
@@ -318,6 +212,52 @@ const Product = ({ match, crumbs, products, auth }) => {
                 description: "You need to be logged in to report a product",
                 status: "info"
             });
+    };
+
+    const onSuccess = id => {
+        history.push("/cart");
+        toast({
+            title: "Added to cart",
+            description: "Product has been successfully added to cart!",
+            status: "success"
+        });
+    };
+
+    const onSuccessBuy = id => {
+        history.push("/checkout");
+        toast({
+            title: "Added to cart",
+            description: "Product has been successfully added to cart!",
+            status: "success"
+        });
+    };
+
+    const onError = err => {
+        console.log(err);
+        toast({
+            title: "Error occurred",
+            description: err.response
+                ? err.response.data.message
+                : "Something wrong happened! Please try again!",
+            status: "error"
+        });
+    };
+
+    const logicError = () => {
+        toast({
+            title: "Error",
+            description:
+                "Maximum product qty limit exceeded in the cart i.e, 20!",
+            status: "error"
+        });
+    };
+
+    const maxOrderExceedError = (max_order, unit) => {
+        toast({
+            title: "Error",
+            description: `You can only buy ${max_order} ${unit}(s) in one slot!`,
+            status: "error"
+        });
     };
 
     return (
@@ -497,7 +437,19 @@ const Product = ({ match, crumbs, products, auth }) => {
                                                 color="#fff"
                                                 w="100%"
                                                 disabled={!product.qty}
-                                                onClick={addToCart}
+                                                onClick={() =>
+                                                    addToCart(
+                                                        product,
+                                                        auth,
+                                                        valueAsNumber,
+                                                        onSuccess,
+                                                        onError,
+                                                        logicError,
+                                                        setCartProducts,
+                                                        cart,
+                                                        maxOrderExceedError
+                                                    )
+                                                }
                                             >
                                                 Add To Cart
                                             </Button>
@@ -515,10 +467,19 @@ const Product = ({ match, crumbs, products, auth }) => {
                                                 bgColor: "#ca282d !important"
                                             }}
                                             disabled={!product.qty}
-                                            onClick={() => {
-                                                addToCart();
-                                                history.push("/checkout");
-                                            }}
+                                            onClick={() =>
+                                                addToCart(
+                                                    product,
+                                                    auth,
+                                                    valueAsNumber,
+                                                    onSuccessBuy,
+                                                    onError,
+                                                    logicError,
+                                                    setCartProducts,
+                                                    cart,
+                                                    maxOrderExceedError
+                                                )
+                                            }
                                         >
                                             Buy Now
                                         </Button>
@@ -698,4 +659,4 @@ const getRelatedProducts = (products, product) => {
     } else return [];
 };
 
-export default connect(mapStateToProps)(Product);
+export default connect(mapStateToProps, mapDispatchToProps)(Product);
