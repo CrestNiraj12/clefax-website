@@ -1,6 +1,6 @@
 import { apiClient, getFinalPrice } from ".";
 
-export const loadWishlist = (setWishlistProducts, onSuccess, onError) => {
+export const loadWishlist = (onSuccess, onError) => {
     if (
         localStorage.getItem("wishlist") &&
         JSON.parse(localStorage.getItem("wishlist")).length > 0
@@ -10,16 +10,8 @@ export const loadWishlist = (setWishlistProducts, onSuccess, onError) => {
                 products: JSON.parse(localStorage.getItem("wishlist"))
             })
             .then(res => {
-                apiClient
-                    .get("/api/wishlist")
-                    .then(res => {
-                        setWishlistProducts([
-                            ...new Set(res.data.map(p => p.product_id))
-                        ]);
-                        localStorage.removeItem("wishlist");
-                        onSuccess();
-                    })
-                    .catch(err => console.log(err));
+                localStorage.removeItem("wishlist");
+                onSuccess();
             })
             .catch(err => {
                 console.log(err);
@@ -28,7 +20,7 @@ export const loadWishlist = (setWishlistProducts, onSuccess, onError) => {
     else onSuccess();
 };
 
-export const loadCart = (setCartProducts, onSuccess, onError) => {
+export const loadCart = (onSuccess, onError) => {
     if (
         localStorage.getItem("cart") &&
         JSON.parse(localStorage.getItem("cart")).length > 0
@@ -38,25 +30,8 @@ export const loadCart = (setCartProducts, onSuccess, onError) => {
                 products: JSON.parse(localStorage.getItem("cart"))
             })
             .then(res => {
-                apiClient
-                    .get("/api/cart")
-                    .then(res => {
-                        setCartProducts(
-                            res.data.map(details => {
-                                return {
-                                    product_id: details.product_id,
-                                    qty: details.qty,
-                                    subtotal: details.subtotal
-                                };
-                            })
-                        );
-                        localStorage.removeItem("cart");
-                        onSuccess();
-                    })
-                    .catch(err => {
-                        console.log(err.response);
-                        onError(err);
-                    });
+                localStorage.removeItem("cart");
+                onSuccess();
             })
             .catch(err => {
                 console.log(err.response);
@@ -207,4 +182,51 @@ export const addToCart = (
             onSuccess(product.id);
         }
     }
+};
+
+export const handleOrder = (
+    { fullname, email, phone, street_no, address, date, collection_id },
+    total,
+    cart,
+    setAuth,
+    onSuccess,
+    onError,
+    data
+) => {
+    apiClient
+        .get("/sanctum/csrf-cookie")
+        .then(res =>
+            apiClient
+                .put("/api/user", {
+                    fullname,
+                    email,
+                    phone,
+                    street_no,
+                    address
+                })
+                .then(res => {
+                    setAuth({
+                        logged_in: true,
+                        user: res.data.user
+                    });
+                    localStorage.setItem("user", JSON.stringify(res.data.user));
+                    apiClient
+                        .post("/api/order", {
+                            date,
+                            collection_id,
+                            subtotal: total,
+                            total: total,
+                            products: cart
+                        })
+                        .then(res => {
+                            console.log(res);
+                            onSuccess(data, res.data.oid);
+                        })
+                        .catch(err => {
+                            onError(err);
+                        });
+                })
+                .catch(err => console.log(err))
+        )
+        .catch(err => console.log(err.response));
 };

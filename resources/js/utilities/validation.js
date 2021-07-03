@@ -51,6 +51,7 @@ export const validateForm = values => {
     if (!values.date) errors.date = "Collection date is required";
     if (!values.collection_id)
         errors.collection_id = "Collection slot is required";
+
     return errors;
 };
 
@@ -68,15 +69,24 @@ export const validateContactForm = values => {
     return errors;
 };
 
-export const isValidDate = date => {
+export const isValidDate = (date, slots) => {
     var dateObj = new Date();
     var month = dateObj.getUTCMonth();
     var day = dateObj.getUTCDate();
     var year = dateObj.getUTCFullYear();
     return (
         date >= new Date(year, month, day) &&
-        (date.getDay() == 3 || date.getDay() == 4 || date.getDay() == 5)
+        slots.some(slot => slot.days.includes(date.getDay()))
     );
+};
+
+export const isValidTime = (date, times, days) => {
+    if (!date) return true;
+    if (!days.includes(date.getDay())) return true;
+    const todayWith24hours = new Date();
+    todayWith24hours.setDate(todayWith24hours.getDate() + 1);
+    const selected = date.setHours(times[0]);
+    return todayWith24hours >= selected;
 };
 
 export const validateLogin = values => {

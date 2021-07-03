@@ -36034,6 +36034,764 @@ if(false) {}
 
 /***/ }),
 
+/***/ "./node_modules/@paypal/react-paypal-js/dist/esm/react-paypal-js.js":
+/*!**************************************************************************!*\
+  !*** ./node_modules/@paypal/react-paypal-js/dist/esm/react-paypal-js.js ***!
+  \**************************************************************************/
+/*! exports provided: FUNDING, PayPalButtons, PayPalMarks, PayPalMessages, PayPalScriptProvider, usePayPalScriptReducer */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "FUNDING", function() { return FUNDING; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PayPalButtons", function() { return PayPalButtons; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PayPalMarks", function() { return PayPalMarks; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PayPalMessages", function() { return PayPalMessages; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PayPalScriptProvider", function() { return PayPalScriptProvider; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "usePayPalScriptReducer", function() { return usePayPalScriptReducer; });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+/*!
+ * react-paypal-js v7.1.0 (2021-06-27T21:59:21.366Z)
+ * Copyright 2020-present, PayPal, Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+
+var _assign = function __assign() {
+  _assign = Object.assign || function __assign(t) {
+    for (var s, i = 1, n = arguments.length; i < n; i++) {
+      s = arguments[i];
+
+      for (var p in s) {
+        if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+      }
+    }
+
+    return t;
+  };
+
+  return _assign.apply(this, arguments);
+};
+
+function __rest(s, e) {
+  var t = {};
+
+  for (var p in s) {
+    if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0) t[p] = s[p];
+  }
+
+  if (s != null && typeof Object.getOwnPropertySymbols === "function") for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+    if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i])) t[p[i]] = s[p[i]];
+  }
+  return t;
+}
+
+function __spreadArray(to, from, pack) {
+  if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
+    if (ar || !(i in from)) {
+      if (!ar) ar = Array.prototype.slice.call(from, 0, i);
+      ar[i] = from[i];
+    }
+  }
+  return to.concat(ar || from);
+}
+
+function findScript(url, attributes) {
+  var currentScript = document.querySelector("script[src=\"" + url + "\"]");
+  if (currentScript === null) return null;
+  var nextScript = createScriptElement(url, attributes);
+  var currentScriptDataset = Object.assign({}, currentScript.dataset);
+  delete currentScriptDataset.uidAuto;
+
+  if (Object.keys(currentScriptDataset).length !== Object.keys(nextScript.dataset).length) {
+    return null;
+  }
+
+  var isExactMatch = true;
+  Object.keys(currentScriptDataset).forEach(function (key) {
+    if (currentScriptDataset[key] !== nextScript.dataset[key]) {
+      isExactMatch = false;
+    }
+  });
+  return isExactMatch ? currentScript : null;
+}
+
+function insertScriptElement(_a) {
+  var url = _a.url,
+      attributes = _a.attributes,
+      onSuccess = _a.onSuccess,
+      onError = _a.onError;
+  var newScript = createScriptElement(url, attributes);
+  newScript.onerror = onError;
+  newScript.onload = onSuccess;
+  document.head.insertBefore(newScript, document.head.firstElementChild);
+}
+
+function processOptions(options) {
+  var sdkBaseURL = "https://www.paypal.com/sdk/js";
+
+  if (options.sdkBaseURL) {
+    sdkBaseURL = options.sdkBaseURL;
+    delete options.sdkBaseURL;
+  }
+
+  var processedMerchantIDAttributes = processMerchantID(options["merchant-id"], options["data-merchant-id"]);
+  var newOptions = Object.assign({}, options, processedMerchantIDAttributes);
+
+  var _a = Object.keys(newOptions).filter(function (key) {
+    return typeof newOptions[key] !== "undefined" && newOptions[key] !== null && newOptions[key] !== "";
+  }).reduce(function (accumulator, key) {
+    var value = newOptions[key].toString();
+
+    if (key.substring(0, 5) === "data-") {
+      accumulator.dataAttributes[key] = value;
+    } else {
+      accumulator.queryParams[key] = value;
+    }
+
+    return accumulator;
+  }, {
+    queryParams: {},
+    dataAttributes: {}
+  }),
+      queryParams = _a.queryParams,
+      dataAttributes = _a.dataAttributes;
+
+  return {
+    url: sdkBaseURL + "?" + objectToQueryString(queryParams),
+    dataAttributes: dataAttributes
+  };
+}
+
+function objectToQueryString(params) {
+  var queryString = "";
+  Object.keys(params).forEach(function (key) {
+    if (queryString.length !== 0) queryString += "&";
+    queryString += key + "=" + params[key];
+  });
+  return queryString;
+}
+
+function createScriptElement(url, attributes) {
+  if (attributes === void 0) {
+    attributes = {};
+  }
+
+  var newScript = document.createElement("script");
+  newScript.src = url;
+  Object.keys(attributes).forEach(function (key) {
+    newScript.setAttribute(key, attributes[key]);
+
+    if (key === "data-csp-nonce") {
+      newScript.setAttribute("nonce", attributes["data-csp-nonce"]);
+    }
+  });
+  return newScript;
+}
+
+function processMerchantID(merchantID, dataMerchantID) {
+  var newMerchantID = "";
+  var newDataMerchantID = "";
+
+  if (Array.isArray(merchantID)) {
+    if (merchantID.length > 1) {
+      newMerchantID = "*";
+      newDataMerchantID = merchantID.toString();
+    } else {
+      newMerchantID = merchantID.toString();
+    }
+  } else if (typeof merchantID === "string" && merchantID.length > 0) {
+    newMerchantID = merchantID;
+  } else if (typeof dataMerchantID === "string" && dataMerchantID.length > 0) {
+    newMerchantID = "*";
+    newDataMerchantID = dataMerchantID;
+  }
+
+  return {
+    "merchant-id": newMerchantID,
+    "data-merchant-id": newDataMerchantID
+  };
+}
+
+function loadScript(options, PromisePonyfill) {
+  if (PromisePonyfill === void 0) {
+    PromisePonyfill = getDefaultPromiseImplementation();
+  }
+
+  validateArguments(options, PromisePonyfill);
+  if (typeof window === "undefined") return PromisePonyfill.resolve(null);
+
+  var _a = processOptions(options),
+      url = _a.url,
+      dataAttributes = _a.dataAttributes;
+
+  var namespace = dataAttributes["data-namespace"] || "paypal";
+  var existingWindowNamespace = getPayPalWindowNamespace$1(namespace);
+
+  if (findScript(url, dataAttributes) && existingWindowNamespace) {
+    return PromisePonyfill.resolve(existingWindowNamespace);
+  }
+
+  return loadCustomScript({
+    url: url,
+    attributes: dataAttributes
+  }, PromisePonyfill).then(function () {
+    var newWindowNamespace = getPayPalWindowNamespace$1(namespace);
+
+    if (newWindowNamespace) {
+      return newWindowNamespace;
+    }
+
+    throw new Error("The window." + namespace + " global variable is not available.");
+  });
+}
+
+function loadCustomScript(options, PromisePonyfill) {
+  if (PromisePonyfill === void 0) {
+    PromisePonyfill = getDefaultPromiseImplementation();
+  }
+
+  validateArguments(options, PromisePonyfill);
+  var url = options.url,
+      attributes = options.attributes;
+
+  if (typeof url !== "string" || url.length === 0) {
+    throw new Error("Invalid url.");
+  }
+
+  if (typeof attributes !== "undefined" && _typeof(attributes) !== "object") {
+    throw new Error("Expected attributes to be an object.");
+  }
+
+  return new PromisePonyfill(function (resolve, reject) {
+    if (typeof window === "undefined") return resolve();
+    insertScriptElement({
+      url: url,
+      attributes: attributes,
+      onSuccess: function onSuccess() {
+        return resolve();
+      },
+      onError: function onError() {
+        return reject(new Error("The script \"" + url + "\" failed to load."));
+      }
+    });
+  });
+}
+
+function getDefaultPromiseImplementation() {
+  if (typeof Promise === "undefined") {
+    throw new Error("Promise is undefined. To resolve the issue, use a Promise polyfill.");
+  }
+
+  return Promise;
+}
+
+function getPayPalWindowNamespace$1(namespace) {
+  return window[namespace];
+}
+
+function validateArguments(options, PromisePonyfill) {
+  if (_typeof(options) !== "object" || options === null) {
+    throw new Error("Expected an options object.");
+  }
+
+  if (typeof PromisePonyfill !== "undefined" && typeof PromisePonyfill !== "function") {
+    throw new Error("Expected PromisePonyfill to be a function.");
+  }
+}
+
+var SCRIPT_LOADING_STATE = {
+  INITIAL: "initial",
+  PENDING: "pending",
+  REJECTED: "rejected",
+  RESOLVED: "resolved"
+};
+var ScriptContext = Object(react__WEBPACK_IMPORTED_MODULE_0__["createContext"])(null);
+var ScriptDispatchContext = Object(react__WEBPACK_IMPORTED_MODULE_0__["createContext"])(null);
+
+function scriptReducer(state, action) {
+  switch (action.type) {
+    case "setLoadingStatus":
+      return {
+        options: _assign({}, state.options),
+        loadingStatus: action.value
+      };
+
+    case "resetOptions":
+      // destroy existing script to make sure only one script loads at a time
+      destroySDKScript(state.options["data-react-paypal-script-id"]);
+      return {
+        loadingStatus: SCRIPT_LOADING_STATE.PENDING,
+        options: _assign(_assign({}, action.value), {
+          "data-react-paypal-script-id": "" + getNewScriptID()
+        })
+      };
+
+    default:
+      {
+        return state;
+      }
+  }
+}
+
+function getNewScriptID() {
+  return "react-paypal-js-" + Math.random().toString(36).substring(7);
+}
+
+function destroySDKScript(reactPayPalScriptID) {
+  var scriptNode = document.querySelector("script[data-react-paypal-script-id=\"" + reactPayPalScriptID + "\"]");
+  if (scriptNode === null) return;
+
+  if (scriptNode.parentNode) {
+    scriptNode.parentNode.removeChild(scriptNode);
+  }
+}
+
+function usePayPalScriptReducer() {
+  var scriptContext = Object(react__WEBPACK_IMPORTED_MODULE_0__["useContext"])(ScriptContext);
+  var dispatchContext = Object(react__WEBPACK_IMPORTED_MODULE_0__["useContext"])(ScriptDispatchContext);
+
+  if (scriptContext === null || dispatchContext === null) {
+    throw new Error("usePayPalScriptReducer must be used within a PayPalScriptProvider");
+  }
+
+  var loadingStatus = scriptContext.loadingStatus,
+      restScriptContext = __rest(scriptContext, ["loadingStatus"]);
+
+  var derivedStatusContext = _assign(_assign({}, restScriptContext), {
+    isInitial: loadingStatus === SCRIPT_LOADING_STATE.INITIAL,
+    isPending: loadingStatus === SCRIPT_LOADING_STATE.PENDING,
+    isResolved: loadingStatus === SCRIPT_LOADING_STATE.RESOLVED,
+    isRejected: loadingStatus === SCRIPT_LOADING_STATE.REJECTED
+  });
+
+  return [derivedStatusContext, dispatchContext];
+}
+
+var PayPalScriptProvider = function PayPalScriptProvider(_a) {
+  var options = _a.options,
+      children = _a.children,
+      _b = _a.deferLoading,
+      deferLoading = _b === void 0 ? false : _b;
+  var initialState = {
+    options: _assign(_assign({}, options), {
+      "data-react-paypal-script-id": "" + getNewScriptID()
+    }),
+    loadingStatus: deferLoading ? SCRIPT_LOADING_STATE.INITIAL : SCRIPT_LOADING_STATE.PENDING
+  };
+
+  var _c = Object(react__WEBPACK_IMPORTED_MODULE_0__["useReducer"])(scriptReducer, initialState),
+      state = _c[0],
+      dispatch = _c[1];
+
+  Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
+    if (deferLoading === false && state.loadingStatus === SCRIPT_LOADING_STATE.INITIAL) {
+      return dispatch({
+        type: "setLoadingStatus",
+        value: SCRIPT_LOADING_STATE.PENDING
+      });
+    }
+
+    if (state.loadingStatus !== SCRIPT_LOADING_STATE.PENDING) return;
+    var isSubscribed = true;
+    loadScript(state.options).then(function () {
+      if (isSubscribed) {
+        dispatch({
+          type: "setLoadingStatus",
+          value: SCRIPT_LOADING_STATE.RESOLVED
+        });
+      }
+    })["catch"](function () {
+      if (isSubscribed) {
+        dispatch({
+          type: "setLoadingStatus",
+          value: SCRIPT_LOADING_STATE.REJECTED
+        });
+      }
+    });
+    return function () {
+      isSubscribed = false;
+    };
+  }, [options, deferLoading, state.loadingStatus]);
+  return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(ScriptContext.Provider, {
+    value: state
+  }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(ScriptDispatchContext.Provider, {
+    value: dispatch
+  }, children));
+};
+
+var DEFAULT_PAYPAL_NAMESPACE = "paypal";
+
+function getPayPalWindowNamespace(namespace) {
+  if (namespace === void 0) {
+    namespace = DEFAULT_PAYPAL_NAMESPACE;
+  } // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
+
+  return window[namespace];
+}
+/**
+ * This `<PayPalButtons />` component renders the [Smart Payment Buttons](https://developer.paypal.com/docs/business/javascript-sdk/javascript-sdk-reference/#buttons).
+ * It relies on the `<PayPalScriptProvider />` parent component for managing state related to loading the JS SDK script.
+ *
+ * Use props for customizing your buttons. For example, here's how you would use the `style` and `createOrder` options:
+ *
+ * ```jsx
+ *     <PayPalButtons style={{ layout: "vertical" }} createOrder={(data, actions) => {}} />
+ * ```
+ */
+
+
+var PayPalButtons = function PayPalButtons(_a) {
+  var _b = _a.className,
+      className = _b === void 0 ? "" : _b,
+      _c = _a.disabled,
+      disabled = _c === void 0 ? false : _c,
+      _d = _a.children,
+      children = _d === void 0 ? null : _d,
+      _e = _a.forceReRender,
+      forceReRender = _e === void 0 ? [] : _e,
+      buttonProps = __rest(_a, ["className", "disabled", "children", "forceReRender"]);
+
+  var buttonsContainerRef = Object(react__WEBPACK_IMPORTED_MODULE_0__["useRef"])(null);
+  var buttons = Object(react__WEBPACK_IMPORTED_MODULE_0__["useRef"])(null);
+  var _f = usePayPalScriptReducer()[0],
+      isResolved = _f.isResolved,
+      options = _f.options;
+
+  var _g = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(null),
+      initActions = _g[0],
+      setInitActions = _g[1];
+
+  var _h = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(true),
+      isEligible = _h[0],
+      setIsEligible = _h[1];
+
+  var _j = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(null),
+      setErrorState = _j[1];
+
+  function closeButtonsComponent() {
+    if (buttons.current !== null) {
+      buttons.current.close()["catch"](function () {// ignore errors when closing the component
+      });
+    }
+  } // useEffect hook for rendering the buttons
+
+
+  Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
+    // verify the sdk script has successfully loaded
+    if (isResolved === false) {
+      return closeButtonsComponent;
+    }
+
+    var paypalWindowNamespace = getPayPalWindowNamespace(options["data-namespace"]); // verify dependency on window object
+
+    if (paypalWindowNamespace === undefined || paypalWindowNamespace.Buttons === undefined) {
+      setErrorState(function () {
+        throw new Error(getErrorMessage$2(options));
+      });
+      return closeButtonsComponent;
+    }
+
+    var decoratedOnInit = function decoratedOnInit(data, actions) {
+      setInitActions(actions);
+
+      if (typeof buttonProps.onInit === "function") {
+        buttonProps.onInit(data, actions);
+      }
+    };
+
+    buttons.current = paypalWindowNamespace.Buttons(_assign(_assign({}, buttonProps), {
+      onInit: decoratedOnInit
+    })); // only render the button when eligible
+
+    if (buttons.current.isEligible() === false) {
+      setIsEligible(false);
+      return closeButtonsComponent;
+    }
+
+    if (buttonsContainerRef.current === null) {
+      return closeButtonsComponent;
+    }
+
+    buttons.current.render(buttonsContainerRef.current)["catch"](function (err) {
+      // component failed to render, possibly because it was closed or destroyed.
+      if (buttonsContainerRef.current === null || buttonsContainerRef.current.children.length === 0) {
+        // paypal buttons container is no longer in the DOM, we can safely ignore the error
+        return;
+      } // paypal buttons container is still in the DOM
+
+
+      setErrorState(function () {
+        throw new Error("Failed to render <PayPalButtons /> component. " + err);
+      });
+    });
+    return closeButtonsComponent;
+  }, __spreadArray(__spreadArray([isResolved], forceReRender), [buttonProps.fundingSource])); // useEffect hook for managing disabled state
+
+  Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
+    if (initActions === null) {
+      return;
+    }
+
+    if (disabled === true) {
+      initActions.disable()["catch"](function () {// ignore errors when disabling the component
+      });
+    } else {
+      initActions.enable()["catch"](function () {// ignore errors when enabling the component
+      });
+    }
+  }, [disabled, initActions]);
+  var isDisabledStyle = disabled ? {
+    opacity: 0.33
+  } : {};
+  var classNames = (className + " " + (disabled ? "paypal-buttons-disabled" : "")).trim();
+
+  if (isEligible === false) {
+    return children;
+  }
+
+  return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    ref: buttonsContainerRef,
+    style: isDisabledStyle,
+    className: classNames
+  });
+};
+
+function getErrorMessage$2(_a) {
+  var _b = _a.components,
+      components = _b === void 0 ? "" : _b,
+      _c = _a["data-namespace"],
+      dataNamespace = _c === void 0 ? DEFAULT_PAYPAL_NAMESPACE : _c;
+  var errorMessage = "Unable to render <PayPalButtons /> because window." + dataNamespace + ".Buttons is undefined."; // the JS SDK includes the Buttons component by default when no 'components' are specified.
+  // The 'buttons' component must be included in the 'components' list when using it with other components.
+
+  if (components.length && !components.includes("buttons")) {
+    var expectedComponents = components + ",buttons";
+    errorMessage += "\nTo fix the issue, add 'buttons' to the list of components passed to the parent PayPalScriptProvider:" + ("\n`<PayPalScriptProvider options={{ components: '" + expectedComponents + "'}}>`.");
+  }
+
+  return errorMessage;
+}
+/**
+ * The `<PayPalMarks />` component is used for conditionally rendering different payment options using radio buttons.
+ * The [Display PayPal Buttons with other Payment Methods guide](https://developer.paypal.com/docs/business/checkout/add-capabilities/buyer-experience/#display-paypal-buttons-with-other-payment-methods) describes this style of integration in detail.
+ * It relies on the `<PayPalScriptProvider />` parent component for managing state related to loading the JS SDK script.
+ *
+ * ```jsx
+ *     <PayPalMarks />
+ * ```
+ *
+ * This component can also be configured to use a single funding source similar to the [standalone buttons](https://developer.paypal.com/docs/business/checkout/configure-payments/standalone-buttons/) approach.
+ * A `FUNDING` object is exported by this library which has a key for every available funding source option.
+ *
+ * ```js
+ *     import { FUNDING } from '@paypal/react-paypal-js'
+ * ```
+ *
+ * Use this `FUNDING` constant to set the `fundingSource` prop.
+ *
+ * ```jsx
+ *     <PayPalMarks fundingSource={FUNDING.PAYPAL}/>
+ * ```
+ */
+
+
+var PayPalMarks = function PayPalMarks(_a) {
+  var _b = _a.className,
+      className = _b === void 0 ? "" : _b,
+      markProps = __rest(_a, ["className"]);
+
+  var _c = usePayPalScriptReducer()[0],
+      isResolved = _c.isResolved,
+      options = _c.options;
+  var markContainerRef = Object(react__WEBPACK_IMPORTED_MODULE_0__["useRef"])(null);
+  var mark = Object(react__WEBPACK_IMPORTED_MODULE_0__["useRef"])(null);
+
+  var _d = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(null),
+      setErrorState = _d[1];
+
+  Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
+    // verify the sdk script has successfully loaded
+    if (isResolved === false) {
+      return;
+    } // don't rerender when already rendered
+
+
+    if (mark.current !== null) {
+      return;
+    }
+
+    var paypalWindowNamespace = getPayPalWindowNamespace(options["data-namespace"]); // verify dependency on window object
+
+    if (paypalWindowNamespace === undefined || paypalWindowNamespace.Marks === undefined) {
+      setErrorState(function () {
+        throw new Error(getErrorMessage$1(options));
+      });
+      return;
+    }
+
+    mark.current = paypalWindowNamespace.Marks(_assign({}, markProps)); // only render the mark when eligible
+
+    if (mark.current.isEligible() === false) {
+      return;
+    }
+
+    if (markContainerRef.current === null) {
+      return;
+    }
+
+    mark.current.render(markContainerRef.current)["catch"](function (err) {
+      // component failed to render, possibly because it was closed or destroyed.
+      if (markContainerRef.current === null || markContainerRef.current.children.length === 0) {
+        // paypal marks container is no longer in the DOM, we can safely ignore the error
+        return;
+      } // paypal marks container is still in the DOM
+
+
+      setErrorState(function () {
+        throw new Error("Failed to render <PayPalMarks /> component. " + err);
+      });
+    });
+  }, [isResolved, markProps.fundingSource]);
+  return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    ref: markContainerRef,
+    className: className
+  });
+};
+
+function getErrorMessage$1(_a) {
+  var _b = _a.components,
+      components = _b === void 0 ? "" : _b,
+      _c = _a["data-namespace"],
+      dataNamespace = _c === void 0 ? DEFAULT_PAYPAL_NAMESPACE : _c;
+  var errorMessage = "Unable to render <PayPalMarks /> because window." + dataNamespace + ".Marks is undefined."; // the JS SDK does not load the Marks component by default. It must be passed into the "components" query parameter.
+
+  if (!components.includes("marks")) {
+    var expectedComponents = components ? components + ",marks" : "marks";
+    errorMessage += "\nTo fix the issue, add 'marks' to the list of components passed to the parent PayPalScriptProvider:" + ("\n`<PayPalScriptProvider options={{ components: '" + expectedComponents + "'}}>`.");
+  }
+
+  return errorMessage;
+}
+
+var PayPalMessages = function PayPalMessages(_a) {
+  var _b = _a.className,
+      className = _b === void 0 ? "" : _b,
+      _c = _a.forceReRender,
+      forceReRender = _c === void 0 ? [] : _c,
+      messageProps = __rest(_a, ["className", "forceReRender"]);
+
+  var _d = usePayPalScriptReducer()[0],
+      isResolved = _d.isResolved,
+      options = _d.options;
+  var messagesContainerRef = Object(react__WEBPACK_IMPORTED_MODULE_0__["useRef"])(null);
+  var messages = Object(react__WEBPACK_IMPORTED_MODULE_0__["useRef"])(null);
+
+  var _e = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(null),
+      setErrorState = _e[1];
+
+  Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
+    // verify the sdk script has successfully loaded
+    if (isResolved === false) {
+      return;
+    }
+
+    var paypalWindowNamespace = getPayPalWindowNamespace(options["data-namespace"]); // verify dependency on window object
+
+    if (paypalWindowNamespace === undefined || paypalWindowNamespace.Messages === undefined) {
+      setErrorState(function () {
+        throw new Error(getErrorMessage(options));
+      });
+      return;
+    }
+
+    messages.current = paypalWindowNamespace.Messages(_assign({}, messageProps));
+
+    if (messagesContainerRef.current === null) {
+      return;
+    }
+
+    messages.current.render(messagesContainerRef.current)["catch"](function (err) {
+      // component failed to render, possibly because it was closed or destroyed.
+      if (messagesContainerRef.current === null || messagesContainerRef.current.children.length === 0) {
+        // paypal messages container is no longer in the DOM, we can safely ignore the error
+        return;
+      } // paypal messages container is still in the DOM
+
+
+      setErrorState(function () {
+        throw new Error("Failed to render <PayPalMessages /> component. " + err);
+      });
+    });
+  }, __spreadArray([isResolved], forceReRender));
+  return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    ref: messagesContainerRef,
+    className: className
+  });
+};
+
+function getErrorMessage(_a) {
+  var _b = _a.components,
+      components = _b === void 0 ? "" : _b,
+      _c = _a["data-namespace"],
+      dataNamespace = _c === void 0 ? DEFAULT_PAYPAL_NAMESPACE : _c;
+  var errorMessage = "Unable to render <PayPalMessages /> because window." + dataNamespace + ".Messages is undefined."; // the JS SDK does not load the Messages component by default. It must be passed into the "components" query parameter.
+
+  if (!components.includes("messages")) {
+    var expectedComponents = components ? components + ",messages" : "messages";
+    errorMessage += "\nTo fix the issue, add 'messages' to the list of components passed to the parent PayPalScriptProvider:" + ("\n`<PayPalScriptProvider options={{ components: '" + expectedComponents + "'}}>`.");
+  }
+
+  return errorMessage;
+}
+
+var FUNDING = {
+  PAYPAL: 'paypal',
+  VENMO: 'venmo',
+  APPLEPAY: 'applepay',
+  ITAU: 'itau',
+  CREDIT: 'credit',
+  PAYLATER: 'paylater',
+  CARD: 'card',
+  IDEAL: 'ideal',
+  SEPA: 'sepa',
+  BANCONTACT: 'bancontact',
+  GIROPAY: 'giropay',
+  SOFORT: 'sofort',
+  EPS: 'eps',
+  MYBANK: 'mybank',
+  P24: 'p24',
+  VERKKOPANKKI: 'verkkopankki',
+  PAYU: 'payu',
+  BLIK: 'blik',
+  TRUSTLY: 'trustly',
+  ZIMPLER: 'zimpler',
+  MAXIMA: 'maxima',
+  OXXO: 'oxxo',
+  BOLETO: 'boleto',
+  WECHATPAY: 'wechatpay',
+  MERCADOPAGO: 'mercadopago'
+};
+
+
+
+/***/ }),
+
 /***/ "./node_modules/@popperjs/core/lib/dom-utils/contains.js":
 /*!***************************************************************!*\
   !*** ./node_modules/@popperjs/core/lib/dom-utils/contains.js ***!
@@ -39933,6 +40691,149 @@ if (true) {
 } ////////////////////////////////////////////////////////////////////////////////
 
 /* harmony default export */ __webpack_exports__["default"] = (VisuallyHidden);
+
+
+
+/***/ }),
+
+/***/ "./node_modules/@stripe/stripe-js/dist/stripe.esm.js":
+/*!***********************************************************!*\
+  !*** ./node_modules/@stripe/stripe-js/dist/stripe.esm.js ***!
+  \***********************************************************/
+/*! exports provided: loadStripe */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "loadStripe", function() { return loadStripe; });
+var V3_URL = 'https://js.stripe.com/v3';
+var V3_URL_REGEX = /^https:\/\/js\.stripe\.com\/v3\/?(\?.*)?$/;
+var EXISTING_SCRIPT_MESSAGE = 'loadStripe.setLoadParameters was called but an existing Stripe.js script already exists in the document; existing script parameters will be used';
+var findScript = function findScript() {
+  var scripts = document.querySelectorAll("script[src^=\"".concat(V3_URL, "\"]"));
+
+  for (var i = 0; i < scripts.length; i++) {
+    var script = scripts[i];
+
+    if (!V3_URL_REGEX.test(script.src)) {
+      continue;
+    }
+
+    return script;
+  }
+
+  return null;
+};
+
+var injectScript = function injectScript(params) {
+  var queryString = params && !params.advancedFraudSignals ? '?advancedFraudSignals=false' : '';
+  var script = document.createElement('script');
+  script.src = "".concat(V3_URL).concat(queryString);
+  var headOrBody = document.head || document.body;
+
+  if (!headOrBody) {
+    throw new Error('Expected document.body not to be null. Stripe.js requires a <body> element.');
+  }
+
+  headOrBody.appendChild(script);
+  return script;
+};
+
+var registerWrapper = function registerWrapper(stripe, startTime) {
+  if (!stripe || !stripe._registerWrapper) {
+    return;
+  }
+
+  stripe._registerWrapper({
+    name: 'stripe-js',
+    version: "1.15.1",
+    startTime: startTime
+  });
+};
+
+var stripePromise = null;
+var loadScript = function loadScript(params) {
+  // Ensure that we only attempt to load Stripe.js at most once
+  if (stripePromise !== null) {
+    return stripePromise;
+  }
+
+  stripePromise = new Promise(function (resolve, reject) {
+    if (typeof window === 'undefined') {
+      // Resolve to null when imported server side. This makes the module
+      // safe to import in an isomorphic code base.
+      resolve(null);
+      return;
+    }
+
+    if (window.Stripe && params) {
+      console.warn(EXISTING_SCRIPT_MESSAGE);
+    }
+
+    if (window.Stripe) {
+      resolve(window.Stripe);
+      return;
+    }
+
+    try {
+      var script = findScript();
+
+      if (script && params) {
+        console.warn(EXISTING_SCRIPT_MESSAGE);
+      } else if (!script) {
+        script = injectScript(params);
+      }
+
+      script.addEventListener('load', function () {
+        if (window.Stripe) {
+          resolve(window.Stripe);
+        } else {
+          reject(new Error('Stripe.js not available'));
+        }
+      });
+      script.addEventListener('error', function () {
+        reject(new Error('Failed to load Stripe.js'));
+      });
+    } catch (error) {
+      reject(error);
+      return;
+    }
+  });
+  return stripePromise;
+};
+var initStripe = function initStripe(maybeStripe, args, startTime) {
+  if (maybeStripe === null) {
+    return null;
+  }
+
+  var stripe = maybeStripe.apply(undefined, args);
+  registerWrapper(stripe, startTime);
+  return stripe;
+};
+
+// own script injection.
+
+var stripePromise$1 = Promise.resolve().then(function () {
+  return loadScript(null);
+});
+var loadCalled = false;
+stripePromise$1["catch"](function (err) {
+  if (!loadCalled) {
+    console.warn(err);
+  }
+});
+var loadStripe = function loadStripe() {
+  for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+    args[_key] = arguments[_key];
+  }
+
+  loadCalled = true;
+  var startTime = Date.now();
+  return stripePromise$1.then(function (maybeStripe) {
+    return initStripe(maybeStripe, args, startTime);
+  });
+};
+
 
 
 
@@ -204667,6 +205568,17 @@ module.exports = "/images/shopping.png?5305487737e6f5203dcf583e740d4b5c";
 
 /***/ }),
 
+/***/ "./resources/images/stripe-logo.png":
+/*!******************************************!*\
+  !*** ./resources/images/stripe-logo.png ***!
+  \******************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "/images/stripe-logo.png?539e7078324d621b2fa07f0943fbc9f2";
+
+/***/ }),
+
 /***/ "./resources/images/stripe.png":
 /*!*************************************!*\
   !*** ./resources/images/stripe.png ***!
@@ -206424,6 +207336,92 @@ var Navbar = function Navbar(_ref) {
 
 /***/ }),
 
+/***/ "./resources/js/components/PaypalButtonsCustomized/index.js":
+/*!******************************************************************!*\
+  !*** ./resources/js/components/PaypalButtonsCustomized/index.js ***!
+  \******************************************************************/
+/*! exports provided: PaypalButtonsCustomized */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PaypalButtonsCustomized", function() { return PaypalButtonsCustomized; });
+/* harmony import */ var _paypal_react_paypal_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @paypal/react-paypal-js */ "./node_modules/@paypal/react-paypal-js/dist/esm/react-paypal-js.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _iterableToArrayLimit(arr, i) { var _i = arr && (typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"]); if (_i == null) return; var _arr = []; var _n = true; var _d = false; var _s, _e; try { for (_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+
+
+var PaypalButtonsCustomized = function PaypalButtonsCustomized(_ref) {
+  var _createOrder = _ref.createOrder,
+      _onApprove = _ref.onApprove,
+      _onCancel = _ref.onCancel,
+      PAYPAL_CLIENT_ID = _ref.PAYPAL_CLIENT_ID;
+
+  var _usePayPalScriptReduc = Object(_paypal_react_paypal_js__WEBPACK_IMPORTED_MODULE_0__["usePayPalScriptReducer"])(),
+      _usePayPalScriptReduc2 = _slicedToArray(_usePayPalScriptReduc, 2),
+      isPending = _usePayPalScriptReduc2[0].isPending,
+      dispatch = _usePayPalScriptReduc2[1];
+
+  Object(react__WEBPACK_IMPORTED_MODULE_1__["useEffect"])(function () {
+    var scriptProviderOptions = {
+      "client-id": PAYPAL_CLIENT_ID
+    };
+    dispatch({
+      type: "resetOptions",
+      value: _objectSpread(_objectSpread({}, scriptProviderOptions), {}, {
+        "data-order-id": Date.now()
+      })
+    });
+  }, [dispatch]);
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_1___default.a.Fragment, null, isPending ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
+    className: "spinner-border",
+    role: "status"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("span", {
+    className: "sr-only"
+  }, "Loading...")) : null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_paypal_react_paypal_js__WEBPACK_IMPORTED_MODULE_0__["PayPalButtons"], {
+    style: {
+      color: "black",
+      shape: "rect",
+      layout: "vertical",
+      label: "pay",
+      height: 35,
+      width: "100%"
+    },
+    createOrder: function createOrder(data, actions) {
+      return _createOrder(data, actions);
+    },
+    onApprove: function onApprove(data, actions) {
+      return _onApprove(data, actions);
+    },
+    onCancel: function onCancel() {
+      return _onCancel();
+    },
+    onError: function onError(err) {
+      return console.log(err);
+    }
+  }));
+};
+
+/***/ }),
+
 /***/ "./resources/js/components/PriceRange/index.js":
 /*!*****************************************************!*\
   !*** ./resources/js/components/PriceRange/index.js ***!
@@ -207578,15 +208576,18 @@ var details = [{
 }, {
   name: "address",
   label: "Address"
+}, {
+  name: "street_no",
+  label: "Street Address"
 }];
 var passwords = [{
-  name: "old_password",
+  name: "password",
   label: "Current Password (Leave blank to leave unchanged)"
 }, {
-  name: "password",
+  name: "new_password",
   label: "New Password"
 }, {
-  name: "password_confirmation",
+  name: "new_password_confirmation",
   label: "Confirm Password"
 }];
 
@@ -207601,9 +208602,9 @@ var Details = function Details(_ref) {
   var toast = Object(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_4__["useToast"])();
 
   var _useState = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])({
-    old_password: false,
     password: false,
-    password_confirmation: false
+    new_password: false,
+    new_password_confirmation: false
   }),
       _useState2 = _slicedToArray(_useState, 2),
       show = _useState2[0],
@@ -207616,12 +208617,13 @@ var Details = function Details(_ref) {
       fullname: auth.user.fullname,
       email: auth.user.email,
       phone: auth.user.phone,
+      street_no: auth.user.street_no,
       address: auth.user.address,
       dob: new Date(auth.user.dob).toISOString().substr(0, 10),
       gender: auth.user.gender,
-      old_password: "",
       password: "",
-      password_confirmation: ""
+      new_password: "",
+      new_password_confirmation: ""
     },
     onSubmit: function onSubmit(values, actions) {
       setTimeout(function () {
@@ -208520,7 +209522,24 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../constants */ "./resources/js/constants.js");
 /* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
 /* harmony import */ var _utilities__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../../utilities */ "./resources/js/utilities/index.js");
+/* harmony import */ var _actions__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../../actions */ "./resources/js/actions/index.js");
+/* harmony import */ var _paypal_react_paypal_js__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! @paypal/react-paypal-js */ "./node_modules/@paypal/react-paypal-js/dist/esm/react-paypal-js.js");
+/* harmony import */ var _components_PaypalButtonsCustomized__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ../../components/PaypalButtonsCustomized */ "./resources/js/components/PaypalButtonsCustomized/index.js");
+/* harmony import */ var _utilities_data__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ../../utilities/data */ "./resources/js/utilities/data.js");
+/* harmony import */ var _images_stripe_logo_png__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ../../../images/stripe-logo.png */ "./resources/images/stripe-logo.png");
+/* harmony import */ var _images_stripe_logo_png__WEBPACK_IMPORTED_MODULE_15___default = /*#__PURE__*/__webpack_require__.n(_images_stripe_logo_png__WEBPACK_IMPORTED_MODULE_15__);
+/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
+/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_16___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_16__);
+/* harmony import */ var query_string__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! query-string */ "./node_modules/query-string/index.js");
+/* harmony import */ var query_string__WEBPACK_IMPORTED_MODULE_17___default = /*#__PURE__*/__webpack_require__.n(query_string__WEBPACK_IMPORTED_MODULE_17__);
+/* harmony import */ var _utilities_payment__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ../../utilities/payment */ "./resources/js/utilities/payment.js");
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
@@ -208547,14 +209566,36 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 
+
+
+
+
+
+
+
+
 var mapStateToProps = function mapStateToProps(state) {
   return {
-    products: state.products
+    products: state.products,
+    auth: state.auth
   };
 };
 
+var mapDispatchToProps = function mapDispatchToProps(dispatch) {
+  return {
+    setAuth: function setAuth(auth) {
+      return dispatch(Object(_actions__WEBPACK_IMPORTED_MODULE_11__["setAuth"])(auth));
+    }
+  };
+};
+
+var PAYPAL_CLIENT_ID = "Afo43y2a3cMuCtXS2fIBPxPyVOgn15xgw5lcYpvhJEgBlzdqZ_KprI9xxVBHsXgB6N5FqSctDNNNpVeR";
+
 var Checkout = function Checkout(_ref) {
-  var crumbs = _ref.crumbs;
+  var crumbs = _ref.crumbs,
+      auth = _ref.auth,
+      setAuth = _ref.setAuth,
+      products = _ref.products;
   var history = Object(react_router_dom__WEBPACK_IMPORTED_MODULE_7__["useHistory"])();
   var toast = Object(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["useToast"])(_constants__WEBPACK_IMPORTED_MODULE_8__["DEFAULT_TOAST"]);
 
@@ -208568,6 +209609,32 @@ var Checkout = function Checkout(_ref) {
       cart = _useState4[0],
       setCart = _useState4[1];
 
+  var _useState5 = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])([]),
+      _useState6 = _slicedToArray(_useState5, 2),
+      slots = _useState6[0],
+      setSlots = _useState6[1];
+
+  var _useState7 = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])(null),
+      _useState8 = _slicedToArray(_useState7, 2),
+      total = _useState8[0],
+      setTotal = _useState8[1];
+
+  var formRef = Object(react__WEBPACK_IMPORTED_MODULE_1__["useRef"])();
+
+  var _useState9 = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])("1"),
+      _useState10 = _slicedToArray(_useState9, 2),
+      value = _useState10[0],
+      setValue = _useState10[1];
+
+  var _useState11 = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])(false),
+      _useState12 = _slicedToArray(_useState11, 2),
+      btnLoading = _useState12[0],
+      setBtnLoading = _useState12[1];
+
+  Object(react__WEBPACK_IMPORTED_MODULE_1__["useEffect"])(function () {
+    var query = query_string__WEBPACK_IMPORTED_MODULE_17___default.a.parse(location.search);
+    if (query.cancelled === "1") onCancel();
+  }, []);
   Object(react__WEBPACK_IMPORTED_MODULE_1__["useEffect"])(function () {
     setLoading(true);
     _utilities__WEBPACK_IMPORTED_MODULE_10__["apiClient"].get("/sanctum/csrf-cookie").then(function (res) {
@@ -208582,7 +209649,23 @@ var Checkout = function Checkout(_ref) {
         }
 
         setCart(res.data);
-        setLoading(false);
+        _utilities__WEBPACK_IMPORTED_MODULE_10__["apiClient"].get("/api/slots").then(function (res) {
+          var formattedSlots = [];
+          if (res.data.length > 0) res.data.map(function (s) {
+            formattedSlots.push(_objectSpread(_objectSpread({}, s), {}, {
+              times: s.times.split(",").map(function (t) {
+                return Number(t.trim());
+              }),
+              days: s.days.split(",").map(function (t) {
+                return Number(t.trim());
+              })
+            }));
+          });
+          setSlots(formattedSlots);
+          setLoading(false);
+        })["catch"](function (err) {
+          return console.log(err);
+        });
       })["catch"](function (err) {
         return console.log(err);
       });
@@ -208601,6 +209684,108 @@ var Checkout = function Checkout(_ref) {
       status: "info"
     });
   }, []);
+  Object(react__WEBPACK_IMPORTED_MODULE_1__["useEffect"])(function () {
+    setTotal(cart.map(function (p) {
+      return p.subtotal;
+    }).reduce(function (a, b) {
+      return a + b;
+    }, 0));
+  }, [cart]);
+
+  var onApprove = function onApprove(data, actions) {
+    actions.order.capture().then(function () {
+      var values = formRef.current.values;
+      Object(_utilities_data__WEBPACK_IMPORTED_MODULE_14__["handleOrder"])(_objectSpread(_objectSpread({}, values), {}, {
+        date: new Date(values.date.getTime() - values.date.getTimezoneOffset() * 60000).toISOString().split("T")[0]
+      }), total, cart, setAuth, onSuccessPaypalPayment, onError, data);
+    });
+  };
+
+  var onCancel = function onCancel() {
+    toast({
+      title: "Payment Cancelled",
+      description: "Your order has been cancelled!",
+      status: "warning"
+    });
+    history.push("/checkout");
+  };
+
+  var createOrder = function createOrder(data, actions) {
+    var validity = Object(_utilities_validation__WEBPACK_IMPORTED_MODULE_4__["validateForm"])(formRef.current.values);
+
+    if (!Object(lodash__WEBPACK_IMPORTED_MODULE_16__["isEmpty"])(validity)) {
+      formRef.current.handleSubmit();
+      return;
+    }
+
+    return actions.order.create({
+      purchase_units: [{
+        amount: {
+          currency: "GBP",
+          value: total
+        }
+      }]
+    });
+  };
+
+  var onSuccessPaypalPayment = function onSuccessPaypalPayment(data, oid) {
+    toast({
+      title: "Payment Success",
+      description: "Your order has been placed!",
+      status: "success"
+    });
+    history.push("/invoice/?order_id=".concat(data.orderID, "&method=paypal&oid=").concat(oid));
+  };
+
+  var onError = function onError(err) {
+    console.log(err.response);
+    var errors = err.response.data.message;
+
+    if (errors.length > 0) {
+      errors.forEach(function (msg) {
+        return toast({
+          title: "Error occured!",
+          description: msg,
+          status: "error"
+        });
+      });
+    }
+  };
+
+  var handleStripePayment = function handleStripePayment(e) {
+    e.preventDefault();
+    var validity = Object(_utilities_validation__WEBPACK_IMPORTED_MODULE_4__["validateForm"])(formRef.current.values);
+
+    if (!Object(lodash__WEBPACK_IMPORTED_MODULE_16__["isEmpty"])(validity)) {
+      formRef.current.handleSubmit();
+      return;
+    }
+
+    var fp = products.filter(function (p) {
+      return cart.map(function (c) {
+        return c.product_id;
+      }).includes(p.id);
+    });
+    var finalProducts = [];
+    fp.forEach(function (p) {
+      finalProducts.push({
+        price_data: {
+          currency: "GBP",
+          product_data: {
+            name: p.name,
+            images: [p.images]
+          },
+          unit_amount: Number(Object(_utilities__WEBPACK_IMPORTED_MODULE_10__["getFinalPrice"])(p).toFixed(2)) * 100
+        },
+        quantity: cart.filter(function (c) {
+          return c.product_id === p.id;
+        })[0].qty
+      });
+    });
+    console.log(finalProducts);
+    Object(_utilities_payment__WEBPACK_IMPORTED_MODULE_18__["payWithStripe"])(setBtnLoading, finalProducts);
+  };
+
   return !localStorage.getItem("user") || JSON.parse(localStorage.getItem("user")).role === "Trader" ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_7__["Redirect"], {
     to: Object(_utilities__WEBPACK_IMPORTED_MODULE_10__["getLoginRedirection"])()
   }) : loading ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Flex"], {
@@ -208616,24 +209801,26 @@ var Checkout = function Checkout(_ref) {
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_components_Breadcrumb__WEBPACK_IMPORTED_MODULE_2__["default"], {
     crumbs: crumbs,
     margin: "20px 0"
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_3__["Formik"], {
+  }), auth.logged_in && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_3__["Formik"], {
     validate: _utilities_validation__WEBPACK_IMPORTED_MODULE_4__["validateForm"],
     initialValues: {
-      fullname: "",
-      email: "",
-      phone: "",
-      street_no: "",
-      address: "",
-      date: "",
+      fullname: auth.user.fullname,
+      email: auth.user.email,
+      phone: auth.user.phone,
+      street_no: auth.user.street_no,
+      address: auth.user.address,
+      date: slots.some(function (slot) {
+        return slot.days.includes(new Date().getDay());
+      }) ? new Date() : "",
       collection_id: ""
     },
+    innerRef: formRef,
     onSubmit: function onSubmit(values, actions) {
-      setTimeout(function () {
-        alert(JSON.stringify(values, null, 2));
-        actions.setSubmitting(false);
-      }, 1000);
+      actions.validateForm();
     }
   }, function (props) {
+    var _React$createElement;
+
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_3__["Form"], {
       style: {
         width: "100%"
@@ -208738,7 +209925,10 @@ var Checkout = function Checkout(_ref) {
     }, function (_ref7) {
       var field = _ref7.field,
           form = _ref7.form;
-      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["FormControl"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["FormLabel"], {
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["FormControl"], {
+        isInvalid: form.errors.date && form.touched.date,
+        required: true
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["FormLabel"], {
         htmlFor: "date",
         mb: "20px !important"
       }, "Collection Date"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(react_datepicker__WEBPACK_IMPORTED_MODULE_5___default.a, {
@@ -208746,27 +209936,35 @@ var Checkout = function Checkout(_ref) {
         onChange: function onChange(date) {
           return form.setFieldValue("date", date);
         },
-        filterDate: _utilities_validation__WEBPACK_IMPORTED_MODULE_4__["isValidDate"],
+        filterDate: function filterDate(date) {
+          return Object(_utilities_validation__WEBPACK_IMPORTED_MODULE_4__["isValidDate"])(date, slots);
+        },
         inline: true
-      }));
+      }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["FormErrorMessage"], null, form.errors.date));
     }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_3__["Field"], {
       name: "collection_id"
     }, function (_ref8) {
       var field = _ref8.field,
           form = _ref8.form;
-      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["FormControl"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["FormLabel"], {
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["FormControl"], {
+        isInvalid: form.errors.collection_id && form.touched.collection_id,
+        required: true
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["FormLabel"], {
         htmlFor: "collection_id",
         mb: "20px !important"
       }, "Collection Slot"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Select"], _extends({}, field, {
         placeholder: "Select slot",
         id: "collection_id"
-      }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("option", {
-        value: "1"
-      }, "10:00 AM - 01:00 PM"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("option", {
-        value: "2"
-      }, "01:00 PM - 04:00 PM"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("option", {
-        value: "3"
-      }, "04:00 PM - 07:00 PM")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["FormErrorMessage"], null, form.errors.collection_id));
+      }), slots && slots.map(function (_ref9, index) {
+        var id = _ref9.id,
+            times = _ref9.times,
+            days = _ref9.days;
+        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("option", {
+          key: index,
+          value: id,
+          disabled: Object(_utilities_validation__WEBPACK_IMPORTED_MODULE_4__["isValidTime"])(props.values["date"], times, days)
+        }, Object(_utilities__WEBPACK_IMPORTED_MODULE_10__["formatSlotTimes"])(times));
+      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["FormErrorMessage"], null, form.errors.collection_id));
     }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Box"], {
       w: {
         base: "100%",
@@ -208782,18 +209980,18 @@ var Checkout = function Checkout(_ref) {
       alignItems: "flex-start"
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Table"], {
       bgColor: "#fff"
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Thead"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Tr"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Th"], null, "Product"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Th"], null, "Amount"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Tbody"], null, cart.map(function (_ref9, index) {
-      var id = _ref9.id,
-          qty = _ref9.qty,
-          _ref9$product = _ref9.product,
-          title = _ref9$product.name,
-          name = _ref9$product.shop.name,
-          subtotal = _ref9.subtotal;
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Thead"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Tr"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Th"], null, "Product"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Th"], null, "Amount"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Tbody"], null, cart.map(function (_ref10, index) {
+      var id = _ref10.id,
+          qty = _ref10.qty,
+          _ref10$product = _ref10.product,
+          title = _ref10$product.name,
+          name = _ref10$product.shop.name,
+          subtotal = _ref10.subtotal;
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Tr"], {
         key: index + id
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Td"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["VStack"], {
         alignItems: "flex-start"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Text"], null, title, " \xD7", " ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("span", null, qty)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Text"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("b", null, "Vendor:"), " ", name))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Td"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Text"], {
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Text"], null, title, " ", "\xD7", " ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("span", null, qty)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Text"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("b", null, "Vendor:"), " ", name))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Td"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Text"], {
         fontWeight: "bold"
       }, "\xA3", subtotal.toFixed(2))));
     }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Tr"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Td"], null, "Subtotal"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Td"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Text"], {
@@ -208811,6 +210009,8 @@ var Checkout = function Checkout(_ref) {
     }).reduce(function (a, b) {
       return a + b;
     }, 0).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")))))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["RadioGroup"], {
+      onChange: setValue,
+      value: value,
       defaultValue: "1",
       mt: "20px !important",
       w: "100%"
@@ -208833,21 +210033,41 @@ var Checkout = function Checkout(_ref) {
       my: "30px",
       fontSize: "small",
       color: "gray"
-    }, "Secure you payment with Paypal or Stripe."), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Button"], {
+    }, "Secure you payment with Paypal or Stripe."), value === "2" && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Button"], (_React$createElement = {
       mt: "30px !important",
-      isLoading: props.isSubmitting,
+      onClick: handleStripePayment,
       background: "primary",
       color: "#fff",
       fontSize: "smaller",
       letterSpacing: "3px",
       fontWeight: "bold",
       px: "25px !important",
-      type: "submit"
-    }, "Place Order")))));
-  }));
+      w: "100%",
+      pos: "relative"
+    }, _defineProperty(_React$createElement, "letterSpacing", "0.8px !important"), _defineProperty(_React$createElement, "_hover", {
+      bg: "#5433FF !important"
+    }), _React$createElement), btnLoading ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Spinner"], {
+      color: "secondary"
+    }) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_1___default.a.Fragment, null, "Pay with", " ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Image"], {
+      src: _images_stripe_logo_png__WEBPACK_IMPORTED_MODULE_15___default.a,
+      w: "55px"
+    }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Box"], {
+      w: "100%"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_paypal_react_paypal_js__WEBPACK_IMPORTED_MODULE_12__["PayPalScriptProvider"], {
+      options: {
+        "client-id": PAYPAL_CLIENT_ID,
+        currency: "GBP"
+      }
+    }, value === "1" && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_components_PaypalButtonsCustomized__WEBPACK_IMPORTED_MODULE_13__["PaypalButtonsCustomized"], {
+      createOrder: createOrder,
+      onApprove: onApprove,
+      onCancel: onCancel,
+      PAYPAL_CLIENT_ID: PAYPAL_CLIENT_ID
+    })))))));
+  }), " ");
 };
 
-/* harmony default export */ __webpack_exports__["default"] = (Object(react_redux__WEBPACK_IMPORTED_MODULE_9__["connect"])(mapStateToProps)(Checkout));
+/* harmony default export */ __webpack_exports__["default"] = (Object(react_redux__WEBPACK_IMPORTED_MODULE_9__["connect"])(mapStateToProps, mapDispatchToProps)(Checkout));
 
 /***/ }),
 
@@ -211332,6 +212552,14 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -211406,7 +212634,31 @@ var Login = function Login(_ref) {
   }, []);
 
   var onSuccessWishlist = function onSuccessWishlist() {
-    Object(_utilities_data__WEBPACK_IMPORTED_MODULE_12__["loadCart"])(setCartProducts, onSuccess, onError);
+    Object(_utilities_data__WEBPACK_IMPORTED_MODULE_12__["loadCart"])(onSuccessCart, onError);
+  };
+
+  var onSuccessCart = function onSuccessCart() {
+    _utilities__WEBPACK_IMPORTED_MODULE_7__["apiClient"].get("/api/wishlist").then(function (res) {
+      setWishlistProducts(_toConsumableArray(new Set(res.data.map(function (p) {
+        return p.product_id;
+      }))));
+      _utilities__WEBPACK_IMPORTED_MODULE_7__["apiClient"].get("/api/cart").then(function (res) {
+        var cart = res.data.map(function (details) {
+          return {
+            product_id: details.product_id,
+            qty: details.qty,
+            subtotal: details.subtotal
+          };
+        });
+        setCartProducts(cart);
+        onSuccess();
+      })["catch"](function (err) {
+        console.log(err.response);
+        onError(err);
+      });
+    })["catch"](function (err) {
+      return console.log(err);
+    });
   };
 
   var onSuccess = function onSuccess() {
@@ -211416,7 +212668,7 @@ var Login = function Login(_ref) {
   var onError = function onError(err) {
     var errors = err.response.data.message;
 
-    if (errors && errors.length > 0) {
+    if (errors.length > 0) {
       errors.forEach(function (msg) {
         return toast({
           title: "Error occured!",
@@ -211521,7 +212773,7 @@ var Login = function Login(_ref) {
             logged_in: true,
             user: res.data.user
           });
-          Object(_utilities_data__WEBPACK_IMPORTED_MODULE_12__["loadWishlist"])(setWishlistProducts, onSuccessWishlist, onError);
+          Object(_utilities_data__WEBPACK_IMPORTED_MODULE_12__["loadWishlist"])(onSuccessWishlist, onError);
         })["catch"](function (err) {
           console.log(err);
           toast({
@@ -215161,7 +216413,7 @@ var theme = Object(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["extendTheme"])
 /*!****************************************!*\
   !*** ./resources/js/utilities/data.js ***!
   \****************************************/
-/*! exports provided: loadWishlist, loadCart, addToCart */
+/*! exports provided: loadWishlist, loadCart, addToCart, handleOrder */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -215169,6 +216421,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "loadWishlist", function() { return loadWishlist; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "loadCart", function() { return loadCart; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "addToCart", function() { return addToCart; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "handleOrder", function() { return handleOrder; });
 /* harmony import */ var ___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! . */ "./resources/js/utilities/index.js");
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
 
@@ -215183,42 +216436,23 @@ function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToAr
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
 
-var loadWishlist = function loadWishlist(setWishlistProducts, onSuccess, onError) {
+var loadWishlist = function loadWishlist(onSuccess, onError) {
   if (localStorage.getItem("wishlist") && JSON.parse(localStorage.getItem("wishlist")).length > 0) ___WEBPACK_IMPORTED_MODULE_0__["apiClient"].post("/api/wishlist/product/bulk-add", {
     products: JSON.parse(localStorage.getItem("wishlist"))
   }).then(function (res) {
-    ___WEBPACK_IMPORTED_MODULE_0__["apiClient"].get("/api/wishlist").then(function (res) {
-      setWishlistProducts(_toConsumableArray(new Set(res.data.map(function (p) {
-        return p.product_id;
-      }))));
-      localStorage.removeItem("wishlist");
-      onSuccess();
-    })["catch"](function (err) {
-      return console.log(err);
-    });
+    localStorage.removeItem("wishlist");
+    onSuccess();
   })["catch"](function (err) {
     console.log(err);
     onError(err);
   });else onSuccess();
 };
-var loadCart = function loadCart(setCartProducts, onSuccess, onError) {
+var loadCart = function loadCart(onSuccess, onError) {
   if (localStorage.getItem("cart") && JSON.parse(localStorage.getItem("cart")).length > 0) ___WEBPACK_IMPORTED_MODULE_0__["apiClient"].post("/api/cart/product/bulk-add", {
     products: JSON.parse(localStorage.getItem("cart"))
   }).then(function (res) {
-    ___WEBPACK_IMPORTED_MODULE_0__["apiClient"].get("/api/cart").then(function (res) {
-      setCartProducts(res.data.map(function (details) {
-        return {
-          product_id: details.product_id,
-          qty: details.qty,
-          subtotal: details.subtotal
-        };
-      }));
-      localStorage.removeItem("cart");
-      onSuccess();
-    })["catch"](function (err) {
-      console.log(err.response);
-      onError(err);
-    });
+    localStorage.removeItem("cart");
+    onSuccess();
   })["catch"](function (err) {
     console.log(err.response);
     onError(err);
@@ -215330,6 +216564,46 @@ var addToCart = function addToCart(product, auth, valueAsNumber, onSuccess, onEr
     }
   }
 };
+var handleOrder = function handleOrder(_ref, total, cart, setAuth, onSuccess, onError, data) {
+  var fullname = _ref.fullname,
+      email = _ref.email,
+      phone = _ref.phone,
+      street_no = _ref.street_no,
+      address = _ref.address,
+      date = _ref.date,
+      collection_id = _ref.collection_id;
+  ___WEBPACK_IMPORTED_MODULE_0__["apiClient"].get("/sanctum/csrf-cookie").then(function (res) {
+    return ___WEBPACK_IMPORTED_MODULE_0__["apiClient"].put("/api/user", {
+      fullname: fullname,
+      email: email,
+      phone: phone,
+      street_no: street_no,
+      address: address
+    }).then(function (res) {
+      setAuth({
+        logged_in: true,
+        user: res.data.user
+      });
+      localStorage.setItem("user", JSON.stringify(res.data.user));
+      ___WEBPACK_IMPORTED_MODULE_0__["apiClient"].post("/api/order", {
+        date: date,
+        collection_id: collection_id,
+        subtotal: total,
+        total: total,
+        products: cart
+      }).then(function (res) {
+        console.log(res);
+        onSuccess(data, res.data.oid);
+      })["catch"](function (err) {
+        onError(err);
+      });
+    })["catch"](function (err) {
+      return console.log(err);
+    });
+  })["catch"](function (err) {
+    return console.log(err.response);
+  });
+};
 
 /***/ }),
 
@@ -215337,7 +216611,7 @@ var addToCart = function addToCart(product, auth, valueAsNumber, onSuccess, onEr
 /*!*****************************************!*\
   !*** ./resources/js/utilities/index.js ***!
   \*****************************************/
-/*! exports provided: getFinalPrice, generateUrl, getIdFromUrl, searchQuery, apiClient, sendMail, getLoginRedirection, getAvgReviews */
+/*! exports provided: getFinalPrice, generateUrl, getIdFromUrl, searchQuery, apiClient, sendMail, getLoginRedirection, getAvgReviews, formatSlotTimes */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -215350,6 +216624,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "sendMail", function() { return sendMail; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getLoginRedirection", function() { return getLoginRedirection; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getAvgReviews", function() { return getAvgReviews; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "formatSlotTimes", function() { return formatSlotTimes; });
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
 
@@ -215394,6 +216669,89 @@ var getAvgReviews = function getAvgReviews(reviews) {
     return r1 + r2;
   }) / reviews.length : 0;
 };
+var formatSlotTimes = function formatSlotTimes(times) {
+  var formatTime = function formatTime(time) {
+    if (time > 12) return (time - 12).toString().padStart(2, "0");else return time.toString().padStart(2, "0");
+  };
+
+  var getAMorPM = function getAMorPM(time) {
+    return time >= 12 ? "PM" : "AM";
+  };
+
+  return "".concat(formatTime(times[0]), ":00 ").concat(getAMorPM(times[0]), " - ").concat(formatTime(times[1]), ":00 ").concat(getAMorPM(times[1]));
+};
+
+/***/ }),
+
+/***/ "./resources/js/utilities/payment.js":
+/*!*******************************************!*\
+  !*** ./resources/js/utilities/payment.js ***!
+  \*******************************************/
+/*! exports provided: payWithStripe */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "payWithStripe", function() { return payWithStripe; });
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _stripe_stripe_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @stripe/stripe-js */ "./node_modules/@stripe/stripe-js/dist/stripe.esm.js");
+
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+
+var payWithStripe = /*#__PURE__*/function () {
+  var _ref = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee(setButtonLoading, products) {
+    var stripePromise, stripe, response, result;
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+      while (1) {
+        switch (_context.prev = _context.next) {
+          case 0:
+            stripePromise = Object(_stripe_stripe_js__WEBPACK_IMPORTED_MODULE_1__["loadStripe"])("pk_test_51HrrlNARkfToiPFSupHqiJpGnsej3pPYyODpRU5x651HuosD4y4b9fufVkDzfKf0BQNbKgxwAKZWMiFWxrnIgaRO000iRAqmx5");
+            setButtonLoading(true);
+            _context.next = 4;
+            return stripePromise["catch"](function (err) {
+              setButtonLoading(false);
+              console.log(err);
+            });
+
+          case 4:
+            stripe = _context.sent;
+            _context.next = 7;
+            return axios.post("/api/stripe/pay", {
+              products: products
+            })["catch"](function (err) {
+              console.log(err.response);
+              setButtonLoading(false);
+            });
+
+          case 7:
+            response = _context.sent;
+            _context.next = 10;
+            return stripe.redirectToCheckout({
+              sessionId: response.data
+            });
+
+          case 10:
+            result = _context.sent;
+            setButtonLoading(false);
+            if (result.error) console.log(result.error);
+
+          case 13:
+          case "end":
+            return _context.stop();
+        }
+      }
+    }, _callee);
+  }));
+
+  return function payWithStripe(_x, _x2) {
+    return _ref.apply(this, arguments);
+  };
+}();
 
 /***/ }),
 
@@ -215401,7 +216759,7 @@ var getAvgReviews = function getAvgReviews(reviews) {
 /*!**********************************************!*\
   !*** ./resources/js/utilities/validation.js ***!
   \**********************************************/
-/*! exports provided: validateEmail, validatePaymentEmails, validateForm, validateContactForm, isValidDate, validateLogin, validateSignup, validateShop, validateDetails, validateReview */
+/*! exports provided: validateEmail, validatePaymentEmails, validateForm, validateContactForm, isValidDate, isValidTime, validateLogin, validateSignup, validateShop, validateDetails, validateReview */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -215411,6 +216769,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "validateForm", function() { return validateForm; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "validateContactForm", function() { return validateContactForm; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isValidDate", function() { return isValidDate; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isValidTime", function() { return isValidTime; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "validateLogin", function() { return validateLogin; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "validateSignup", function() { return validateSignup; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "validateShop", function() { return validateShop; });
@@ -215458,12 +216817,22 @@ var validateContactForm = function validateContactForm(values) {
   if (!values.message) errors.message = "Message is required";
   return errors;
 };
-var isValidDate = function isValidDate(date) {
+var isValidDate = function isValidDate(date, slots) {
   var dateObj = new Date();
   var month = dateObj.getUTCMonth();
   var day = dateObj.getUTCDate();
   var year = dateObj.getUTCFullYear();
-  return date >= new Date(year, month, day) && (date.getDay() == 3 || date.getDay() == 4 || date.getDay() == 5);
+  return date >= new Date(year, month, day) && slots.some(function (slot) {
+    return slot.days.includes(date.getDay());
+  });
+};
+var isValidTime = function isValidTime(date, times, days) {
+  if (!date) return true;
+  if (!days.includes(date.getDay())) return true;
+  var todayWith24hours = new Date();
+  todayWith24hours.setDate(todayWith24hours.getDate() + 1);
+  var selected = date.setHours(times[0]);
+  return todayWith24hours >= selected;
 };
 var validateLogin = function validateLogin(values) {
   var errors = {};

@@ -11,7 +11,7 @@ class CollectionSlot extends Model
 
      protected $fillable = [
         'times',
-        'day'
+        'days'
     ];
 
     public function orders()

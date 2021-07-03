@@ -52,7 +52,35 @@ const Login = ({ setAuth, auth, setCartProducts, setWishlistProducts }) => {
     }, []);
 
     const onSuccessWishlist = () => {
-        loadCart(setCartProducts, onSuccess, onError);
+        loadCart(onSuccessCart, onError);
+    };
+
+    const onSuccessCart = () => {
+        apiClient
+            .get("/api/wishlist")
+            .then(res => {
+                setWishlistProducts([
+                    ...new Set(res.data.map(p => p.product_id))
+                ]);
+                apiClient
+                    .get("/api/cart")
+                    .then(res => {
+                        const cart = res.data.map(details => {
+                            return {
+                                product_id: details.product_id,
+                                qty: details.qty,
+                                subtotal: details.subtotal
+                            };
+                        });
+                        setCartProducts(cart);
+                        onSuccess();
+                    })
+                    .catch(err => {
+                        console.log(err.response);
+                        onError(err);
+                    });
+            })
+            .catch(err => console.log(err));
     };
 
     const onSuccess = () => {
@@ -61,7 +89,7 @@ const Login = ({ setAuth, auth, setCartProducts, setWishlistProducts }) => {
 
     const onError = err => {
         const errors = err.response.data.message;
-        if (errors && errors.length > 0) {
+        if (errors.length > 0) {
             errors.forEach(msg =>
                 toast({
                     title: "Error occured!",
@@ -149,7 +177,6 @@ const Login = ({ setAuth, auth, setCartProducts, setWishlistProducts }) => {
                                                         user: res.data.user
                                                     });
                                                     loadWishlist(
-                                                        setWishlistProducts,
                                                         onSuccessWishlist,
                                                         onError
                                                     );

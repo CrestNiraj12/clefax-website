@@ -19,7 +19,7 @@ class CreateOrderHasProductsTable extends Migration
             $table->unsignedBigInteger('product_id');
             $table->integer('qty');
             $table->decimal('subtotal');
-            $table->foreign('order_id')->references('id')->on('offers');
+            $table->foreign('order_id')->references('id')->on('orders');
             $table->foreign('product_id')->references('id')->on('products');
             $table->timestamps();
         });

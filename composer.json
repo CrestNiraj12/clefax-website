@@ -15,6 +15,7 @@
         "laravel/tinker": "^2.5",
         "laravel/ui": "^3.2",
         "proxeuse/fortify-tabler": "^1.1",
+        "stripe/stripe-php": "^7.87",
         "yajra/laravel-oci8": "^8.4",
         "zacksmash/fortify-ui": "^1.4"
     },

@@ -16,7 +16,7 @@ class CreateCollectionSlotsTable extends Migration
         Schema::create('collection_slots', function (Blueprint $table) {
             $table->id();
             $table->string('times');
-            $table->string('day');
+            $table->string('days');
             $table->timestamps();
         });
     }

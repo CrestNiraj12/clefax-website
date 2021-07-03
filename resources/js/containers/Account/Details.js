@@ -25,16 +25,17 @@ const details = [
     { name: "fullname", label: "Full Name" },
     { name: "email", label: "Email Address" },
     { name: "phone", label: "Phone no." },
-    { name: "address", label: "Address" }
+    { name: "address", label: "Address" },
+    { name: "street_no", label: "Street Address" }
 ];
 
 const passwords = [
     {
-        name: "old_password",
+        name: "password",
         label: "Current Password (Leave blank to leave unchanged)"
     },
-    { name: "password", label: "New Password" },
-    { name: "password_confirmation", label: "Confirm Password" }
+    { name: "new_password", label: "New Password" },
+    { name: "new_password_confirmation", label: "Confirm Password" }
 ];
 
 const mapStateToProps = state => ({
@@ -44,9 +45,9 @@ const mapStateToProps = state => ({
 const Details = ({ auth }) => {
     const toast = useToast();
     const [show, setShow] = useState({
-        old_password: false,
         password: false,
-        password_confirmation: false
+        new_password: false,
+        new_password_confirmation: false
     });
 
     return (
@@ -57,12 +58,13 @@ const Details = ({ auth }) => {
                 fullname: auth.user.fullname,
                 email: auth.user.email,
                 phone: auth.user.phone,
+                street_no: auth.user.street_no,
                 address: auth.user.address,
                 dob: new Date(auth.user.dob).toISOString().substr(0, 10),
                 gender: auth.user.gender,
-                old_password: "",
                 password: "",
-                password_confirmation: ""
+                new_password: "",
+                new_password_confirmation: ""
             }}
             onSubmit={(values, actions) => {
                 setTimeout(() => {

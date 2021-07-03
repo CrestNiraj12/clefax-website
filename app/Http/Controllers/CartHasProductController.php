@@ -51,7 +51,7 @@ class CartHasProductController extends Controller
             $productsLength += $p["qty"];
             $product = Product::where("id", $p["product_id"])->first();
             if ($product->qty <= 0) {
-                array_push($errors, "$product->name in out of stock!");
+                array_push($errors, "$product->name is out of stock!");
             }
             if ($p["qty"] > $product->max_order || $p["qty"] > $product->qty) {
                 array_push($errors, "You can only buy $product->max_order $product->unit(s) of $product->name in one slot!");
@@ -71,7 +71,7 @@ class CartHasProductController extends Controller
             array_push($errors, 'Maximum product qty limit exceeded in the cart i.e, 20!');
         
         if (count($errors) > 0) {
-            return response()->json(['message' => $errors]);
+            return response()->json(['message' => $errors], 401);
         }
         
         return response()->json(['message' => 'Successfully added products to cart!']);
