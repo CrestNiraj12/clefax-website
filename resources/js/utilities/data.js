@@ -20,7 +20,7 @@ export const loadWishlist = (onSuccess, onError) => {
     else onSuccess();
 };
 
-export const loadCart = (onSuccess, onError) => {
+export const loadCart = (setProducts, onError) => {
     if (
         localStorage.getItem("cart") &&
         JSON.parse(localStorage.getItem("cart")).length > 0
@@ -31,13 +31,13 @@ export const loadCart = (onSuccess, onError) => {
             })
             .then(res => {
                 localStorage.removeItem("cart");
-                onSuccess();
+                setProducts();
             })
             .catch(err => {
-                console.log(err.response);
+                setProducts();
                 onError(err);
             });
-    else onSuccess();
+    else setProducts();
 };
 
 export const addToCart = (
@@ -187,11 +187,12 @@ export const addToCart = (
 export const handleOrder = (
     { fullname, email, phone, street_no, address, date, collection_id },
     total,
+    slot,
     cart,
     setAuth,
     onSuccess,
     onError,
-    data
+    method
 ) => {
     apiClient
         .get("/sanctum/csrf-cookie")
@@ -210,17 +211,37 @@ export const handleOrder = (
                         user: res.data.user
                     });
                     localStorage.setItem("user", JSON.stringify(res.data.user));
+                    date = new Date(date);
+                    date = new Date(
+                        date.getTime() - date.getTimezoneOffset() * 60000
+                    )
+                        .toISOString()
+                        .split("T")[0];
                     apiClient
                         .post("/api/order", {
                             date,
                             collection_id,
                             subtotal: total,
-                            total: total,
+                            total,
                             products: cart
                         })
                         .then(res => {
-                            console.log(res);
-                            onSuccess(data, res.data.oid);
+                            apiClient
+                                .post("/api/payment", {
+                                    method,
+                                    amount: total,
+                                    order_id: res.data.oid
+                                })
+                                .then(() => {
+                                    onSuccess(
+                                        total,
+                                        res.data.oid,
+                                        date + " " + slot
+                                    );
+                                })
+                                .catch(err => {
+                                    onError(err);
+                                });
                         })
                         .catch(err => {
                             onError(err);

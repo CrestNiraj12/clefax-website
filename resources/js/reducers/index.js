@@ -6,6 +6,7 @@ import showSearch from "./showSearch";
 import auth from "./setAuth";
 import cart from "./setCartProducts";
 import wishlist from "./setWishlistProducts";
+import slots from "./setSlots";
 
 export default combineReducers({
     auth,
@@ -14,5 +15,6 @@ export default combineReducers({
     page,
     showSearch,
     cart,
-    wishlist
+    wishlist,
+    slots
 });

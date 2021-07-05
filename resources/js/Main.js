@@ -10,7 +10,8 @@ import {
     setCategories,
     setAuth,
     setCartProducts,
-    setWishlistProducts
+    setWishlistProducts,
+    setSlots
 } from "./actions";
 import routes from "./routes";
 import { useMediaQuery } from "@chakra-ui/media-query";
@@ -21,8 +22,8 @@ import Login from "./containers/Login";
 import Signup from "./containers/Signup";
 import ForgotPassword from "./containers/ForgotPassword";
 import TraderSignup from "./containers/TraderSignup";
-import { apiClient, getFinalPrice } from "./utilities";
-import { uniqBy } from "lodash";
+import { apiClient } from "./utilities";
+import PaymentRedirect from "./containers/PaymentRedirect";
 
 const mapDispatchToProps = dispatch => ({
     setProducts: products => dispatch(setProducts(products)),
@@ -30,7 +31,8 @@ const mapDispatchToProps = dispatch => ({
     setCategories: category => dispatch(setCategories(category)),
     setAuth: auth => dispatch(setAuth(auth)),
     setCartProducts: cart => dispatch(setCartProducts(cart)),
-    setWishlistProducts: wishlist => dispatch(setWishlistProducts(wishlist))
+    setWishlistProducts: wishlist => dispatch(setWishlistProducts(wishlist)),
+    setSlots: slots => dispatch(setSlots(slots))
 });
 
 const mapStateToProps = state => ({
@@ -46,7 +48,8 @@ const Main = ({
     setCategories,
     setAuth,
     setCartProducts,
-    setWishlistProducts
+    setWishlistProducts,
+    setSlots
 }) => {
     const location = useLocation();
     const [desktop] = useMediaQuery("(min-width: 1100px)");
@@ -55,6 +58,20 @@ const Main = ({
     useEffect(() => {
         setPage(window.location.pathname === "/" ? HOME_PAGE : "");
     }, [location]);
+
+    useEffect(() => {
+        axios
+            .get("/api/categories")
+            .then(res => setCategories(res.data))
+            .catch(err => console.log(err));
+    }, []);
+
+    useEffect(() => {
+        window.onscroll = function(e) {
+            if (window.scrollY >= 350) setShowScrollBtn(true);
+            else if (window.scrollY < 800) setShowScrollBtn(false);
+        };
+    }, []);
 
     useEffect(() => {
         apiClient
@@ -136,18 +153,32 @@ const Main = ({
     }, []);
 
     useEffect(() => {
-        axios
-            .get("/api/categories")
-            .then(res => setCategories(res.data))
-            .catch(err => console.log(err));
-    }, []);
-
-    useEffect(() => {
-        window.onscroll = function(e) {
-            if (window.scrollY >= 350) setShowScrollBtn(true);
-            else if (window.scrollY < 800) setShowScrollBtn(false);
-        };
-    }, []);
+        if (localStorage.getItem("user"))
+            apiClient
+                .get("/sanctum/csrf-cookie")
+                .then(res =>
+                    apiClient
+                        .get("/api/slots")
+                        .then(res => {
+                            const formattedSlots = [];
+                            if (res.data.length > 0)
+                                res.data.map(s => {
+                                    formattedSlots.push({
+                                        ...s,
+                                        times: s.times
+                                            .split(",")
+                                            .map(t => Number(t.trim())),
+                                        days: s.days
+                                            .split(",")
+                                            .map(t => Number(t.trim()))
+                                    });
+                                });
+                            setSlots(formattedSlots);
+                        })
+                        .catch(err => console.log(err))
+                )
+                .catch(err => console.log(err));
+    });
 
     return (
         <>
@@ -163,6 +194,7 @@ const Main = ({
                     exact
                 />
                 <Route path="/trader-signup" component={TraderSignup} exact />
+                <Route path="/redirect" component={PaymentRedirect} />
                 {routes.map(({ path, Component, exact }) => (
                     <Route
                         exact={exact}

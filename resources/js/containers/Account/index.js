@@ -30,7 +30,7 @@ const Account = ({ crumbs, auth }) => {
 
     return !localStorage.getItem("user") ||
         JSON.parse(localStorage.getItem("user")).role === "Trader" ? (
-        <Redirect to="/" />
+        <Redirect to="/login?r=/account" />
     ) : (
         <Box mx="20px" mb="100px">
             <Breadcrumb crumbs={crumbs} margin="20px 0" />

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
     Table,
     Thead,
@@ -9,70 +9,114 @@ import {
     Button,
     Badge,
     Heading,
-    Link
+    Link,
+    Spinner,
+    Flex,
+    Box
 } from "@chakra-ui/react";
 import { useHistory } from "react-router-dom";
-
-const orders = [
-    {
-        id: "0001",
-        date: "2021/01/01",
-        status: 1,
-        total: 1000.0
-    }
-];
+import { useEffect } from "react";
+import { apiClient } from "../../utilities";
 
 const Orders = () => {
     var history = useHistory();
+    const [orders, setOrders] = useState([]);
+    const [loading, setLoading] = useState(false);
 
-    return (
+    useEffect(() => {
+        setLoading(true);
+        apiClient
+            .get("/sanctum/csrf-cookie")
+            .then(res =>
+                apiClient
+                    .get("/api/orders")
+                    .then(res => {
+                        setOrders(res.data);
+                        setLoading(false);
+                    })
+                    .catch(err => {
+                        console.log(err);
+                        toast({
+                            title: "Error occurred!",
+                            description: "Error retrieving orders!",
+                            status: "error"
+                        });
+                        history.goBack();
+                    })
+            )
+            .catch(err => console.log(err));
+    }, []);
+
+    return loading ? (
+        <Flex w="100%" justifyContent="center" alignItems="center">
+            <Spinner color="secondary" />
+        </Flex>
+    ) : (
         <>
             {orders && orders.length ? (
-                <Table>
-                    <Thead bg="lightgray">
-                        <Tr>
-                            <Th>Order No.</Th>
-                            <Th>Date</Th>
-                            <Th>Status</Th>
-                            <Th>Total</Th>
-                            <Th>Actions</Th>
-                        </Tr>
-                    </Thead>
-                    <Tbody>
-                        {orders.map(({ id, date, status, total }, index) => (
-                            <Tr key={index}>
-                                <Td>{id}</Td>
-                                <Td>{date}</Td>
-                                <Td>
-                                    <Badge
-                                        ml="1"
-                                        fontSize="0.8em"
-                                        colorScheme={
-                                            status === 1 ? "green" : "yellow"
-                                        }
-                                    >
-                                        {status === 1
-                                            ? "Delivered"
-                                            : "Processing"}
-                                    </Badge>
-                                </Td>
-                                <Td>£{total}</Td>
-                                <Td>
-                                    <Button
-                                        h="auto"
-                                        p="10px 20px !important"
-                                        fontSize="xs"
-                                        onClick={() =>
-                                            history.push("/invoice?id=1")
-                                        }
-                                    >
-                                        View
-                                    </Button>
-                                </Td>
+                <Box maxH="500px" className="scrollable" overflowY="auto">
+                    <Table>
+                        <Thead bg="lightgray">
+                            <Tr>
+                                <Th>Order No.</Th>
+                                <Th>Date</Th>
+                                <Th>Status</Th>
+                                <Th>Total</Th>
+                                <Th>Actions</Th>
                             </Tr>
-                        ))}
-                    </Tbody>
-                </Table>
+                        </Thead>
+                        <Tbody>
+                            {orders.map(
+                                ({ id, date, status, total }, index) => (
+                                    <Tr key={index}>
+                                        <Td>
+                                            {id.toString().padStart(4, "0")}
+                                        </Td>
+                                        <Td>{date}</Td>
+                                        <Td>
+                                            <Badge
+                                                ml="1"
+                                                fontSize="0.8em"
+                                                colorScheme={
+                                                    status === 1
+                                                        ? "green"
+                                                        : "purple"
+                                                }
+                                            >
+                                                {status === 1
+                                                    ? "Delivered"
+                                                    : "Processing"}
+                                            </Badge>
+                                        </Td>
+                                        <Td>
+                                            £
+                                            {total
+                                                .toFixed(2)
+                                                .replace(
+                                                    /\B(?=(\d{3})+(?!\d))/g,
+                                                    ","
+                                                )}
+                                        </Td>
+                                        <Td>
+                                            <Button
+                                                h="auto"
+                                                p="10px 20px !important"
+                                                fontSize="xs"
+                                                onClick={() =>
+                                                    history.push(
+                                                        `/invoice?oid=${id}`
+                                                    )
+                                                }
+                                            >
+                                                View
+                                            </Button>
+                                        </Td>
+                                    </Tr>
+                                )
+                            )}
+                        </Tbody>
+                    </Table>
+                </Box>
             ) : (
                 <>
                     <Heading as="h6" fontSize="lg" mb="20px">

@@ -33,7 +33,7 @@ class OrderHasProductsController extends Controller
 
             if ($product->qty <= 0) {
                 array_push($errors, "$product->name is out of stock!");
-            } else if (($product->qty - $p["qty"]) <= 0) {
+            } else if (($product->qty - $p["qty"]) < 0) {
                 array_push($errors, "Order made for $product->name is more than the available stock!");
             } else {
                 $product->qty = $product->qty - $p["qty"];
@@ -55,4 +55,5 @@ class OrderHasProductsController extends Controller
         }
         return response()->json(['message' => 'Order placed successfully!', 'oid' => $order->id]);
     }
+    
 }

@@ -11,7 +11,8 @@ export const PaypalButtonsCustomized = ({
 
     useEffect(() => {
         const scriptProviderOptions = {
-            "client-id": PAYPAL_CLIENT_ID
+            "client-id": PAYPAL_CLIENT_ID,
+            currency: "GBP"
         };
 
         dispatch({

@@ -52,10 +52,10 @@ const Login = ({ setAuth, auth, setCartProducts, setWishlistProducts }) => {
     }, []);
 
     const onSuccessWishlist = () => {
-        loadCart(onSuccessCart, onError);
+        loadCart(setProducts, onError);
     };
 
-    const onSuccessCart = () => {
+    const setProducts = () => {
         apiClient
             .get("/api/wishlist")
             .then(res => {

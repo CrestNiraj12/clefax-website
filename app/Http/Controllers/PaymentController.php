@@ -2,10 +2,26 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cart;
+use App\Models\CartHasProduct;
+use App\Models\Payment;
 use Illuminate\Http\Request;
 
 class PaymentController extends Controller
 {
+    public function store(Request $request) {
+        $request->validate([
+            'method' => 'required',
+            'amount' => 'required',
+            'order_id' => 'required'
+        ]);
+        
+        $payment = Payment::create($request->all() + ['user_id' => auth()->user()->id]);
+        $cart = Cart::where('user_id', auth()->user()->id)->first();
+        CartHasProduct::where('cart_id', $cart->id)->delete();
+        return response()->json(['message' => 'Payment Added Successfully!']);
+    }
+
     public function stripePaymentProcess(Request $request) {
         try {
             $products = $request->products;
@@ -14,8 +30,8 @@ class PaymentController extends Controller
                 'payment_method_types' => ['card'],
                 'line_items' => $products,
                 'mode' => 'payment',
-                'success_url' => "$redirect_domain/invoice/?order_id={CHECKOUT_SESSION_ID}&method=stripe",
-                'cancel_url' => "$redirect_domain/checkout/?cancelled=1"
+                'success_url' => "http://localhost:3000/redirect/?session_id={CHECKOUT_SESSION_ID}",
+                'cancel_url' => "http://localhost:3000/checkout/?cancelled=1"
             ];
             $session = \Stripe\Checkout\Session::create($products);
             return response()->json($session->id);

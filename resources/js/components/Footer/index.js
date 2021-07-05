@@ -244,7 +244,7 @@ const Footer = () => {
                                 161 123 6789
                             </Text>
                             <Text className="footerText">
-                                clefax-eshop@gmail.com
+                                clefaxeshop@gmail.com
                             </Text>
                             <Text className="footerText">
                                 189 Spen Lane, Gomersal, West Yorkshire, BD19

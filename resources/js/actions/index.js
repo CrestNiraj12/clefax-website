@@ -4,6 +4,7 @@ import {
     SET_CATEGORIES,
     SET_PAGE,
     SET_PRODUCTS,
+    SET_SLOTS,
     SET_WISHLIST_PRODUCTS,
     SHOW_SEARCH
 } from "../constants";
@@ -41,4 +42,9 @@ export const setCartProducts = cart => ({
 export const setWishlistProducts = wishlist => ({
     type: SET_WISHLIST_PRODUCTS,
     payload: wishlist
+});
+
+export const setSlots = slots => ({
+    type: SET_SLOTS,
+    payload: slots
 });

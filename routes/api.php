@@ -4,6 +4,7 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\CartHasProductController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CollectionSlotController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\OrderHasProductsController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProductController;
@@ -40,7 +41,7 @@ Route::get('/products', [ProductController::class, "getAllProducts"]);
 Route::get('/products/{id}', [ProductController::class, "getProduct"]);
 Route::get('/categories', [CategoryController::class, "getAllCategories"]);
 Route::get('/categories/{id}', [CategoryController::class, "getCategory"]);
-Route::post('/stripe/pay', [PaymentController::class, 'stripePaymentProcess']);
+ Route::get('/orders/{id}', [OrderController::class, 'getOrderById']);
 Route::middleware(['auth:sanctum'])->group(function() {
     Route::post('/report/create', [ReportController::class, 'store']);
     Route::post('/review/create', [ReviewController::class, 'store']);
@@ -60,8 +61,11 @@ Route::middleware(['auth:sanctum'])->group(function() {
     Route::delete('/cart/product/{id}', [CartHasProductController::class, 'destroy']);
     Route::get('/slots', [CollectionSlotController::class, 'getSlots']);
     Route::put('/user', [UserController::class, 'update']);
+    Route::get('/orders', [OrderController::class, 'getOrders']);
+   
     Route::post('/order', [OrderHasProductsController::class, 'store']);
-    
+    Route::post('/payment', [PaymentController::class, 'store']);
+    Route::post('/stripe/pay', [PaymentController::class, 'stripePaymentProcess']);
     Route::post('/stripe/session', [PaymentController::class, 'stripeRetrieveSession']);
 });
 

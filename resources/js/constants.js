@@ -13,8 +13,13 @@ export const MONTHS = [
     "December"
 ];
 
+export const USER_ID = "user_gv0qwalY9PvUeXJCyl8Bj";
+export const SERVICE_ID = "service_545j0cc";
+export const TEMPLATE_BASIC = "template_6bm3ljd";
+export const TEMPLATE_ORDER = "template_z4cp9xh";
 export const SET_PRODUCTS = "SET_PRODUCTS";
 export const SET_CATEGORIES = "SET_CATEGORIES";
+export const SET_SLOTS = "SET_SLOTS";
 export const SET_PAGE = "SET_PAGE";
 export const HOME_PAGE = "HOME_PAGE";
 export const SHOW_SEARCH = "SHOW_SEARCH";

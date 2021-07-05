@@ -52,7 +52,7 @@ class Product extends Model
     }
 
     public function orders() {
-        return $this->hasMany(Order::class, 'order_has_products');
+        return $this->belongsToMany(Order::class, 'order_has_products');
     }
 
     public function wishlists() {

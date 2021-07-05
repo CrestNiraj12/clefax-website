@@ -18,6 +18,12 @@ class Order extends Model
         'collection_id'
     ];
 
+    protected $casts = [
+        'date' => 'date:M d, Y',
+        'subtotal' => 'float',
+        'total' => 'float'
+    ];
+
     public function cart() {
         return $this->belongsTo(Cart::class);
     }
@@ -27,10 +33,14 @@ class Order extends Model
     }
 
     public function products() {
-        return $this->hasMany(Product::class, 'order_has_products');
+        return $this->belongsToMany(Product::class, 'order_has_products')->withPivot('qty', 'subtotal');
     }
 
     public function user() {
         return $this->belongsTo(User::class);
+    }
+
+    public function payment() {
+        return $this->hasOne(Payment::class);
     }
 }
