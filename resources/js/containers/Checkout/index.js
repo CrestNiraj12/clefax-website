@@ -24,7 +24,7 @@ import {
     Flex,
     Image
 } from "@chakra-ui/react";
-import React, { Fragment, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import Breadcrumb from "../../components/Breadcrumb";
 import { Formik, Form, Field } from "formik";
 import {
