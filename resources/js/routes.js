@@ -78,7 +78,6 @@ export default [
         exact: true,
         name: "My Account"
     },
-
     {
         path: "/*",
         Component: NotFound,

@@ -88,7 +88,9 @@ const Login = ({ setAuth, auth, setCartProducts, setWishlistProducts }) => {
     };
 
     const onError = err => {
+        console.log(err.response);
         const errors = err.response.data.message;
+        console.log(errors);
         if (errors.length > 0) {
             errors.forEach(msg =>
                 toast({
@@ -172,6 +174,10 @@ const Login = ({ setAuth, auth, setCartProducts, setWishlistProducts }) => {
                                                             res.data.user
                                                         )
                                                     );
+                                                    localStorage.setItem(
+                                                        "auth",
+                                                        true
+                                                    );
                                                     setAuth({
                                                         logged_in: true,
                                                         user: res.data.user
@@ -182,20 +188,49 @@ const Login = ({ setAuth, auth, setCartProducts, setWishlistProducts }) => {
                                                     );
                                                 })
                                                 .catch(err => {
-                                                    console.log(err);
-                                                    toast({
-                                                        title:
-                                                            "Error while logging in",
-                                                        description: err
-                                                            .response.data
-                                                            ? err.response.data
-                                                                  .message
-                                                            : "Error occured! Please try again!",
-                                                        status: "error"
-                                                    });
-                                                    actions.setSubmitting(
-                                                        false
-                                                    );
+                                                    if (
+                                                        err.response.status ===
+                                                        403
+                                                    ) {
+                                                        setAuth({
+                                                            logged_in: false,
+                                                            user:
+                                                                err.response
+                                                                    .data.user
+                                                        });
+                                                        localStorage.setItem(
+                                                            "user",
+                                                            JSON.stringify(
+                                                                err.response
+                                                                    .data.user
+                                                            )
+                                                        );
+                                                        localStorage.setItem(
+                                                            "auth",
+                                                            false
+                                                        );
+                                                        history.push(
+                                                            "/verify-email"
+                                                        );
+                                                    } else {
+                                                        console.log(
+                                                            err.response
+                                                        );
+                                                        toast({
+                                                            title:
+                                                                "Error while logging in",
+                                                            description: err
+                                                                .response.data
+                                                                ? err.response
+                                                                      .data
+                                                                      .message
+                                                                : "Error occured! Please try again!",
+                                                            status: "error"
+                                                        });
+                                                        actions.setSubmitting(
+                                                            false
+                                                        );
+                                                    }
                                                 })
                                         )
                                         .catch(err => {

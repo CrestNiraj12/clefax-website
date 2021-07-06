@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Traits\UploadTrait;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -20,6 +21,7 @@ class UserController extends Controller
         
         if ($user) {
             if ($user->role == "Trader" && !isset($user->email_verified_at)) return response()->json(['message' => 'Your account is not yet activated!'], 401);
+            if ($user->role != "Trader" && !isset($user->email_verified_at)) return response()->json(['message' => 'Your account is not yet activated!', 'user' => $user], 403);
             
             Auth::login($user);
             
@@ -38,9 +40,8 @@ class UserController extends Controller
     {   
         $this->validator($request->all())->validate();
         $user = User::create($request->all());
-        $this->guard()->login($user);
         return response()->json([
-            'user' => $user->load('wishlist.products', 'cart.products'),
+            'user' => $user,
             'message' => 'Registration Successful!'
         ], 200);
     }
@@ -65,6 +66,12 @@ class UserController extends Controller
     public function logout() {
         Auth::logout();
         return response()->json(['message' => 'Logged out successfully!'], 200);
+    }
+
+    public function verifyEmail($id) {
+        $user = tap(User::where('id', $id))->update(['email_verified_at' => Carbon::now()->toDateTimeString()])->first();
+        $this->guard()->login($user);
+        return response()->json(['message' => 'User account activated successfully!', 'user' => $user], 200);
     }
 
     public function update(Request $request) {

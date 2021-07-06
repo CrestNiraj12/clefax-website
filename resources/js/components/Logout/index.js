@@ -34,6 +34,7 @@ const Logout = ({
         apiClient
             .post("/api/logout")
             .then(res => {
+                localStorage.setItem("auth", false);
                 localStorage.removeItem("user");
                 setAuth({ logged_in: false, user: null });
 

@@ -75,15 +75,7 @@ export const addToCart = (
                             subtotal: getFinalPrice(product) * valueAsNumber
                         })
                         .then(res => {
-                            setCartProducts([
-                                {
-                                    product_id: product.id,
-                                    qty: valueAsNumber,
-                                    subtotal:
-                                        getFinalPrice(product) * valueAsNumber
-                                },
-                                ...cart
-                            ]);
+                            setCartProducts([res.data.cart, ...cart]);
                             onSuccess(product.id);
                         })
                         .catch(err => {

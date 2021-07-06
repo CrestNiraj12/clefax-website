@@ -26,6 +26,7 @@ export const SHOW_SEARCH = "SHOW_SEARCH";
 export const SET_AUTH = "SET_AUTH";
 export const SET_CART_PRODUCTS = "SET_CART_PRODUCTS";
 export const SET_WISHLIST_PRODUCTS = "SET_WISHLIST_PRODUCTS";
+export const SALT = "jZFtv5TYpQdZhdM";
 export const MAPS_API_KEY = "AIzaSyDkdfRfa5j9YuZy0FB-jZFtv5TYpQdZhdM";
 export const DEFAULT_TOAST = {
     position: window.innerWidth < 1100 ? "bottom" : "top-right",

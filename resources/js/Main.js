@@ -24,6 +24,9 @@ import ForgotPassword from "./containers/ForgotPassword";
 import TraderSignup from "./containers/TraderSignup";
 import { apiClient } from "./utilities";
 import PaymentRedirect from "./containers/PaymentRedirect";
+import EmailVerification from "./containers/EmailVerification";
+import EmailVerificationRequest from "./containers/EmailVerificationRequest";
+import PasswordReset from "./containers/PasswordReset";
 
 const mapDispatchToProps = dispatch => ({
     setProducts: products => dispatch(setProducts(products)),
@@ -74,20 +77,21 @@ const Main = ({
     }, []);
 
     useEffect(() => {
-        apiClient
-            .get("/sanctum/csrf-cookie")
-            .catch(err => localStorage.removeItem("user"));
-    }, []);
-
-    useEffect(() => {
-        setAuth(
-            localStorage.getItem("user")
-                ? {
-                      logged_in: true,
-                      user: JSON.parse(localStorage.getItem("user"))
-                  }
-                : { logged_in: false, user: null }
-        );
+        if (localStorage.getItem("user")) {
+            if (
+                localStorage.getItem("auth") &&
+                localStorage.getItem("auth") === "true"
+            ) {
+                setAuth({
+                    logged_in: true,
+                    user: JSON.parse(localStorage.getItem("user"))
+                });
+            } else
+                setAuth({
+                    logged_in: false,
+                    user: JSON.parse(localStorage.getItem("user"))
+                });
+        } else setAuth({ logged_in: false, user: null });
     }, []);
 
     useEffect(() => {
@@ -95,8 +99,11 @@ const Main = ({
             .get("/api/products")
             .then(res => {
                 setProducts(res.data);
-                var tempProducts = [];
-                if (localStorage.getItem("user"))
+                if (
+                    localStorage.getItem("auth") &&
+                    localStorage.getItem("auth") === "true" &&
+                    localStorage.getItem("user")
+                )
                     apiClient
                         .get("/sanctum/csrf-cookie")
                         .then(res =>
@@ -135,9 +142,13 @@ const Main = ({
                                             console.log(err.response)
                                         );
                                 })
-                                .catch(err => console.log(err))
+                                .catch(err => {
+                                    console.log(err);
+                                })
                         )
-                        .catch(err => console.log(err.response));
+                        .catch(err => {
+                            console.log(err.response);
+                        });
                 else {
                     if (localStorage.getItem("wishlist")) {
                         const ps = JSON.parse(localStorage.getItem("wishlist"));
@@ -153,7 +164,11 @@ const Main = ({
     }, []);
 
     useEffect(() => {
-        if (localStorage.getItem("user"))
+        if (
+            localStorage.getItem("auth") &&
+            localStorage.getItem("auth") === "true" &&
+            localStorage.getItem("user")
+        )
             apiClient
                 .get("/sanctum/csrf-cookie")
                 .then(res =>
@@ -175,7 +190,9 @@ const Main = ({
                                 });
                             setSlots(formattedSlots);
                         })
-                        .catch(err => console.log(err))
+                        .catch(err => {
+                            console.log(err.response);
+                        })
                 )
                 .catch(err => console.log(err));
     });
@@ -194,6 +211,13 @@ const Main = ({
                     exact
                 />
                 <Route path="/trader-signup" component={TraderSignup} exact />
+                <Route
+                    path="/verify-email"
+                    component={EmailVerificationRequest}
+                    exact
+                />
+                <Route path="/user/verify" component={EmailVerification} />
+                <Route path="/reset-password" component={PasswordReset} />
                 <Route path="/redirect" component={PaymentRedirect} />
                 {routes.map(({ path, Component, exact }) => (
                     <Route

@@ -12,14 +12,17 @@ import {
     Link,
     Spinner,
     Flex,
-    Box
+    Box,
+    useToast
 } from "@chakra-ui/react";
 import { useHistory } from "react-router-dom";
 import { useEffect } from "react";
 import { apiClient } from "../../utilities";
+import { DEFAULT_TOAST } from "../../constants";
 
 const Orders = () => {
     var history = useHistory();
+    const toast = useToast(DEFAULT_TOAST);
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(false);
 

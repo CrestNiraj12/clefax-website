@@ -27,7 +27,7 @@ class WishlistHasProductController extends Controller
         foreach ($products as $p) {
             $wishlistHasProduct->firstOrCreate([
                 'wishlist_id' => $wishlist->id, 
-                'product_id' => $p["product_id"]
+                'product_id' => $p
             ]);
         }
         return response()->json(['message' => 'Successfully added products to wishlist!']);

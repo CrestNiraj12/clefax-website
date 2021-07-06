@@ -43,6 +43,7 @@ Route::get('/categories', [CategoryController::class, "getAllCategories"]);
 Route::get('/categories/{id}', [CategoryController::class, "getCategory"]);
 Route::get('/shops', [ShopController::class, "getAllShops"]);
 Route::get('/shops/{id}', [ShopController::class, "getShop"]);
+Route::get('/user/verify/{id}', [UserController::class, 'verifyEmail']);
 
 Route::middleware(['auth:sanctum'])->group(function() {
     Route::post('/report/create', [ReportController::class, 'store']);

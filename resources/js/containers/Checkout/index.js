@@ -239,10 +239,9 @@ const Checkout = ({
 
     const onSuccessPaypalPayment = (total, oid, collection_slot) => {
         setCartProducts([]);
-        const order_table = generateTable(
-            JSON.parse(localStorage.getItem("order")),
-            total
-        );
+        const ps = JSON.parse(localStorage.getItem("order"));
+        const order_table = generateTable(ps, total);
+
         handleMailSend(
             TEMPLATE_ORDER,
             "Your order has been placed",
@@ -250,6 +249,25 @@ const Checkout = ({
             auth.user.email,
             { order_table, collection_slot }
         );
+
+        ps.map(p => p.shop_id).forEach(s => {
+            const productsByShop = ps.filter(p => p.shop_id === s);
+            const t = cart
+                .filter(c =>
+                    productsByShop.map(p => p.id.includes(Number(c.product_id)))
+                )
+                .map(p => p.subtotal)
+                .reduce((a, b) => a + b, 0);
+            const ot = generateTable(productsByShop, t);
+            handleMailSend(
+                TEMPLATE_ORDER,
+                "Your order has been placed",
+                productsByShop[0].shop.user.fullname,
+                productsByShop[0].shop.user.email,
+                { ot, collection_slot }
+            );
+        });
+
         toast({
             title: "Payment Success",
             description: "Your order has been placed!",

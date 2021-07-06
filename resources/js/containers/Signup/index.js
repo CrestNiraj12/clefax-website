@@ -140,13 +140,17 @@ const Signup = ({ setAuth, auth }) => {
                                                         values.isTrader === "0"
                                                     ) {
                                                         localStorage.setItem(
+                                                            "auth",
+                                                            false
+                                                        );
+                                                        localStorage.setItem(
                                                             "user",
                                                             JSON.stringify(
                                                                 res.data.user
                                                             )
                                                         );
                                                         setAuth({
-                                                            logged_in: true,
+                                                            logged_in: false,
                                                             user: res.data.user
                                                         });
                                                     }
@@ -157,7 +161,7 @@ const Signup = ({ setAuth, auth }) => {
                                                     history.push(
                                                         values.isTrader === "1"
                                                             ? `/trader-signup`
-                                                            : "/"
+                                                            : "/verify-email"
                                                     );
                                                 })
                                                 .catch(err => {

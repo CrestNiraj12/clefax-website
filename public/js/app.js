@@ -47751,6 +47751,50 @@ var StepsStyleConfig = {
 
 /***/ }),
 
+/***/ "./node_modules/charenc/charenc.js":
+/*!*****************************************!*\
+  !*** ./node_modules/charenc/charenc.js ***!
+  \*****************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+var charenc = {
+  // UTF-8 encoding
+  utf8: {
+    // Convert a string to a byte array
+    stringToBytes: function(str) {
+      return charenc.bin.stringToBytes(unescape(encodeURIComponent(str)));
+    },
+
+    // Convert a byte array to a string
+    bytesToString: function(bytes) {
+      return decodeURIComponent(escape(charenc.bin.bytesToString(bytes)));
+    }
+  },
+
+  // Binary encoding
+  bin: {
+    // Convert a string to a byte array
+    stringToBytes: function(str) {
+      for (var bytes = [], i = 0; i < str.length; i++)
+        bytes.push(str.charCodeAt(i) & 0xFF);
+      return bytes;
+    },
+
+    // Convert a byte array to a string
+    bytesToString: function(bytes) {
+      for (var str = [], i = 0; i < bytes.length; i++)
+        str.push(String.fromCharCode(bytes[i]));
+      return str.join('');
+    }
+  }
+};
+
+module.exports = charenc;
+
+
+/***/ }),
+
 /***/ "./node_modules/classnames/index.js":
 /*!******************************************!*\
   !*** ./node_modules/classnames/index.js ***!
@@ -47940,6 +47984,113 @@ function copy(text, options) {
 }
 
 module.exports = copy;
+
+
+/***/ }),
+
+/***/ "./node_modules/crypt/crypt.js":
+/*!*************************************!*\
+  !*** ./node_modules/crypt/crypt.js ***!
+  \*************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+(function() {
+  var base64map
+      = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/',
+
+  crypt = {
+    // Bit-wise rotation left
+    rotl: function(n, b) {
+      return (n << b) | (n >>> (32 - b));
+    },
+
+    // Bit-wise rotation right
+    rotr: function(n, b) {
+      return (n << (32 - b)) | (n >>> b);
+    },
+
+    // Swap big-endian to little-endian and vice versa
+    endian: function(n) {
+      // If number given, swap endian
+      if (n.constructor == Number) {
+        return crypt.rotl(n, 8) & 0x00FF00FF | crypt.rotl(n, 24) & 0xFF00FF00;
+      }
+
+      // Else, assume array and swap all items
+      for (var i = 0; i < n.length; i++)
+        n[i] = crypt.endian(n[i]);
+      return n;
+    },
+
+    // Generate an array of any length of random bytes
+    randomBytes: function(n) {
+      for (var bytes = []; n > 0; n--)
+        bytes.push(Math.floor(Math.random() * 256));
+      return bytes;
+    },
+
+    // Convert a byte array to big-endian 32-bit words
+    bytesToWords: function(bytes) {
+      for (var words = [], i = 0, b = 0; i < bytes.length; i++, b += 8)
+        words[b >>> 5] |= bytes[i] << (24 - b % 32);
+      return words;
+    },
+
+    // Convert big-endian 32-bit words to a byte array
+    wordsToBytes: function(words) {
+      for (var bytes = [], b = 0; b < words.length * 32; b += 8)
+        bytes.push((words[b >>> 5] >>> (24 - b % 32)) & 0xFF);
+      return bytes;
+    },
+
+    // Convert a byte array to a hex string
+    bytesToHex: function(bytes) {
+      for (var hex = [], i = 0; i < bytes.length; i++) {
+        hex.push((bytes[i] >>> 4).toString(16));
+        hex.push((bytes[i] & 0xF).toString(16));
+      }
+      return hex.join('');
+    },
+
+    // Convert a hex string to a byte array
+    hexToBytes: function(hex) {
+      for (var bytes = [], c = 0; c < hex.length; c += 2)
+        bytes.push(parseInt(hex.substr(c, 2), 16));
+      return bytes;
+    },
+
+    // Convert a byte array to a base-64 string
+    bytesToBase64: function(bytes) {
+      for (var base64 = [], i = 0; i < bytes.length; i += 3) {
+        var triplet = (bytes[i] << 16) | (bytes[i + 1] << 8) | bytes[i + 2];
+        for (var j = 0; j < 4; j++)
+          if (i * 8 + j * 6 <= bytes.length * 8)
+            base64.push(base64map.charAt((triplet >>> 6 * (3 - j)) & 0x3F));
+          else
+            base64.push('=');
+      }
+      return base64.join('');
+    },
+
+    // Convert a base-64 string to a byte array
+    base64ToBytes: function(base64) {
+      // Remove non-base-64 characters
+      base64 = base64.replace(/[^A-Z0-9+\/]/ig, '');
+
+      for (var bytes = [], i = 0, imod4 = 0; i < base64.length;
+          imod4 = ++i % 4) {
+        if (imod4 == 0) continue;
+        bytes.push(((base64map.indexOf(base64.charAt(i - 1))
+            & (Math.pow(2, -2 * imod4 + 8) - 1)) << (imod4 * 2))
+            | (base64map.indexOf(base64.charAt(i)) >>> (6 - imod4 * 2)));
+      }
+      return bytes;
+    }
+  };
+
+  module.exports = crypt;
+})();
 
 
 /***/ }),
@@ -78267,6 +78418,38 @@ function hoistNonReactStatics(targetComponent, sourceComponent, blacklist) {
 }
 
 module.exports = hoistNonReactStatics;
+
+
+/***/ }),
+
+/***/ "./node_modules/is-buffer/index.js":
+/*!*****************************************!*\
+  !*** ./node_modules/is-buffer/index.js ***!
+  \*****************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/*!
+ * Determine if an object is a Buffer
+ *
+ * @author   Feross Aboukhadijeh <https://feross.org>
+ * @license  MIT
+ */
+
+// The _isBuffer check is for Safari 5-7 support, because it's missing
+// Object.prototype.constructor. Remove this eventually
+module.exports = function (obj) {
+  return obj != null && (isBuffer(obj) || isSlowBuffer(obj) || !!obj._isBuffer)
+}
+
+function isBuffer (obj) {
+  return !!obj.constructor && typeof obj.constructor.isBuffer === 'function' && obj.constructor.isBuffer(obj)
+}
+
+// For Node v0.10 support. Remove this eventually.
+function isSlowBuffer (obj) {
+  return typeof obj.readFloatLE === 'function' && typeof obj.slice === 'function' && isBuffer(obj.slice(0, 0))
+}
 
 
 /***/ }),
@@ -114279,6 +114462,177 @@ module.exports = mergeWith;
 }.call(this));
 
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../webpack/buildin/global.js */ "./node_modules/webpack/buildin/global.js"), __webpack_require__(/*! ./../webpack/buildin/module.js */ "./node_modules/webpack/buildin/module.js")(module)))
+
+/***/ }),
+
+/***/ "./node_modules/md5/md5.js":
+/*!*********************************!*\
+  !*** ./node_modules/md5/md5.js ***!
+  \*********************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+(function(){
+  var crypt = __webpack_require__(/*! crypt */ "./node_modules/crypt/crypt.js"),
+      utf8 = __webpack_require__(/*! charenc */ "./node_modules/charenc/charenc.js").utf8,
+      isBuffer = __webpack_require__(/*! is-buffer */ "./node_modules/is-buffer/index.js"),
+      bin = __webpack_require__(/*! charenc */ "./node_modules/charenc/charenc.js").bin,
+
+  // The core
+  md5 = function (message, options) {
+    // Convert to byte array
+    if (message.constructor == String)
+      if (options && options.encoding === 'binary')
+        message = bin.stringToBytes(message);
+      else
+        message = utf8.stringToBytes(message);
+    else if (isBuffer(message))
+      message = Array.prototype.slice.call(message, 0);
+    else if (!Array.isArray(message) && message.constructor !== Uint8Array)
+      message = message.toString();
+    // else, assume byte array already
+
+    var m = crypt.bytesToWords(message),
+        l = message.length * 8,
+        a =  1732584193,
+        b = -271733879,
+        c = -1732584194,
+        d =  271733878;
+
+    // Swap endian
+    for (var i = 0; i < m.length; i++) {
+      m[i] = ((m[i] <<  8) | (m[i] >>> 24)) & 0x00FF00FF |
+             ((m[i] << 24) | (m[i] >>>  8)) & 0xFF00FF00;
+    }
+
+    // Padding
+    m[l >>> 5] |= 0x80 << (l % 32);
+    m[(((l + 64) >>> 9) << 4) + 14] = l;
+
+    // Method shortcuts
+    var FF = md5._ff,
+        GG = md5._gg,
+        HH = md5._hh,
+        II = md5._ii;
+
+    for (var i = 0; i < m.length; i += 16) {
+
+      var aa = a,
+          bb = b,
+          cc = c,
+          dd = d;
+
+      a = FF(a, b, c, d, m[i+ 0],  7, -680876936);
+      d = FF(d, a, b, c, m[i+ 1], 12, -389564586);
+      c = FF(c, d, a, b, m[i+ 2], 17,  606105819);
+      b = FF(b, c, d, a, m[i+ 3], 22, -1044525330);
+      a = FF(a, b, c, d, m[i+ 4],  7, -176418897);
+      d = FF(d, a, b, c, m[i+ 5], 12,  1200080426);
+      c = FF(c, d, a, b, m[i+ 6], 17, -1473231341);
+      b = FF(b, c, d, a, m[i+ 7], 22, -45705983);
+      a = FF(a, b, c, d, m[i+ 8],  7,  1770035416);
+      d = FF(d, a, b, c, m[i+ 9], 12, -1958414417);
+      c = FF(c, d, a, b, m[i+10], 17, -42063);
+      b = FF(b, c, d, a, m[i+11], 22, -1990404162);
+      a = FF(a, b, c, d, m[i+12],  7,  1804603682);
+      d = FF(d, a, b, c, m[i+13], 12, -40341101);
+      c = FF(c, d, a, b, m[i+14], 17, -1502002290);
+      b = FF(b, c, d, a, m[i+15], 22,  1236535329);
+
+      a = GG(a, b, c, d, m[i+ 1],  5, -165796510);
+      d = GG(d, a, b, c, m[i+ 6],  9, -1069501632);
+      c = GG(c, d, a, b, m[i+11], 14,  643717713);
+      b = GG(b, c, d, a, m[i+ 0], 20, -373897302);
+      a = GG(a, b, c, d, m[i+ 5],  5, -701558691);
+      d = GG(d, a, b, c, m[i+10],  9,  38016083);
+      c = GG(c, d, a, b, m[i+15], 14, -660478335);
+      b = GG(b, c, d, a, m[i+ 4], 20, -405537848);
+      a = GG(a, b, c, d, m[i+ 9],  5,  568446438);
+      d = GG(d, a, b, c, m[i+14],  9, -1019803690);
+      c = GG(c, d, a, b, m[i+ 3], 14, -187363961);
+      b = GG(b, c, d, a, m[i+ 8], 20,  1163531501);
+      a = GG(a, b, c, d, m[i+13],  5, -1444681467);
+      d = GG(d, a, b, c, m[i+ 2],  9, -51403784);
+      c = GG(c, d, a, b, m[i+ 7], 14,  1735328473);
+      b = GG(b, c, d, a, m[i+12], 20, -1926607734);
+
+      a = HH(a, b, c, d, m[i+ 5],  4, -378558);
+      d = HH(d, a, b, c, m[i+ 8], 11, -2022574463);
+      c = HH(c, d, a, b, m[i+11], 16,  1839030562);
+      b = HH(b, c, d, a, m[i+14], 23, -35309556);
+      a = HH(a, b, c, d, m[i+ 1],  4, -1530992060);
+      d = HH(d, a, b, c, m[i+ 4], 11,  1272893353);
+      c = HH(c, d, a, b, m[i+ 7], 16, -155497632);
+      b = HH(b, c, d, a, m[i+10], 23, -1094730640);
+      a = HH(a, b, c, d, m[i+13],  4,  681279174);
+      d = HH(d, a, b, c, m[i+ 0], 11, -358537222);
+      c = HH(c, d, a, b, m[i+ 3], 16, -722521979);
+      b = HH(b, c, d, a, m[i+ 6], 23,  76029189);
+      a = HH(a, b, c, d, m[i+ 9],  4, -640364487);
+      d = HH(d, a, b, c, m[i+12], 11, -421815835);
+      c = HH(c, d, a, b, m[i+15], 16,  530742520);
+      b = HH(b, c, d, a, m[i+ 2], 23, -995338651);
+
+      a = II(a, b, c, d, m[i+ 0],  6, -198630844);
+      d = II(d, a, b, c, m[i+ 7], 10,  1126891415);
+      c = II(c, d, a, b, m[i+14], 15, -1416354905);
+      b = II(b, c, d, a, m[i+ 5], 21, -57434055);
+      a = II(a, b, c, d, m[i+12],  6,  1700485571);
+      d = II(d, a, b, c, m[i+ 3], 10, -1894986606);
+      c = II(c, d, a, b, m[i+10], 15, -1051523);
+      b = II(b, c, d, a, m[i+ 1], 21, -2054922799);
+      a = II(a, b, c, d, m[i+ 8],  6,  1873313359);
+      d = II(d, a, b, c, m[i+15], 10, -30611744);
+      c = II(c, d, a, b, m[i+ 6], 15, -1560198380);
+      b = II(b, c, d, a, m[i+13], 21,  1309151649);
+      a = II(a, b, c, d, m[i+ 4],  6, -145523070);
+      d = II(d, a, b, c, m[i+11], 10, -1120210379);
+      c = II(c, d, a, b, m[i+ 2], 15,  718787259);
+      b = II(b, c, d, a, m[i+ 9], 21, -343485551);
+
+      a = (a + aa) >>> 0;
+      b = (b + bb) >>> 0;
+      c = (c + cc) >>> 0;
+      d = (d + dd) >>> 0;
+    }
+
+    return crypt.endian([a, b, c, d]);
+  };
+
+  // Auxiliary functions
+  md5._ff  = function (a, b, c, d, x, s, t) {
+    var n = a + (b & c | ~b & d) + (x >>> 0) + t;
+    return ((n << s) | (n >>> (32 - s))) + b;
+  };
+  md5._gg  = function (a, b, c, d, x, s, t) {
+    var n = a + (b & d | c & ~d) + (x >>> 0) + t;
+    return ((n << s) | (n >>> (32 - s))) + b;
+  };
+  md5._hh  = function (a, b, c, d, x, s, t) {
+    var n = a + (b ^ c ^ d) + (x >>> 0) + t;
+    return ((n << s) | (n >>> (32 - s))) + b;
+  };
+  md5._ii  = function (a, b, c, d, x, s, t) {
+    var n = a + (c ^ (b | ~d)) + (x >>> 0) + t;
+    return ((n << s) | (n >>> (32 - s))) + b;
+  };
+
+  // Package private blocksize
+  md5._blocksize = 16;
+  md5._digestsize = 16;
+
+  module.exports = function (message, options) {
+    if (message === undefined || message === null)
+      throw new Error('Illegal argument ' + message);
+
+    var digestbytes = crypt.wordsToBytes(md5(message, options));
+    return options && options.asBytes ? digestbytes :
+        options && options.asString ? bin.bytesToString(digestbytes) :
+        crypt.bytesToHex(digestbytes);
+  };
+
+})();
+
 
 /***/ }),
 
@@ -204070,6 +204424,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _containers_TraderSignup__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./containers/TraderSignup */ "./resources/js/containers/TraderSignup/index.js");
 /* harmony import */ var _utilities__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./utilities */ "./resources/js/utilities/index.js");
 /* harmony import */ var _containers_PaymentRedirect__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./containers/PaymentRedirect */ "./resources/js/containers/PaymentRedirect/index.js");
+/* harmony import */ var _containers_EmailVerification__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ./containers/EmailVerification */ "./resources/js/containers/EmailVerification/index.js");
+/* harmony import */ var _containers_EmailVerificationRequest__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ./containers/EmailVerificationRequest */ "./resources/js/containers/EmailVerificationRequest/index.js");
+/* harmony import */ var _containers_PasswordReset__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! ./containers/PasswordReset */ "./resources/js/containers/PasswordReset/index.js");
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 
 function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
@@ -204101,6 +204458,9 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 function _iterableToArrayLimit(arr, i) { var _i = arr && (typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"]); if (_i == null) return; var _arr = []; var _n = true; var _d = false; var _s, _e; try { for (_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+
+
 
 
 
@@ -204191,15 +204551,17 @@ var Main = function Main(_ref) {
     };
   }, []);
   Object(react__WEBPACK_IMPORTED_MODULE_1__["useEffect"])(function () {
-    _utilities__WEBPACK_IMPORTED_MODULE_16__["apiClient"].get("/sanctum/csrf-cookie")["catch"](function (err) {
-      return localStorage.removeItem("user");
-    });
-  }, []);
-  Object(react__WEBPACK_IMPORTED_MODULE_1__["useEffect"])(function () {
-    setAuth(localStorage.getItem("user") ? {
-      logged_in: true,
-      user: JSON.parse(localStorage.getItem("user"))
-    } : {
+    if (localStorage.getItem("user")) {
+      if (localStorage.getItem("auth") && localStorage.getItem("auth") === "true") {
+        setAuth({
+          logged_in: true,
+          user: JSON.parse(localStorage.getItem("user"))
+        });
+      } else setAuth({
+        logged_in: false,
+        user: JSON.parse(localStorage.getItem("user"))
+      });
+    } else setAuth({
       logged_in: false,
       user: null
     });
@@ -204207,8 +204569,7 @@ var Main = function Main(_ref) {
   Object(react__WEBPACK_IMPORTED_MODULE_1__["useEffect"])(function () {
     axios__WEBPACK_IMPORTED_MODULE_0___default.a.get("/api/products").then(function (res) {
       setProducts(res.data);
-      var tempProducts = [];
-      if (localStorage.getItem("user")) _utilities__WEBPACK_IMPORTED_MODULE_16__["apiClient"].get("/sanctum/csrf-cookie").then(function (res) {
+      if (localStorage.getItem("auth") && localStorage.getItem("auth") === "true" && localStorage.getItem("user")) _utilities__WEBPACK_IMPORTED_MODULE_16__["apiClient"].get("/sanctum/csrf-cookie").then(function (res) {
         return _utilities__WEBPACK_IMPORTED_MODULE_16__["apiClient"].get("/api/wishlist").then(function (res) {
           setWishlistProducts(_toConsumableArray(new Set(res.data.map(function (p) {
             return p.product_id;
@@ -204229,10 +204590,10 @@ var Main = function Main(_ref) {
             return console.log(err.response);
           });
         })["catch"](function (err) {
-          return console.log(err);
+          console.log(err);
         });
       })["catch"](function (err) {
-        return console.log(err.response);
+        console.log(err.response);
       });else {
         if (localStorage.getItem("wishlist")) {
           var ps = JSON.parse(localStorage.getItem("wishlist"));
@@ -204249,7 +204610,7 @@ var Main = function Main(_ref) {
     });
   }, []);
   Object(react__WEBPACK_IMPORTED_MODULE_1__["useEffect"])(function () {
-    if (localStorage.getItem("user")) _utilities__WEBPACK_IMPORTED_MODULE_16__["apiClient"].get("/sanctum/csrf-cookie").then(function (res) {
+    if (localStorage.getItem("auth") && localStorage.getItem("auth") === "true" && localStorage.getItem("user")) _utilities__WEBPACK_IMPORTED_MODULE_16__["apiClient"].get("/sanctum/csrf-cookie").then(function (res) {
       return _utilities__WEBPACK_IMPORTED_MODULE_16__["apiClient"].get("/api/slots").then(function (res) {
         var formattedSlots = [];
         if (res.data.length > 0) res.data.map(function (s) {
@@ -204264,7 +204625,7 @@ var Main = function Main(_ref) {
         });
         setSlots(formattedSlots);
       })["catch"](function (err) {
-        return console.log(err);
+        console.log(err.response);
       });
     })["catch"](function (err) {
       return console.log(err);
@@ -204288,6 +204649,16 @@ var Main = function Main(_ref) {
     path: "/trader-signup",
     component: _containers_TraderSignup__WEBPACK_IMPORTED_MODULE_15__["default"],
     exact: true
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_3__["Route"], {
+    path: "/verify-email",
+    component: _containers_EmailVerificationRequest__WEBPACK_IMPORTED_MODULE_19__["default"],
+    exact: true
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_3__["Route"], {
+    path: "/user/verify",
+    component: _containers_EmailVerification__WEBPACK_IMPORTED_MODULE_18__["default"]
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_3__["Route"], {
+    path: "/reset-password",
+    component: _containers_PasswordReset__WEBPACK_IMPORTED_MODULE_20__["default"]
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_3__["Route"], {
     path: "/redirect",
     component: _containers_PaymentRedirect__WEBPACK_IMPORTED_MODULE_17__["default"]
@@ -204999,6 +205370,7 @@ var Logout = function Logout(_ref) {
 
   var handleLogout = function handleLogout() {
     _utilities__WEBPACK_IMPORTED_MODULE_3__["apiClient"].post("/api/logout").then(function (res) {
+      localStorage.setItem("auth", false);
       localStorage.removeItem("user");
       setAuth({
         logged_in: false,
@@ -206962,7 +207334,7 @@ var handleSortBy = function handleSortBy(index, setSortBy, setFilteredProducts, 
 /*!***********************************!*\
   !*** ./resources/js/constants.js ***!
   \***********************************/
-/*! exports provided: MONTHS, USER_ID, SERVICE_ID, TEMPLATE_BASIC, TEMPLATE_ORDER, SET_PRODUCTS, SET_CATEGORIES, SET_SLOTS, SET_PAGE, HOME_PAGE, SHOW_SEARCH, SET_AUTH, SET_CART_PRODUCTS, SET_WISHLIST_PRODUCTS, MAPS_API_KEY, DEFAULT_TOAST */
+/*! exports provided: MONTHS, USER_ID, SERVICE_ID, TEMPLATE_BASIC, TEMPLATE_ORDER, SET_PRODUCTS, SET_CATEGORIES, SET_SLOTS, SET_PAGE, HOME_PAGE, SHOW_SEARCH, SET_AUTH, SET_CART_PRODUCTS, SET_WISHLIST_PRODUCTS, SALT, MAPS_API_KEY, DEFAULT_TOAST */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -206981,6 +207353,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SET_AUTH", function() { return SET_AUTH; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SET_CART_PRODUCTS", function() { return SET_CART_PRODUCTS; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SET_WISHLIST_PRODUCTS", function() { return SET_WISHLIST_PRODUCTS; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SALT", function() { return SALT; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MAPS_API_KEY", function() { return MAPS_API_KEY; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DEFAULT_TOAST", function() { return DEFAULT_TOAST; });
 var MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
@@ -206997,6 +207370,7 @@ var SHOW_SEARCH = "SHOW_SEARCH";
 var SET_AUTH = "SET_AUTH";
 var SET_CART_PRODUCTS = "SET_CART_PRODUCTS";
 var SET_WISHLIST_PRODUCTS = "SET_WISHLIST_PRODUCTS";
+var SALT = "jZFtv5TYpQdZhdM";
 var MAPS_API_KEY = "AIzaSyDkdfRfa5j9YuZy0FB-jZFtv5TYpQdZhdM";
 var DEFAULT_TOAST = {
   position: window.innerWidth < 1100 ? "bottom" : "top-right",
@@ -207362,6 +207736,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @chakra-ui/react */ "./node_modules/@chakra-ui/react/dist/esm/index.js");
 /* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
 /* harmony import */ var _utilities__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../utilities */ "./resources/js/utilities/index.js");
+/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../constants */ "./resources/js/constants.js");
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -207380,8 +207755,10 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 
+
 var Orders = function Orders() {
   var history = Object(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["useHistory"])();
+  var toast = Object(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["useToast"])(_constants__WEBPACK_IMPORTED_MODULE_4__["DEFAULT_TOAST"]);
 
   var _useState = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])([]),
       _useState2 = _slicedToArray(_useState, 2),
@@ -208381,10 +208758,32 @@ var Checkout = function Checkout(_ref) {
 
   var onSuccessPaypalPayment = function onSuccessPaypalPayment(total, oid, collection_slot) {
     setCartProducts([]);
-    var order_table = Object(_utilities_mail__WEBPACK_IMPORTED_MODULE_19__["generateTable"])(JSON.parse(localStorage.getItem("order")), total);
+    var ps = JSON.parse(localStorage.getItem("order"));
+    var order_table = Object(_utilities_mail__WEBPACK_IMPORTED_MODULE_19__["generateTable"])(ps, total);
     Object(_utilities_mail__WEBPACK_IMPORTED_MODULE_19__["handleMailSend"])(_constants__WEBPACK_IMPORTED_MODULE_8__["TEMPLATE_ORDER"], "Your order has been placed", auth.user.fullname, auth.user.email, {
       order_table: order_table,
       collection_slot: collection_slot
+    });
+    ps.map(function (p) {
+      return p.shop_id;
+    }).forEach(function (s) {
+      var productsByShop = ps.filter(function (p) {
+        return p.shop_id === s;
+      });
+      var t = cart.filter(function (c) {
+        return productsByShop.map(function (p) {
+          return p.id.includes(Number(c.product_id));
+        });
+      }).map(function (p) {
+        return p.subtotal;
+      }).reduce(function (a, b) {
+        return a + b;
+      }, 0);
+      var ot = Object(_utilities_mail__WEBPACK_IMPORTED_MODULE_19__["generateTable"])(productsByShop, t);
+      Object(_utilities_mail__WEBPACK_IMPORTED_MODULE_19__["handleMailSend"])(_constants__WEBPACK_IMPORTED_MODULE_8__["TEMPLATE_ORDER"], "Your order has been placed", productsByShop[0].shop.user.fullname, productsByShop[0].shop.user.email, {
+        ot: ot,
+        collection_slot: collection_slot
+      });
     });
     toast({
       title: "Payment Success",
@@ -209063,6 +209462,309 @@ var Contact = function Contact(_ref) {
 /* harmony default export */ __webpack_exports__["default"] = (Object(google_maps_react__WEBPACK_IMPORTED_MODULE_3__["GoogleApiWrapper"])({
   apiKey: _constants__WEBPACK_IMPORTED_MODULE_4__["MAPS_API_KEY"]
 })(Contact));
+
+/***/ }),
+
+/***/ "./resources/js/containers/EmailVerification/index.js":
+/*!************************************************************!*\
+  !*** ./resources/js/containers/EmailVerification/index.js ***!
+  \************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _chakra_ui_layout__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @chakra-ui/layout */ "./node_modules/@chakra-ui/layout/dist/esm/index.js");
+/* harmony import */ var _chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @chakra-ui/react */ "./node_modules/@chakra-ui/react/dist/esm/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var md5__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! md5 */ "./node_modules/md5/md5.js");
+/* harmony import */ var md5__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(md5__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../constants */ "./resources/js/constants.js");
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
+/* harmony import */ var query_string__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! query-string */ "./node_modules/query-string/index.js");
+/* harmony import */ var query_string__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(query_string__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var _utilities__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../utilities */ "./resources/js/utilities/index.js");
+/* harmony import */ var _actions__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../actions */ "./resources/js/actions/index.js");
+/* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+
+
+
+
+
+
+
+
+
+
+
+
+var mapDispatchToProps = function mapDispatchToProps(dispatch) {
+  return {
+    setAuth: function setAuth(auth) {
+      return dispatch(Object(_actions__WEBPACK_IMPORTED_MODULE_8__["setAuth"])(auth));
+    }
+  };
+};
+
+var EmailVerification = function EmailVerification(_ref) {
+  var setAuth = _ref.setAuth;
+  var toast = Object(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["useToast"])(_constants__WEBPACK_IMPORTED_MODULE_4__["DEFAULT_TOAST"]);
+  var history = Object(react_router_dom__WEBPACK_IMPORTED_MODULE_5__["useHistory"])();
+  Object(react__WEBPACK_IMPORTED_MODULE_2__["useEffect"])(function () {
+    var query = query_string__WEBPACK_IMPORTED_MODULE_6___default.a.parse(location.search);
+
+    if (query.token) {
+      var auth = localStorage.getItem("auth");
+      var user = localStorage.getItem("user");
+
+      if (auth && user) {
+        if (auth === "true") {
+          toast({
+            title: "Account already verified",
+            description: "Your account is already verified!",
+            status: "info"
+          });
+          history.push("/");
+        } else {
+          user = JSON.parse(user);
+
+          if (query.token === md5__WEBPACK_IMPORTED_MODULE_3___default()(user.email + _constants__WEBPACK_IMPORTED_MODULE_4__["SALT"] + user.fullname)) {
+            _utilities__WEBPACK_IMPORTED_MODULE_7__["apiClient"].get("/api/user/verify/".concat(user.id)).then(function (res) {
+              setAuth({
+                logged_in: true,
+                user: res.data.user
+              });
+              localStorage.setItem("auth", true);
+              localStorage.setItem("user", JSON.stringify(res.data.user));
+              toast({
+                title: "Email verification success",
+                description: res.data.message,
+                status: "success"
+              });
+              history.push("/");
+            })["catch"](function (err) {
+              return console.log(err);
+            });
+          } else {
+            toast({
+              title: "Link invalid or expired",
+              description: "Your account verification link is invalid or already expired!",
+              status: "warning"
+            });
+            history.push("/login");
+          }
+        }
+      } else {
+        toast({
+          title: "Link expired",
+          description: "Your account verification link is already expired!",
+          status: "warning"
+        });
+        history.push("/login");
+      }
+    }
+  }, []);
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_layout__WEBPACK_IMPORTED_MODULE_0__["Flex"], {
+    w: "100%",
+    h: "100vh",
+    justifyContent: "center",
+    alignItems: "center"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Spinner"], {
+    color: "secondary",
+    mr: "10px",
+    boxSize: "15px"
+  }), " ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement("p", null, "Verifying your account... Please dont close this window!"));
+};
+
+/* harmony default export */ __webpack_exports__["default"] = (Object(react_redux__WEBPACK_IMPORTED_MODULE_9__["connect"])(null, mapDispatchToProps)(EmailVerification));
+
+/***/ }),
+
+/***/ "./resources/js/containers/EmailVerificationRequest/index.js":
+/*!*******************************************************************!*\
+  !*** ./resources/js/containers/EmailVerificationRequest/index.js ***!
+  \*******************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @chakra-ui/react */ "./node_modules/@chakra-ui/react/dist/esm/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var react_icons_ai__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-icons/ai */ "./node_modules/react-icons/ai/index.esm.js");
+/* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
+/* harmony import */ var _images_logo_black_png__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../images/logo-black.png */ "./resources/images/logo-black.png");
+/* harmony import */ var _images_logo_black_png__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_images_logo_black_png__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../constants */ "./resources/js/constants.js");
+/* harmony import */ var _utilities_mail__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../utilities/mail */ "./resources/js/utilities/mail.js");
+/* harmony import */ var md5__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! md5 */ "./node_modules/md5/md5.js");
+/* harmony import */ var md5__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(md5__WEBPACK_IMPORTED_MODULE_8__);
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _iterableToArrayLimit(arr, i) { var _i = arr && (typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"]); if (_i == null) return; var _arr = []; var _n = true; var _d = false; var _s, _e; try { for (_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+
+
+
+
+
+
+
+
+
+
+
+var mapStateToProps = function mapStateToProps(state) {
+  return {
+    auth: state.auth
+  };
+};
+
+var EmailVerification = function EmailVerification(_ref) {
+  var auth = _ref.auth;
+  var history = Object(react_router_dom__WEBPACK_IMPORTED_MODULE_4__["useHistory"])();
+
+  var _useState = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])(false),
+      _useState2 = _slicedToArray(_useState, 2),
+      loading = _useState2[0],
+      setLoading = _useState2[1];
+
+  var toast = Object(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["useToast"])(_constants__WEBPACK_IMPORTED_MODULE_6__["DEFAULT_TOAST"]);
+  Object(react__WEBPACK_IMPORTED_MODULE_1__["useEffect"])(function () {
+    if (!auth.logged_in && auth.user) {
+      if (auth.user.email_verified_at) {
+        toast({
+          title: "Account already verified",
+          description: "Your account is already verified!",
+          status: "info"
+        });
+        history.push("/");
+      } else {
+        toast({
+          title: "Verify your account",
+          description: "You need to verify your email address first!",
+          status: "info"
+        });
+        sendVerificationMail();
+      }
+    } else if (auth.logged_in && auth.user) {
+      toast({
+        title: "Account already verified",
+        description: "Your account is already verified!",
+        status: "info"
+      });
+      history.push("/");
+    } else history.push("/login");
+  }, [auth]);
+
+  var sendVerificationMail = function sendVerificationMail() {
+    var resend = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+    setLoading(true);
+    var hash = md5__WEBPACK_IMPORTED_MODULE_8___default()(auth.user.email + _constants__WEBPACK_IMPORTED_MODULE_6__["SALT"] + auth.user.fullname);
+    var link = "http://localhost:3000/user/verify/?token=".concat(hash);
+    var message = "<p>Please click <a href=\"".concat(link, "\">here</a> or the given link below to verify your email!</p><p><a href=\"").concat(link, "\">").concat(link, "</a></p>");
+    Object(_utilities_mail__WEBPACK_IMPORTED_MODULE_7__["handleMailSend"])(_constants__WEBPACK_IMPORTED_MODULE_6__["TEMPLATE_BASIC"], "Email verification link", auth.user.fullname, auth.user.email, {
+      message: message,
+      from_name: "Clefax E-Shop",
+      reply_to: null
+    });
+    if (resend) toast({
+      title: "Email resend success",
+      description: "Your email verification link has been sent successfully!",
+      status: "success"
+    });
+    setLoading(false);
+  };
+
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Flex"], {
+    alignItems: {
+      base: "center",
+      md: "flex-start"
+    },
+    direction: "column"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Link"], {
+    href: "/",
+    _focus: {
+      boxShadow: "none"
+    },
+    outline: "none",
+    pos: {
+      base: "relative",
+      md: "absolute"
+    },
+    top: {
+      base: "0",
+      md: "-50px"
+    }
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Image"], {
+    src: _images_logo_black_png__WEBPACK_IMPORTED_MODULE_5___default.a,
+    w: "200px",
+    objectFit: "cover",
+    h: {
+      base: "20vh",
+      md: "auto"
+    }
+  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Flex"], {
+    w: "100%",
+    h: {
+      base: "auto",
+      md: "100vh"
+    },
+    justifyContent: "center",
+    alignItems: "center"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Box"], {
+    maxW: {
+      base: "md",
+      md: "xl"
+    },
+    w: "100%",
+    m: "20px",
+    borderWidth: "1px",
+    borderRadius: "lg",
+    overflow: "hidden",
+    mt: {
+      base: "50px !important",
+      md: "0 !important"
+    },
+    textAlign: "center",
+    p: {
+      base: "30px 10px",
+      md: "50px"
+    }
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Icon"], {
+    as: react_icons_ai__WEBPACK_IMPORTED_MODULE_2__["AiFillCheckCircle"],
+    color: "green",
+    fontSize: "3em"
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Heading"], {
+    as: "h6",
+    fontSize: "lg",
+    mt: "20px"
+  }, "Email verification link sent!"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Text"], {
+    mt: "10px"
+  }, "Please check your email account and click on the link to verify your email address."), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Button"], {
+    p: "20px !important",
+    mt: "20px",
+    fontSize: "sm",
+    onClick: function onClick() {
+      return sendVerificationMail(true);
+    }
+  }, loading ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Spinner"], {
+    color: "primary"
+  }) : "Resend link"))));
+};
+
+/* harmony default export */ __webpack_exports__["default"] = (Object(react_redux__WEBPACK_IMPORTED_MODULE_3__["connect"])(mapStateToProps)(EmailVerification));
 
 /***/ }),
 
@@ -211481,7 +212183,9 @@ var Login = function Login(_ref) {
   };
 
   var onError = function onError(err) {
+    console.log(err.response);
     var errors = err.response.data.message;
+    console.log(errors);
 
     if (errors.length > 0) {
       errors.forEach(function (msg) {
@@ -211584,19 +212288,30 @@ var Login = function Login(_ref) {
             status: "success"
           });
           localStorage.setItem("user", JSON.stringify(res.data.user));
+          localStorage.setItem("auth", true);
           setAuth({
             logged_in: true,
             user: res.data.user
           });
           Object(_utilities_data__WEBPACK_IMPORTED_MODULE_12__["loadWishlist"])(onSuccessWishlist, onError);
         })["catch"](function (err) {
-          console.log(err);
-          toast({
-            title: "Error while logging in",
-            description: err.response.data ? err.response.data.message : "Error occured! Please try again!",
-            status: "error"
-          });
-          actions.setSubmitting(false);
+          if (err.response.status === 403) {
+            setAuth({
+              logged_in: false,
+              user: err.response.data.user
+            });
+            localStorage.setItem("user", JSON.stringify(err.response.data.user));
+            localStorage.setItem("auth", false);
+            history.push("/verify-email");
+          } else {
+            console.log(err.response);
+            toast({
+              title: "Error while logging in",
+              description: err.response.data ? err.response.data.message : "Error occured! Please try again!",
+              status: "error"
+            });
+            actions.setSubmitting(false);
+          }
         });
       })["catch"](function (err) {
         console.log(err.response);
@@ -211757,6 +212472,27 @@ var NotFound = function NotFound(_ref) {
 };
 
 /* harmony default export */ __webpack_exports__["default"] = (NotFound);
+
+/***/ }),
+
+/***/ "./resources/js/containers/PasswordReset/index.js":
+/*!********************************************************!*\
+  !*** ./resources/js/containers/PasswordReset/index.js ***!
+  \********************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+
+
+var PasswordReset = function PasswordReset() {
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null);
+};
+
+/* harmony default export */ __webpack_exports__["default"] = (PasswordReset);
 
 /***/ }),
 
@@ -213741,15 +214477,16 @@ var Signup = function Signup(_ref) {
           });
 
           if (values.isTrader === "0") {
+            localStorage.setItem("auth", false);
             localStorage.setItem("user", JSON.stringify(res.data.user));
             setAuth({
-              logged_in: true,
+              logged_in: false,
               user: res.data.user
             });
           }
 
           actions.setSubmitting(false);
-          history.push(values.isTrader === "1" ? "/trader-signup" : "/");
+          history.push(values.isTrader === "1" ? "/trader-signup" : "/verify-email");
         })["catch"](function (err) {
           console.log(err.response);
           actions.setSubmitting(false);
@@ -215542,11 +216279,7 @@ var addToCart = function addToCart(product, auth, valueAsNumber, onSuccess, onEr
         qty: valueAsNumber,
         subtotal: Object(___WEBPACK_IMPORTED_MODULE_0__["getFinalPrice"])(product) * valueAsNumber
       }).then(function (res) {
-        setCartProducts([{
-          product_id: product.id,
-          qty: valueAsNumber,
-          subtotal: Object(___WEBPACK_IMPORTED_MODULE_0__["getFinalPrice"])(product) * valueAsNumber
-        }].concat(_toConsumableArray(cart)));
+        setCartProducts([res.data.cart].concat(_toConsumableArray(cart)));
         onSuccess(product.id);
       })["catch"](function (err) {
         onError(err);
