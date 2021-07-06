@@ -14,7 +14,8 @@ import {
     Text,
     Spacer,
     SimpleGrid,
-    Flex
+    Flex,
+    Avatar
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
@@ -24,10 +25,13 @@ import ProductCardColumn from "../../components/ProductCardColumn";
 import Sorter, { handleSortBy } from "../../components/Sorter";
 import ReactPaginate from "react-paginate";
 import { BsArrowLeftShort, BsArrowRightShort } from "react-icons/bs";
+import { FaLocationArrow, FaUser, FaPhone, FaEnvelope } from "react-icons/fa";
 import { ChevronRightIcon } from "@chakra-ui/icons";
-import { ceil } from "lodash";
-import { getFinalPrice, searchQuery } from "../../utilities";
+import { ceil, filter } from "lodash";
+import { apiClient, getFinalPrice, searchQuery } from "../../utilities";
 import qs from "query-string";
+import { useHistory } from "react-router-dom";
+import ShopImg from "../../../images/shop.jpg";
 
 const mapStateToProps = state => ({
     products: state.products,
@@ -37,6 +41,7 @@ const mapStateToProps = state => ({
 const options = [6, 12, 18];
 
 const Shop = ({ crumbs, products, categories }) => {
+    var history = useHistory();
     const [sortBy, setSortBy] = useState(0);
     const [loading, setLoading] = useState(false);
     const [filteredProducts, setFilteredProducts] = useState([]);
@@ -47,6 +52,10 @@ const Shop = ({ crumbs, products, categories }) => {
     const [activeTags, setActiveTags] = useState([]);
     const [tags, setTags] = useState([]);
     const [query, setQuery] = useState(null);
+    const [filterByShop, setFilterByShop] = useState({
+        status: false,
+        shop: null
+    });
 
     useEffect(() => {
         if (products) {
@@ -66,14 +75,52 @@ const Shop = ({ crumbs, products, categories }) => {
             setLoading(true);
             const q = qs.parse(location.search);
             setQuery(q);
-            if (categories.length) {
+            if (categories.length && products.length) {
                 const index = q.cat
                     ? categories.findIndex(category => category.name === q.cat)
                     : null;
                 handleFilter(value, index, null, q.q);
             }
         }
-    }, [categories]);
+    }, [categories, products]);
+
+    useEffect(() => {
+        if (location.pathname === "/shop/products/") {
+            setLoading(true);
+            const q = qs.parse(location.search);
+            if (q.id) {
+                apiClient
+                    .get("/sanctum/csrf-cookie")
+                    .then(res =>
+                        apiClient
+                            .get(`/api/shops/${q.id}`)
+                            .then(res => {
+                                setFilterByShop({
+                                    status: true,
+                                    shop: res.data
+                                });
+                                setFilteredProducts(res.data.products);
+
+                                var temp = [];
+                                res.data.products.forEach(p => {
+                                    temp = temp.concat(
+                                        p.tags
+                                            ? p.tags
+                                                  .split(",")
+                                                  .map(t => t.trim())
+                                            : []
+                                    );
+                                });
+
+                                setTags(temp);
+                                setLoading(false);
+                            })
+                            .catch(err => console.log(err))
+                    )
+                    .catch(err => console.log(err));
+            } else history.goBack();
+        }
+    }, []);
 
     useEffect(() => {
         if (location.pathname !== "/shop/search/" && products.length) {
@@ -87,6 +134,10 @@ const Shop = ({ crumbs, products, categories }) => {
         setLoading(true);
 
         var fp = products;
+
+        if (filterByShop.status) {
+            fp = filterByShop.shop.products;
+        }
 
         if (q) fp = searchQuery(fp, q);
 
@@ -160,9 +211,11 @@ const Shop = ({ crumbs, products, categories }) => {
             <Breadcrumb
                 crumbs={crumbs}
                 margin="20px 0"
-                customPageName={
-                    query ? `Search Results for "${query.q}"` : null
-                }
+                customPageName={(() => {
+                    if (query) return `Search Results for "${query.q}"`;
+                    else if (filterByShop.status) return filterByShop.shop.name;
+                    else return null;
+                })()}
             />
             <Stack
                 direction={{ base: "column", lg: "row" }}
@@ -200,7 +253,10 @@ const Shop = ({ crumbs, products, categories }) => {
                                     }
                                 >
                                     <ListIcon as={ChevronRightIcon} />
-                                    {name} {!query && `(${products.length})`}
+                                    {name}{" "}
+                                    {!query &&
+                                        !filterByShop.status &&
+                                        `(${products.length})`}
                                 </ListItem>
                             ))}
                         </List>
@@ -213,7 +269,11 @@ const Shop = ({ crumbs, products, categories }) => {
                         <Divider borderColor="#66666663" mb="20px" />
                         <PriceRange
                             setLoading={setLoading}
-                            data={products}
+                            data={
+                                filterByShop.status
+                                    ? filterByShop.shop.products
+                                    : products
+                            }
                             setPriceRange={setValue}
                             handleFilter={handleFilter}
                             fontSize="medium"
@@ -259,6 +319,73 @@ const Shop = ({ crumbs, products, categories }) => {
                     )}{" "}
                 </VStack>
                 <Box w="100%">
+                    {filterByShop.status && (
+                        <Box
+                            w="100%"
+                            h="400px"
+                            bg={`url(${ShopImg}) no-repeat center center`}
+                            bgSize="cover"
+                            mb="30px"
+                        >
+                            <VStack
+                                w={{ base: "100%", md: "40%", lg: "30%" }}
+                                bgColor="rgba(0, 0, 0, 0.8)"
+                                spacing={3}
+                                h="100%"
+                                justifyContent="center"
+                                p="20px 10px"
+                            >
+                                <Avatar
+                                    size="xl"
+                                    name={filterByShop.shop.name}
+                                    src={filterByShop.shop.logo}
+                                    mb="10px"
+                                />
+                                <Heading as="h6" fontSize="lg" color="#fff">
+                                    {filterByShop.shop.name}
+                                </Heading>
+                                <VStack
+                                    mt="45px !important"
+                                    spacing={2}
+                                    alignItems="flex-start"
+                                >
+                                    <Text
+                                        color="#fff"
+                                        display="flex"
+                                        alignItems="center"
+                                    >
+                                        <Icon as={FaLocationArrow} mr="10px" />{" "}
+                                        {filterByShop.shop.street_no},{" "}
+                                        {filterByShop.shop.city}
+                                    </Text>
+                                    <Text
+                                        color="#fff"
+                                        display="flex"
+                                        alignItems="center"
+                                    >
+                                        <Icon as={FaUser} mr="10px" />{" "}
+                                        {filterByShop.shop.user.fullname}
+                                    </Text>
+                                    <Text
+                                        color="#fff"
+                                        display="flex"
+                                        alignItems="center"
+                                    >
+                                        <Icon as={FaEnvelope} mr="10px" />{" "}
+                                        {filterByShop.shop.user.email}
+                                    </Text>
+                                    <Text
+                                        color="#fff"
+                                        display="flex"
+                                        alignItems="center"
+                                    >
+                                        <Icon as={FaPhone} mr="10px" />{" "}
+                                        {filterByShop.shop.user.phone}
+                                    </Text>
+                                </VStack>
+                            </VStack>
+                        </Box>
+                    )}
                     <Stack
                         direction={{ base: "column", md: "row" }}
                         alignItems={{ base: "flex-start", md: "center" }}

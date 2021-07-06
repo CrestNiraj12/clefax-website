@@ -10,23 +10,31 @@ import {
     FormErrorMessage,
     FormLabel,
     Heading,
-    HStack,
     Input,
     InputGroup,
     InputRightElement,
     Select,
+    Spinner,
     Stack,
     useToast,
     VStack
 } from "@chakra-ui/react";
 import { connect } from "react-redux";
+import { apiClient } from "../../utilities";
+import { DEFAULT_TOAST } from "../../constants";
+import { setAuth } from "../../actions";
 
 const details = [
-    { name: "fullname", label: "Full Name" },
-    { name: "email", label: "Email Address" },
-    { name: "phone", label: "Phone no." },
-    { name: "address", label: "Address" },
-    { name: "street_no", label: "Street Address" }
+    { name: "fullname", label: "Full Name", disabled: false, required: true },
+    { name: "email", label: "Email Address", disabled: true, required: true },
+    { name: "phone", label: "Phone no.", disabled: false, required: true },
+    { name: "address", label: "Address", disabled: false, required: true },
+    {
+        name: "street_no",
+        label: "Street Address",
+        disabled: false,
+        required: false
+    }
 ];
 
 const passwords = [
@@ -42,15 +50,20 @@ const mapStateToProps = state => ({
     auth: state.auth
 });
 
-const Details = ({ auth }) => {
-    const toast = useToast();
+const mapDispatchToProps = dispatch => ({
+    setAuth: auth => dispatch(setAuth(auth))
+});
+
+const Details = ({ auth, setAuth }) => {
+    const toast = useToast(DEFAULT_TOAST);
     const [show, setShow] = useState({
         password: false,
         new_password: false,
         new_password_confirmation: false
     });
+    const [avatar, setAvatar] = useState(null);
 
-    return (
+    return auth.logged_in ? (
         <Formik
             validate={validateDetails}
             initialValues={{
@@ -67,19 +80,68 @@ const Details = ({ auth }) => {
                 new_password_confirmation: ""
             }}
             onSubmit={(values, actions) => {
-                setTimeout(() => {
-                    alert(JSON.stringify(values, null, 2));
-                    actions.setSubmitting(false);
-                    toast({
-                        title: "Account details updated",
-                        description:
-                            "Successfully updated your account details.",
-                        status: "success",
-                        duration: 2000,
-                        isClosable: true,
-                        position: "top"
-                    });
-                }, 1000);
+                apiClient
+                    .get("/sanctum/csrf-cookie")
+                    .then(res => {
+                        const data = new FormData();
+
+                        for (var key in values) {
+                            data.append(key, values[key]);
+                        }
+
+                        data.append("avatar", avatar);
+                        apiClient
+                            .post("/api/user", data)
+                            .then(res => {
+                                setAuth({
+                                    logged_in: true,
+                                    user: res.data.user
+                                });
+                                localStorage.setItem(
+                                    "user",
+                                    JSON.stringify(res.data.user)
+                                );
+                                actions.setSubmitting(false);
+                                toast({
+                                    title: "Account details updated",
+                                    description: res.data.message,
+                                    status: "success"
+                                });
+                            })
+                            .catch(err => {
+                                actions.setSubmitting(false);
+                                console.log(err);
+                                console.log(err.response);
+                                if (err.response) {
+                                    const errors = err.response.data.errors;
+                                    if (errors) {
+                                        Object.keys(errors)
+                                            .map(k => errors[k][0])
+                                            .forEach(error => {
+                                                console.log(error);
+                                                toast({
+                                                    title: "Error occurred!",
+                                                    description: error,
+                                                    status: "error"
+                                                });
+                                            });
+                                    } else
+                                        toast({
+                                            title: "Error occurred!",
+                                            description:
+                                                err.response.data.message,
+                                            status: "error"
+                                        });
+                                } else
+                                    toast({
+                                        title: "Error occurred!",
+                                        description:
+                                            "Something went wrong while updating your details! Please try again!",
+                                        status: "error"
+                                    });
+                            });
+                    })
+                    .catch(err => console.log(err));
             }}
         >
             {props => (
@@ -105,7 +167,7 @@ const Details = ({ auth }) => {
                                         <Avatar
                                             size="2xl"
                                             name={auth.user.fullname}
-                                            src={auth.user.avatar}
+                                            src={`storage/${auth.user.avatar}`}
                                         />
                                         <Box w={{ base: "100%", md: "40%" }}>
                                             <FormLabel>Avatar</FormLabel>
@@ -114,12 +176,14 @@ const Details = ({ auth }) => {
                                                     withPreview={true}
                                                     withIcon={true}
                                                     buttonText="Browse avatar"
-                                                    onChange={(files, urls) =>
+                                                    singleImage={true}
+                                                    onChange={(files, urls) => {
+                                                        setAvatar(files[0]);
                                                         form.setFieldValue(
                                                             "avatar",
                                                             files[0]
-                                                        )
-                                                    }
+                                                        );
+                                                    }}
                                                     imgExtension={[
                                                         ".jpg",
                                                         ".gif",
@@ -134,23 +198,34 @@ const Details = ({ auth }) => {
                                 </FormControl>
                             )}
                         </Field>
-                        {details.map(({ name, label }, index) => (
-                            <Field name={name} key={index}>
-                                {({ field, form }) => (
-                                    <FormControl
-                                        isInvalid={
-                                            form.errors[name] &&
-                                            form.touched[name]
-                                        }
-                                        mb="10px !important"
-                                    >
-                                        <FormLabel>{label}</FormLabel>
+                        {details.map(
+                            ({ name, label, disabled, required }, index) => (
+                                <Field name={name} key={index}>
+                                    {({ field, form }) => (
+                                        <FormControl
+                                            isInvalid={
+                                                form.errors[name] &&
+                                                form.touched[name]
+                                            }
+                                            isRequired={required}
+                                            mb="10px !important"
+                                        >
+                                            <FormLabel>{label}</FormLabel>
 
-                                        <Input {...field} id={name} size="sm" />
-                                    </FormControl>
-                                )}
-                            </Field>
-                        ))}
+                                            <Input
+                                                {...field}
+                                                id={name}
+                                                size="sm"
+                                                disabled={disabled}
+                                            />
+                                            <FormErrorMessage>
+                                                {form.errors.name}
+                                            </FormErrorMessage>
+                                        </FormControl>
+                                    )}
+                                </Field>
+                            )
+                        )}
                         <Field name="dob">
                             {({ field, form }) => (
                                 <FormControl
@@ -167,6 +242,9 @@ const Details = ({ auth }) => {
                                         id="dob"
                                         size="sm"
                                     />
+                                    <FormErrorMessage>
+                                        {form.errors.dob}
+                                    </FormErrorMessage>
                                 </FormControl>
                             )}
                         </Field>
@@ -191,6 +269,9 @@ const Details = ({ auth }) => {
                                         <option value="F">Female</option>
                                         <option value="O">Other</option>
                                     </Select>
+                                    <FormErrorMessage>
+                                        {form.errors.gender}
+                                    </FormErrorMessage>
                                 </FormControl>
                             )}
                         </Field>
@@ -268,7 +349,9 @@ const Details = ({ auth }) => {
                 </Form>
             )}
         </Formik>
+    ) : (
+        <Spinner color="secondary" />
     );
 };
 
-export default connect(mapStateToProps)(Details);
+export default connect(mapStateToProps, mapDispatchToProps)(Details);

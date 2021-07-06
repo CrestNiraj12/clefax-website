@@ -13,78 +13,16 @@ import {
     Input,
     SimpleGrid,
     VStack,
-    Icon
+    Avatar
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import Breadcrumb from "../../components/Breadcrumb";
 import { SearchIcon } from "@chakra-ui/icons";
-import { HiOutlineDocumentSearch } from "react-icons/hi";
 import { CSSTransition } from "react-transition-group";
 import { handleSortBy } from "../../components/Sorter";
-import { searchQuery } from "../../utilities";
-
-const vs = [
-    {
-        id: 1,
-        name: "Tony Leonard",
-        city: "San Francisco, CA 94110, United States",
-        street_no: "60, 29th Street",
-        PAN: "01202012010",
-        logo:
-            "https://image.freepik.com/free-vector/happy-shop-logo-template_57516-57.jpg",
-        created_at: "2021/01/01"
-    },
-    {
-        id: 1,
-        name: "Peent Leonard",
-        city: "San Francisco, CA 94110, United States",
-        street_no: "60, 29th Street",
-        PAN: "01202012010",
-        logo:
-            "https://i.pinimg.com/originals/c1/92/9d/c1929d3492c2f64ab65b43808c072043.jpg",
-        created_at: "2022/01/05"
-    },
-    {
-        id: 1,
-        name: "Tony Leonard",
-        city: "San Francisco, CA 94110, United States",
-        street_no: "60, 29th Street",
-        PAN: "01202012010",
-        logo:
-            "https://image.freepik.com/free-vector/happy-shop-logo-template_57516-57.jpg",
-        created_at: "2021/10/01"
-    },
-    {
-        id: 1,
-        name: "Reent Leonard",
-        city: "San Francisco, CA 94110, United States",
-        street_no: "60, 29th Street",
-        PAN: "01202012010",
-        logo:
-            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTGZvbSzJpL1DAcs1qQMEa-GXnNa6g1EX02RA&usqp=CAU",
-        created_at: "2121/01/01"
-    },
-    {
-        id: 1,
-        name: "Tony Leonard",
-        city: "San Francisco, CA 94110, United States",
-        street_no: "60, 29th Street",
-        PAN: "01202012010",
-        logo:
-            "https://image.freepik.com/free-vector/happy-shop-logo-template_57516-57.jpg",
-        created_at: "2021/01/21"
-    },
-    {
-        id: 1,
-        name: "Tony Leonard",
-        city: "San Francisco, CA 94110, United States",
-        street_no: "60, 29th Street",
-        PAN: "01202012010",
-        logo:
-            "https://image.freepik.com/free-vector/happy-shop-logo-template_57516-57.jpg",
-        created_at: "2021/01/30"
-    }
-];
+import { apiClient, searchQuery } from "../../utilities";
+import Shop from "../../../images/shop.jpg";
+import { useHistory } from "react-router-dom";
 
 const sortingOptions = ["Most Recent", "Most Popular"];
 
@@ -96,8 +34,13 @@ const Vendors = ({ crumbs }) => {
     const [showVendorSearch, setShowVendorSearch] = useState(false);
 
     useEffect(() => {
-        setVendors(vs);
-        handleSortBy(2, setOption, setFilteredVendors, vs, 2);
+        apiClient
+            .get("/api/shops")
+            .then(res => {
+                setVendors(res.data);
+                handleSortBy(2, setOption, setFilteredVendors, res.data, 2);
+            })
+            .catch(err => console.log(err));
     }, []);
 
     const handleSort = index => {
@@ -119,7 +62,7 @@ const Vendors = ({ crumbs }) => {
         const q = e.target.value;
         setQuery(q);
 
-        const filtered = searchQuery(vendors, q, "name");
+        const filtered = searchQuery(vendors, q);
 
         setFilteredVendors(q.length > 0 ? filtered : vendors);
     };
@@ -215,31 +158,44 @@ const Vendors = ({ crumbs }) => {
     );
 };
 
-const VendorColumn = ({ vendor: { name, street_no, city, logo, PAN } }) => {
+const VendorColumn = ({ vendor: { id, name, street_no, city, logo } }) => {
+    var history = useHistory();
+
     return (
         <Box
             w="100%"
             h="200px"
             p="20px"
-            bg={`url(${logo}) no-repeat center center #515151`}
+            bg={`url(${Shop}) no-repeat center center #515151`}
             bgBlendMode="multiply"
             bgSize="cover"
+            display="flex"
+            onClick={() => history.push(`/shop/products/?id=${id}`)}
+            role="group"
         >
-            <VStack alignItems="flex-start" h="100%" justifyContent="center">
-                <Heading as="h6" fontSize="lg" color="#fff">
-                    {name}
-                </Heading>
-                <Text color="#fff" fontSize="xs">
-                    {street_no}, {city}
-                </Text>
-                <Text color="#fff" fontSize="sm" color="lightgray">
-                    PAN
-                    <span>
-                        <Icon as={HiOutlineDocumentSearch} />
-                    </span>{" "}
-                    : {PAN}
-                </Text>
-            </VStack>
+            <HStack spacing={5}>
+                <Avatar size="lg" name={name} src={logo} />
+                <VStack
+                    alignItems="flex-start"
+                    h="100%"
+                    justifyContent="center"
+                >
+                    <Heading
+                        as="h6"
+                        fontSize="lg"
+                        color="#fff"
+                        _groupHover={{
+                            cursor: "pointer",
+                            color: "var(--chakra-colors-secondary) !important"
+                        }}
+                    >
+                        {name}
+                    </Heading>
+                    <Text color="#fff" fontSize="xs">
+                        {street_no}, {city}
+                    </Text>
+                </VStack>
+            </HStack>
         </Box>
     );
 };

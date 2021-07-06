@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Traits\UploadTrait;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -9,6 +10,8 @@ use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
+    use UploadTrait;
+
     public function login(Request $request) {      
         $user = User::where([
                 'email' => $request->email, 
@@ -64,10 +67,10 @@ class UserController extends Controller
         return response()->json(['message' => 'Logged out successfully!'], 200);
     }
 
-    public function update(Request $request) {   
+    public function update(Request $request) {
         $request->validate([
-            'password' => 'optional',
-            'new_password' => 'confirmed|regex:/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/|different:password|required_with:password'
+            'password' => 'nullable',
+            'new_password' => 'nullable|confirmed|regex:/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/|different:password|required_with:password'
         ]);
 
         if (isset($request->password)) {
@@ -86,12 +89,13 @@ class UserController extends Controller
         }
 
         $imageName = null;
+        
         if ($request->hasFile('avatar')) {
             $request->validate(['avatar' => 'image|mimes:jpeg,png,jpg,gif,svg']);
             $imageName = $this->imageUpload($request->avatar, 'users');
         }
 
-        User::where('id', auth()->user()->id)->update($request->except('avatar', 'password', 'new_password') + (isset($imageName) ? ['avatar' => $imageName] : []));
-        return response()->json(['message' => 'User updated successfully!', 'user' => auth()->user()]);
+        $user = tap(User::where('id', auth()->user()->id))->update($request->except('avatar', 'password', 'new_password', 'new_password_confirmation') + (isset($imageName) ? ['avatar' => $imageName] : []))->first();
+        return response()->json(['message' => 'User details updated successfully!', 'user' => $user]);
     }
 }

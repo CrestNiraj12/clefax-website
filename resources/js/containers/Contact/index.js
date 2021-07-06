@@ -13,11 +13,12 @@ import {
     FormControl,
     FormErrorMessage,
     Input,
-    Button
+    Button,
+    useToast
 } from "@chakra-ui/react";
 import Breadcrumb from "../../components/Breadcrumb";
 import { Map, GoogleApiWrapper, InfoWindow, Marker } from "google-maps-react";
-import { MAPS_API_KEY } from "../../constants";
+import { MAPS_API_KEY, TEMPLATE_BASIC } from "../../constants";
 import {
     FaTwitter,
     FaFacebook,
@@ -27,6 +28,7 @@ import {
 } from "react-icons/fa";
 import { Formik, Form, Field } from "formik";
 import { validateContactForm } from "../../utilities/validation";
+import { handleMailSend } from "../../utilities/mail";
 
 const mapStyles = {
     width: "100%",
@@ -65,6 +67,7 @@ const Contact = ({ crumbs }) => {
     const [showInfoWindow, setShowInfoWindow] = useState(false);
     const [activeMarker, setActiveMarker] = useState(null);
     const [selectedPlace, setSelectedPlace] = useState(null);
+    const toast = useToast();
 
     const handleMarkerClick = (props, marker, e) => {
         setActiveMarker(marker);
@@ -125,14 +128,34 @@ const Contact = ({ crumbs }) => {
                             message: ""
                         }}
                         onSubmit={(values, actions) => {
-                            setTimeout(() => {
-                                alert(JSON.stringify(values, null, 2));
-                                actions.setSubmitting(false);
-                            }, 1000);
+                            handleMailSend(
+                                TEMPLATE_BASIC,
+                                values.subject,
+                                "Admin",
+                                "clefaxeshop@gmail.com",
+                                {
+                                    message:
+                                        `<p>Enquiry from: ${values.fullname}<br/>Email: ${values.email}</p><p>` +
+                                        message.value +
+                                        "</p>",
+                                    from_name: values.fullname,
+                                    reply_to: values.email
+                                }
+                            );
+                            actions.setSubmitting(false);
+                            toast({
+                                title: "Thank you for contacting us",
+                                description:
+                                    "We will look at your enquiry and contact you soon!",
+                                status: "info",
+                                duration: "1500",
+                                position: "top"
+                            });
+                            actions.resetForm();
                         }}
                     >
                         {props => (
-                            <>
+                            <Form style={{ width: "100%" }}>
                                 <HStack>
                                     <Field name="fullname">
                                         {({ field, form }) => (
@@ -241,7 +264,7 @@ const Contact = ({ crumbs }) => {
                                 >
                                     Send
                                 </Button>
-                            </>
+                            </Form>
                         )}
                     </Formik>
                 </Box>
@@ -268,7 +291,7 @@ const Contact = ({ crumbs }) => {
                         <Heading as="h6" fontSize="small">
                             Email
                         </Heading>
-                        <Text>clefax-eshop@gmail.com</Text>
+                        <Text>clefaxeshop@gmail.com</Text>
                     </VStack>
                     <VStack spacing={3} alignItems="flex-start">
                         <Heading as="h6" fontSize="small">

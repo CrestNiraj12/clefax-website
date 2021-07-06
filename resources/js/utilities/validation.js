@@ -64,7 +64,7 @@ export const validateContactForm = values => {
         errors.email = "Email address is invalid";
     }
 
-    if (!values.phone) errors.subject = "Subject is required";
+    if (!values.subject) errors.subject = "Subject is required";
     if (!values.message) errors.message = "Message is required";
     return errors;
 };
@@ -135,12 +135,19 @@ export const validateShop = values => {
 export const validateDetails = values => {
     const errors = {};
 
+    if (!values.fullname) errors.fullname = "Please enter your name";
+
+    if (!values.phone) errors.phone = "Please enter your phone number";
+    if (!values.address) errors.address = "Please enter your address";
+
     if (
         values.email &&
         !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)
     ) {
         errors.email = "Email address is invalid";
     }
+    if (!values.dob) errors.dob = "Please enter your date of birth";
+    if (!values.gender) errors.gender = "Please enter your gender";
 
     if (values.old_password) {
         if (!values.password) errors.password = "Password is required";

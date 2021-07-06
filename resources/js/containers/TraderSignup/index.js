@@ -251,6 +251,9 @@ const TraderSignup = () => {
                                                                     withIcon={
                                                                         true
                                                                     }
+                                                                    singleImage={
+                                                                        true
+                                                                    }
                                                                     buttonText="Browse logo"
                                                                     onChange={(
                                                                         files,

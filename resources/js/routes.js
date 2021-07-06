@@ -25,6 +25,12 @@ export default [
         name: "Search results"
     },
     {
+        path: "/shop/products",
+        Component: Shop,
+        exact: false,
+        name: "Shop products"
+    },
+    {
         path: "/shop/:name",
         Component: Product,
         exact: false,

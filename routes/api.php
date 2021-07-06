@@ -41,7 +41,9 @@ Route::get('/products', [ProductController::class, "getAllProducts"]);
 Route::get('/products/{id}', [ProductController::class, "getProduct"]);
 Route::get('/categories', [CategoryController::class, "getAllCategories"]);
 Route::get('/categories/{id}', [CategoryController::class, "getCategory"]);
- Route::get('/orders/{id}', [OrderController::class, 'getOrderById']);
+Route::get('/shops', [ShopController::class, "getAllShops"]);
+Route::get('/shops/{id}', [ShopController::class, "getShop"]);
+
 Route::middleware(['auth:sanctum'])->group(function() {
     Route::post('/report/create', [ReportController::class, 'store']);
     Route::post('/review/create', [ReviewController::class, 'store']);
@@ -60,9 +62,9 @@ Route::middleware(['auth:sanctum'])->group(function() {
     Route::get('/cart', [CartHasProductController::class, 'getCartHasProducts']);
     Route::delete('/cart/product/{id}', [CartHasProductController::class, 'destroy']);
     Route::get('/slots', [CollectionSlotController::class, 'getSlots']);
-    Route::put('/user', [UserController::class, 'update']);
+    Route::post('/user', [UserController::class, 'update']);
     Route::get('/orders', [OrderController::class, 'getOrders']);
-   
+    Route::get('/orders/{id}', [OrderController::class, 'getOrderById']);
     Route::post('/order', [OrderHasProductsController::class, 'store']);
     Route::post('/payment', [PaymentController::class, 'store']);
     Route::post('/stripe/pay', [PaymentController::class, 'stripePaymentProcess']);

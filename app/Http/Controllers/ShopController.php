@@ -18,7 +18,7 @@ class ShopController extends Controller
 
     public function show($id) {
         $shop = Shop::find($id);
-        return $shop;
+        return $shop->load('products.category', 'user');
     }
 
     public function getShop($id) {
