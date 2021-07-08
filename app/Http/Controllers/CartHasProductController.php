@@ -30,7 +30,7 @@ class CartHasProductController extends Controller
                     ['qty' => $cartHasProduct->getOriginal('qty') + $request->qty, 
                     'subtotal' => $cartHasProduct->getOriginal('subtotal') + $request->subtotal
                 ]);
-                return response()->json(['message' => 'Successfully udated product in the cart!']);
+                return response()->json(['message' => 'Successfully updated product in the cart!']);
             }
         } else 
             return response()->json(['message' => 'Maximum product qty limit exceeded in the cart i.e, 20!'], 401);

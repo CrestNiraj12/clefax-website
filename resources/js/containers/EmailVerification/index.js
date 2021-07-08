@@ -37,25 +37,30 @@ const EmailVerification = ({ setAuth }) => {
                         query.token === md5(user.email + SALT + user.fullname)
                     ) {
                         apiClient
-                            .get(`/api/user/verify/${user.id}`)
-                            .then(res => {
-                                setAuth({
-                                    logged_in: true,
-                                    user: res.data.user
-                                });
-                                localStorage.setItem("auth", true);
-                                localStorage.setItem(
-                                    "user",
-                                    JSON.stringify(res.data.user)
-                                );
-                                toast({
-                                    title: "Email verification success",
-                                    description: res.data.message,
-                                    status: "success"
-                                });
-                                history.push("/");
-                            })
-                            .catch(err => console.log(err));
+                            .get("/sanctum/csrf-cookie")
+                            .then(res =>
+                                apiClient
+                                    .get(`/api/user/verify/${user.id}`)
+                                    .then(res => {
+                                        setAuth({
+                                            logged_in: true,
+                                            user: res.data.user
+                                        });
+                                        localStorage.setItem("auth", true);
+                                        localStorage.setItem(
+                                            "user",
+                                            JSON.stringify(res.data.user)
+                                        );
+                                        toast({
+                                            title: "Email verification success",
+                                            description: res.data.message,
+                                            status: "success"
+                                        });
+                                        history.push("/");
+                                    })
+                                    .catch(err => console.log(err.response))
+                            )
+                            .catch(err => console.log(err.response));
                     } else {
                         toast({
                             title: "Link invalid or expired",

@@ -204574,20 +204574,16 @@ var Main = function Main(_ref) {
           setWishlistProducts(_toConsumableArray(new Set(res.data.map(function (p) {
             return p.product_id;
           }))));
-          _utilities__WEBPACK_IMPORTED_MODULE_16__["apiClient"].get("/sanctum/csrf-cookie").then(function (res) {
-            return _utilities__WEBPACK_IMPORTED_MODULE_16__["apiClient"].get("/api/cart").then(function (res) {
-              setCartProducts(res.data.map(function (details) {
-                return {
-                  product_id: details.product_id,
-                  qty: details.qty,
-                  subtotal: details.subtotal
-                };
-              }));
-            })["catch"](function (err) {
-              return console.log(err);
-            });
+          _utilities__WEBPACK_IMPORTED_MODULE_16__["apiClient"].get("/api/cart").then(function (res) {
+            setCartProducts(res.data.map(function (details) {
+              return {
+                product_id: details.product_id,
+                qty: details.qty,
+                subtotal: details.subtotal
+              };
+            }));
           })["catch"](function (err) {
-            return console.log(err.response);
+            return console.log(err);
           });
         })["catch"](function (err) {
           console.log(err);
@@ -204657,7 +204653,7 @@ var Main = function Main(_ref) {
     path: "/user/verify",
     component: _containers_EmailVerification__WEBPACK_IMPORTED_MODULE_18__["default"]
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_3__["Route"], {
-    path: "/reset-password",
+    path: "/user/reset",
     component: _containers_PasswordReset__WEBPACK_IMPORTED_MODULE_20__["default"]
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_3__["Route"], {
     path: "/redirect",
@@ -208527,6 +208523,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _utilities_mail__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ../../utilities/mail */ "./resources/js/utilities/mail.js");
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
@@ -208731,6 +208735,7 @@ var Checkout = function Checkout(_ref) {
         quantity: cp.qty
       });
       op.push({
+        id: p.id,
         name: p.name,
         qty: cp.qty,
         unit: p.unit,
@@ -208764,27 +208769,29 @@ var Checkout = function Checkout(_ref) {
       order_table: order_table,
       collection_slot: collection_slot
     });
-    ps.map(function (p) {
-      return p.shop_id;
-    }).forEach(function (s) {
+
+    _toConsumableArray(new Set(ps.map(function (p) {
+      return p.shop;
+    }))).forEach(function (s) {
       var productsByShop = ps.filter(function (p) {
-        return p.shop_id === s;
+        return p.shop === s;
       });
-      var t = cart.filter(function (c) {
-        return productsByShop.map(function (p) {
-          return p.id.includes(Number(c.product_id));
-        });
-      }).map(function (p) {
+      var shop = products.filter(function (p) {
+        return p.shop.name === s;
+      })[0].shop;
+      var t = productsByShop.map(function (p) {
         return p.subtotal;
       }).reduce(function (a, b) {
         return a + b;
       }, 0);
       var ot = Object(_utilities_mail__WEBPACK_IMPORTED_MODULE_19__["generateTable"])(productsByShop, t);
-      Object(_utilities_mail__WEBPACK_IMPORTED_MODULE_19__["handleMailSend"])(_constants__WEBPACK_IMPORTED_MODULE_8__["TEMPLATE_ORDER"], "Your order has been placed", productsByShop[0].shop.user.fullname, productsByShop[0].shop.user.email, {
-        ot: ot,
-        collection_slot: collection_slot
+      var message = "<p>An ordered was made from your shop <strong>".concat(shop.name, "</strong>.</p> \n                    <p><span style=\"color: #e03e2d;\">CUSTOMER DETAILS:</span></p>\n                    <p><span style=\"font-size: 10pt;\">Name: ").concat(auth.user.fullname, "<br />Email: ").concat(auth.user.email, "<br /></span><span style=\"font-size: 10pt;\">Collection date &amp; time: <strong>").concat(collection_slot, "</strong><br /></span></p>\n                    <p>&nbsp;</p>\n                    <p><span style=\"color: #e03e2d;\">ORDER DETAILS:</span></p>\n                    <p>").concat(ot, "</p>");
+      if (productsByShop.length) Object(_utilities_mail__WEBPACK_IMPORTED_MODULE_19__["handleMailSend"])(_constants__WEBPACK_IMPORTED_MODULE_8__["TEMPLATE_BASIC"], "New order notification", shop.user.fullname, shop.user.email, {
+        from_name: "Clefax E-Shop",
+        message: message
       });
     });
+
     toast({
       title: "Payment Success",
       description: "Your order has been placed!",
@@ -209530,21 +209537,25 @@ var EmailVerification = function EmailVerification(_ref) {
           user = JSON.parse(user);
 
           if (query.token === md5__WEBPACK_IMPORTED_MODULE_3___default()(user.email + _constants__WEBPACK_IMPORTED_MODULE_4__["SALT"] + user.fullname)) {
-            _utilities__WEBPACK_IMPORTED_MODULE_7__["apiClient"].get("/api/user/verify/".concat(user.id)).then(function (res) {
-              setAuth({
-                logged_in: true,
-                user: res.data.user
+            _utilities__WEBPACK_IMPORTED_MODULE_7__["apiClient"].get("/sanctum/csrf-cookie").then(function (res) {
+              return _utilities__WEBPACK_IMPORTED_MODULE_7__["apiClient"].get("/api/user/verify/".concat(user.id)).then(function (res) {
+                setAuth({
+                  logged_in: true,
+                  user: res.data.user
+                });
+                localStorage.setItem("auth", true);
+                localStorage.setItem("user", JSON.stringify(res.data.user));
+                toast({
+                  title: "Email verification success",
+                  description: res.data.message,
+                  status: "success"
+                });
+                history.push("/");
+              })["catch"](function (err) {
+                return console.log(err.response);
               });
-              localStorage.setItem("auth", true);
-              localStorage.setItem("user", JSON.stringify(res.data.user));
-              toast({
-                title: "Email verification success",
-                description: res.data.message,
-                status: "success"
-              });
-              history.push("/");
             })["catch"](function (err) {
-              return console.log(err);
+              return console.log(err.response);
             });
           } else {
             toast({
@@ -209786,6 +209797,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _images_wine_png__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_images_wine_png__WEBPACK_IMPORTED_MODULE_4__);
 /* harmony import */ var _images_logo_black_png__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../images/logo-black.png */ "./resources/images/logo-black.png");
 /* harmony import */ var _images_logo_black_png__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_images_logo_black_png__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../constants */ "./resources/js/constants.js");
+/* harmony import */ var _utilities__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../utilities */ "./resources/js/utilities/index.js");
+/* harmony import */ var _utilities_mail__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../utilities/mail */ "./resources/js/utilities/mail.js");
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
@@ -209807,7 +209821,12 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 
+
+
+
 var ForgotPassword = function ForgotPassword() {
+  var toast = Object(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["useToast"])(_constants__WEBPACK_IMPORTED_MODULE_6__["DEFAULT_TOAST"]);
+
   var _useMediaQuery = Object(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["useMediaQuery"])("(max-width: 768px)"),
       _useMediaQuery2 = _slicedToArray(_useMediaQuery, 1),
       isSmallerThan768 = _useMediaQuery2[0];
@@ -209878,10 +209897,30 @@ var ForgotPassword = function ForgotPassword() {
       email: ""
     },
     onSubmit: function onSubmit(values, actions) {
-      setTimeout(function () {
-        alert(JSON.stringify(values, null, 2));
+      _utilities__WEBPACK_IMPORTED_MODULE_7__["apiClient"].post("/api/forgot-password", values).then(function (res) {
+        var token = res.data.token;
+        var link = "http://localhost:3000/user/reset/?token=".concat(token);
+        var message = "<p>Please click <a href=\"".concat(link, "\">here</a> or the given link below to go to reset password link!</p><p><a href=\"").concat(link, "\">").concat(link, "</a></p>");
+        Object(_utilities_mail__WEBPACK_IMPORTED_MODULE_8__["handleMailSend"])(_constants__WEBPACK_IMPORTED_MODULE_6__["TEMPLATE_BASIC"], "Password reset link", res.data.user.fullname, res.data.user.email, {
+          message: message,
+          from_name: "Clefax E-Shop",
+          reply_to: null
+        });
+        toast({
+          title: "Reset link sent",
+          description: "Your password reset link has been sent successfully!",
+          status: "info"
+        });
         actions.setSubmitting(false);
-      }, 1000);
+      })["catch"](function (err) {
+        console.log(err);
+        toast({
+          title: "Error occurred!",
+          description: err.response ? err.response.data.message : "Something went wrong! Please try again later!",
+          status: "error"
+        });
+        actions.setSubmitting(false);
+      });
     }
   }, function (props) {
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_2__["Form"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["VStack"], {
@@ -212185,7 +212224,6 @@ var Login = function Login(_ref) {
   var onError = function onError(err) {
     console.log(err.response);
     var errors = err.response.data.message;
-    console.log(errors);
 
     if (errors.length > 0) {
       errors.forEach(function (msg) {
@@ -212484,12 +212522,267 @@ var NotFound = function NotFound(_ref) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @chakra-ui/react */ "./node_modules/@chakra-ui/react/dist/esm/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var formik__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! formik */ "./node_modules/formik/dist/formik.esm.js");
+/* harmony import */ var _utilities_validation__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../utilities/validation */ "./resources/js/utilities/validation.js");
+/* harmony import */ var _images_wine_png__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../images/wine.png */ "./resources/images/wine.png");
+/* harmony import */ var _images_wine_png__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_images_wine_png__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _images_logo_black_png__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../images/logo-black.png */ "./resources/images/logo-black.png");
+/* harmony import */ var _images_logo_black_png__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_images_logo_black_png__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
+/* harmony import */ var _utilities__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../utilities */ "./resources/js/utilities/index.js");
+/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../constants */ "./resources/js/constants.js");
+/* harmony import */ var query_string__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! query-string */ "./node_modules/query-string/index.js");
+/* harmony import */ var query_string__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(query_string__WEBPACK_IMPORTED_MODULE_9__);
+function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _iterableToArrayLimit(arr, i) { var _i = arr && (typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"]); if (_i == null) return; var _arr = []; var _n = true; var _d = false; var _s, _e; try { for (_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+
+
+
+
+
+
+
+
+
+
+var passwords = [{
+  name: "password",
+  label: "Current Password"
+}, {
+  name: "new_password",
+  label: "New Password"
+}, {
+  name: "new_password_confirmation",
+  label: "Confirm Password"
+}];
 
 var PasswordReset = function PasswordReset() {
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null);
+  var toast = Object(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["useToast"])(_constants__WEBPACK_IMPORTED_MODULE_8__["DEFAULT_TOAST"]);
+  var history = Object(react_router_dom__WEBPACK_IMPORTED_MODULE_6__["useHistory"])();
+
+  var _useMediaQuery = Object(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["useMediaQuery"])("(max-width: 768px)"),
+      _useMediaQuery2 = _slicedToArray(_useMediaQuery, 1),
+      isSmallerThan768 = _useMediaQuery2[0];
+
+  var _useState = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])({
+    password: false,
+    new_password: false,
+    new_password_confirmation: false
+  }),
+      _useState2 = _slicedToArray(_useState, 2),
+      show = _useState2[0],
+      setShow = _useState2[1];
+
+  var _useState3 = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])(null),
+      _useState4 = _slicedToArray(_useState3, 2),
+      token = _useState4[0],
+      setToken = _useState4[1];
+
+  Object(react__WEBPACK_IMPORTED_MODULE_1__["useEffect"])(function () {
+    var q = query_string__WEBPACK_IMPORTED_MODULE_9___default.a.parse(location.search);
+    if (q.token) setToken(q.token);else history.push("/");
+  }, []);
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Flex"], {
+    alignItems: {
+      base: "center",
+      md: "flex-start"
+    },
+    direction: "column"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Link"], {
+    href: "/",
+    _focus: {
+      boxShadow: "none"
+    },
+    outline: "none",
+    pos: {
+      base: "relative",
+      md: "absolute"
+    },
+    top: {
+      base: "0",
+      md: "-50px"
+    }
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Image"], {
+    src: _images_logo_black_png__WEBPACK_IMPORTED_MODULE_5___default.a,
+    w: "200px",
+    objectFit: "cover",
+    h: {
+      base: "20vh",
+      md: "auto"
+    }
+  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Flex"], {
+    w: "100%",
+    h: {
+      base: "auto",
+      md: "100vh"
+    },
+    justifyContent: "center",
+    alignItems: "center"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Box"], {
+    maxW: {
+      base: "md",
+      md: "xl"
+    },
+    w: "100%",
+    m: "20px",
+    borderWidth: "1px",
+    borderRadius: "lg",
+    overflow: "hidden",
+    mt: {
+      base: "50px !important",
+      md: "0 !important"
+    }
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Stack"], {
+    direction: {
+      base: "column",
+      md: "row"
+    }
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Box"], {
+    p: {
+      base: "6",
+      sm: "10"
+    },
+    w: "100%"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_2__["Formik"], {
+    validate: _utilities_validation__WEBPACK_IMPORTED_MODULE_3__["validatePasswords"],
+    initialValues: {
+      password: "",
+      new_password: "",
+      new_password_confirmation: ""
+    },
+    onSubmit: function onSubmit(values, actions) {
+      _utilities__WEBPACK_IMPORTED_MODULE_7__["apiClient"].get("/sanctum/csrf-cookie").then(function (res) {
+        return _utilities__WEBPACK_IMPORTED_MODULE_7__["apiClient"].put("/api/reset-password", _objectSpread({
+          token: token
+        }, values)).then(function (res) {
+          toast({
+            title: "Password reset success",
+            description: "Your password has been changed successfully!",
+            status: "success"
+          });
+          history.push("/login");
+        })["catch"](function (err) {
+          console.log(err.response);
+          var errors = err.response.data.errors;
+
+          if (errors) {
+            var messages = Object.values(errors).map(function (msg) {
+              return msg[0];
+            });
+            console.log(messages);
+            messages.forEach(function (msg) {
+              return toast({
+                title: "Error occured!",
+                description: msg,
+                status: "error"
+              });
+            });
+          } else {
+            toast({
+              title: "Error occured!",
+              description: err.response ? err.response.data.message : "Something went wrong! Please try again!",
+              status: "error"
+            });
+          }
+
+          if (err.response.status === 403) history.push("/forgot-password");
+          actions.setSubmitting(false);
+        });
+      })["catch"](function (err) {
+        console.log(err);
+        toast({
+          title: "Error occurred!",
+          description: "Error occured! Please try again!",
+          status: "error"
+        });
+        actions.setSubmitting(false);
+      });
+    }
+  }, function (props) {
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_2__["Form"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["VStack"], {
+      alignItems: "flex-start",
+      w: "100%"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Heading"], {
+      as: "h6",
+      fontSize: "lg",
+      mb: "30px"
+    }, "Password reset"), passwords.map(function (_ref, index) {
+      var name = _ref.name,
+          label = _ref.label;
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_2__["Field"], {
+        name: name,
+        key: index
+      }, function (_ref2) {
+        var field = _ref2.field,
+            form = _ref2.form;
+        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["FormControl"], {
+          isInvalid: form.errors[name] && form.touched[name],
+          mb: "10px !important"
+        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["FormLabel"], null, label), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["InputGroup"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Input"], _extends({}, field, {
+          id: name,
+          pr: "4.5rem",
+          type: show[name] ? "text" : "password"
+        })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["InputRightElement"], {
+          width: "4.5rem"
+        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Button"], {
+          fontSize: "xs",
+          p: "10px !important",
+          h: "1.75rem",
+          borderRadius: "md",
+          letterSpacing: "0.5px !important",
+          fontWeight: "bold",
+          textTransform: "none !important",
+          size: "sm",
+          onClick: function onClick() {
+            return setShow(_objectSpread(_objectSpread({}, show), {}, _defineProperty({}, name, !show[name])));
+          }
+        }, show[name] ? "Hide" : "Show"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["FormErrorMessage"], null, form.errors[name]));
+      });
+    }), " ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Button"], {
+      mt: "30px !important",
+      isLoading: props.isSubmitting,
+      background: "primary",
+      color: "#fff",
+      fontSize: "smaller",
+      letterSpacing: "3px",
+      fontWeight: "bold",
+      px: "25px !important",
+      type: "submit"
+    }, "Submit")));
+  })), !isSmallerThan768 && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Image"], {
+    w: {
+      base: "100%",
+      md: "40%"
+    },
+    maxH: {
+      base: "200px",
+      md: "100%"
+    },
+    src: _images_wine_png__WEBPACK_IMPORTED_MODULE_4___default.a,
+    alt: "Login Image",
+    objectFit: "cover"
+  })))));
 };
 
 /* harmony default export */ __webpack_exports__["default"] = (PasswordReset);
@@ -216279,7 +216572,21 @@ var addToCart = function addToCart(product, auth, valueAsNumber, onSuccess, onEr
         qty: valueAsNumber,
         subtotal: Object(___WEBPACK_IMPORTED_MODULE_0__["getFinalPrice"])(product) * valueAsNumber
       }).then(function (res) {
-        setCartProducts([res.data.cart].concat(_toConsumableArray(cart)));
+        if (cart.map(function (c) {
+          return c.product_id;
+        }).includes(product.id)) setCartProducts([{
+          product_id: product.id,
+          qty: valueAsNumber + cart.filter(function (c) {
+            return c.product_id === product.id;
+          })[0].qty,
+          subtotal: Object(___WEBPACK_IMPORTED_MODULE_0__["getFinalPrice"])(product) * valueAsNumber + cart.filter(function (c) {
+            return c.product_id === product.id;
+          })[0].subtotal
+        }].concat(_toConsumableArray(cart)));else setCartProducts([{
+          product_id: product.id,
+          qty: valueAsNumber,
+          subtotal: Object(___WEBPACK_IMPORTED_MODULE_0__["getFinalPrice"])(product) * valueAsNumber
+        }].concat(_toConsumableArray(cart)));
         onSuccess(product.id);
       })["catch"](function (err) {
         onError(err);
@@ -216366,7 +216673,7 @@ var handleOrder = function handleOrder(_ref, total, slot, cart, setAuth, onSucce
       date = _ref.date,
       collection_id = _ref.collection_id;
   ___WEBPACK_IMPORTED_MODULE_0__["apiClient"].get("/sanctum/csrf-cookie").then(function (res) {
-    return ___WEBPACK_IMPORTED_MODULE_0__["apiClient"].put("/api/user", {
+    return ___WEBPACK_IMPORTED_MODULE_0__["apiClient"].post("/api/user", {
       fullname: fullname,
       email: email,
       phone: phone,
@@ -216614,7 +216921,7 @@ var payWithStripe = /*#__PURE__*/function () {
 /*!**********************************************!*\
   !*** ./resources/js/utilities/validation.js ***!
   \**********************************************/
-/*! exports provided: validateEmail, validatePaymentEmails, validateForm, validateContactForm, isValidDate, isValidTime, validateLogin, validateSignup, validateShop, validateDetails, validateReview */
+/*! exports provided: validateEmail, validatePaymentEmails, validateForm, validateContactForm, isValidDate, isValidTime, validateLogin, validateSignup, validateShop, validateDetails, validatePasswords, validateReview */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -216629,6 +216936,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "validateSignup", function() { return validateSignup; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "validateShop", function() { return validateShop; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "validateDetails", function() { return validateDetails; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "validatePasswords", function() { return validatePasswords; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "validateReview", function() { return validateReview; });
 var validateEmail = function validateEmail(values) {
   var errors = {};
@@ -216732,18 +217040,25 @@ var validateDetails = function validateDetails(values) {
   if (!values.dob) errors.dob = "Please enter your date of birth";
   if (!values.gender) errors.gender = "Please enter your gender";
 
-  if (values.old_password) {
-    if (!values.password) errors.password = "Password is required";
+  if (values.password) {
+    validatePasswords(values);
+  }
 
-    if (!/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/i.test(values.password)) {
-      errors.password = "Password format is invalid";
-    }
+  return errors;
+};
+var validatePasswords = function validatePasswords(values) {
+  var errors = {};
+  if (!values.password) errors.password = "Password is required";
+  if (!values.new_password) errors.new_password = "New password is required";
 
-    if (!values.password_confirmation) errors.password = "Password confirmation is required";
+  if (!/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/i.test(values.new_password)) {
+    errors.new_password = "Password format is invalid";
+  }
 
-    if (values.password !== values.password_confirmation) {
-      errors.password_confirmation = "Please make sure your passwords match";
-    }
+  if (!values.new_password_confirmation) errors.new_password_confirmation = "Password confirmation is required";
+
+  if (values.new_password !== values.new_password_confirmation) {
+    errors.new_password_confirmation = "Please make sure your passwords match";
   }
 
   return errors;

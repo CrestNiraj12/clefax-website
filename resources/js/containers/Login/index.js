@@ -90,7 +90,6 @@ const Login = ({ setAuth, auth, setCartProducts, setWishlistProducts }) => {
     const onError = err => {
         console.log(err.response);
         const errors = err.response.data.message;
-        console.log(errors);
         if (errors.length > 0) {
             errors.forEach(msg =>
                 toast({

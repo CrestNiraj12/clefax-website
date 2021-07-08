@@ -115,32 +115,23 @@ const Main = ({
                                             res.data.map(p => p.product_id)
                                         )
                                     ]);
+
                                     apiClient
-                                        .get("/sanctum/csrf-cookie")
-                                        .then(res =>
-                                            apiClient
-                                                .get("/api/cart")
-                                                .then(res => {
-                                                    setCartProducts(
-                                                        res.data.map(
-                                                            details => {
-                                                                return {
-                                                                    product_id:
-                                                                        details.product_id,
-                                                                    qty:
-                                                                        details.qty,
-                                                                    subtotal:
-                                                                        details.subtotal
-                                                                };
-                                                            }
-                                                        )
-                                                    );
+                                        .get("/api/cart")
+                                        .then(res => {
+                                            setCartProducts(
+                                                res.data.map(details => {
+                                                    return {
+                                                        product_id:
+                                                            details.product_id,
+                                                        qty: details.qty,
+                                                        subtotal:
+                                                            details.subtotal
+                                                    };
                                                 })
-                                                .catch(err => console.log(err))
-                                        )
-                                        .catch(err =>
-                                            console.log(err.response)
-                                        );
+                                            );
+                                        })
+                                        .catch(err => console.log(err));
                                 })
                                 .catch(err => {
                                     console.log(err);
@@ -217,7 +208,7 @@ const Main = ({
                     exact
                 />
                 <Route path="/user/verify" component={EmailVerification} />
-                <Route path="/reset-password" component={PasswordReset} />
+                <Route path="/user/reset" component={PasswordReset} />
                 <Route path="/redirect" component={PaymentRedirect} />
                 {routes.map(({ path, Component, exact }) => (
                     <Route

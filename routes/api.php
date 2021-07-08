@@ -44,6 +44,8 @@ Route::get('/categories/{id}', [CategoryController::class, "getCategory"]);
 Route::get('/shops', [ShopController::class, "getAllShops"]);
 Route::get('/shops/{id}', [ShopController::class, "getShop"]);
 Route::get('/user/verify/{id}', [UserController::class, 'verifyEmail']);
+Route::post('/forgot-password', [UserController::class, 'forgotPassword']);
+Route::put('/reset-password', [UserController::class, 'resetPassword']);
 
 Route::middleware(['auth:sanctum'])->group(function() {
     Route::post('/report/create', [ReportController::class, 'store']);

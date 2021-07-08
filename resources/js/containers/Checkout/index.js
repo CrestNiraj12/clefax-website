@@ -36,7 +36,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { Redirect, useHistory } from "react-router-dom";
 import { useEffect } from "react";
-import { DEFAULT_TOAST, TEMPLATE_ORDER } from "../../constants";
+import { DEFAULT_TOAST, TEMPLATE_BASIC, TEMPLATE_ORDER } from "../../constants";
 import { connect } from "react-redux";
 import {
     apiClient,
@@ -209,6 +209,7 @@ const Checkout = ({
             });
 
             op.push({
+                id: p.id,
                 name: p.name,
                 qty: cp.qty,
                 unit: p.unit,
@@ -249,23 +250,29 @@ const Checkout = ({
             auth.user.email,
             { order_table, collection_slot }
         );
-
-        ps.map(p => p.shop_id).forEach(s => {
-            const productsByShop = ps.filter(p => p.shop_id === s);
-            const t = cart
-                .filter(c =>
-                    productsByShop.map(p => p.id.includes(Number(c.product_id)))
-                )
+        [...new Set(ps.map(p => p.shop))].forEach(s => {
+            const productsByShop = ps.filter(p => p.shop === s);
+            const shop = products.filter(p => p.shop.name === s)[0].shop;
+            const t = productsByShop
                 .map(p => p.subtotal)
                 .reduce((a, b) => a + b, 0);
+
             const ot = generateTable(productsByShop, t);
-            handleMailSend(
-                TEMPLATE_ORDER,
-                "Your order has been placed",
-                productsByShop[0].shop.user.fullname,
-                productsByShop[0].shop.user.email,
-                { ot, collection_slot }
-            );
+            const message = `<p>An ordered was made from your shop <strong>${shop.name}</strong>.</p> 
+                    <p><span style="color: #e03e2d;">CUSTOMER DETAILS:</span></p>
+                    <p><span style="font-size: 10pt;">Name: ${auth.user.fullname}<br />Email: ${auth.user.email}<br /></span><span style="font-size: 10pt;">Collection date &amp; time: <strong>${collection_slot}</strong><br /></span></p>
+                    <p>&nbsp;</p>
+                    <p><span style="color: #e03e2d;">ORDER DETAILS:</span></p>
+                    <p>${ot}</p>`;
+
+            if (productsByShop.length)
+                handleMailSend(
+                    TEMPLATE_BASIC,
+                    "New order notification",
+                    shop.user.fullname,
+                    shop.user.email,
+                    { from_name: "Clefax E-Shop", message }
+                );
         });
 
         toast({

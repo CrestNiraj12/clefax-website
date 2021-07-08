@@ -149,17 +149,26 @@ export const validateDetails = values => {
     if (!values.dob) errors.dob = "Please enter your date of birth";
     if (!values.gender) errors.gender = "Please enter your gender";
 
-    if (values.old_password) {
-        if (!values.password) errors.password = "Password is required";
-        if (!/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/i.test(values.password)) {
-            errors.password = "Password format is invalid";
-        }
-        if (!values.password_confirmation)
-            errors.password = "Password confirmation is required";
-        if (values.password !== values.password_confirmation) {
-            errors.password_confirmation =
-                "Please make sure your passwords match";
-        }
+    if (values.password) {
+        validatePasswords(values);
+    }
+
+    return errors;
+};
+
+export const validatePasswords = values => {
+    const errors = {};
+
+    if (!values.password) errors.password = "Password is required";
+    if (!values.new_password) errors.new_password = "New password is required";
+    if (!/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/i.test(values.new_password)) {
+        errors.new_password = "Password format is invalid";
+    }
+    if (!values.new_password_confirmation)
+        errors.new_password_confirmation = "Password confirmation is required";
+    if (values.new_password !== values.new_password_confirmation) {
+        errors.new_password_confirmation =
+            "Please make sure your passwords match";
     }
 
     return errors;

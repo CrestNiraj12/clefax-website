@@ -11,15 +11,20 @@ import {
     Link,
     VStack,
     Text,
-    useMediaQuery
+    useMediaQuery,
+    useToast
 } from "@chakra-ui/react";
 import React from "react";
 import { Formik, Form, Field } from "formik";
 import { validateEmail } from "../../utilities/validation";
 import Wine from "../../../images/wine.png";
 import Logo from "../../../images/logo-black.png";
+import { DEFAULT_TOAST, TEMPLATE_BASIC } from "../../constants";
+import { apiClient } from "../../utilities";
+import { handleMailSend } from "../../utilities/mail";
 
 const ForgotPassword = () => {
+    const toast = useToast(DEFAULT_TOAST);
     const [isSmallerThan768] = useMediaQuery("(max-width: 768px)");
 
     return (
@@ -63,10 +68,42 @@ const ForgotPassword = () => {
                                     email: ""
                                 }}
                                 onSubmit={(values, actions) => {
-                                    setTimeout(() => {
-                                        alert(JSON.stringify(values, null, 2));
-                                        actions.setSubmitting(false);
-                                    }, 1000);
+                                    apiClient
+                                        .post("/api/forgot-password", values)
+                                        .then(res => {
+                                            const token = res.data.token;
+                                            const link = `http://localhost:3000/user/reset/?token=${token}`;
+                                            const message = `<p>Please click <a href="${link}">here</a> or the given link below to go to reset password link!</p><p><a href="${link}">${link}</a></p>`;
+                                            handleMailSend(
+                                                TEMPLATE_BASIC,
+                                                "Password reset link",
+                                                res.data.user.fullname,
+                                                res.data.user.email,
+                                                {
+                                                    message: message,
+                                                    from_name: "Clefax E-Shop",
+                                                    reply_to: null
+                                                }
+                                            );
+                                            toast({
+                                                title: "Reset link sent",
+                                                description:
+                                                    "Your password reset link has been sent successfully!",
+                                                status: "info"
+                                            });
+                                            actions.setSubmitting(false);
+                                        })
+                                        .catch(err => {
+                                            console.log(err);
+                                            toast({
+                                                title: "Error occurred!",
+                                                description: err.response
+                                                    ? err.response.data.message
+                                                    : "Something went wrong! Please try again later!",
+                                                status: "error"
+                                            });
+                                            actions.setSubmitting(false);
+                                        });
                                 }}
                             >
                                 {props => (

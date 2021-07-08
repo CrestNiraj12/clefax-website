@@ -75,7 +75,37 @@ export const addToCart = (
                             subtotal: getFinalPrice(product) * valueAsNumber
                         })
                         .then(res => {
-                            setCartProducts([res.data.cart, ...cart]);
+                            if (
+                                cart.map(c => c.product_id).includes(product.id)
+                            )
+                                setCartProducts([
+                                    {
+                                        product_id: product.id,
+                                        qty:
+                                            valueAsNumber +
+                                            cart.filter(
+                                                c => c.product_id === product.id
+                                            )[0].qty,
+                                        subtotal:
+                                            getFinalPrice(product) *
+                                                valueAsNumber +
+                                            cart.filter(
+                                                c => c.product_id === product.id
+                                            )[0].subtotal
+                                    },
+                                    ...cart
+                                ]);
+                            else
+                                setCartProducts([
+                                    {
+                                        product_id: product.id,
+                                        qty: valueAsNumber,
+                                        subtotal:
+                                            getFinalPrice(product) *
+                                            valueAsNumber
+                                    },
+                                    ...cart
+                                ]);
                             onSuccess(product.id);
                         })
                         .catch(err => {
@@ -190,7 +220,7 @@ export const handleOrder = (
         .get("/sanctum/csrf-cookie")
         .then(res =>
             apiClient
-                .put("/api/user", {
+                .post("/api/user", {
                     fullname,
                     email,
                     phone,
