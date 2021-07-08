@@ -58,7 +58,6 @@
         "react-router-dom": "^5.2.0",
         "react-share": "^4.4.0",
         "react-slick": "^0.28.1",
-        "react-to-pdf": "0.0.14",
         "react-transition-group": "^4.4.1",
         "slick-carousel": "^1.8.1"
     }
