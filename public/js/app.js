@@ -205525,74 +205525,6 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch) {
   };
 };
 
-var cats = [{
-  title: "Products",
-  content: [{
-    title: "Product category",
-    url: "#"
-  }, {
-    title: "Product category",
-    url: "#"
-  }, {
-    title: "Product category",
-    url: "#"
-  }, {
-    title: "Product category",
-    url: "#"
-  }]
-}, {
-  title: "Products",
-  content: [{
-    title: "Product category",
-    url: "#"
-  }, {
-    title: "Product category",
-    url: "#"
-  }, {
-    title: "Product category",
-    url: "#"
-  }, {
-    title: "Product category",
-    url: "#"
-  }]
-}, {
-  title: "Products",
-  content: [{
-    title: "Product category",
-    url: "#"
-  }, {
-    title: "Product category",
-    url: "#"
-  }, {
-    title: "Product category",
-    url: "#"
-  }, {
-    title: "Product category",
-    url: "#"
-  }, {
-    title: "Product category",
-    url: "#"
-  }, {
-    title: "Product category",
-    url: "#"
-  }]
-}, {
-  title: "Products",
-  content: [{
-    title: "Product category",
-    url: "#"
-  }, {
-    title: "Product category",
-    url: "#"
-  }, {
-    title: "Product category",
-    url: "#"
-  }, {
-    title: "Product category",
-    url: "#"
-  }]
-}];
-
 var mapStateToProps = function mapStateToProps(state) {
   return {
     products: state.products,
@@ -205667,21 +205599,9 @@ var Navbar = function Navbar(_ref) {
       query = _useState14[0],
       setQuery = _useState14[1];
 
-  var _useState15 = Object(react__WEBPACK_IMPORTED_MODULE_2__["useState"])([]),
-      _useState16 = _slicedToArray(_useState15, 2),
-      cats = _useState16[0],
-      setCats = _useState16[1];
-
   Object(react__WEBPACK_IMPORTED_MODULE_2__["useEffect"])(function () {
     if (products.length) setFilteredProducts(products);
   }, [products]);
-  Object(react__WEBPACK_IMPORTED_MODULE_2__["useEffect"])(function () {
-    _utilities__WEBPACK_IMPORTED_MODULE_13__["apiClient"].get("/api/categories").then(function (res) {
-      return setCategories(res.data);
-    })["catch"](function (err) {
-      return console.log(err);
-    });
-  }, []);
 
   var handleClose = function handleClose() {
     setChangeDrawer(false);
@@ -205812,10 +205732,10 @@ var Navbar = function Navbar(_ref) {
     fontSize: "2em",
     color: "secondary",
     textTransform: "uppercase"
-  }, "Shop")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Spacer"], null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Spacer"], null)), cats.map(function (_ref2, index) {
+  }, "Shop")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Spacer"], null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Spacer"], null)), categories.map(function (_ref2, index) {
     var name = _ref2.name,
         ps = _ref2.products;
-    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Box"], {
+    return ps.length ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Box"], {
       w: "100%",
       key: index,
       mb: "30px"
@@ -205844,7 +205764,7 @@ var Navbar = function Navbar(_ref) {
           textDecoration: "none"
         }
       }, name));
-    })));
+    }))) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_2___default.a.Fragment, null);
   })))))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Box"], {
     w: "100%",
     background: "transparent",
@@ -206163,10 +206083,10 @@ var Navbar = function Navbar(_ref) {
     right: "0",
     className: "navMenu-page",
     zIndex: "999"
-  }, cats.map(function (_ref5, index) {
+  }, categories.map(function (_ref5, index) {
     var name = _ref5.name,
         ps = _ref5.products;
-    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Box"], {
+    return ps.length ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Box"], {
       w: "100%",
       key: index
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Heading"], {
@@ -206194,7 +206114,7 @@ var Navbar = function Navbar(_ref) {
           textDecoration: "none"
         }
       }, name));
-    })));
+    }))) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_2___default.a.Fragment, null);
   })))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Box"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Link"], {
     href: "/contact",
     className: " textLink-small",

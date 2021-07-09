@@ -71,47 +71,6 @@ const mapDispatchToProps = dispatch => ({
     showSearch: show => dispatch(showSearch(show))
 });
 
-const cats = [
-    {
-        title: "Products",
-        content: [
-            { title: "Product category", url: "#" },
-            { title: "Product category", url: "#" },
-            { title: "Product category", url: "#" },
-            { title: "Product category", url: "#" }
-        ]
-    },
-    {
-        title: "Products",
-        content: [
-            { title: "Product category", url: "#" },
-            { title: "Product category", url: "#" },
-            { title: "Product category", url: "#" },
-            { title: "Product category", url: "#" }
-        ]
-    },
-    {
-        title: "Products",
-        content: [
-            { title: "Product category", url: "#" },
-            { title: "Product category", url: "#" },
-            { title: "Product category", url: "#" },
-            { title: "Product category", url: "#" },
-            { title: "Product category", url: "#" },
-            { title: "Product category", url: "#" }
-        ]
-    },
-    {
-        title: "Products",
-        content: [
-            { title: "Product category", url: "#" },
-            { title: "Product category", url: "#" },
-            { title: "Product category", url: "#" },
-            { title: "Product category", url: "#" }
-        ]
-    }
-];
-
 const mapStateToProps = state => ({
     products: state.products,
     categories: state.categories,
@@ -138,18 +97,10 @@ const Navbar = ({ showSearch, products, categories, auth, cart, wishlist }) => {
     const [changeDrawer, setChangeDrawer] = useState(false);
     const [loading, setLoading] = useState(false);
     const [query, setQuery] = useState("");
-    const [cats, setCats] = useState([]);
 
     useEffect(() => {
         if (products.length) setFilteredProducts(products);
     }, [products]);
-
-    useEffect(() => {
-        apiClient
-            .get("/api/categories")
-            .then(res => setCategories(res.data))
-            .catch(err => console.log(err));
-    }, []);
 
     const handleClose = () => {
         setChangeDrawer(false);
@@ -288,45 +239,56 @@ const Navbar = ({ showSearch, products, categories, auth, cart, wishlist }) => {
                                     <Spacer />
                                     <Spacer />
                                 </Flex>
-                                {cats.map(({ name, products: ps }, index) => (
-                                    <Box w="100%" key={index} mb="30px">
-                                        <Heading
-                                            as="h6"
-                                            fontSize="16px"
-                                            textTransform="uppercase"
-                                            letterSpacing="1"
-                                            m="10px 0"
-                                        >
-                                            {name}
-                                        </Heading>
-                                        <hr className="line" />
-                                        <Divider borderColor="#66666663" />
-                                        <List>
-                                            {ps.map(({ name, id }, index) => (
-                                                <ListItem
-                                                    key={index}
-                                                    m="15px 0"
+                                {categories.map(
+                                    ({ name, products: ps }, index) =>
+                                        ps.length ? (
+                                            <Box w="100%" key={index} mb="30px">
+                                                <Heading
+                                                    as="h6"
+                                                    fontSize="16px"
+                                                    textTransform="uppercase"
+                                                    letterSpacing="1"
+                                                    m="10px 0"
                                                 >
-                                                    <Link
-                                                        href={generateUrl(
-                                                            id,
-                                                            name
-                                                        )}
-                                                        fontSize="16px"
-                                                        color="gray.700"
-                                                        _hover={{
-                                                            color: "secondary",
-                                                            textDecoration:
-                                                                "none"
-                                                        }}
-                                                    >
-                                                        {name}
-                                                    </Link>
-                                                </ListItem>
-                                            ))}
-                                        </List>
-                                    </Box>
-                                ))}
+                                                    {name}
+                                                </Heading>
+                                                <hr className="line" />
+                                                <Divider borderColor="#66666663" />
+                                                <List>
+                                                    {ps.map(
+                                                        (
+                                                            { name, id },
+                                                            index
+                                                        ) => (
+                                                            <ListItem
+                                                                key={index}
+                                                                m="15px 0"
+                                                            >
+                                                                <Link
+                                                                    href={generateUrl(
+                                                                        id,
+                                                                        name
+                                                                    )}
+                                                                    fontSize="16px"
+                                                                    color="gray.700"
+                                                                    _hover={{
+                                                                        color:
+                                                                            "secondary",
+                                                                        textDecoration:
+                                                                            "none"
+                                                                    }}
+                                                                >
+                                                                    {name}
+                                                                </Link>
+                                                            </ListItem>
+                                                        )
+                                                    )}
+                                                </List>
+                                            </Box>
+                                        ) : (
+                                            <></>
+                                        )
+                                )}
                             </VStack>
                         </CSSTransition>
                     </DrawerBody>
@@ -796,65 +758,68 @@ const Navbar = ({ showSearch, products, categories, auth, cart, wishlist }) => {
                                                 className="navMenu-page"
                                                 zIndex="999"
                                             >
-                                                {cats.map(
+                                                {categories.map(
                                                     (
                                                         { name, products: ps },
                                                         index
-                                                    ) => (
-                                                        <Box
-                                                            w="100%"
-                                                            key={index}
-                                                        >
-                                                            <Heading
-                                                                as="h6"
-                                                                fontSize="16px"
-                                                                textTransform="uppercase"
-                                                                letterSpacing="1"
-                                                                m="10px 0"
+                                                    ) =>
+                                                        ps.length ? (
+                                                            <Box
+                                                                w="100%"
+                                                                key={index}
                                                             >
-                                                                {name}
-                                                            </Heading>
-                                                            <hr className="line" />
-                                                            <Divider borderColor="#66666663" />
-                                                            <List>
-                                                                {ps.map(
-                                                                    (
-                                                                        {
-                                                                            name,
-                                                                            id
-                                                                        },
-                                                                        index
-                                                                    ) => (
-                                                                        <ListItem
-                                                                            key={
-                                                                                index
-                                                                            }
-                                                                            m="15px 0"
-                                                                        >
-                                                                            <Link
-                                                                                href={generateUrl(
-                                                                                    id,
-                                                                                    name
-                                                                                )}
-                                                                                fontSize="16px"
-                                                                                color="gray.700"
-                                                                                _hover={{
-                                                                                    color:
-                                                                                        "secondary",
-                                                                                    textDecoration:
-                                                                                        "none"
-                                                                                }}
-                                                                            >
-                                                                                {
-                                                                                    name
+                                                                <Heading
+                                                                    as="h6"
+                                                                    fontSize="16px"
+                                                                    textTransform="uppercase"
+                                                                    letterSpacing="1"
+                                                                    m="10px 0"
+                                                                >
+                                                                    {name}
+                                                                </Heading>
+                                                                <hr className="line" />
+                                                                <Divider borderColor="#66666663" />
+                                                                <List>
+                                                                    {ps.map(
+                                                                        (
+                                                                            {
+                                                                                name,
+                                                                                id
+                                                                            },
+                                                                            index
+                                                                        ) => (
+                                                                            <ListItem
+                                                                                key={
+                                                                                    index
                                                                                 }
-                                                                            </Link>
-                                                                        </ListItem>
-                                                                    )
-                                                                )}
-                                                            </List>
-                                                        </Box>
-                                                    )
+                                                                                m="15px 0"
+                                                                            >
+                                                                                <Link
+                                                                                    href={generateUrl(
+                                                                                        id,
+                                                                                        name
+                                                                                    )}
+                                                                                    fontSize="16px"
+                                                                                    color="gray.700"
+                                                                                    _hover={{
+                                                                                        color:
+                                                                                            "secondary",
+                                                                                        textDecoration:
+                                                                                            "none"
+                                                                                    }}
+                                                                                >
+                                                                                    {
+                                                                                        name
+                                                                                    }
+                                                                                </Link>
+                                                                            </ListItem>
+                                                                        )
+                                                                    )}
+                                                                </List>
+                                                            </Box>
+                                                        ) : (
+                                                            <></>
+                                                        )
                                                 )}
                                             </Grid>
                                         </CSSTransition>
