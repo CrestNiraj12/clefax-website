@@ -5,9 +5,9 @@ import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import { CSSTransition } from "react-transition-group";
 import { useHistory } from "react-router";
+import Cake from "../../../images/cake-bg.png";
+import Fruits from "../../../images/fruits.png";
 import Meat from "../../../images/meat.png";
-import Bread from "../../../images/BREAD.png";
-import Donuts from "../../../images/donuts.png";
 
 const responsive = {
     superLargeDesktop: {
@@ -33,19 +33,19 @@ const carousel = [
         title: "Meat",
         subtitle: "Fresh meats of all kind",
         image: Meat,
-        button_url: "#"
+        button_url: "/shop/search/?q=&cat=Meat"
     },
     {
-        title: "Breads",
-        subtitle: "Fresh breads",
-        image: Bread,
-        button_url: "#"
+        title: "Cakes",
+        subtitle: "Baked just for you",
+        image: Cake,
+        button_url: "/shop/search/?q=Cake&cat=Bakery"
     },
     {
-        title: "Donuts",
-        subtitle: "Sprinkled donuts",
-        image: Donuts,
-        button_url: "#"
+        title: "Fruits",
+        subtitle: "Fresh organic fruits",
+        image: Fruits,
+        button_url: "/shop/search/?q=&cat=Fruits"
     }
 ];
 

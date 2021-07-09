@@ -1,9 +1,9 @@
 import {
+    Avatar,
     Box,
     Button,
     Flex,
     Heading,
-    HStack,
     Image,
     Link,
     SimpleGrid,
@@ -11,34 +11,37 @@ import {
 } from "@chakra-ui/react";
 import React from "react";
 import { useHistory } from "react-router";
+import Veggies from "../../../images/veggies.jpg";
+import Bakery from "../../../images/bakery.jpg";
+import Meat from "../../../images/meat.jpg";
+import { useEffect } from "react";
+import { apiClient } from "../../utilities";
+import { useState } from "react";
 
 const cards = [
     {
-        title: "Great Sound",
-        subtitle: "Up to 20% off",
+        title: "Organic Vegetables",
+        subtitle: "Up to 10% off",
         btnStyle: "solid",
         colorTheme: "normal",
-        link: "#",
-        image:
-            "https://wpbingosite.com/wordpress/dimita/wp-content/uploads/2020/02/banner2-10.jpg"
+        link: "/shop/search/?q=&cat=Vegetables",
+        image: Veggies
     },
     {
-        title: "Special Version",
-        subtitle: "High-end goods 2020",
+        title: "Fresh Meat",
+        subtitle: "High-end meat",
         btnStyle: "solid",
         colorTheme: "normal",
-        link: "#",
-        image:
-            "https://wpbingosite.com/wordpress/dimita/wp-content/uploads/2020/02/banner2-11.jpg"
+        link: "/shop/search/?q=&cat=Meat",
+        image: Meat
     },
     {
-        title: "Series 5 Titanium",
-        subtitle: "Apple Watch Edition",
+        title: "Amazing cakes",
+        subtitle: "Cakes & Cookies",
         colorTheme: "bw",
         btnStyle: "outline",
-        link: "#",
-        image:
-            "https://wpbingosite.com/wordpress/dimita/wp-content/uploads/2020/02/banner2-12.jpg"
+        link: "/shop/search/?q=&cat=Bakery",
+        image: Bakery
     }
 ];
 
@@ -47,7 +50,7 @@ const brands = [
         logo:
             "https://wpbingosite.com/wordpress/dimita/wp-content/uploads/2019/12/brand2-1.png",
         name: "Magna",
-        url: "#"
+        url: "http://localhost:3000/shop/products/?id=1"
     },
     {
         logo:
@@ -83,6 +86,17 @@ const brands = [
 
 const Brands = () => {
     var history = useHistory();
+    const [vendors, setVendors] = useState([]);
+
+    useEffect(() => {
+        apiClient
+            .get("/api/shops")
+            .then(res => {
+                setVendors(res.data);
+            })
+            .catch(err => console.log(err));
+    }, []);
+
     return (
         <Box marginY="100px" overflow="hidden">
             <SimpleGrid columns={{ md: cards.length / 2, lg: cards.length }}>
@@ -102,8 +116,15 @@ const Brands = () => {
                         >
                             <Box pos="relative" h="420px" overflow="hidden">
                                 <Box
-                                    bgImage={`url(${image})`}
+                                    bg={`url(${image}) no-repeat center center`}
+                                    bgSize="cover"
                                     alt={title}
+                                    backgroundColor="#a7a7a7"
+                                    backgroundBlendMode={
+                                        colorTheme === "normal"
+                                            ? ""
+                                            : "multiply"
+                                    }
                                     className="gridItemImage"
                                     w="100%"
                                     h="100%"
@@ -133,7 +154,7 @@ const Brands = () => {
                                         marginY="15px"
                                         color={
                                             colorTheme === "normal"
-                                                ? "#000"
+                                                ? "primary"
                                                 : "#fff"
                                         }
                                     >
@@ -169,40 +190,44 @@ const Brands = () => {
                 className="slideshow"
                 justifyContent="space-between"
             >
-                {brands.concat(brands).map(({ logo, url, name }, index) => (
-                    <Flex
-                        key={index}
-                        padding="70px 94px"
-                        w="100%"
-                        justifyContent="center"
-                        borderRightWidth="1px"
-                        borderTopWidth="1px"
-                        borderBottomWidth="1px"
-                        borderLeftWidth={index === 0 ? "1px" : "0"}
-                        borderColor="lightgray"
-                    >
-                        <Link
-                            href={url}
-                            outline="none"
-                            tabIndex={-1}
-                            _focus={{
-                                boxShadow: "none"
-                            }}
+                {vendors
+                    .concat(vendors)
+                    .concat(vendors)
+                    .map(({ id, logo, name }, index) => (
+                        <Flex
+                            key={index}
+                            padding="70px 94px"
+                            w="100%"
+                            justifyContent="center"
+                            borderRightWidth="1px"
+                            borderTopWidth="1px"
+                            borderBottomWidth="1px"
+                            borderLeftWidth={index === 0 ? "1px" : "0"}
+                            borderColor="lightgray"
                         >
-                            <Image
-                                src={logo}
-                                alt={name}
-                                className="brandImg"
-                                filter="saturate(0)"
-                                transition="transform 0.2s ease-out"
-                                _hover={{
-                                    transform: "scale(1.1)",
-                                    filter: "saturate(1)"
+                            <Link
+                                href={`/shop/products/?id=${id}`}
+                                outline="none"
+                                tabIndex={-1}
+                                _focus={{
+                                    boxShadow: "none"
                                 }}
-                            />
-                        </Link>
-                    </Flex>
-                ))}
+                            >
+                                <Avatar
+                                    size="xl"
+                                    name={name}
+                                    src={logo}
+                                    filter="saturate(0)"
+                                    transition="transform 0.2s ease-out"
+                                    className="brandImg"
+                                    _hover={{
+                                        transform: "scale(1.1)",
+                                        filter: "saturate(1)"
+                                    }}
+                                />
+                            </Link>
+                        </Flex>
+                    ))}
             </Flex>
         </Box>
     );

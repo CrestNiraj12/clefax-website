@@ -73,6 +73,7 @@ const Product = ({
     const toast = useToast(DEFAULT_TOAST);
     const [product, setProduct] = useState(null);
     const [inWishlist, setInWishlist] = useState(null);
+    const [related, setRelated] = useState([]);
     const { isOpen, onOpen, onClose } = useDisclosure();
     const {
         valueAsNumber,
@@ -107,6 +108,11 @@ const Product = ({
     useEffect(() => {
         if (product) setInWishlist(wishlist.includes(product.id));
     }, [product, wishlist]);
+
+    useEffect(() => {
+        if (product && products)
+            setRelated(getRelatedProducts(products, product));
+    }, [products, product]);
 
     const addToWishlist = () => {
         if (product) {
@@ -284,12 +290,14 @@ const Product = ({
                             direction={{ base: "column", md: "row" }}
                         >
                             <ImageMagnifier
-                                // images={product.images}
+                                images={product.images
+                                    .split(",")
+                                    .map(i => i.trim())}
                                 title={product.name}
                             />
 
                             <Box
-                                w={{ base: "100%", md: "50%" }}
+                                w={{ base: "100%", md: "60%" }}
                                 mt={{
                                     base: "180px !important",
                                     md: "0 !important"
@@ -561,7 +569,10 @@ const Product = ({
                                         <b>Category:</b> {product.category.name}
                                     </Text>
                                     <Text py="5px">
-                                        <b>Tags:</b> {product.tags}
+                                        <b>Tags:</b>{" "}
+                                        {product.tags
+                                            ? product.tags
+                                            : "No tags available"}
                                     </Text>
                                     <HStack py="5px">
                                         <b>Share:</b>{" "}
@@ -627,15 +638,13 @@ const Product = ({
                     mt="50px"
                     columns={{ base: 1, sm: 2, md: 3, lg: 5 }}
                 >
-                    {getRelatedProducts(products, product)
-                        .slice(0, 5)
-                        .map((p, index) => (
-                            <ProductCardColumn
-                                product={p}
-                                hideRatings={true}
-                                key={index}
-                            />
-                        ))}
+                    {related.slice(0, 5).map((p, index) => (
+                        <ProductCardColumn
+                            product={p}
+                            hideRatings={true}
+                            key={index + new Date()}
+                        />
+                    ))}
                 </SimpleGrid>
             </Box>
         </Box>

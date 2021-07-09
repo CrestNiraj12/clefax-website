@@ -5,14 +5,18 @@ import {
     Grid,
     GridItem,
     Heading,
+    Link,
     Text
 } from "@chakra-ui/react";
 import React from "react";
 import Lamb from "../../../images/lamb-dark.png";
 import Deli from "../../../images/deli.png";
 import Cake from "../../../images/cake.png";
+import { useHistory } from "react-router-dom";
 
 const CollectionGrid = () => {
+    const history = useHistory();
+
     return (
         <Grid
             h={{ base: "150vh", md: "300vh", lg: "48vw" }}
@@ -72,7 +76,11 @@ const CollectionGrid = () => {
                             favourite item
                         </span>
                     </Heading>
-                    <Button variant="outline" className="outlineButton">
+                    <Button
+                        variant="outline"
+                        className="outlineButton"
+                        onClick={() => history.push("/shop")}
+                    >
                         Discover now
                     </Button>
                 </Flex>
@@ -83,30 +91,42 @@ const CollectionGrid = () => {
                 bg="papayawhip"
                 className="gridItem"
             >
-                <Box
-                    className="gridItemImage"
-                    bg={`url(${Deli}) no-repeat center center`}
-                    bgSize="cover"
-                    w="100%"
-                    h="100%"
-                ></Box>
+                <Link href="/shop/search/?q=&cat=Meat">
+                    <Box
+                        className="gridItemImage"
+                        bg={`url(${Deli}) no-repeat center center`}
+                        bgSize="cover"
+                        w="100%"
+                        h="100%"
+                    ></Box>
+                </Link>
             </GridItem>
             <GridItem colSpan={2} bg="lightgray" className="gridItem">
                 <Flex className="grid-flex">
-                    <Text className="subheading">Joystick Design 2020</Text>
-                    <Heading className="gridHeadingMd">
-                        Creation Conquered
-                    </Heading>
-                    <Button variant="outline" className="outlineButton">
+                    <Text className="subheading">Organic Local Vegetables</Text>
+                    <Heading className="gridHeadingMd">Fresh Veggies</Heading>
+                    <Button
+                        variant="outline"
+                        className="outlineButton"
+                        onClick={() =>
+                            history.push("/shop/search/?q=&cat=Vegetables")
+                        }
+                    >
                         Shop collection
                     </Button>
                 </Flex>
             </GridItem>
             <GridItem colSpan={2} bg="primary" className="gridItem">
                 <Flex className="grid-flex" color="#fff">
-                    <Text className="subheading">Best Brand 2020</Text>
-                    <Heading className="gridHeadingMd">Surround Sound</Heading>
-                    <Button variant="outline" className="outlineButton">
+                    <Text className="subheading">Local Dairy Products</Text>
+                    <Heading className="gridHeadingMd">Organic Cheese</Heading>
+                    <Button
+                        variant="outline"
+                        className="outlineButton"
+                        onClick={() =>
+                            history.push("/shop/search/?q=&cat=Dairy")
+                        }
+                    >
                         Shop collection
                     </Button>
                 </Flex>
@@ -117,13 +137,15 @@ const CollectionGrid = () => {
                 bg="primary"
                 className="gridItem"
             >
-                <Box
-                    className="gridItemImage"
-                    bg={`url(${Cake}) no-repeat center center`}
-                    bgSize="cover"
-                    w="100%"
-                    h="100%"
-                ></Box>
+                <Link href="/shop/search/?q=&cat=Bakery">
+                    <Box
+                        className="gridItemImage"
+                        bg={`url(${Cake}) no-repeat center center`}
+                        bgSize="cover"
+                        w="100%"
+                        h="100%"
+                    ></Box>
+                </Link>
             </GridItem>
         </Grid>
     );

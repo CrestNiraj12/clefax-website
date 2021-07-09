@@ -18,9 +18,10 @@ import { CSSTransition } from "react-transition-group";
 import { generateUrl, getAvgReviews } from "../../utilities";
 
 const ProductCardColumn = ({
-    product: { id, name, images, reviews, price, discount },
+    product: { id, name, images: im, reviews, price, discount },
     hideRatings = false
 }) => {
+    const images = im.split(",").map(i => i.trim());
     const [src, setSrc] = useState(images[0]);
     const [imageLoaded, setImageLoaded] = useState(false);
 
@@ -60,6 +61,7 @@ const ProductCardColumn = ({
                             alt={name}
                             w="100%"
                             minH="22vw"
+                            h={{ base: "400px", lg: "22vw" }}
                             outline="none"
                             objectFit="contain"
                             bg="#e6e6e6"

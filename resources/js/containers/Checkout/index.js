@@ -325,8 +325,8 @@ const Checkout = ({
                 price_data: {
                     currency: "GBP",
                     product_data: {
-                        name: p.name
-                        // images: [p.images]
+                        name: p.name,
+                        images: p.images.split(",").map(i => i.trim())
                     },
                     unit_amount: Number(getFinalPrice(p).toFixed(2)) * 100
                 },

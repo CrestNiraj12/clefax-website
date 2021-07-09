@@ -6,14 +6,15 @@ import { apiClient, formatSlotTimes } from "../../utilities";
 import { handleOrder } from "../../utilities/data";
 import qs from "query-string";
 import { Flex, Spinner, useToast } from "@chakra-ui/react";
-import { DEFAULT_TOAST, TEMPLATE_ORDER } from "../../constants";
+import { DEFAULT_TOAST, TEMPLATE_BASIC, TEMPLATE_ORDER } from "../../constants";
 import { generateTable, handleMailSend } from "../../utilities/mail";
 import { useHistory } from "react-router-dom";
 
 const mapStateToProps = state => ({
     cart: state.cart,
     slots: state.slots,
-    auth: state.auth
+    auth: state.auth,
+    products: state.products
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -21,7 +22,14 @@ const mapDispatchToProps = dispatch => ({
     setCartProducts: cart => dispatch(setCartProducts(cart))
 });
 
-const PaymentRedirect = ({ cart, slots, setAuth, auth, setCartProducts }) => {
+const PaymentRedirect = ({
+    cart,
+    slots,
+    setAuth,
+    auth,
+    setCartProducts,
+    products
+}) => {
     var history = useHistory();
     const toast = useToast(DEFAULT_TOAST);
 
@@ -67,10 +75,9 @@ const PaymentRedirect = ({ cart, slots, setAuth, auth, setCartProducts }) => {
     const onSuccess = (total, oid, collection_slot) => {
         localStorage.removeItem("values");
         setCartProducts([]);
-        const order_table = generateTable(
-            JSON.parse(localStorage.getItem("order")),
-            total
-        );
+        const ps = JSON.parse(localStorage.getItem("order"));
+        const order_table = generateTable(ps, total);
+
         handleMailSend(
             TEMPLATE_ORDER,
             "Your order has been placed",
@@ -78,6 +85,32 @@ const PaymentRedirect = ({ cart, slots, setAuth, auth, setCartProducts }) => {
             auth.user.email,
             { order_table, collection_slot }
         );
+
+        [...new Set(ps.map(p => p.shop))].forEach(s => {
+            const productsByShop = ps.filter(p => p.shop === s);
+            const shop = products.filter(p => p.shop.name === s)[0].shop;
+            const t = productsByShop
+                .map(p => p.subtotal)
+                .reduce((a, b) => a + b, 0);
+
+            const ot = generateTable(productsByShop, t);
+            const message = `<p>An ordered was made from your shop <strong>${shop.name}</strong>.</p> 
+                    <p><span style="color: #e03e2d;">CUSTOMER DETAILS:</span></p>
+                    <p><span style="font-size: 10pt;">Name: ${auth.user.fullname}<br />Email: ${auth.user.email}<br /></span><span style="font-size: 10pt;">Collection date &amp; time: <strong>${collection_slot}</strong><br /></span></p>
+                    <p>&nbsp;</p>
+                    <p><span style="color: #e03e2d;">ORDER DETAILS:</span></p>
+                    <p>${ot}</p>`;
+
+            if (productsByShop.length)
+                handleMailSend(
+                    TEMPLATE_BASIC,
+                    "New order notification",
+                    shop.user.fullname,
+                    shop.user.email,
+                    { from_name: "Clefax E-Shop", message }
+                );
+        });
+
         localStorage.removeItem("order");
         toast({
             title: "Payment Success",

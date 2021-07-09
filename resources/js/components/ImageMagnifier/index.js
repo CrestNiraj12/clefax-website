@@ -7,7 +7,6 @@ import { Box, Image } from "@chakra-ui/react";
 const settings = {
     className: "slider",
     dots: true,
-    dotsClass: "slick-dots",
     speed: 500,
     slidesToShow: 1,
     swipeToSlide: false,

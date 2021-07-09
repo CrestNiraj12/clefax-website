@@ -4,34 +4,29 @@ import Carousel from "react-multi-carousel";
 
 const categories = [
     {
-        title: "Headphone",
-        image:
-            "https://wpbingosite.com/wordpress/dimita/wp-content/uploads/2020/01/img1.png",
-        url: "#"
+        title: "Bakery",
+        image: "https://i.imgur.com/uMmffue.png",
+        url: "/shop/search/?q=&cat=Bakery"
     },
     {
-        title: "Airpods",
-        image:
-            "https://wpbingosite.com/wordpress/dimita/wp-content/uploads/2020/01/img2-1.png",
-        url: "#"
+        title: "Dairy",
+        image: "https://i.imgur.com/FYIJ3Qt.png",
+        url: "/shop/search/?q=&cat=Dairy"
     },
     {
-        title: "Smartphone",
-        image:
-            "https://wpbingosite.com/wordpress/dimita/wp-content/uploads/2020/01/img3-1.png",
-        url: "#"
+        title: "Fruits",
+        image: "https://i.imgur.com/NF698jk.png",
+        url: "/shop/search/?q=&cat=Fruits"
     },
     {
-        title: "Smartphone",
-        image:
-            "https://wpbingosite.com/wordpress/dimita/wp-content/uploads/2020/01/img3-1.png",
-        url: "#"
+        title: "Meat",
+        image: "https://i.imgur.com/H3rwTuC.png",
+        url: "/shop/search/?q=&cat=Meat"
     },
     {
-        title: "Smartphone",
-        image:
-            "https://wpbingosite.com/wordpress/dimita/wp-content/uploads/2020/01/img3-1.png",
-        url: "#"
+        title: "Vegetables",
+        image: "https://i.imgur.com/1U1IgBf.png",
+        url: "/shop/search/?q=&cat=Vegetables"
     }
 ];
 
@@ -86,8 +81,8 @@ const Categories = () => {
                         >
                             <Image
                                 src={image}
-                                w="150px"
-                                height="150px"
+                                w="180px"
+                                height="140px"
                                 transition="transform 0.25s ease-out"
                                 alt={title}
                             />

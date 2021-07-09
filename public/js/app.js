@@ -204186,17 +204186,6 @@ module.exports = function(module) {
 
 /***/ }),
 
-/***/ "./resources/images/BREAD.png":
-/*!************************************!*\
-  !*** ./resources/images/BREAD.png ***!
-  \************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-module.exports = "/images/BREAD.png?663226aa21db632dc08df6c0b58c88c7";
-
-/***/ }),
-
 /***/ "./resources/images/bag.png":
 /*!**********************************!*\
   !*** ./resources/images/bag.png ***!
@@ -204205,6 +204194,28 @@ module.exports = "/images/BREAD.png?663226aa21db632dc08df6c0b58c88c7";
 /***/ (function(module, exports) {
 
 module.exports = "/images/bag.png?fc4f7ce933591a519c0f7d0cf6848cab";
+
+/***/ }),
+
+/***/ "./resources/images/bakery.jpg":
+/*!*************************************!*\
+  !*** ./resources/images/bakery.jpg ***!
+  \*************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "/images/bakery.jpg?c23660c03f263bed04d0ecb8a07aaeeb";
+
+/***/ }),
+
+/***/ "./resources/images/cake-bg.png":
+/*!**************************************!*\
+  !*** ./resources/images/cake-bg.png ***!
+  \**************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "/images/cake-bg.png?ac033d2b0bbe0c9ddb092d2d286083c4";
 
 /***/ }),
 
@@ -204241,14 +204252,14 @@ module.exports = "/images/deli.png?b453aecb999fa113ba5bc1137456974c";
 
 /***/ }),
 
-/***/ "./resources/images/donuts.png":
+/***/ "./resources/images/fruits.png":
 /*!*************************************!*\
-  !*** ./resources/images/donuts.png ***!
+  !*** ./resources/images/fruits.png ***!
   \*************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "/images/donuts.png?1713eda1cb91d167db184d4bed993566";
+module.exports = "/images/fruits.png?0d90235bd509adcf5e12535d92bb4f01";
 
 /***/ }),
 
@@ -204296,6 +204307,17 @@ module.exports = "/images/logo-black.png?35348b85675ade74bd77eb6b5cc2398f";
 
 /***/ }),
 
+/***/ "./resources/images/meat.jpg":
+/*!***********************************!*\
+  !*** ./resources/images/meat.jpg ***!
+  \***********************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "/images/meat.jpg?95ab2ff169f96cf37251d4baa80fd969";
+
+/***/ }),
+
 /***/ "./resources/images/meat.png":
 /*!***********************************!*\
   !*** ./resources/images/meat.png ***!
@@ -204303,7 +204325,7 @@ module.exports = "/images/logo-black.png?35348b85675ade74bd77eb6b5cc2398f";
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "/images/meat.png?8f8965aca76ccfd7bf190ec80964de85";
+module.exports = "/images/meat.png?6d26e933a4ac5e98c7752ff4730f3a0c";
 
 /***/ }),
 
@@ -204381,6 +204403,17 @@ module.exports = "/images/stripe-logo.png?539e7078324d621b2fa07f0943fbc9f2";
 /***/ (function(module, exports) {
 
 module.exports = "/images/stripe.png?c05df6d3bfac92f49ddc165989a2940e";
+
+/***/ }),
+
+/***/ "./resources/images/veggies.jpg":
+/*!**************************************!*\
+  !*** ./resources/images/veggies.jpg ***!
+  \**************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "/images/veggies.jpg?e1724be60944ef571f64be170065a58e";
 
 /***/ }),
 
@@ -205283,7 +205316,6 @@ function _extends() { _extends = Object.assign || function (target) { for (var i
 var settings = {
   className: "slider",
   dots: true,
-  dotsClass: "slick-dots",
   speed: 500,
   slidesToShow: 1,
   swipeToSlide: false,
@@ -206455,12 +206487,15 @@ var ProductCardColumn = function ProductCardColumn(_ref) {
   var _ref$product = _ref.product,
       id = _ref$product.id,
       name = _ref$product.name,
-      images = _ref$product.images,
+      im = _ref$product.images,
       reviews = _ref$product.reviews,
       price = _ref$product.price,
       discount = _ref$product.discount,
       _ref$hideRatings = _ref.hideRatings,
       hideRatings = _ref$hideRatings === void 0 ? false : _ref$hideRatings;
+  var images = im.split(",").map(function (i) {
+    return i.trim();
+  });
 
   var _useState = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(images[0]),
       _useState2 = _slicedToArray(_useState, 2),
@@ -206507,6 +206542,10 @@ var ProductCardColumn = function ProductCardColumn(_ref) {
     alt: name,
     w: "100%",
     minH: "22vw",
+    h: {
+      base: "400px",
+      lg: "22vw"
+    },
     outline: "none",
     objectFit: "contain",
     bg: "#e6e6e6",
@@ -206663,10 +206702,13 @@ var ProductCardRow = function ProductCardRow(_ref) {
   var _ref$product = _ref.product,
       id = _ref$product.id,
       name = _ref$product.name,
-      images = _ref$product.images,
+      im = _ref$product.images,
       reviews = _ref$product.reviews,
       price = _ref$product.price,
       discount = _ref$product.discount;
+  var images = im.split(",").map(function (i) {
+    return i.trim();
+  });
 
   var _useState = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(images[0]),
       _useState2 = _slicedToArray(_useState, 2),
@@ -206869,7 +206911,9 @@ var ProductCardRowSmall = function ProductCardRowSmall(_ref) {
     h: "80px",
     w: "80px"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Image"], {
-    src: images[0],
+    src: images.split(",").map(function (i) {
+      return i.trim();
+    })[0],
     alt: name,
     w: "100%",
     h: "100%",
@@ -208303,7 +208347,7 @@ var Cart = function Cart(_ref) {
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["HStack"], {
       spacing: 10
     }, !smallerThan768 && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Image"], {
-      src: images[0],
+      src: images.split(",")[0],
       alt: title,
       w: "100px"
     }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["VStack"], {
@@ -208846,8 +208890,10 @@ var Checkout = function Checkout(_ref) {
         price_data: {
           currency: "GBP",
           product_data: {
-            name: p.name // images: [p.images]
-
+            name: p.name,
+            images: p.images.split(",").map(function (i) {
+              return i.trim();
+            })
           },
           unit_amount: Number(Object(_utilities__WEBPACK_IMPORTED_MODULE_10__["getFinalPrice"])(p).toFixed(2)) * 100
         },
@@ -209994,35 +210040,60 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var react_router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-router */ "./node_modules/react-router/esm/react-router.js");
+/* harmony import */ var _images_veggies_jpg__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../images/veggies.jpg */ "./resources/images/veggies.jpg");
+/* harmony import */ var _images_veggies_jpg__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_images_veggies_jpg__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _images_bakery_jpg__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../images/bakery.jpg */ "./resources/images/bakery.jpg");
+/* harmony import */ var _images_bakery_jpg__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_images_bakery_jpg__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _images_meat_jpg__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../images/meat.jpg */ "./resources/images/meat.jpg");
+/* harmony import */ var _images_meat_jpg__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_images_meat_jpg__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _utilities__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../utilities */ "./resources/js/utilities/index.js");
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _iterableToArrayLimit(arr, i) { var _i = arr && (typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"]); if (_i == null) return; var _arr = []; var _n = true; var _d = false; var _s, _e; try { for (_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+
+
+
+
+
+
 
 
 
 var cards = [{
-  title: "Great Sound",
-  subtitle: "Up to 20% off",
+  title: "Organic Vegetables",
+  subtitle: "Up to 10% off",
   btnStyle: "solid",
   colorTheme: "normal",
-  link: "#",
-  image: "https://wpbingosite.com/wordpress/dimita/wp-content/uploads/2020/02/banner2-10.jpg"
+  link: "/shop/search/?q=&cat=Vegetables",
+  image: _images_veggies_jpg__WEBPACK_IMPORTED_MODULE_3___default.a
 }, {
-  title: "Special Version",
-  subtitle: "High-end goods 2020",
+  title: "Fresh Meat",
+  subtitle: "High-end meat",
   btnStyle: "solid",
   colorTheme: "normal",
-  link: "#",
-  image: "https://wpbingosite.com/wordpress/dimita/wp-content/uploads/2020/02/banner2-11.jpg"
+  link: "/shop/search/?q=&cat=Meat",
+  image: _images_meat_jpg__WEBPACK_IMPORTED_MODULE_5___default.a
 }, {
-  title: "Series 5 Titanium",
-  subtitle: "Apple Watch Edition",
+  title: "Amazing cakes",
+  subtitle: "Cakes & Cookies",
   colorTheme: "bw",
   btnStyle: "outline",
-  link: "#",
-  image: "https://wpbingosite.com/wordpress/dimita/wp-content/uploads/2020/02/banner2-12.jpg"
+  link: "/shop/search/?q=&cat=Bakery",
+  image: _images_bakery_jpg__WEBPACK_IMPORTED_MODULE_4___default.a
 }];
 var brands = [{
   logo: "https://wpbingosite.com/wordpress/dimita/wp-content/uploads/2019/12/brand2-1.png",
   name: "Magna",
-  url: "#"
+  url: "http://localhost:3000/shop/products/?id=1"
 }, {
   logo: "https://wpbingosite.com/wordpress/dimita/wp-content/uploads/2019/12/brand3.png",
   name: "Logoname",
@@ -210047,6 +210118,19 @@ var brands = [{
 
 var Brands = function Brands() {
   var history = Object(react_router__WEBPACK_IMPORTED_MODULE_2__["useHistory"])();
+
+  var _useState = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])([]),
+      _useState2 = _slicedToArray(_useState, 2),
+      vendors = _useState2[0],
+      setVendors = _useState2[1];
+
+  Object(react__WEBPACK_IMPORTED_MODULE_1__["useEffect"])(function () {
+    _utilities__WEBPACK_IMPORTED_MODULE_6__["apiClient"].get("/api/shops").then(function (res) {
+      setVendors(res.data);
+    })["catch"](function (err) {
+      return console.log(err);
+    });
+  }, []);
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Box"], {
     marginY: "100px",
     overflow: "hidden"
@@ -210075,8 +210159,11 @@ var Brands = function Brands() {
       h: "420px",
       overflow: "hidden"
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Box"], {
-      bgImage: "url(".concat(image, ")"),
+      bg: "url(".concat(image, ") no-repeat center center"),
+      bgSize: "cover",
       alt: title,
+      backgroundColor: "#a7a7a7",
+      backgroundBlendMode: colorTheme === "normal" ? "" : "multiply",
       className: "gridItemImage",
       w: "100%",
       h: "100%"
@@ -210095,7 +210182,7 @@ var Brands = function Brands() {
       letterSpacing: "1.8px",
       fontSize: "2em",
       marginY: "15px",
-      color: colorTheme === "normal" ? "#000" : "#fff"
+      color: colorTheme === "normal" ? "primary" : "#fff"
     }, title), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Button"], {
       variant: btnStyle,
       color: colorTheme === "normal" ? "#000" : "#fff",
@@ -210111,9 +210198,9 @@ var Brands = function Brands() {
     mt: "100px",
     className: "slideshow",
     justifyContent: "space-between"
-  }, brands.concat(brands).map(function (_ref2, index) {
-    var logo = _ref2.logo,
-        url = _ref2.url,
+  }, vendors.concat(vendors).concat(vendors).map(function (_ref2, index) {
+    var id = _ref2.id,
+        logo = _ref2.logo,
         name = _ref2.name;
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Flex"], {
       key: index,
@@ -210126,18 +210213,19 @@ var Brands = function Brands() {
       borderLeftWidth: index === 0 ? "1px" : "0",
       borderColor: "lightgray"
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Link"], {
-      href: url,
+      href: "/shop/products/?id=".concat(id),
       outline: "none",
       tabIndex: -1,
       _focus: {
         boxShadow: "none"
       }
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Image"], {
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Avatar"], {
+      size: "xl",
+      name: name,
       src: logo,
-      alt: name,
-      className: "brandImg",
       filter: "saturate(0)",
       transition: "transform 0.2s ease-out",
+      className: "brandImg",
       _hover: {
         transform: "scale(1.1)",
         filter: "saturate(1)"
@@ -210168,25 +210256,25 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var categories = [{
-  title: "Headphone",
-  image: "https://wpbingosite.com/wordpress/dimita/wp-content/uploads/2020/01/img1.png",
-  url: "#"
+  title: "Bakery",
+  image: "https://i.imgur.com/uMmffue.png",
+  url: "/shop/search/?q=&cat=Bakery"
 }, {
-  title: "Airpods",
-  image: "https://wpbingosite.com/wordpress/dimita/wp-content/uploads/2020/01/img2-1.png",
-  url: "#"
+  title: "Dairy",
+  image: "https://i.imgur.com/FYIJ3Qt.png",
+  url: "/shop/search/?q=&cat=Dairy"
 }, {
-  title: "Smartphone",
-  image: "https://wpbingosite.com/wordpress/dimita/wp-content/uploads/2020/01/img3-1.png",
-  url: "#"
+  title: "Fruits",
+  image: "https://i.imgur.com/NF698jk.png",
+  url: "/shop/search/?q=&cat=Fruits"
 }, {
-  title: "Smartphone",
-  image: "https://wpbingosite.com/wordpress/dimita/wp-content/uploads/2020/01/img3-1.png",
-  url: "#"
+  title: "Meat",
+  image: "https://i.imgur.com/H3rwTuC.png",
+  url: "/shop/search/?q=&cat=Meat"
 }, {
-  title: "Smartphone",
-  image: "https://wpbingosite.com/wordpress/dimita/wp-content/uploads/2020/01/img3-1.png",
-  url: "#"
+  title: "Vegetables",
+  image: "https://i.imgur.com/1U1IgBf.png",
+  url: "/shop/search/?q=&cat=Vegetables"
 }];
 var responsive = {
   superLargeDesktop: {
@@ -210252,8 +210340,8 @@ var Categories = function Categories() {
       }
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Image"], {
       src: image,
-      w: "150px",
-      height: "150px",
+      w: "180px",
+      height: "140px",
       transition: "transform 0.25s ease-out",
       alt: title
     }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Heading"], {
@@ -210286,6 +210374,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _images_deli_png__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_images_deli_png__WEBPACK_IMPORTED_MODULE_3__);
 /* harmony import */ var _images_cake_png__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../images/cake.png */ "./resources/images/cake.png");
 /* harmony import */ var _images_cake_png__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_images_cake_png__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
+
 
 
 
@@ -210293,6 +210383,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var CollectionGrid = function CollectionGrid() {
+  var history = Object(react_router_dom__WEBPACK_IMPORTED_MODULE_5__["useHistory"])();
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Grid"], {
     h: {
       base: "150vh",
@@ -210361,7 +210452,10 @@ var CollectionGrid = function CollectionGrid() {
     }
   }, "favourite item")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Button"], {
     variant: "outline",
-    className: "outlineButton"
+    className: "outlineButton",
+    onClick: function onClick() {
+      return history.push("/shop");
+    }
   }, "Discover now"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["GridItem"], {
     rowSpan: {
       base: 1,
@@ -210371,13 +210465,15 @@ var CollectionGrid = function CollectionGrid() {
     colSpan: 2,
     bg: "papayawhip",
     className: "gridItem"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Link"], {
+    href: "/shop/search/?q=&cat=Meat"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Box"], {
     className: "gridItemImage",
     bg: "url(".concat(_images_deli_png__WEBPACK_IMPORTED_MODULE_3___default.a, ") no-repeat center center"),
     bgSize: "cover",
     w: "100%",
     h: "100%"
-  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["GridItem"], {
+  }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["GridItem"], {
     colSpan: 2,
     bg: "lightgray",
     className: "gridItem"
@@ -210385,11 +210481,14 @@ var CollectionGrid = function CollectionGrid() {
     className: "grid-flex"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Text"], {
     className: "subheading"
-  }, "Joystick Design 2020"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Heading"], {
+  }, "Organic Local Vegetables"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Heading"], {
     className: "gridHeadingMd"
-  }, "Creation Conquered"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Button"], {
+  }, "Fresh Veggies"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Button"], {
     variant: "outline",
-    className: "outlineButton"
+    className: "outlineButton",
+    onClick: function onClick() {
+      return history.push("/shop/search/?q=&cat=Vegetables");
+    }
   }, "Shop collection"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["GridItem"], {
     colSpan: 2,
     bg: "primary",
@@ -210399,11 +210498,14 @@ var CollectionGrid = function CollectionGrid() {
     color: "#fff"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Text"], {
     className: "subheading"
-  }, "Best Brand 2020"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Heading"], {
+  }, "Local Dairy Products"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Heading"], {
     className: "gridHeadingMd"
-  }, "Surround Sound"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Button"], {
+  }, "Organic Cheese"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Button"], {
     variant: "outline",
-    className: "outlineButton"
+    className: "outlineButton",
+    onClick: function onClick() {
+      return history.push("/shop/search/?q=&cat=Dairy");
+    }
   }, "Shop collection"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["GridItem"], {
     rowSpan: {
       base: 1,
@@ -210417,13 +210519,15 @@ var CollectionGrid = function CollectionGrid() {
     },
     bg: "primary",
     className: "gridItem"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Link"], {
+    href: "/shop/search/?q=&cat=Bakery"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Box"], {
     className: "gridItemImage",
     bg: "url(".concat(_images_cake_png__WEBPACK_IMPORTED_MODULE_4___default.a, ") no-repeat center center"),
     bgSize: "cover",
     w: "100%",
     h: "100%"
-  })));
+  }))));
 };
 
 /* harmony default export */ __webpack_exports__["default"] = (CollectionGrid);
@@ -210743,12 +210847,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_multi_carousel_lib_styles_css__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(react_multi_carousel_lib_styles_css__WEBPACK_IMPORTED_MODULE_4__);
 /* harmony import */ var react_transition_group__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react-transition-group */ "./node_modules/react-transition-group/esm/index.js");
 /* harmony import */ var react_router__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! react-router */ "./node_modules/react-router/esm/react-router.js");
-/* harmony import */ var _images_meat_png__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../../images/meat.png */ "./resources/images/meat.png");
-/* harmony import */ var _images_meat_png__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(_images_meat_png__WEBPACK_IMPORTED_MODULE_7__);
-/* harmony import */ var _images_BREAD_png__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../../images/BREAD.png */ "./resources/images/BREAD.png");
-/* harmony import */ var _images_BREAD_png__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(_images_BREAD_png__WEBPACK_IMPORTED_MODULE_8__);
-/* harmony import */ var _images_donuts_png__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../../../images/donuts.png */ "./resources/images/donuts.png");
-/* harmony import */ var _images_donuts_png__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(_images_donuts_png__WEBPACK_IMPORTED_MODULE_9__);
+/* harmony import */ var _images_cake_bg_png__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../../images/cake-bg.png */ "./resources/images/cake-bg.png");
+/* harmony import */ var _images_cake_bg_png__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(_images_cake_bg_png__WEBPACK_IMPORTED_MODULE_7__);
+/* harmony import */ var _images_fruits_png__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../../images/fruits.png */ "./resources/images/fruits.png");
+/* harmony import */ var _images_fruits_png__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(_images_fruits_png__WEBPACK_IMPORTED_MODULE_8__);
+/* harmony import */ var _images_meat_png__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../../../images/meat.png */ "./resources/images/meat.png");
+/* harmony import */ var _images_meat_png__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(_images_meat_png__WEBPACK_IMPORTED_MODULE_9__);
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -210804,18 +210908,18 @@ var responsive = {
 var carousel = [{
   title: "Meat",
   subtitle: "Fresh meats of all kind",
-  image: _images_meat_png__WEBPACK_IMPORTED_MODULE_7___default.a,
-  button_url: "#"
+  image: _images_meat_png__WEBPACK_IMPORTED_MODULE_9___default.a,
+  button_url: "/shop/search/?q=&cat=Meat"
 }, {
-  title: "Breads",
-  subtitle: "Fresh breads",
-  image: _images_BREAD_png__WEBPACK_IMPORTED_MODULE_8___default.a,
-  button_url: "#"
+  title: "Cakes",
+  subtitle: "Baked just for you",
+  image: _images_cake_bg_png__WEBPACK_IMPORTED_MODULE_7___default.a,
+  button_url: "/shop/search/?q=Cake&cat=Bakery"
 }, {
-  title: "Donuts",
-  subtitle: "Sprinkled donuts",
-  image: _images_donuts_png__WEBPACK_IMPORTED_MODULE_9___default.a,
-  button_url: "#"
+  title: "Fruits",
+  subtitle: "Fresh organic fruits",
+  image: _images_fruits_png__WEBPACK_IMPORTED_MODULE_8___default.a,
+  button_url: "/shop/search/?q=&cat=Fruits"
 }];
 
 var Header = function Header() {
@@ -212810,6 +212914,18 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../constants */ "./resources/js/constants.js");
 /* harmony import */ var _utilities_mail__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../utilities/mail */ "./resources/js/utilities/mail.js");
 /* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
 
 
 
@@ -212826,7 +212942,8 @@ var mapStateToProps = function mapStateToProps(state) {
   return {
     cart: state.cart,
     slots: state.slots,
-    auth: state.auth
+    auth: state.auth,
+    products: state.products
   };
 };
 
@@ -212846,7 +212963,8 @@ var PaymentRedirect = function PaymentRedirect(_ref) {
       slots = _ref.slots,
       setAuth = _ref.setAuth,
       auth = _ref.auth,
-      setCartProducts = _ref.setCartProducts;
+      setCartProducts = _ref.setCartProducts,
+      products = _ref.products;
   var history = Object(react_router_dom__WEBPACK_IMPORTED_MODULE_9__["useHistory"])();
   var toast = Object(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_6__["useToast"])(_constants__WEBPACK_IMPORTED_MODULE_7__["DEFAULT_TOAST"]);
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
@@ -212874,11 +212992,35 @@ var PaymentRedirect = function PaymentRedirect(_ref) {
   var onSuccess = function onSuccess(total, oid, collection_slot) {
     localStorage.removeItem("values");
     setCartProducts([]);
-    var order_table = Object(_utilities_mail__WEBPACK_IMPORTED_MODULE_8__["generateTable"])(JSON.parse(localStorage.getItem("order")), total);
+    var ps = JSON.parse(localStorage.getItem("order"));
+    var order_table = Object(_utilities_mail__WEBPACK_IMPORTED_MODULE_8__["generateTable"])(ps, total);
     Object(_utilities_mail__WEBPACK_IMPORTED_MODULE_8__["handleMailSend"])(_constants__WEBPACK_IMPORTED_MODULE_7__["TEMPLATE_ORDER"], "Your order has been placed", auth.user.fullname, auth.user.email, {
       order_table: order_table,
       collection_slot: collection_slot
     });
+
+    _toConsumableArray(new Set(ps.map(function (p) {
+      return p.shop;
+    }))).forEach(function (s) {
+      var productsByShop = ps.filter(function (p) {
+        return p.shop === s;
+      });
+      var shop = products.filter(function (p) {
+        return p.shop.name === s;
+      })[0].shop;
+      var t = productsByShop.map(function (p) {
+        return p.subtotal;
+      }).reduce(function (a, b) {
+        return a + b;
+      }, 0);
+      var ot = Object(_utilities_mail__WEBPACK_IMPORTED_MODULE_8__["generateTable"])(productsByShop, t);
+      var message = "<p>An ordered was made from your shop <strong>".concat(shop.name, "</strong>.</p> \n                    <p><span style=\"color: #e03e2d;\">CUSTOMER DETAILS:</span></p>\n                    <p><span style=\"font-size: 10pt;\">Name: ").concat(auth.user.fullname, "<br />Email: ").concat(auth.user.email, "<br /></span><span style=\"font-size: 10pt;\">Collection date &amp; time: <strong>").concat(collection_slot, "</strong><br /></span></p>\n                    <p>&nbsp;</p>\n                    <p><span style=\"color: #e03e2d;\">ORDER DETAILS:</span></p>\n                    <p>").concat(ot, "</p>");
+      if (productsByShop.length) Object(_utilities_mail__WEBPACK_IMPORTED_MODULE_8__["handleMailSend"])(_constants__WEBPACK_IMPORTED_MODULE_7__["TEMPLATE_BASIC"], "New order notification", shop.user.fullname, shop.user.email, {
+        from_name: "Clefax E-Shop",
+        message: message
+      });
+    });
+
     localStorage.removeItem("order");
     toast({
       title: "Payment Success",
@@ -213642,6 +213784,11 @@ var Product = function Product(_ref) {
       inWishlist = _useState4[0],
       setInWishlist = _useState4[1];
 
+  var _useState5 = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])([]),
+      _useState6 = _slicedToArray(_useState5, 2),
+      related = _useState6[0],
+      setRelated = _useState6[1];
+
   var _useDisclosure = Object(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["useDisclosure"])(),
       isOpen = _useDisclosure.isOpen,
       onOpen = _useDisclosure.onOpen,
@@ -213674,6 +213821,9 @@ var Product = function Product(_ref) {
   Object(react__WEBPACK_IMPORTED_MODULE_1__["useEffect"])(function () {
     if (product) setInWishlist(wishlist.includes(product.id));
   }, [product, wishlist]);
+  Object(react__WEBPACK_IMPORTED_MODULE_1__["useEffect"])(function () {
+    if (product && products) setRelated(getRelatedProducts(products, product));
+  }, [products, product]);
 
   var addToWishlist = function addToWishlist() {
     if (product) {
@@ -213827,13 +213977,15 @@ var Product = function Product(_ref) {
       base: "column",
       md: "row"
     }
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_components_ImageMagnifier__WEBPACK_IMPORTED_MODULE_9__["default"] // images={product.images}
-  , {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_components_ImageMagnifier__WEBPACK_IMPORTED_MODULE_9__["default"], {
+    images: product.images.split(",").map(function (i) {
+      return i.trim();
+    }),
     title: product.name
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Box"], {
     w: {
       base: "100%",
-      md: "50%"
+      md: "60%"
     },
     mt: {
       base: "180px !important",
@@ -214000,7 +214152,7 @@ var Product = function Product(_ref) {
     py: "5px"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("b", null, "Category:"), " ", product.category.name), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Text"], {
     py: "5px"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("b", null, "Tags:"), " ", product.tags), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["HStack"], {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("b", null, "Tags:"), " ", product.tags ? product.tags : "No tags available"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["HStack"], {
     py: "5px"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("b", null, "Share:"), " ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["HStack"], {
     spacing: 3
@@ -214051,11 +214203,11 @@ var Product = function Product(_ref) {
       md: 3,
       lg: 5
     }
-  }, getRelatedProducts(products, product).slice(0, 5).map(function (p, index) {
+  }, related.slice(0, 5).map(function (p, index) {
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_components_ProductCardColumn__WEBPACK_IMPORTED_MODULE_11__["default"], {
       product: p,
       hideRatings: true,
-      key: index
+      key: index + new Date()
     });
   }))));
 };
@@ -215866,7 +216018,7 @@ var Wishlist = function Wishlist(_ref) {
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["HStack"], {
       spacing: 10
     }, !smallerThan1024 && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Image"], {
-      src: images[0],
+      src: images.split(",")[0],
       alt: title,
       w: "100px"
     }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["VStack"], {
