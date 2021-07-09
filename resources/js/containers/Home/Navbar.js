@@ -53,7 +53,8 @@ import {
     AiOutlineLogin,
     AiOutlineUser
 } from "react-icons/ai";
-import { uniqBy } from "lodash";
+import { useEffect } from "react";
+import { apiClient, generateUrl } from "../../utilities";
 
 const mapDispatchToProps = dispatch => ({
     showSearch: show => dispatch(showSearch(show))
@@ -64,47 +65,6 @@ const mapStateToProps = state => ({
     cart: state.cart,
     wishlist: state.wishlist
 });
-
-const headings = [
-    {
-        title: "Products",
-        content: [
-            { title: "Product category", url: "#" },
-            { title: "Product category", url: "#" },
-            { title: "Product category", url: "#" },
-            { title: "Product category", url: "#" }
-        ]
-    },
-    {
-        title: "Products",
-        content: [
-            { title: "Product category", url: "#" },
-            { title: "Product category", url: "#" },
-            { title: "Product category", url: "#" },
-            { title: "Product category", url: "#" }
-        ]
-    },
-    {
-        title: "Products",
-        content: [
-            { title: "Product category", url: "#" },
-            { title: "Product category", url: "#" },
-            { title: "Product category", url: "#" },
-            { title: "Product category", url: "#" },
-            { title: "Product category", url: "#" },
-            { title: "Product category", url: "#" }
-        ]
-    },
-    {
-        title: "Products",
-        content: [
-            { title: "Product category", url: "#" },
-            { title: "Product category", url: "#" },
-            { title: "Product category", url: "#" },
-            { title: "Product category", url: "#" }
-        ]
-    }
-];
 
 const Navbar = ({ showSearch, auth, cart, wishlist }) => {
     var history = useHistory();
@@ -119,6 +79,14 @@ const Navbar = ({ showSearch, auth, cart, wishlist }) => {
     } = useDisclosure();
     const btnRef = React.useRef();
     const [changeDrawer, setChangeDrawer] = useState(false);
+    const [categories, setCategories] = useState([]);
+
+    useEffect(() => {
+        apiClient
+            .get("/api/categories")
+            .then(res => setCategories(res.data))
+            .catch(err => console.log(err));
+    }, []);
 
     const handleClose = () => {
         setChangeDrawer(false);
@@ -338,45 +306,52 @@ const Navbar = ({ showSearch, auth, cart, wishlist }) => {
                                     <Spacer />
                                     <Spacer />
                                 </Flex>
-                                {headings.map(({ title, content }, index) => (
-                                    <Box w="100%" key={index} mb="30px">
-                                        <Heading
-                                            as="h6"
-                                            fontSize="16px"
-                                            textTransform="uppercase"
-                                            letterSpacing="1"
-                                            m="10px 0"
-                                        >
-                                            {title}
-                                        </Heading>
-                                        <hr className="line" />
-                                        <Divider borderColor="#66666663" />
-                                        <List>
-                                            {content.map(
-                                                ({ title, url }, index) => (
-                                                    <ListItem
-                                                        key={index}
-                                                        m="15px 0"
-                                                    >
-                                                        <Link
-                                                            href={url}
-                                                            fontSize="16px"
-                                                            color="gray.700"
-                                                            _hover={{
-                                                                color:
-                                                                    "secondary",
-                                                                textDecoration:
-                                                                    "none"
-                                                            }}
+                                {categories.map(({ name, products }, index) =>
+                                    products.length ? (
+                                        <Box w="100%" key={index} mb="30px">
+                                            <Heading
+                                                as="h6"
+                                                fontSize="16px"
+                                                textTransform="uppercase"
+                                                letterSpacing="1"
+                                                m="10px 0"
+                                            >
+                                                {name}
+                                            </Heading>
+                                            <hr className="line" />
+                                            <Divider borderColor="#66666663" />
+                                            <List>
+                                                {products.map(
+                                                    ({ name, id }, index) => (
+                                                        <ListItem
+                                                            key={index}
+                                                            m="15px 0"
                                                         >
-                                                            {title}
-                                                        </Link>
-                                                    </ListItem>
-                                                )
-                                            )}
-                                        </List>
-                                    </Box>
-                                ))}
+                                                            <Link
+                                                                href={generateUrl(
+                                                                    id,
+                                                                    name
+                                                                )}
+                                                                fontSize="16px"
+                                                                color="gray.700"
+                                                                _hover={{
+                                                                    color:
+                                                                        "secondary",
+                                                                    textDecoration:
+                                                                        "none"
+                                                                }}
+                                                            >
+                                                                {name}
+                                                            </Link>
+                                                        </ListItem>
+                                                    )
+                                                )}
+                                            </List>
+                                        </Box>
+                                    ) : (
+                                        <></>
+                                    )
+                                )}
                             </VStack>
                         </CSSTransition>
                     </DrawerBody>
@@ -477,58 +452,65 @@ const Navbar = ({ showSearch, auth, cart, wishlist }) => {
                                             className="navMenu"
                                             zIndex="999"
                                         >
-                                            {headings.map(
-                                                ({ title, content }, index) => (
-                                                    <Box w="100%" key={index}>
-                                                        <Heading
-                                                            as="h6"
-                                                            fontSize="16px"
-                                                            textTransform="uppercase"
-                                                            letterSpacing="1"
-                                                            m="10px 0"
+                                            {categories.map(
+                                                ({ name, products }, index) =>
+                                                    products.length ? (
+                                                        <Box
+                                                            w="100%"
+                                                            key={index}
                                                         >
-                                                            {title}
-                                                        </Heading>
-                                                        <hr className="line" />
-                                                        <Divider borderColor="#66666663" />
-                                                        <List>
-                                                            {content.map(
-                                                                (
-                                                                    {
-                                                                        title,
-                                                                        url
-                                                                    },
-                                                                    index
-                                                                ) => (
-                                                                    <ListItem
-                                                                        key={
-                                                                            index
-                                                                        }
-                                                                        m="15px 0"
-                                                                    >
-                                                                        <Link
-                                                                            href={
-                                                                                url
+                                                            <Heading
+                                                                as="h6"
+                                                                fontSize="16px"
+                                                                textTransform="uppercase"
+                                                                letterSpacing="1"
+                                                                m="10px 0"
+                                                            >
+                                                                {name}
+                                                            </Heading>
+                                                            <hr className="line" />
+                                                            <Divider borderColor="#66666663" />
+                                                            <List>
+                                                                {products.map(
+                                                                    (
+                                                                        {
+                                                                            name,
+                                                                            id
+                                                                        },
+                                                                        index
+                                                                    ) => (
+                                                                        <ListItem
+                                                                            key={
+                                                                                index
                                                                             }
-                                                                            fontSize="16px"
-                                                                            color="gray.700"
-                                                                            _hover={{
-                                                                                color:
-                                                                                    "secondary",
-                                                                                textDecoration:
-                                                                                    "none"
-                                                                            }}
+                                                                            m="15px 0"
                                                                         >
-                                                                            {
-                                                                                title
-                                                                            }
-                                                                        </Link>
-                                                                    </ListItem>
-                                                                )
-                                                            )}
-                                                        </List>
-                                                    </Box>
-                                                )
+                                                                            <Link
+                                                                                href={generateUrl(
+                                                                                    id,
+                                                                                    name
+                                                                                )}
+                                                                                fontSize="16px"
+                                                                                color="gray.700"
+                                                                                _hover={{
+                                                                                    color:
+                                                                                        "secondary",
+                                                                                    textDecoration:
+                                                                                        "none"
+                                                                                }}
+                                                                            >
+                                                                                {
+                                                                                    name
+                                                                                }
+                                                                            </Link>
+                                                                        </ListItem>
+                                                                    )
+                                                                )}
+                                                            </List>
+                                                        </Box>
+                                                    ) : (
+                                                        <></>
+                                                    )
                                             )}
                                         </Grid>
                                     </CSSTransition>

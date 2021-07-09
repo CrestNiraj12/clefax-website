@@ -57,7 +57,7 @@ import { useHistory } from "react-router";
 import ProductCardRowSmall from "../ProductCardRowSmall";
 import { showSearch } from "../../actions";
 import ShopLocal from "../../../images/shoplocal.jpg";
-import { searchQuery } from "../../utilities";
+import { apiClient, generateUrl, searchQuery } from "../../utilities";
 import Logout from "../Logout";
 import { FiLogOut, FiShoppingBag } from "react-icons/fi";
 import {
@@ -71,7 +71,7 @@ const mapDispatchToProps = dispatch => ({
     showSearch: show => dispatch(showSearch(show))
 });
 
-const headings = [
+const cats = [
     {
         title: "Products",
         content: [
@@ -138,10 +138,18 @@ const Navbar = ({ showSearch, products, categories, auth, cart, wishlist }) => {
     const [changeDrawer, setChangeDrawer] = useState(false);
     const [loading, setLoading] = useState(false);
     const [query, setQuery] = useState("");
+    const [cats, setCats] = useState([]);
 
     useEffect(() => {
         if (products.length) setFilteredProducts(products);
     }, [products]);
+
+    useEffect(() => {
+        apiClient
+            .get("/api/categories")
+            .then(res => setCategories(res.data))
+            .catch(err => console.log(err));
+    }, []);
 
     const handleClose = () => {
         setChangeDrawer(false);
@@ -280,7 +288,7 @@ const Navbar = ({ showSearch, products, categories, auth, cart, wishlist }) => {
                                     <Spacer />
                                     <Spacer />
                                 </Flex>
-                                {headings.map(({ title, content }, index) => (
+                                {cats.map(({ name, products: ps }, index) => (
                                     <Box w="100%" key={index} mb="30px">
                                         <Heading
                                             as="h6"
@@ -289,33 +297,33 @@ const Navbar = ({ showSearch, products, categories, auth, cart, wishlist }) => {
                                             letterSpacing="1"
                                             m="10px 0"
                                         >
-                                            {title}
+                                            {name}
                                         </Heading>
                                         <hr className="line" />
                                         <Divider borderColor="#66666663" />
                                         <List>
-                                            {content.map(
-                                                ({ title, url }, index) => (
-                                                    <ListItem
-                                                        key={index}
-                                                        m="15px 0"
+                                            {ps.map(({ name, id }, index) => (
+                                                <ListItem
+                                                    key={index}
+                                                    m="15px 0"
+                                                >
+                                                    <Link
+                                                        href={generateUrl(
+                                                            id,
+                                                            name
+                                                        )}
+                                                        fontSize="16px"
+                                                        color="gray.700"
+                                                        _hover={{
+                                                            color: "secondary",
+                                                            textDecoration:
+                                                                "none"
+                                                        }}
                                                     >
-                                                        <Link
-                                                            href={url}
-                                                            fontSize="16px"
-                                                            color="gray.700"
-                                                            _hover={{
-                                                                color:
-                                                                    "secondary",
-                                                                textDecoration:
-                                                                    "none"
-                                                            }}
-                                                        >
-                                                            {title}
-                                                        </Link>
-                                                    </ListItem>
-                                                )
-                                            )}
+                                                        {name}
+                                                    </Link>
+                                                </ListItem>
+                                            ))}
                                         </List>
                                     </Box>
                                 ))}
@@ -788,9 +796,9 @@ const Navbar = ({ showSearch, products, categories, auth, cart, wishlist }) => {
                                                 className="navMenu-page"
                                                 zIndex="999"
                                             >
-                                                {headings.map(
+                                                {cats.map(
                                                     (
-                                                        { title, content },
+                                                        { name, products: ps },
                                                         index
                                                     ) => (
                                                         <Box
@@ -804,16 +812,16 @@ const Navbar = ({ showSearch, products, categories, auth, cart, wishlist }) => {
                                                                 letterSpacing="1"
                                                                 m="10px 0"
                                                             >
-                                                                {title}
+                                                                {name}
                                                             </Heading>
                                                             <hr className="line" />
                                                             <Divider borderColor="#66666663" />
                                                             <List>
-                                                                {content.map(
+                                                                {ps.map(
                                                                     (
                                                                         {
-                                                                            title,
-                                                                            url
+                                                                            name,
+                                                                            id
                                                                         },
                                                                         index
                                                                     ) => (
@@ -824,9 +832,10 @@ const Navbar = ({ showSearch, products, categories, auth, cart, wishlist }) => {
                                                                             m="15px 0"
                                                                         >
                                                                             <Link
-                                                                                href={
-                                                                                    url
-                                                                                }
+                                                                                href={generateUrl(
+                                                                                    id,
+                                                                                    name
+                                                                                )}
                                                                                 fontSize="16px"
                                                                                 color="gray.700"
                                                                                 _hover={{
@@ -837,7 +846,7 @@ const Navbar = ({ showSearch, products, categories, auth, cart, wishlist }) => {
                                                                                 }}
                                                                             >
                                                                                 {
-                                                                                    title
+                                                                                    name
                                                                                 }
                                                                             </Link>
                                                                         </ListItem>
