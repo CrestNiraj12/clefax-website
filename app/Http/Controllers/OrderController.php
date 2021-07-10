@@ -7,6 +7,12 @@ use Illuminate\Http\Request;
 
 class OrderController extends Controller
 {
+    public function index()
+    {
+        $orders = Order::with(['user', 'collection_slot'])->get();
+        return view("admin.orders.orders", ['page_title' => 'Orders', 'orders' => $orders]);
+    }
+
     public function getOrders() {
         $orders = Order::where('user_id', auth()->user()->id)->get();
         return response()->json($orders);

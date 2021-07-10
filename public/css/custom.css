@@ -9,3 +9,15 @@
 .alert-custom > h5 {
   margin-bottom: 10px;
 }
+
+.navitem > i {
+  margin-right: 10px;
+}
+
+table > thead > tr > th {
+  max-width: 300px;
+}
+
+.card-footer::after {
+  display: none !important;
+}

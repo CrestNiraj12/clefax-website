@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Traits\UploadTrait;
+use App\Models\Product;
 use App\Models\Shop;
 use Illuminate\Http\Request;
 
@@ -12,8 +13,8 @@ class ShopController extends Controller
 
     public function index()
     {
-        $shops = Shop::all();
-        return view("admin.shop.shop", ['page_title' => 'Shops', 'shops' => $shops]);
+        $shops = Shop::where('user_id', auth()->user()->id)->get();
+        return view("admin.shops.shops", ['page_title' => 'Shops', 'shops' => $shops]);
     }
 
     public function show($id) {
@@ -40,7 +41,8 @@ class ShopController extends Controller
 
     public function store(Request $request) {
         $this->addShop($request);
-        return redirect("/trader/shops")->with('success', 'Shop Added!');
+        session()->put('success', "Shop Added!");
+        return redirect("/admin/shops");
     }
 
     public function addShopFromApi(Request $request) {
@@ -53,7 +55,13 @@ class ShopController extends Controller
         return response()->json($shops);
     }
 
-    public function showEditForm(Request $request, $id) {
+    public function getAllShopsAdmin()
+    {
+        $shops = Shop::all();
+        return view("admin.shops.shops", ['page_title' => 'Shops', 'shops' => $shops]);
+    }
+
+    public function showEditForm($id) {
         $shop = $this->show($id);
         return view('admin.shops.edit', ['page_title' => 'Edit Shop', 'shop' => $shop]);
     }
@@ -66,12 +74,14 @@ class ShopController extends Controller
             $request->validate(['logo' => 'image|mimes:jpeg,png,jpg,gif,svg']);
             $imageName = $this->imageUpload($request->logo, 'shops');
         }
-        Shop::where('id', $id)->update($request->except('logo') + isset($imageName) ? ['logo' => $imageName] : []);
-        return redirect("/trader/shops")->with('success', 'Shop Updated!');
+        Shop::where('id', $id)->update($request->except('logo', '_token', '_method') + (isset($imageName) ? ['logo' => $imageName] : []));
+        session()->put('success', "Shop Updated!");
+        return redirect("/admin/shops");
     }
 
     public function destroy($id) {
-        Shop::where('id', $id)->delete();
-        return redirect()->back()->with('success', 'Shop Deleted!');
+        //Shop::where('id', $id)->delete();
+        session()->put('success', "Shop Deleted!");
+        return redirect("/admin/shops");
     }
 }

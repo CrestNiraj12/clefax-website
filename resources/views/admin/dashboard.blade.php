@@ -40,6 +40,7 @@
 
 @section('css')
     <link href="{{ asset('/css/custom.css') }}" rel="stylesheet" />
+    <link href="{{ asset('/css/admin.css') }}" rel="stylesheet" />
     <!-- Tabler Core -->
     <link href="{{ asset('dist/css/tabler.min.css') }}" rel="stylesheet" />
 @stop

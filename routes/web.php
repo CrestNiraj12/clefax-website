@@ -1,6 +1,9 @@
 <?php
 
+use App\Http\Controllers\OrderController;
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ShopController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -26,7 +29,17 @@ Route::post('/admin/logout', [UserController::class, "logoutUser"])->name('logou
 
 Route::middleware(['auth:sanctum'])->group(function() {
     Route::prefix('admin')->group(function () {
-		//Route::resource('dashboard', DashboardController::class);
+		Route::prefix('shops')->group(function () {
+            Route::view('add', 'admin.shops.add', ['page_title' => 'Add Shop']);
+            Route::get('{id}/edit', [ShopController::class, 'showEditForm']);
+        });
+		Route::resource('shops', ShopController::class);
+		Route::prefix('products')->group(function () {
+            Route::get('add', [ProductController::class, 'showAddForm']);
+            Route::get('{id}/edit', [ProductController::class, 'showEditForm']);
+        });
+		Route::resource('products', ProductController::class);
+		Route::get('orders', [OrderController::class, 'index']);
 		Route::prefix('profile')->group(function () {
 			Route::get('/', [ProfileController::class, 'editProfile'])->name('profile');
 			Route::post('update', [ProfileInformationController::class, 'update'])->name('user-profile-information.update');
