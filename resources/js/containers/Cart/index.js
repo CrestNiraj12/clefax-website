@@ -36,7 +36,12 @@ import { useHistory } from "react-router-dom";
 import { setCartProducts } from "../../actions";
 import Breadcrumb from "../../components/Breadcrumb";
 import { DEFAULT_TOAST } from "../../constants";
-import { apiClient, generateUrl, getFinalPrice } from "../../utilities";
+import {
+    apiClient,
+    generateUrl,
+    getFinalPrice,
+    getLoginRedirection
+} from "../../utilities";
 
 const mapStateToProps = state => ({
     products: state.products,
@@ -75,6 +80,27 @@ const Cart = ({ crumbs, auth, products, cart, setCartProducts }) => {
         );
         setLoading(false);
     }, [cart, products]);
+
+    useEffect(() => {
+        if (!localStorage.getItem("user")) {
+            toast({
+                title: "Login required",
+                description: "Please login to continue",
+                status: "info"
+            });
+            history.push(getLoginRedirection());
+        } else if (
+            localStorage.getItem("user") &&
+            JSON.parse(localStorage.getItem("user")).role !== "Customer"
+        ) {
+            toast({
+                title: "Permission not granted",
+                description: "You are not allowed to proceed to the page",
+                status: "info"
+            });
+            history.push("/");
+        }
+    }, []);
 
     const handleRemoveProduct = (id, showToast = true) => {
         const removed = cartProducts.filter(p => p.id !== id);

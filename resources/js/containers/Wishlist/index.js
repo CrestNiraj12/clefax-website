@@ -35,7 +35,7 @@ import { useHistory } from "react-router-dom";
 import { setCartProducts, setWishlistProducts } from "../../actions";
 import Breadcrumb from "../../components/Breadcrumb";
 import { DEFAULT_TOAST } from "../../constants";
-import { apiClient, generateUrl } from "../../utilities";
+import { apiClient, generateUrl, getLoginRedirection } from "../../utilities";
 import { addToCart } from "../../utilities/data";
 
 const mapStateToProps = state => ({
@@ -76,6 +76,27 @@ const Wishlist = ({
         );
         setLoading(false);
     }, [wishlist]);
+
+    useEffect(() => {
+        if (!localStorage.getItem("user")) {
+            toast({
+                title: "Login required",
+                description: "Please login to continue",
+                status: "info"
+            });
+            history.push(getLoginRedirection());
+        } else if (
+            localStorage.getItem("user") &&
+            JSON.parse(localStorage.getItem("user")).role !== "Customer"
+        ) {
+            toast({
+                title: "Permission not granted",
+                description: "You are not allowed to proceed to the page",
+                status: "info"
+            });
+            history.push("/");
+        }
+    }, []);
 
     const handleRemoveProduct = (id, showToast = true) => {
         const removed = wishlistProducts.filter(p => p.id !== id);

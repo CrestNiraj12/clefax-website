@@ -204952,6 +204952,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var google_maps_react__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! google-maps-react */ "./node_modules/google-maps-react/dist/index.js");
 /* harmony import */ var google_maps_react__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(google_maps_react__WEBPACK_IMPORTED_MODULE_6__);
 /* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../constants */ "./resources/js/constants.js");
+/* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -204963,6 +204972,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 function _iterableToArrayLimit(arr, i) { var _i = arr && (typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"]); if (_i == null) return; var _arr = []; var _n = true; var _d = false; var _s, _e; try { for (_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
 
 
 
@@ -204997,51 +205007,15 @@ var socials = [{
   url: "#",
   desc: "Linkedin"
 }];
-var footerLinks = [{
-  title: "company",
-  links: [{
-    title: "Wishlist",
-    url: "/wishlist"
-  }, {
-    title: "Shop Products",
-    url: "/shop"
-  }, {
-    title: "My Cart",
-    url: "/cart"
-  }, {
-    title: "Checkout",
-    url: "/checkout"
-  }, {
-    title: "Contact Us",
-    url: "/contact"
-  }, {
-    title: "Order Tracking",
-    url: "/orders"
-  }]
-}, {
-  title: "Explore",
-  links: [{
-    title: "Gift a Smile",
-    url: "#"
-  }, {
-    title: "Creybit Cares",
-    url: "#"
-  }, {
-    title: "Size Guide",
-    url: "#"
-  }, {
-    title: "F.A.Q's",
-    url: "#"
-  }, {
-    title: "Privacy Policy",
-    url: "#"
-  }, {
-    title: "Store Location",
-    url: "#"
-  }]
-}];
 
-var Footer = function Footer() {
+var mapStateToProps = function mapStateToProps(state) {
+  return {
+    auth: state.auth
+  };
+};
+
+var Footer = function Footer(_ref) {
+  var auth = _ref.auth;
   var history = Object(react_router__WEBPACK_IMPORTED_MODULE_3__["useHistory"])();
 
   var _useState = Object(react__WEBPACK_IMPORTED_MODULE_2__["useState"])(false),
@@ -205058,6 +205032,50 @@ var Footer = function Footer() {
       _useState6 = _slicedToArray(_useState5, 2),
       selectedPlace = _useState6[0],
       setSelectedPlace = _useState6[1];
+
+  var footerLinks = [{
+    title: "company",
+    links: [].concat(_toConsumableArray(auth.logged_in && auth.user.role === "Customer" ? [{
+      title: "Wishlist",
+      url: "/wishlist"
+    }] : []), [{
+      title: "Shop Products",
+      url: "/shop"
+    }], _toConsumableArray(auth.logged_in && auth.user.role === "Customer" ? [{
+      title: "My Cart",
+      url: "/cart"
+    }, {
+      title: "Checkout",
+      url: "/checkout"
+    }] : []), [{
+      title: "Contact Us",
+      url: "/contact"
+    }], _toConsumableArray(auth.logged_in && auth.user.role === "Customer" ? [{
+      title: "Order Tracking",
+      url: "/orders"
+    }] : []))
+  }, {
+    title: "Explore",
+    links: [{
+      title: "Gift a Smile",
+      url: "#"
+    }, {
+      title: "Creybit Cares",
+      url: "#"
+    }, {
+      title: "Size Guide",
+      url: "#"
+    }, {
+      title: "F.A.Q's",
+      url: "#"
+    }, {
+      title: "Privacy Policy",
+      url: "#"
+    }, {
+      title: "Store Location",
+      url: "#"
+    }]
+  }];
 
   var handleMarkerClick = function handleMarkerClick(props, marker, e) {
     setActiveMarker(marker);
@@ -205142,10 +205160,10 @@ var Footer = function Footer() {
     }
   }, "Subscribe")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Spacer"], null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["HStack"], {
     spacing: 0
-  }, socials.map(function (_ref, index) {
-    var icon = _ref.icon,
-        url = _ref.url,
-        desc = _ref.desc;
+  }, socials.map(function (_ref2, index) {
+    var icon = _ref2.icon,
+        url = _ref2.url,
+        desc = _ref2.desc;
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["IconButton"], {
       key: index,
       "aria-label": desc,
@@ -205199,9 +205217,9 @@ var Footer = function Footer() {
     className: "footerText"
   }, "clefaxeshop@gmail.com"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Text"], {
     className: "footerText"
-  }, "189 Spen Lane, Gomersal, West Yorkshire, BD19 4PJ"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Spacer"], null), footerLinks.map(function (_ref2, index) {
-    var title = _ref2.title,
-        links = _ref2.links;
+  }, "189 Spen Lane, Gomersal, West Yorkshire, BD19 4PJ"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Spacer"], null), footerLinks.map(function (_ref3, index) {
+    var title = _ref3.title,
+        links = _ref3.links;
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_2__["Fragment"], {
       key: index
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["VStack"], {
@@ -205215,9 +205233,9 @@ var Footer = function Footer() {
       className: "footerHeading"
     }, title), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["VStack"], {
       className: "footerInnerContainer"
-    }, links.map(function (_ref3, i) {
-      var title = _ref3.title,
-          url = _ref3.url;
+    }, links.map(function (_ref4, i) {
+      var title = _ref4.title,
+          url = _ref4.url;
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Link"], {
         href: url,
         key: i,
@@ -205282,9 +205300,9 @@ var Footer = function Footer() {
   }))));
 };
 
-/* harmony default export */ __webpack_exports__["default"] = (Object(google_maps_react__WEBPACK_IMPORTED_MODULE_6__["GoogleApiWrapper"])({
+/* harmony default export */ __webpack_exports__["default"] = (Object(react_redux__WEBPACK_IMPORTED_MODULE_8__["connect"])(mapStateToProps)(Object(google_maps_react__WEBPACK_IMPORTED_MODULE_6__["GoogleApiWrapper"])({
   apiKey: _constants__WEBPACK_IMPORTED_MODULE_7__["MAPS_API_KEY"]
-})(Footer));
+})(Footer)));
 
 /***/ }),
 
@@ -205949,10 +205967,10 @@ var Navbar = function Navbar(_ref) {
       color: "var(--chakra-colors-secondary) !important"
     },
     onClick: function onClick() {
-      return auth.logged_in && auth.user.role === "Trader" ? window.location = "/trader/dashboard" : history.push("/account");
+      return auth.logged_in && auth.user.role !== "Customer" ? window.location = "/admin/dashboard" : history.push("/account");
     },
     minH: "48px"
-  }, auth.logged_in && auth.user.role === "Trader" ? "Dashboard" : "My Account"), auth.logged_in && auth.user.role === "Trader" && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["MenuItem"], {
+  }, auth.logged_in && auth.user.role !== "Customer" ? "Dashboard" : "My Account"), auth.logged_in && auth.user.role !== "Customer" && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["MenuItem"], {
     icon: /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Icon"], {
       fontSize: "16px",
       as: react_icons_fi__WEBPACK_IMPORTED_MODULE_15__["FiLogOut"]
@@ -208074,6 +208092,23 @@ var Cart = function Cart(_ref) {
     }));
     setLoading(false);
   }, [cart, products]);
+  Object(react__WEBPACK_IMPORTED_MODULE_2__["useEffect"])(function () {
+    if (!localStorage.getItem("user")) {
+      toast({
+        title: "Login required",
+        description: "Please login to continue",
+        status: "info"
+      });
+      history.push(Object(_utilities__WEBPACK_IMPORTED_MODULE_9__["getLoginRedirection"])());
+    } else if (localStorage.getItem("user") && JSON.parse(localStorage.getItem("user")).role !== "Customer") {
+      toast({
+        title: "Permission not granted",
+        description: "You are not allowed to proceed to the page",
+        status: "info"
+      });
+      history.push("/");
+    }
+  }, []);
 
   var handleRemoveProduct = function handleRemoveProduct(id) {
     var showToast = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
@@ -208611,7 +208646,7 @@ var Checkout = function Checkout(_ref) {
   }, []);
   Object(react__WEBPACK_IMPORTED_MODULE_1__["useEffect"])(function () {
     setLoading(true);
-    _utilities__WEBPACK_IMPORTED_MODULE_10__["apiClient"].get("/sanctum/csrf-cookie").then(function (res) {
+    if (localStorage.getItem("user") && JSON.parse(localStorage.getItem("user")).role === "Customer") _utilities__WEBPACK_IMPORTED_MODULE_10__["apiClient"].get("/sanctum/csrf-cookie").then(function (res) {
       return _utilities__WEBPACK_IMPORTED_MODULE_10__["apiClient"].get("/api/cart").then(function (res) {
         if (!res.data || !res.data.length) {
           toast({
@@ -208636,7 +208671,7 @@ var Checkout = function Checkout(_ref) {
       title: "Login required",
       description: "Please login to continue",
       status: "info"
-    });else if (JSON.parse(localStorage.getItem("user")).role === "Trader") toast({
+    });else if (localStorage.getItem("user") && JSON.parse(localStorage.getItem("user")).role !== "Customer") toast({
       title: "Permission not granted",
       description: "You are not allowed to proceed to the page",
       status: "info"
@@ -208845,7 +208880,7 @@ var Checkout = function Checkout(_ref) {
     Object(_utilities_payment__WEBPACK_IMPORTED_MODULE_18__["payWithStripe"])(setBtnLoading, finalProducts, values);
   };
 
-  return !localStorage.getItem("user") || JSON.parse(localStorage.getItem("user")).role === "Trader" ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_7__["Redirect"], {
+  return !localStorage.getItem("user") || JSON.parse(localStorage.getItem("user")).role !== "Customer" ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_7__["Redirect"], {
     to: Object(_utilities__WEBPACK_IMPORTED_MODULE_10__["getLoginRedirection"])()
   }) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_1___default.a.Fragment, null, loading && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Flex"], {
     w: "100%",
@@ -211216,10 +211251,10 @@ var Navbar = function Navbar(_ref) {
     colorScheme: "red"
   }, cart.length))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Divider"], null)), auth.logged_in && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_2___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Box"], {
     p: "10px"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Link"], {
-    href: auth.logged_in && auth.user.role === "Trader" ? "/trader/dashboard" : "/account",
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement("a", {
+    href: auth.logged_in && auth.user.role !== "Customer" ? "/admin/dashboard" : "/account",
     className: "link textLink"
-  }, auth.logged_in && auth.user.role === "Trader" ? "Dashboard" : "My Account")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Divider"], null)), (!auth.logged_in || auth.logged_in && auth.user.role === "Customer") && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_2___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Box"], {
+  }, auth.logged_in && auth.user.role !== "Customer" ? "Dashboard" : "My Account")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Divider"], null)), (!auth.logged_in || auth.logged_in && auth.user.role === "Customer") && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_2___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Box"], {
     p: "10px"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Link"], {
     href: "/wishlist",
@@ -211242,7 +211277,7 @@ var Navbar = function Navbar(_ref) {
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Link"], {
     href: "/register",
     className: "link textLink"
-  }, "Register"))), auth.logged_in && auth.user.role === "Trader" && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_2___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Box"], {
+  }, "Register"))), auth.logged_in && auth.user.role !== "Customer" && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_2___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Box"], {
     p: "10px"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Link"], {
     onClick: openModal,
@@ -211349,7 +211384,7 @@ var Navbar = function Navbar(_ref) {
     spacing: 12,
     direction: "row",
     alignItems: "center",
-    ml: auth.logged_in && auth.user.role === "Trader" ? "-100px" : "0"
+    ml: auth.logged_in && auth.user.role !== "Customer" ? "-100px" : "0"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Box"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Link"], {
     href: "/",
     className: "link textLink"
@@ -211479,10 +211514,10 @@ var Navbar = function Navbar(_ref) {
       color: "var(--chakra-colors-secondary) !important"
     },
     onClick: function onClick() {
-      return auth.logged_in && auth.user.role === "Trader" ? window.location = "/trader/dashboard" : history.push("/account");
+      return auth.logged_in && auth.user.role !== "Customer" ? window.location = "/admin/dashboard" : history.push("/account");
     },
     minH: "48px"
-  }, auth.logged_in && auth.user.role === "Trader" ? "Dashboard" : "My Account"), auth.logged_in && auth.user.role === "Trader" && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["MenuItem"], {
+  }, auth.logged_in && auth.user.role !== "Customer" ? "Dashboard" : "My Account"), auth.logged_in && auth.user.role !== "Customer" && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["MenuItem"], {
     icon: /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Icon"], {
       fontSize: "16px",
       as: react_icons_fi__WEBPACK_IMPORTED_MODULE_12__["FiLogOut"]
@@ -212175,27 +212210,29 @@ var Login = function Login(_ref) {
   };
 
   var setProducts = function setProducts() {
-    _utilities__WEBPACK_IMPORTED_MODULE_7__["apiClient"].get("/api/wishlist").then(function (res) {
-      setWishlistProducts(_toConsumableArray(new Set(res.data.map(function (p) {
-        return p.product_id;
-      }))));
-      _utilities__WEBPACK_IMPORTED_MODULE_7__["apiClient"].get("/api/cart").then(function (res) {
-        var cart = res.data.map(function (details) {
-          return {
-            product_id: details.product_id,
-            qty: details.qty,
-            subtotal: details.subtotal
-          };
+    if (auth.logged_in && auth.user.role === "Customer") {
+      _utilities__WEBPACK_IMPORTED_MODULE_7__["apiClient"].get("/api/wishlist").then(function (res) {
+        setWishlistProducts(_toConsumableArray(new Set(res.data.map(function (p) {
+          return p.product_id;
+        }))));
+        _utilities__WEBPACK_IMPORTED_MODULE_7__["apiClient"].get("/api/cart").then(function (res) {
+          var cart = res.data.map(function (details) {
+            return {
+              product_id: details.product_id,
+              qty: details.qty,
+              subtotal: details.subtotal
+            };
+          });
+          setCartProducts(cart);
+          onSuccess();
+        })["catch"](function (err) {
+          console.log(err.response);
+          onError(err);
         });
-        setCartProducts(cart);
-        onSuccess();
       })["catch"](function (err) {
-        console.log(err.response);
-        onError(err);
+        return console.log(err);
       });
-    })["catch"](function (err) {
-      return console.log(err);
-    });
+    }
   };
 
   var onSuccess = function onSuccess() {
@@ -213145,7 +213182,7 @@ var ProductTabs = function ProductTabs(_ref) {
     fontSize: "xl"
   }, "".concat(product.reviews.length ? "" : "BE THE FIRST TO ", "REVIEW \u201C").concat(product.name, "\u201D")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Text"], {
     color: "gray"
-  }, "Your email address will not be published. Required fields are marked *"), auth.logged_in ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_11__["Formik"], {
+  }, "Your email address will not be published. Required fields are marked *"), auth.logged_in && auth.user.role === "Customer" ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_11__["Formik"], {
     validate: _utilities_validation__WEBPACK_IMPORTED_MODULE_12__["validateReview"],
     initialValues: {
       rating: 0,
@@ -213241,7 +213278,7 @@ var ProductTabs = function ProductTabs(_ref) {
         opacity: 0.8
       }
     }, "Submit"));
-  }) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Text"], null, "You need to be logged in to be able to review the product. Please", " ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Link"], {
+  }) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Text"], null, "You need to be logged in", " ", auth.logged_in && "as customer ", "to be able to review the product. Please", " ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Link"], {
     href: Object(_utilities__WEBPACK_IMPORTED_MODULE_10__["getLoginRedirection"])(),
     color: "secondary",
     textDecor: "underline",
@@ -214040,7 +214077,7 @@ var Product = function Product(_ref) {
   }, "Buy Now")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["HStack"], {
     alignItems: "baseline",
     spacing: 5
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Button"], {
+  }, auth.logged_in && auth.user.role === "Customer" && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Button"], {
     mt: "20px",
     mb: "30px",
     color: inWishlist ? "secondary" : "gray",
@@ -215821,6 +215858,23 @@ var Wishlist = function Wishlist(_ref) {
     }));
     setLoading(false);
   }, [wishlist]);
+  Object(react__WEBPACK_IMPORTED_MODULE_2__["useEffect"])(function () {
+    if (!localStorage.getItem("user")) {
+      toast({
+        title: "Login required",
+        description: "Please login to continue",
+        status: "info"
+      });
+      history.push(Object(_utilities__WEBPACK_IMPORTED_MODULE_9__["getLoginRedirection"])());
+    } else if (localStorage.getItem("user") && JSON.parse(localStorage.getItem("user")).role !== "Customer") {
+      toast({
+        title: "Permission not granted",
+        description: "You are not allowed to proceed to the page",
+        status: "info"
+      });
+      history.push("/");
+    }
+  }, []);
 
   var handleRemoveProduct = function handleRemoveProduct(id) {
     var showToast = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
@@ -216619,7 +216673,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
 
 var loadWishlist = function loadWishlist(onSuccess, onError) {
-  if (localStorage.getItem("wishlist") && JSON.parse(localStorage.getItem("wishlist")).length > 0) ___WEBPACK_IMPORTED_MODULE_0__["apiClient"].post("/api/wishlist/product/bulk-add", {
+  if (localStorage.getItem("user") && JSON.parse(localStorage.getItem("user")).role === "Customer" && localStorage.getItem("wishlist") && JSON.parse(localStorage.getItem("wishlist")).length > 0) ___WEBPACK_IMPORTED_MODULE_0__["apiClient"].post("/api/wishlist/product/bulk-add", {
     products: JSON.parse(localStorage.getItem("wishlist"))
   }).then(function (res) {
     localStorage.removeItem("wishlist");
@@ -216630,7 +216684,7 @@ var loadWishlist = function loadWishlist(onSuccess, onError) {
   });else onSuccess();
 };
 var loadCart = function loadCart(setProducts, onError) {
-  if (localStorage.getItem("cart") && JSON.parse(localStorage.getItem("cart")).length > 0) ___WEBPACK_IMPORTED_MODULE_0__["apiClient"].post("/api/cart/product/bulk-add", {
+  if (localStorage.getItem("user") && JSON.parse(localStorage.getItem("user")).role === "Customer" && localStorage.getItem("cart") && JSON.parse(localStorage.getItem("cart")).length > 0) ___WEBPACK_IMPORTED_MODULE_0__["apiClient"].post("/api/cart/product/bulk-add", {
     products: JSON.parse(localStorage.getItem("cart"))
   }).then(function (res) {
     localStorage.removeItem("cart");

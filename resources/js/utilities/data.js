@@ -2,6 +2,8 @@ import { apiClient, getFinalPrice } from ".";
 
 export const loadWishlist = (onSuccess, onError) => {
     if (
+        localStorage.getItem("user") &&
+        JSON.parse(localStorage.getItem("user")).role === "Customer" &&
         localStorage.getItem("wishlist") &&
         JSON.parse(localStorage.getItem("wishlist")).length > 0
     )
@@ -22,6 +24,8 @@ export const loadWishlist = (onSuccess, onError) => {
 
 export const loadCart = (setProducts, onError) => {
     if (
+        localStorage.getItem("user") &&
+        JSON.parse(localStorage.getItem("user")).role === "Customer" &&
         localStorage.getItem("cart") &&
         JSON.parse(localStorage.getItem("cart")).length > 0
     )

@@ -177,22 +177,22 @@ const Navbar = ({ showSearch, auth, cart, wishlist }) => {
                                         {auth.logged_in && (
                                             <>
                                                 <Box p="10px">
-                                                    <Link
+                                                    <a
                                                         href={
                                                             auth.logged_in &&
-                                                            auth.user.role ===
-                                                                "Trader"
-                                                                ? "/trader/dashboard"
+                                                            auth.user.role !==
+                                                                "Customer"
+                                                                ? "/admin/dashboard"
                                                                 : "/account"
                                                         }
                                                         className="link textLink"
                                                     >
                                                         {auth.logged_in &&
-                                                        auth.user.role ===
-                                                            "Trader"
+                                                        auth.user.role !==
+                                                            "Customer"
                                                             ? "Dashboard"
                                                             : "My Account"}
-                                                    </Link>
+                                                    </a>
                                                 </Box>
                                                 <Divider />
                                             </>
@@ -251,7 +251,7 @@ const Navbar = ({ showSearch, auth, cart, wishlist }) => {
                                             </>
                                         )}
                                         {auth.logged_in &&
-                                            auth.user.role === "Trader" && (
+                                            auth.user.role !== "Customer" && (
                                                 <>
                                                     <Box p="10px">
                                                         <Link
@@ -409,7 +409,7 @@ const Navbar = ({ showSearch, auth, cart, wishlist }) => {
                                 alignItems="center"
                                 ml={
                                     auth.logged_in &&
-                                    auth.user.role === "Trader"
+                                    auth.user.role !== "Customer"
                                         ? "-100px"
                                         : "0"
                                 }
@@ -612,21 +612,21 @@ const Navbar = ({ showSearch, auth, cart, wishlist }) => {
                                             }}
                                             onClick={() =>
                                                 auth.logged_in &&
-                                                auth.user.role === "Trader"
+                                                auth.user.role !== "Customer"
                                                     ? (window.location =
-                                                          "/trader/dashboard")
+                                                          "/admin/dashboard")
                                                     : history.push("/account")
                                             }
                                             minH="48px"
                                         >
                                             {auth.logged_in &&
-                                            auth.user.role === "Trader"
+                                            auth.user.role !== "Customer"
                                                 ? "Dashboard"
                                                 : "My Account"}
                                         </MenuItem>
                                     )}
                                     {auth.logged_in &&
-                                        auth.user.role === "Trader" && (
+                                        auth.user.role !== "Customer" && (
                                             <MenuItem
                                                 icon={
                                                     <Icon

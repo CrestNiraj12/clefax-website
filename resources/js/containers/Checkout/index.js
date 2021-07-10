@@ -92,27 +92,31 @@ const Checkout = ({
 
     useEffect(() => {
         setLoading(true);
-        apiClient
-            .get("/sanctum/csrf-cookie")
-            .then(res =>
-                apiClient
-                    .get("/api/cart")
-                    .then(res => {
-                        if (!res.data || !res.data.length) {
-                            toast({
-                                title: "Cart is empty",
-                                description:
-                                    "Please add some products to the cart before checking out!",
-                                status: "warning"
-                            });
-                            history.push("/cart");
-                        }
-                        setCart(res.data);
-                        setLoading(false);
-                    })
-                    .catch(err => console.log(err))
-            )
-            .catch(err => console.log(err.response));
+        if (
+            localStorage.getItem("user") &&
+            JSON.parse(localStorage.getItem("user")).role === "Customer"
+        )
+            apiClient
+                .get("/sanctum/csrf-cookie")
+                .then(res =>
+                    apiClient
+                        .get("/api/cart")
+                        .then(res => {
+                            if (!res.data || !res.data.length) {
+                                toast({
+                                    title: "Cart is empty",
+                                    description:
+                                        "Please add some products to the cart before checking out!",
+                                    status: "warning"
+                                });
+                                history.push("/cart");
+                            }
+                            setCart(res.data);
+                            setLoading(false);
+                        })
+                        .catch(err => console.log(err))
+                )
+                .catch(err => console.log(err.response));
     }, []);
 
     useEffect(() => {
@@ -122,7 +126,10 @@ const Checkout = ({
                 description: "Please login to continue",
                 status: "info"
             });
-        else if (JSON.parse(localStorage.getItem("user")).role === "Trader")
+        else if (
+            localStorage.getItem("user") &&
+            JSON.parse(localStorage.getItem("user")).role !== "Customer"
+        )
             toast({
                 title: "Permission not granted",
                 description: "You are not allowed to proceed to the page",
@@ -348,7 +355,7 @@ const Checkout = ({
     };
 
     return !localStorage.getItem("user") ||
-        JSON.parse(localStorage.getItem("user")).role === "Trader" ? (
+        JSON.parse(localStorage.getItem("user")).role !== "Customer" ? (
         <Redirect to={getLoginRedirection()} />
     ) : (
         <>

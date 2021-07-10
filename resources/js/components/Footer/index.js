@@ -27,6 +27,7 @@ import Paypal from "../../../images/paypal.png";
 import Stripe from "../../../images/stripe.png";
 import { Map, GoogleApiWrapper, InfoWindow, Marker } from "google-maps-react";
 import { MAPS_API_KEY } from "../../constants";
+import { connect } from "react-redux";
 
 const mapStyles = {
     width: "100%",
@@ -61,72 +62,88 @@ const socials = [
     }
 ];
 
-const footerLinks = [
-    {
-        title: "company",
-        links: [
-            {
-                title: "Wishlist",
-                url: "/wishlist"
-            },
-            {
-                title: "Shop Products",
-                url: "/shop"
-            },
-            {
-                title: "My Cart",
-                url: "/cart"
-            },
-            {
-                title: "Checkout",
-                url: "/checkout"
-            },
-            {
-                title: "Contact Us",
-                url: "/contact"
-            },
-            {
-                title: "Order Tracking",
-                url: "/orders"
-            }
-        ]
-    },
-    {
-        title: "Explore",
-        links: [
-            {
-                title: "Gift a Smile",
-                url: "#"
-            },
-            {
-                title: "Creybit Cares",
-                url: "#"
-            },
-            {
-                title: "Size Guide",
-                url: "#"
-            },
-            {
-                title: "F.A.Q's",
-                url: "#"
-            },
-            {
-                title: "Privacy Policy",
-                url: "#"
-            },
-            {
-                title: "Store Location",
-                url: "#"
-            }
-        ]
-    }
-];
+const mapStateToProps = state => ({
+    auth: state.auth
+});
 
-const Footer = () => {
+const Footer = ({ auth }) => {
     var history = useHistory();
     const [showInfoWindow, setShowInfoWindow] = useState(false);
     const [activeMarker, setActiveMarker] = useState(null);
     const [selectedPlace, setSelectedPlace] = useState(null);
+
+    const footerLinks = [
+        {
+            title: "company",
+            links: [
+                ...(auth.logged_in && auth.user.role === "Customer"
+                    ? [
+                          {
+                              title: "Wishlist",
+                              url: "/wishlist"
+                          }
+                      ]
+                    : []),
+                {
+                    title: "Shop Products",
+                    url: "/shop"
+                },
+                ...(auth.logged_in && auth.user.role === "Customer"
+                    ? [
+                          {
+                              title: "My Cart",
+                              url: "/cart"
+                          },
+                          {
+                              title: "Checkout",
+                              url: "/checkout"
+                          }
+                      ]
+                    : []),
+                {
+                    title: "Contact Us",
+                    url: "/contact"
+                },
+                ...(auth.logged_in && auth.user.role === "Customer"
+                    ? [
+                          {
+                              title: "Order Tracking",
+                              url: "/orders"
+                          }
+                      ]
+                    : [])
+            ]
+        },
+        {
+            title: "Explore",
+            links: [
+                {
+                    title: "Gift a Smile",
+                    url: "#"
+                },
+                {
+                    title: "Creybit Cares",
+                    url: "#"
+                },
+                {
+                    title: "Size Guide",
+                    url: "#"
+                },
+                {
+                    title: "F.A.Q's",
+                    url: "#"
+                },
+                {
+                    title: "Privacy Policy",
+                    url: "#"
+                },
+                {
+                    title: "Store Location",
+                    url: "#"
+                }
+            ]
+        }
+    ];
 
     const handleMarkerClick = (props, marker, e) => {
         setActiveMarker(marker);
@@ -343,4 +360,6 @@ const Footer = () => {
     );
 };
 
-export default GoogleApiWrapper({ apiKey: MAPS_API_KEY })(Footer);
+export default connect(mapStateToProps)(
+    GoogleApiWrapper({ apiKey: MAPS_API_KEY })(Footer)
+);

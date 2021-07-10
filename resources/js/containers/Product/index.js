@@ -494,42 +494,47 @@ const Product = ({
                                     </Stack>
                                 )}
                                 <HStack alignItems="baseline" spacing={5}>
-                                    <Button
-                                        mt="20px"
-                                        mb="30px"
-                                        color={
-                                            inWishlist ? "secondary" : "gray"
-                                        }
-                                        leftIcon={
-                                            <Icon
-                                                as={
+                                    {auth.logged_in &&
+                                        auth.user.role === "Customer" && (
+                                            <Button
+                                                mt="20px"
+                                                mb="30px"
+                                                color={
                                                     inWishlist
-                                                        ? IoHeart
-                                                        : IoHeartOutline
+                                                        ? "secondary"
+                                                        : "gray"
                                                 }
-                                                boxSize="22px"
-                                                mr="5px"
-                                            />
-                                        }
-                                        variant="link"
-                                        textTransform="none"
-                                        letterSpacing="0"
-                                        _hover={{
-                                            background:
-                                                "transparent !important",
-                                            color:
-                                                "var(--chakra-colors-secondary) !important"
-                                        }}
-                                        onClick={
-                                            inWishlist
-                                                ? removeFromWishlist
-                                                : addToWishlist
-                                        }
-                                    >
-                                        {inWishlist
-                                            ? "Added to Wishlist!"
-                                            : "Add to Wishlist"}
-                                    </Button>
+                                                leftIcon={
+                                                    <Icon
+                                                        as={
+                                                            inWishlist
+                                                                ? IoHeart
+                                                                : IoHeartOutline
+                                                        }
+                                                        boxSize="22px"
+                                                        mr="5px"
+                                                    />
+                                                }
+                                                variant="link"
+                                                textTransform="none"
+                                                letterSpacing="0"
+                                                _hover={{
+                                                    background:
+                                                        "transparent !important",
+                                                    color:
+                                                        "var(--chakra-colors-secondary) !important"
+                                                }}
+                                                onClick={
+                                                    inWishlist
+                                                        ? removeFromWishlist
+                                                        : addToWishlist
+                                                }
+                                            >
+                                                {inWishlist
+                                                    ? "Added to Wishlist!"
+                                                    : "Add to Wishlist"}
+                                            </Button>
+                                        )}
                                     <Button
                                         mt="20px"
                                         mb="30px"

@@ -7,7 +7,7 @@
         {{ session('error') }}
     </x-adminlte-alert>
     {{session()->forget('error')}}
-@endif 
+@endif
 
 <form method="POST" action="{{ route('login') }}" class="card card-md">
     @csrf

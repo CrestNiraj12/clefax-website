@@ -555,37 +555,38 @@ const Navbar = ({ showSearch, products, categories, auth, cart, wishlist }) => {
                                         }}
                                         onClick={() =>
                                             auth.logged_in &&
-                                            auth.user.role === "Trader"
+                                            auth.user.role !== "Customer"
                                                 ? (window.location =
-                                                      "/trader/dashboard")
+                                                      "/admin/dashboard")
                                                 : history.push("/account")
                                         }
                                         minH="48px"
                                     >
                                         {auth.logged_in &&
-                                        auth.user.role === "Trader"
+                                        auth.user.role !== "Customer"
                                             ? "Dashboard"
                                             : "My Account"}
                                     </MenuItem>
                                 )}
-                                {auth.logged_in && auth.user.role === "Trader" && (
-                                    <MenuItem
-                                        icon={
-                                            <Icon
-                                                fontSize="16px"
-                                                as={FiLogOut}
-                                            />
-                                        }
-                                        onClick={openModal}
-                                        minH="40px"
-                                        _hover={{
-                                            color:
-                                                "var(--chakra-colors-secondary) !important"
-                                        }}
-                                    >
-                                        Logout
-                                    </MenuItem>
-                                )}
+                                {auth.logged_in &&
+                                    auth.user.role !== "Customer" && (
+                                        <MenuItem
+                                            icon={
+                                                <Icon
+                                                    fontSize="16px"
+                                                    as={FiLogOut}
+                                                />
+                                            }
+                                            onClick={openModal}
+                                            minH="40px"
+                                            _hover={{
+                                                color:
+                                                    "var(--chakra-colors-secondary) !important"
+                                            }}
+                                        >
+                                            Logout
+                                        </MenuItem>
+                                    )}
                                 {(!auth.logged_in ||
                                     (auth.logged_in &&
                                         auth.user.role === "Customer")) && (

@@ -56,31 +56,33 @@ const Login = ({ setAuth, auth, setCartProducts, setWishlistProducts }) => {
     };
 
     const setProducts = () => {
-        apiClient
-            .get("/api/wishlist")
-            .then(res => {
-                setWishlistProducts([
-                    ...new Set(res.data.map(p => p.product_id))
-                ]);
-                apiClient
-                    .get("/api/cart")
-                    .then(res => {
-                        const cart = res.data.map(details => {
-                            return {
-                                product_id: details.product_id,
-                                qty: details.qty,
-                                subtotal: details.subtotal
-                            };
+        if (auth.logged_in && auth.user.role === "Customer") {
+            apiClient
+                .get("/api/wishlist")
+                .then(res => {
+                    setWishlistProducts([
+                        ...new Set(res.data.map(p => p.product_id))
+                    ]);
+                    apiClient
+                        .get("/api/cart")
+                        .then(res => {
+                            const cart = res.data.map(details => {
+                                return {
+                                    product_id: details.product_id,
+                                    qty: details.qty,
+                                    subtotal: details.subtotal
+                                };
+                            });
+                            setCartProducts(cart);
+                            onSuccess();
+                        })
+                        .catch(err => {
+                            console.log(err.response);
+                            onError(err);
                         });
-                        setCartProducts(cart);
-                        onSuccess();
-                    })
-                    .catch(err => {
-                        console.log(err.response);
-                        onError(err);
-                    });
-            })
-            .catch(err => console.log(err));
+                })
+                .catch(err => console.log(err));
+        }
     };
 
     const onSuccess = () => {

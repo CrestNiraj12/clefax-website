@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Http\Controllers\ProfileInformationController;
 use Laravel\Fortify\Features;
@@ -19,8 +20,8 @@ use Laravel\Fortify\Http\Controllers\PasswordController;
 |
 */
 
-Route::view('/admin/login', 'auth.login')->name('login');
-Route::post('/admin/login', [UserController::class, "loginUser"]);
+Route::view('/login', 'app')->name('login');
+// Route::post('/admin/login', [UserController::class, "loginUser"]);
 Route::post('/admin/logout', [UserController::class, "logoutUser"])->name('logout');
 
 Route::middleware(['auth:sanctum'])->group(function() {
@@ -39,7 +40,11 @@ Route::middleware(['auth:sanctum'])->group(function() {
 	});
 });
 
-Route::view('/admin/dashboard', 'admin.dashboard')
+Route::get('/admin/dashboard', function() {
+		if (Auth::user()->role !== "Trader" && Auth::user()->role !== "Admin")
+			return redirect("/login");
+		else return view('admin.dashboard');
+	})
 	->name('dashboard')
 	->middleware(['auth', 'verified']);
 

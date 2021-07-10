@@ -135,7 +135,8 @@ const ProductTabs = ({ product, auth }) => {
                                     Your email address will not be published.
                                     Required fields are marked *
                                 </Text>
-                                {auth.logged_in ? (
+                                {auth.logged_in &&
+                                auth.user.role === "Customer" ? (
                                     <Formik
                                         validate={validateReview}
                                         initialValues={{
@@ -318,8 +319,9 @@ const ProductTabs = ({ product, auth }) => {
                                     </Formik>
                                 ) : (
                                     <Text>
-                                        You need to be logged in to be able to
-                                        review the product. Please{" "}
+                                        You need to be logged in{" "}
+                                        {auth.logged_in && "as customer "}to be
+                                        able to review the product. Please{" "}
                                         <Link
                                             href={getLoginRedirection()}
                                             color="secondary"
