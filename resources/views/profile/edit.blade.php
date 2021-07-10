@@ -91,54 +91,60 @@
                                     value="{{ old('email') ?? auth()->user()->email }}" autofocus disabled />
                             </div>
 
+                            <div class="mb-3">
+                                <label class="form-label">Phone</label>
+                                <input type="text" name="phone" class="form-control"
+                                    value="{{ old('phone') ?? auth()->user()->phone }}" autofocus />
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Date of birth</label>
+                                <input type="date" name="dob" class="form-control"
+                                    value="{{ old('dob') ?? auth()->user()->dob }}" autofocus />
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Street Address</label>
+                                <input type="text" name="street_no" class="form-control"
+                                    value="{{ old('street_no') ?? auth()->user()->street_no }}" autofocus />
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">City</label>
+                                <input type="text" name="address" class="form-control"
+                                    value="{{ old('address') ?? auth()->user()->address }}" autofocus />
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Gender</label>
+                                <select class="form-control" id="types" name="category_id">
+                                   <option value="M" {{ auth()->user()->gender == "M" ? "selected" : "" }}>Male</option>
+                                   <option value="F" {{ auth()->user()->gender == "F" ? "selected" : "" }}>Female</option>
+                                   <option value="O" {{ auth()->user()->gender == "O" ? "selected" : "" }}>Others</option>
+                                </select>
+                            </div>
+
+                            @if (auth()->user()->role == "Trader")
+                                <div class="mb-3">
+                                    <label class="form-label">Paypal email</label>
+                                    <input type="text" name="paypal_email" class="form-control"
+                                        value="{{ old('paypal_email') ?? auth()->user()->paypal_email }}" autofocus />
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label">Stripe email</label>
+                                    <input type="text" name="stripe_email" class="form-control"
+                                        value="{{ old('stripe_email') ?? auth()->user()->stripe_email }}" autofocus />
+                                </div>
+                            @endif
+
                             <div>
                                 <button type="submit" class="btn btn-primary">
                                     Update Profile
                                 </button>
                             </div>
+                            
                         </form>
-
-                        <hr>
-
-                        <h2>{{ __('Active Sessions') }}</h2>
-
-                        <div class="table-responsive">
-                            <table class="table table-vcenter datatable">
-                                <thead>
-                                    <tr>
-                                        <th>User Agent</th>
-                                        <th>IP Address</th>
-                                        <th>Last Activity</th>
-                                        <th class="w-1"></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach($devices as $device)
-                                    <tr>
-                                        <td>{{ $device->user_agent }}</td>
-                                        <td>
-                                            {{ $device->ip_address }}
-                                        </td>
-                                        <td>
-                                            {{ Carbon\Carbon::createFromTimestamp($device->last_activity)->locale(str_replace('_', '-', app()->getLocale()))->diffForHumans() }}
-                                        </td>
-                                        <td>
-                                            @if(\Session::getId() == $device->id)
-                                            <button disabled="disabled" class="btn btn-primary">Current Device</button>
-                                            @else
-                                            <form action="{{ route('profile.deletedevice', ['id' => $device->id]) }}"
-                                                method="post">
-                                                @csrf
-                                                @method('DELETE')
-                                                <input type="submit" class="btn btn-danger" value="Remove" />
-                                            </form>
-                                            @endif
-                                        </td>
-                                    </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
 
                         <hr>
 
@@ -187,6 +193,9 @@
 @stop
 
 @section('css')
+    <link href="{{ asset('/css/custom.css') }}" rel="stylesheet" />
+    <link href="{{ asset('/css/admin.css') }}" rel="stylesheet" />
+
     <!-- Tabler Core -->
     <link href="{{ asset('dist/css/tabler.min.css') }}" rel="stylesheet" />
 @stop
