@@ -21,14 +21,40 @@ class UserController extends Controller
             ])->first();
         
         if ($user) {
-            if ($user->role == "Trader" && !isset($user->email_verified_at)) return response()->json(['message' => 'Your account is not yet activated!'], 401);
-            if ($user->role != "Trader" && !isset($user->email_verified_at)) return response()->json(['message' => 'Your account is not yet activated!', 'user' => $user], 403);
+            if (($user->role == "Trader" || $user->role == "Admin") && !isset($user->email_verified_at)) return response()->json(['message' => 'Please login from your admin panel login!'], 401);
+            if ($user->role != "Customer" && !isset($user->email_verified_at)) return response()->json(['message' => 'Your account is not yet activated!', 'user' => $user], 403);
 
             Auth::login($user);
             
             return response()->json(['message' => 'Login successful!', 'user' => auth()->user()], 200);
         } else {
             return response()->json(['message' => 'Invalid email or password!'], 401);
+        }
+    }
+
+    public function loginUser(Request $request) {      
+        $user = User::where([
+                'email' => $request->email, 
+                'password' => strtoupper(md5($request->password . "5USFGOJN2T3HW8" .  strtoupper($request->email) . "USFGOJN2T3"))
+            ])->first();
+        
+        if ($user) {
+            if ($user->role == "Customer") {
+                session()->put('error', "Invalid email or password!");
+                return redirect()->back()->withInput();
+            }
+            if (($user->role == "Trader" || $user->role == "Admin") && !isset($user->email_verified_at)) {
+                session()->put('error', 'Your account has not been yet activated!');
+                return redirect()->back()->withInput();
+            }
+
+            Auth::login($user);
+
+            session()->put('success', "Successfully logged in!");
+            return redirect('/admin/dashboard');
+        } else {
+            session()->put('error', "Invalid email or password!");
+            return redirect()->back()->withInput();
         }
     }
 
@@ -65,8 +91,13 @@ class UserController extends Controller
     }
 
     public function logout() {
-        Auth::logout();
+        $this->logoutUser();
         return response()->json(['message' => 'Logged out successfully!'], 200);
+    }
+
+    public function logoutUser() {
+        Auth::logout();
+        return redirect('/logout');
     }
 
     public function verifyEmail($id) {

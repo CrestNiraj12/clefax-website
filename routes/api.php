@@ -36,7 +36,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::post('/login', [UserController::class, "login"]);
 Route::post('/signup', [UserController::class, "signup"]);
-Route::post('/logout', [UserController::class, "logout"])->name('logout');
+Route::post('/logout', [UserController::class, "logout"]);
 Route::get('/products', [ProductController::class, "getAllProducts"]);
 Route::get('/products/{id}', [ProductController::class, "getProduct"]);
 Route::get('/categories', [CategoryController::class, "getAllCategories"]);

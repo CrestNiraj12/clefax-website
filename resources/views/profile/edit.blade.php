@@ -44,7 +44,7 @@
                         <div class="row mb-3">
                             <div class="col-2 text-center m-auto">
                                 <span
-                                    style="--tblr-avatar-size: 8rem; background-image: url(@if (Auth::user()->avatar) {{ asset('storage/avatars/'.Auth::user()->avatar) }} @else https://api.proxeuse.com/avatars/api/?name={{ urlencode(Auth::user()->name) }}&color=fff&background={{ substr(md5(Auth::user()->name), 0, 6) }}&size=500 @endif)"
+                                    style="--tblr-avatar-size: 8rem; background-image: url(@if (Auth::user()->avatar) {{ asset('storage/avatars/'.Auth::user()->avatar) }} @else https://api.proxeuse.com/avatars/api/?name={{ urlencode(Auth::user()->fullname) }}&color=fff&background={{ substr(md5(Auth::user()->fullname), 0, 6) }}&size=500 @endif)"
                                     class="avatar avatar-xl"></span>
                             </div>
                             <div class="col-10">
@@ -81,14 +81,14 @@
                             <div class="mb-3">
                                 <label class="form-label">Full Name</label>
                                 <input type="text" name="name" class="form-control"
-                                    value="{{ old('name') ?? auth()->user()->name }}" required autofocus
+                                    value="{{ old('fullname') ?? auth()->user()->fullname }}" required autofocus
                                     autocomplete="name" />
                             </div>
 
                             <div class="mb-3">
                                 <label class="form-label">{{ __('Email') }}</label>
                                 <input type="email" name="email" class="form-control"
-                                    value="{{ old('email') ?? auth()->user()->email }}" required autofocus />
+                                    value="{{ old('email') ?? auth()->user()->email }}" autofocus disabled />
                             </div>
 
                             <div>

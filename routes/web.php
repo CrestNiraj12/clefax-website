@@ -1,9 +1,12 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
+use Laravel\Fortify\Http\Controllers\ProfileInformationController;
 use Laravel\Fortify\Features;
 use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
+use Laravel\Fortify\Http\Controllers\PasswordController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,13 +19,17 @@ use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
 |
 */
 
+Route::view('/admin/login', 'auth.login')->name('login');
+Route::post('/admin/login', [UserController::class, "loginUser"]);
+Route::post('/admin/logout', [UserController::class, "logoutUser"])->name('logout');
 
-		
 Route::middleware(['auth:sanctum'])->group(function() {
-    Route::prefix('trader')->group(function () {
+    Route::prefix('admin')->group(function () {
 		//Route::resource('dashboard', DashboardController::class);
 		Route::prefix('profile')->group(function () {
 			Route::get('/', [ProfileController::class, 'editProfile'])->name('profile');
+			Route::post('update', [ProfileInformationController::class, 'update'])->name('user-profile-information.update');
+			Route::put('password/update', [PasswordController::class, 'update'])->name('user-password.update');
 			Route::name('profile.')->group(function () {
 				Route::post('avatar', [ProfileController::class, 'updateAvatar'])->name('avatar');
 				Route::delete('avatar', [ProfileController::class, 'removeOldAvatar'])->name('deleteavatar');
@@ -32,9 +39,7 @@ Route::middleware(['auth:sanctum'])->group(function() {
 	});
 });
 
-
-
-Route::view('/trader/dashboard', 'trader.dashboard')
+Route::view('/admin/dashboard', 'admin.dashboard')
 	->name('dashboard')
 	->middleware(['auth', 'verified']);
 

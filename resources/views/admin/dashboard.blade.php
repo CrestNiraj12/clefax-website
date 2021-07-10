@@ -48,8 +48,10 @@
     <!-- Tabler Core -->
     <script src="{{ asset('dist/js/tabler.min.js') }}"></script>
     <script>
-        setTimeout(function() {
-            document.getElementById('alert').classList.remove('hide');
-        }, 2000);
+        $(document).ready(function() {
+            $("#success-alert").fadeTo(2000, 500).slideUp(500, function(){
+                $("#success-alert").slideUp(500);
+            });
+        });
     </script>
 @stop

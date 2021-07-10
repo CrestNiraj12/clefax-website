@@ -84,7 +84,7 @@ const Login = ({ setAuth, auth, setCartProducts, setWishlistProducts }) => {
     };
 
     const onSuccess = () => {
-        history.push(redir);
+        window.location = redir;
     };
 
     const onError = err => {

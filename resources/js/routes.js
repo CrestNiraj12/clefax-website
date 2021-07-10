@@ -9,9 +9,11 @@ import Vendors from "./containers/Vendors";
 import Shop from "./containers/Shop";
 import NotFound from "./containers/NotFound";
 import Account from "./containers/Account";
+import LogoutProcess from "./containers/LogoutProcess";
 
 export default [
     { path: "/", Component: Home, exact: true, name: "Home" },
+    { path: "/logout", Component: LogoutProcess, exact: true, name: "Home" },
     {
         path: "/shop",
         Component: Shop,

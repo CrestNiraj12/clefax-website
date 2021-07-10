@@ -30,7 +30,7 @@ return [
     |
     */
 
-    'use_ico_only' => false,
+    'use_ico_only' => true,
     'use_full_favicon' => false,
 
     /*
@@ -46,11 +46,11 @@ return [
     */
 
     'logo' => env('APP_NAME', 'AdminLTE 3'),
-    'logo_img' => 'vendor/adminlte/dist/img/AdminLTELogo.png',
+    'logo_img' => 'favicons/favicon-192x192.png',
     'logo_img_class' => 'brand-image img-circle elevation-3',
     'logo_img_xl' => null,
     'logo_img_xl_class' => 'brand-image-xs',
-    'logo_img_alt' => 'AdminLTE',
+    'logo_img_alt' => 'Clefax E-Shop',
 
     /*
     |--------------------------------------------------------------------------
@@ -187,13 +187,13 @@ return [
     */
 
     'use_route_url' => false,
-    'dashboard_url' => '/trader/dashboard',
-    'logout_url' => '/trader/logout',
-    'login_url' => '/login',
+    'dashboard_url' => '/admin/dashboard',
+    'logout_url' => '/admin/logout',
+    'login_url' => '/admin/login',
     'register_url' => '/signup',
     'password_reset_url' => 'password/reset',
     'password_email_url' => 'password/email',
-    'profile_url' => '/trader/profile',
+    'profile_url' => '/admin/profile',
 
     /*
     |--------------------------------------------------------------------------
@@ -391,11 +391,11 @@ return [
             ],
         ],
         'Sweetalert2' => [
-            'active' => false,
+            'active' => true,
             'files' => [
                 [
                     'type' => 'js',
-                    'asset' => false,
+                    'asset' => true,
                     'location' => '//cdn.jsdelivr.net/npm/sweetalert2@8',
                 ],
             ],

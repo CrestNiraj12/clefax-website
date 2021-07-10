@@ -2,17 +2,22 @@
 
 @section('content')
 
+@if(session()->has('error'))
+    <x-adminlte-alert theme="danger" title="Error">
+        {{ session('error') }}
+    </x-adminlte-alert>
+    {{session()->forget('error')}}
+@endif 
+
 <form method="POST" action="{{ route('login') }}" class="card card-md">
     @csrf
     <div class="card-body">
         <h2 class="mb-3 text-center">{{ __('auth.login') }}</h2>
-
         <div class="mb-3">
             <label class="form-label">{{ __('auth.fields.email') }}</label>
             <input class="form-control" type="email" name="email" placeholder="{{ __('auth.placeholder.email') }}"
                 value="{{ old('email') }}" required autofocus tabindex="1" />
         </div>
-
         <div class="mb-2">
             <label class="form-label">
                 {{ __('auth.fields.password') }}

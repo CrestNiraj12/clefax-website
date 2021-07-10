@@ -35606,7 +35606,7 @@ var weakMemoize = function weakMemoize(func) {
 /***/ (function(module, exports, __webpack_require__) {
 
 
-var content = __webpack_require__(/*! !../../css-loader??ref--7-1!../../postcss-loader/src??ref--7-2!./300.css */ "./node_modules/css-loader/index.js?!./node_modules/postcss-loader/src/index.js?!./node_modules/@fontsource/archivo/300.css");
+var content = __webpack_require__(/*! !../../css-loader??ref--8-1!../../postcss-loader/src??ref--8-2!./300.css */ "./node_modules/css-loader/index.js?!./node_modules/postcss-loader/src/index.js?!./node_modules/@fontsource/archivo/300.css");
 
 if(typeof content === 'string') content = [[module.i, content, '']];
 
@@ -35724,7 +35724,7 @@ module.exports = "/fonts/vendor/@fontsource/archivo/files/archivo-vietnamese-400
 /***/ (function(module, exports, __webpack_require__) {
 
 
-var content = __webpack_require__(/*! !../../css-loader??ref--7-1!../../postcss-loader/src??ref--7-2!./index.css */ "./node_modules/css-loader/index.js?!./node_modules/postcss-loader/src/index.js?!./node_modules/@fontsource/archivo/index.css");
+var content = __webpack_require__(/*! !../../css-loader??ref--8-1!../../postcss-loader/src??ref--8-2!./index.css */ "./node_modules/css-loader/index.js?!./node_modules/postcss-loader/src/index.js?!./node_modules/@fontsource/archivo/index.css");
 
 if(typeof content === 'string') content = [[module.i, content, '']];
 
@@ -35754,7 +35754,7 @@ if(false) {}
 /***/ (function(module, exports, __webpack_require__) {
 
 
-var content = __webpack_require__(/*! !../../css-loader??ref--7-1!../../postcss-loader/src??ref--7-2!./500.css */ "./node_modules/css-loader/index.js?!./node_modules/postcss-loader/src/index.js?!./node_modules/@fontsource/rubik/500.css");
+var content = __webpack_require__(/*! !../../css-loader??ref--8-1!../../postcss-loader/src??ref--8-2!./500.css */ "./node_modules/css-loader/index.js?!./node_modules/postcss-loader/src/index.js?!./node_modules/@fontsource/rubik/500.css");
 
 if(typeof content === 'string') content = [[module.i, content, '']];
 
@@ -35784,7 +35784,7 @@ if(false) {}
 /***/ (function(module, exports, __webpack_require__) {
 
 
-var content = __webpack_require__(/*! !../../css-loader??ref--7-1!../../postcss-loader/src??ref--7-2!./700.css */ "./node_modules/css-loader/index.js?!./node_modules/postcss-loader/src/index.js?!./node_modules/@fontsource/rubik/700.css");
+var content = __webpack_require__(/*! !../../css-loader??ref--8-1!../../postcss-loader/src??ref--8-2!./700.css */ "./node_modules/css-loader/index.js?!./node_modules/postcss-loader/src/index.js?!./node_modules/@fontsource/rubik/700.css");
 
 if(typeof content === 'string') content = [[module.i, content, '']];
 
@@ -36012,7 +36012,7 @@ module.exports = "/fonts/vendor/@fontsource/rubik/files/rubik-latin-ext-700-norm
 /***/ (function(module, exports, __webpack_require__) {
 
 
-var content = __webpack_require__(/*! !../../css-loader??ref--7-1!../../postcss-loader/src??ref--7-2!./index.css */ "./node_modules/css-loader/index.js?!./node_modules/postcss-loader/src/index.js?!./node_modules/@fontsource/rubik/index.css");
+var content = __webpack_require__(/*! !../../css-loader??ref--8-1!../../postcss-loader/src??ref--8-2!./index.css */ "./node_modules/css-loader/index.js?!./node_modules/postcss-loader/src/index.js?!./node_modules/@fontsource/rubik/index.css");
 
 if(typeof content === 'string') content = [[module.i, content, '']];
 
@@ -48271,7 +48271,7 @@ var getBox = function getBox(el) {
 
 /***/ "./node_modules/css-loader/index.js?!./node_modules/postcss-loader/src/index.js?!./node_modules/@fontsource/archivo/300.css":
 /*!**********************************************************************************************************************************!*\
-  !*** ./node_modules/css-loader??ref--7-1!./node_modules/postcss-loader/src??ref--7-2!./node_modules/@fontsource/archivo/300.css ***!
+  !*** ./node_modules/css-loader??ref--8-1!./node_modules/postcss-loader/src??ref--8-2!./node_modules/@fontsource/archivo/300.css ***!
   \**********************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
@@ -48291,7 +48291,7 @@ exports.push([module.i, "/* archivo-vietnamese-300-normal*/\n\n@font-face {\n  f
 
 /***/ "./node_modules/css-loader/index.js?!./node_modules/postcss-loader/src/index.js?!./node_modules/@fontsource/archivo/index.css":
 /*!************************************************************************************************************************************!*\
-  !*** ./node_modules/css-loader??ref--7-1!./node_modules/postcss-loader/src??ref--7-2!./node_modules/@fontsource/archivo/index.css ***!
+  !*** ./node_modules/css-loader??ref--8-1!./node_modules/postcss-loader/src??ref--8-2!./node_modules/@fontsource/archivo/index.css ***!
   \************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
@@ -48311,7 +48311,7 @@ exports.push([module.i, "/* archivo-vietnamese-400-normal*/\n\n@font-face {\n  f
 
 /***/ "./node_modules/css-loader/index.js?!./node_modules/postcss-loader/src/index.js?!./node_modules/@fontsource/rubik/500.css":
 /*!********************************************************************************************************************************!*\
-  !*** ./node_modules/css-loader??ref--7-1!./node_modules/postcss-loader/src??ref--7-2!./node_modules/@fontsource/rubik/500.css ***!
+  !*** ./node_modules/css-loader??ref--8-1!./node_modules/postcss-loader/src??ref--8-2!./node_modules/@fontsource/rubik/500.css ***!
   \********************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
@@ -48331,7 +48331,7 @@ exports.push([module.i, "/* rubik-cyrillic-ext-500-normal*/\n\n@font-face {\n  f
 
 /***/ "./node_modules/css-loader/index.js?!./node_modules/postcss-loader/src/index.js?!./node_modules/@fontsource/rubik/700.css":
 /*!********************************************************************************************************************************!*\
-  !*** ./node_modules/css-loader??ref--7-1!./node_modules/postcss-loader/src??ref--7-2!./node_modules/@fontsource/rubik/700.css ***!
+  !*** ./node_modules/css-loader??ref--8-1!./node_modules/postcss-loader/src??ref--8-2!./node_modules/@fontsource/rubik/700.css ***!
   \********************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
@@ -48351,7 +48351,7 @@ exports.push([module.i, "/* rubik-cyrillic-ext-700-normal*/\n\n@font-face {\n  f
 
 /***/ "./node_modules/css-loader/index.js?!./node_modules/postcss-loader/src/index.js?!./node_modules/@fontsource/rubik/index.css":
 /*!**********************************************************************************************************************************!*\
-  !*** ./node_modules/css-loader??ref--7-1!./node_modules/postcss-loader/src??ref--7-2!./node_modules/@fontsource/rubik/index.css ***!
+  !*** ./node_modules/css-loader??ref--8-1!./node_modules/postcss-loader/src??ref--8-2!./node_modules/@fontsource/rubik/index.css ***!
   \**********************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
@@ -48371,7 +48371,7 @@ exports.push([module.i, "/* rubik-cyrillic-ext-400-normal*/\n\n@font-face {\n  f
 
 /***/ "./node_modules/css-loader/index.js?!./node_modules/postcss-loader/src/index.js?!./node_modules/rc-slider/assets/index.css":
 /*!*********************************************************************************************************************************!*\
-  !*** ./node_modules/css-loader??ref--7-1!./node_modules/postcss-loader/src??ref--7-2!./node_modules/rc-slider/assets/index.css ***!
+  !*** ./node_modules/css-loader??ref--8-1!./node_modules/postcss-loader/src??ref--8-2!./node_modules/rc-slider/assets/index.css ***!
   \*********************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
@@ -48390,7 +48390,7 @@ exports.push([module.i, ".rc-slider {\n  position: relative;\n  height: 14px;\n 
 
 /***/ "./node_modules/css-loader/index.js?!./node_modules/postcss-loader/src/index.js?!./node_modules/react-datepicker/dist/react-datepicker.css":
 /*!*************************************************************************************************************************************************!*\
-  !*** ./node_modules/css-loader??ref--7-1!./node_modules/postcss-loader/src??ref--7-2!./node_modules/react-datepicker/dist/react-datepicker.css ***!
+  !*** ./node_modules/css-loader??ref--8-1!./node_modules/postcss-loader/src??ref--8-2!./node_modules/react-datepicker/dist/react-datepicker.css ***!
   \*************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
@@ -48409,7 +48409,7 @@ exports.push([module.i, ".react-datepicker__navigation-icon::before, .react-date
 
 /***/ "./node_modules/css-loader/index.js?!./node_modules/postcss-loader/src/index.js?!./node_modules/react-images-upload/index.css":
 /*!************************************************************************************************************************************!*\
-  !*** ./node_modules/css-loader??ref--7-1!./node_modules/postcss-loader/src??ref--7-2!./node_modules/react-images-upload/index.css ***!
+  !*** ./node_modules/css-loader??ref--8-1!./node_modules/postcss-loader/src??ref--8-2!./node_modules/react-images-upload/index.css ***!
   \************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
@@ -48428,7 +48428,7 @@ exports.push([module.i, ".fileUploader {\n  width: 100%;\n}\n\n.fileContainer {\
 
 /***/ "./node_modules/css-loader/index.js?!./node_modules/postcss-loader/src/index.js?!./node_modules/react-multi-carousel/lib/styles.css":
 /*!******************************************************************************************************************************************!*\
-  !*** ./node_modules/css-loader??ref--7-1!./node_modules/postcss-loader/src??ref--7-2!./node_modules/react-multi-carousel/lib/styles.css ***!
+  !*** ./node_modules/css-loader??ref--8-1!./node_modules/postcss-loader/src??ref--8-2!./node_modules/react-multi-carousel/lib/styles.css ***!
   \******************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
@@ -48448,7 +48448,7 @@ exports.push([module.i, "@font-face{\n  font-family:\"revicons\";\n\n  fallback:
 
 /***/ "./node_modules/css-loader/index.js?!./node_modules/postcss-loader/src/index.js?!./node_modules/slick-carousel/slick/slick-theme.css":
 /*!*******************************************************************************************************************************************!*\
-  !*** ./node_modules/css-loader??ref--7-1!./node_modules/postcss-loader/src??ref--7-2!./node_modules/slick-carousel/slick/slick-theme.css ***!
+  !*** ./node_modules/css-loader??ref--8-1!./node_modules/postcss-loader/src??ref--8-2!./node_modules/slick-carousel/slick/slick-theme.css ***!
   \*******************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
@@ -48468,7 +48468,7 @@ exports.push([module.i, "@charset 'UTF-8';\n\n/* Slider */\n\n.slick-loading .sl
 
 /***/ "./node_modules/css-loader/index.js?!./node_modules/postcss-loader/src/index.js?!./node_modules/slick-carousel/slick/slick.css":
 /*!*************************************************************************************************************************************!*\
-  !*** ./node_modules/css-loader??ref--7-1!./node_modules/postcss-loader/src??ref--7-2!./node_modules/slick-carousel/slick/slick.css ***!
+  !*** ./node_modules/css-loader??ref--8-1!./node_modules/postcss-loader/src??ref--8-2!./node_modules/slick-carousel/slick/slick.css ***!
   \*************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
@@ -122253,7 +122253,7 @@ function getTransitionName(transitionName, transitionType) {
 /***/ (function(module, exports, __webpack_require__) {
 
 
-var content = __webpack_require__(/*! !../../css-loader??ref--7-1!../../postcss-loader/src??ref--7-2!./index.css */ "./node_modules/css-loader/index.js?!./node_modules/postcss-loader/src/index.js?!./node_modules/rc-slider/assets/index.css");
+var content = __webpack_require__(/*! !../../css-loader??ref--8-1!../../postcss-loader/src??ref--8-2!./index.css */ "./node_modules/css-loader/index.js?!./node_modules/postcss-loader/src/index.js?!./node_modules/rc-slider/assets/index.css");
 
 if(typeof content === 'string') content = [[module.i, content, '']];
 
@@ -127422,7 +127422,7 @@ function withSideEffect(reducePropsToState, handleStateChangeOnClient) {
 /***/ (function(module, exports, __webpack_require__) {
 
 
-var content = __webpack_require__(/*! !../../css-loader??ref--7-1!../../postcss-loader/src??ref--7-2!./react-datepicker.css */ "./node_modules/css-loader/index.js?!./node_modules/postcss-loader/src/index.js?!./node_modules/react-datepicker/dist/react-datepicker.css");
+var content = __webpack_require__(/*! !../../css-loader??ref--8-1!../../postcss-loader/src??ref--8-2!./react-datepicker.css */ "./node_modules/css-loader/index.js?!./node_modules/postcss-loader/src/index.js?!./node_modules/react-datepicker/dist/react-datepicker.css");
 
 if(typeof content === 'string') content = [[module.i, content, '']];
 
@@ -181273,7 +181273,7 @@ exports.default = ReactImageUploadComponent;
 /***/ (function(module, exports, __webpack_require__) {
 
 
-var content = __webpack_require__(/*! !../css-loader??ref--7-1!../postcss-loader/src??ref--7-2!./index.css */ "./node_modules/css-loader/index.js?!./node_modules/postcss-loader/src/index.js?!./node_modules/react-images-upload/index.css");
+var content = __webpack_require__(/*! !../css-loader??ref--8-1!../postcss-loader/src??ref--8-2!./index.css */ "./node_modules/css-loader/index.js?!./node_modules/postcss-loader/src/index.js?!./node_modules/react-images-upload/index.css");
 
 if(typeof content === 'string') content = [[module.i, content, '']];
 
@@ -181618,7 +181618,7 @@ module.exports = "/fonts/vendor/react-multi-carousel/lib/revicons.woff?04eb8fc57
 /***/ (function(module, exports, __webpack_require__) {
 
 
-var content = __webpack_require__(/*! !../../css-loader??ref--7-1!../../postcss-loader/src??ref--7-2!./styles.css */ "./node_modules/css-loader/index.js?!./node_modules/postcss-loader/src/index.js?!./node_modules/react-multi-carousel/lib/styles.css");
+var content = __webpack_require__(/*! !../../css-loader??ref--8-1!../../postcss-loader/src??ref--8-2!./styles.css */ "./node_modules/css-loader/index.js?!./node_modules/postcss-loader/src/index.js?!./node_modules/react-multi-carousel/lib/styles.css");
 
 if(typeof content === 'string') content = [[module.i, content, '']];
 
@@ -200203,7 +200203,7 @@ module.exports = "/fonts/vendor/slick-carousel/slick/slick.woff?b7c9e1e479de3b53
 /***/ (function(module, exports, __webpack_require__) {
 
 
-var content = __webpack_require__(/*! !../../css-loader??ref--7-1!../../postcss-loader/src??ref--7-2!./slick-theme.css */ "./node_modules/css-loader/index.js?!./node_modules/postcss-loader/src/index.js?!./node_modules/slick-carousel/slick/slick-theme.css");
+var content = __webpack_require__(/*! !../../css-loader??ref--8-1!../../postcss-loader/src??ref--8-2!./slick-theme.css */ "./node_modules/css-loader/index.js?!./node_modules/postcss-loader/src/index.js?!./node_modules/slick-carousel/slick/slick-theme.css");
 
 if(typeof content === 'string') content = [[module.i, content, '']];
 
@@ -200233,7 +200233,7 @@ if(false) {}
 /***/ (function(module, exports, __webpack_require__) {
 
 
-var content = __webpack_require__(/*! !../../css-loader??ref--7-1!../../postcss-loader/src??ref--7-2!./slick.css */ "./node_modules/css-loader/index.js?!./node_modules/postcss-loader/src/index.js?!./node_modules/slick-carousel/slick/slick.css");
+var content = __webpack_require__(/*! !../../css-loader??ref--8-1!../../postcss-loader/src??ref--8-2!./slick.css */ "./node_modules/css-loader/index.js?!./node_modules/postcss-loader/src/index.js?!./node_modules/slick-carousel/slick/slick.css");
 
 if(typeof content === 'string') content = [[module.i, content, '']];
 
@@ -204847,7 +204847,7 @@ try {
 
 
 window.axios = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
-window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+window.axios.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest";
 /**
  * Echo exposes an expressive API for subscribing to channels and listening
  * for events that are broadcast by Laravel. Echo and event broadcasting
@@ -212199,7 +212199,7 @@ var Login = function Login(_ref) {
   };
 
   var onSuccess = function onSuccess() {
-    history.push(redir);
+    window.location = redir;
   };
 
   var onError = function onError(err) {
@@ -212435,6 +212435,62 @@ var Login = function Login(_ref) {
 };
 
 /* harmony default export */ __webpack_exports__["default"] = (Object(react_redux__WEBPACK_IMPORTED_MODULE_9__["connect"])(mapStateToProps, mapDispatchToProps)(Login));
+
+/***/ }),
+
+/***/ "./resources/js/containers/LogoutProcess/index.js":
+/*!********************************************************!*\
+  !*** ./resources/js/containers/LogoutProcess/index.js ***!
+  \********************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @chakra-ui/react */ "./node_modules/@chakra-ui/react/dist/esm/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
+/* harmony import */ var _actions__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../actions */ "./resources/js/actions/index.js");
+/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../constants */ "./resources/js/constants.js");
+
+
+
+
+
+
+
+var mapDispatchToProps = function mapDispatchToProps(dispatch) {
+  return {
+    setAuth: function setAuth(auth) {
+      return dispatch(Object(_actions__WEBPACK_IMPORTED_MODULE_4__["setAuth"])(auth));
+    }
+  };
+};
+
+var LogoutProcess = function LogoutProcess(_ref) {
+  var setAuth = _ref.setAuth;
+  var toast = Object(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["useToast"])(_constants__WEBPACK_IMPORTED_MODULE_5__["DEFAULT_TOAST"]);
+  var history = Object(react_router_dom__WEBPACK_IMPORTED_MODULE_3__["useHistory"])();
+  Object(react__WEBPACK_IMPORTED_MODULE_1__["useEffect"])(function () {
+    localStorage.setItem("auth", false);
+    localStorage.removeItem("user");
+    setAuth({
+      logged_in: false,
+      user: null
+    });
+    toast({
+      title: "Logout success",
+      description: "Successfully logged out!",
+      status: "success"
+    });
+    history.push("/");
+  }, []);
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Box"], null);
+};
+
+/* harmony default export */ __webpack_exports__["default"] = (Object(react_redux__WEBPACK_IMPORTED_MODULE_2__["connect"])(null, mapDispatchToProps)(LogoutProcess));
 
 /***/ }),
 
@@ -216345,6 +216401,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _containers_Shop__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./containers/Shop */ "./resources/js/containers/Shop/index.js");
 /* harmony import */ var _containers_NotFound__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./containers/NotFound */ "./resources/js/containers/NotFound/index.js");
 /* harmony import */ var _containers_Account__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./containers/Account */ "./resources/js/containers/Account/index.js");
+/* harmony import */ var _containers_LogoutProcess__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./containers/LogoutProcess */ "./resources/js/containers/LogoutProcess/index.js");
+
 
 
 
@@ -216359,6 +216417,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ([{
   path: "/",
   Component: _containers_Home__WEBPACK_IMPORTED_MODULE_1__["default"],
+  exact: true,
+  name: "Home"
+}, {
+  path: "/logout",
+  Component: _containers_LogoutProcess__WEBPACK_IMPORTED_MODULE_11__["default"],
   exact: true,
   name: "Home"
 }, {
@@ -217101,6 +217164,17 @@ var validateReview = function validateReview(values) {
 
 /***/ }),
 
+/***/ "./resources/sass/admin.scss":
+/*!***********************************!*\
+  !*** ./resources/sass/admin.scss ***!
+  \***********************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+
 /***/ "./resources/sass/app.scss":
 /*!*********************************!*\
   !*** ./resources/sass/app.scss ***!
@@ -217112,9 +217186,9 @@ var validateReview = function validateReview(values) {
 
 /***/ }),
 
-/***/ "./resources/sass/trader.scss":
+/***/ "./resources/sass/custom.scss":
 /*!************************************!*\
-  !*** ./resources/sass/trader.scss ***!
+  !*** ./resources/sass/custom.scss ***!
   \************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
@@ -217124,15 +217198,16 @@ var validateReview = function validateReview(values) {
 /***/ }),
 
 /***/ 0:
-/*!******************************************************************************************!*\
-  !*** multi ./resources/js/app.js ./resources/sass/app.scss ./resources/sass/trader.scss ***!
-  \******************************************************************************************/
+/*!**********************************************************************************************************************!*\
+  !*** multi ./resources/js/app.js ./resources/sass/app.scss ./resources/sass/custom.scss ./resources/sass/admin.scss ***!
+  \**********************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(/*! D:\Projects\clefax-website\resources\js\app.js */"./resources/js/app.js");
 __webpack_require__(/*! D:\Projects\clefax-website\resources\sass\app.scss */"./resources/sass/app.scss");
-module.exports = __webpack_require__(/*! D:\Projects\clefax-website\resources\sass\trader.scss */"./resources/sass/trader.scss");
+__webpack_require__(/*! D:\Projects\clefax-website\resources\sass\custom.scss */"./resources/sass/custom.scss");
+module.exports = __webpack_require__(/*! D:\Projects\clefax-website\resources\sass\admin.scss */"./resources/sass/admin.scss");
 
 
 /***/ })
