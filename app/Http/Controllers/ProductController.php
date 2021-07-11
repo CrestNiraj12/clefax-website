@@ -14,8 +14,9 @@ class ProductController extends Controller
 
     public function index()
     {
-        $products = Product::with(['shop', 'category'])->get();
-        return view("admin.products.products", ['page_title' => 'Products', 'products' => $products]);
+        $productsWithShop = Product::with(['shop', 'category'])->get();
+        $products = $productsWithShop->where('shop.user_id', auth()->user()->id);
+        return view("admin.products.products", ['page_title' => 'Products', 'products' => $products->load('shop', 'category')->paginate("10")]);
     }
 
     public function show($id) {

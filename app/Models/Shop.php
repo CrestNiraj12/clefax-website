@@ -25,4 +25,10 @@ class Shop extends Model
     public function products() {
         return $this->hasMany(Product::class);
     }
+
+    public function getLogoAttribute($value)
+    {
+        $logo = str_contains($value, '\\') || str_contains($value, 'http') ? ("\storage\\" . $value) : "https://api.proxeuse.com/avatars/api/?name=".urlencode($this->attributes['name'])."&color=fff&background=".substr(md5($this->attributes['name']), 0, 6)."&size=300";
+        return $logo;
+    }
 }

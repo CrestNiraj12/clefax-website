@@ -2,20 +2,6 @@
 
 @section('content')
 
-@if(Session::has('success'))
-    <x-adminlte-alert class="alert-custom" id="alert" theme="success" title="Success" dismissable>
-        {{ Session::get('success') }}
-    </x-adminlte-alert>
-    {{session()->forget('success')}}
-@endif
-
-@if(Session::has('error'))
-    <x-adminlte-alert class="alert-custom" id="alert" theme="danger" title="Error occurred!" dismissable>
-        {{ Session::get('error') }}
-    </x-adminlte-alert>
-    {{session()->forget('error')}}
-@endif
-
 <!-- Main content -->
 <section class="content">
 
@@ -71,20 +57,20 @@
                         <td class="py-3 px-6 text-center">
                             <img 
                                 class="w-10 h-10 rounded-full" 
-                                src="{{("\storage\\" . explode(",", $product['images'])[0]) }}" 
+                                src="{{$product['images'][0]}}" 
                                 alt="{{ $product['name'] }}" />
                         </td>
                         <td class="py-3 px-6 text-left">
                             <p>{{ $product["category"]["name"] }}</p>
                         </td>
                         <td class="py-3 px-6 text-left">
-                           <p>{{ $product["qty"] }} {{ $product["unit"] }}(s) </p>
+                           <p>@convertQty($product["qty"]) {{ $product["unit"] }}(s) </p>
                         </td>
                         <td class="py-3 px-6 text-center">
-                            <p>{{ $product["discount"] }}%</p>
+                            <p>@convert($product["discount"])%</p>
                         </td>
                         <td class="py-3 px-6 text-center">
-                            <p>£{{ $product["price"] }}</p>
+                            <p>£@convert($product["price"])</p>
                         </td>
                         <td class="py-3 px-6 text-center">
                             <p>{{ $product["max_order"] }}</p>
@@ -134,6 +120,9 @@
                 @endif
             </tbody>
         </table>
+        <div class="my-3 mx-3">
+            {!! $products->links() !!}
+        </div>
     </div>
     <!-- /.card-body -->
     </div>

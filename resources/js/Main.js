@@ -171,9 +171,7 @@ const Main = ({
                                 res.data.map(s => {
                                     formattedSlots.push({
                                         ...s,
-                                        times: s.times
-                                            .split(",")
-                                            .map(t => Number(t.trim())),
+                                        times: s.times,
                                         days: s.days
                                             .split(",")
                                             .map(t => Number(t.trim()))

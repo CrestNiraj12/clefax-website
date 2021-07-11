@@ -85,7 +85,7 @@ export const isValidTime = (date, times, days) => {
     if (!days.includes(date.getDay())) return true;
     const todayWith24hours = new Date();
     todayWith24hours.setDate(todayWith24hours.getDate() + 1);
-    const selected = date.setHours(times[0]);
+    const selected = date.setHours(times.substr(0, 2));
     return todayWith24hours >= selected;
 };
 

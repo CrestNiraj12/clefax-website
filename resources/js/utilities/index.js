@@ -61,18 +61,3 @@ export const getAvgReviews = reviews => {
               reviews.length
         : 0;
 };
-
-export const formatSlotTimes = times => {
-    const formatTime = time => {
-        if (time > 12) return (time - 12).toString().padStart(2, "0");
-        else return time.toString().padStart(2, "0");
-    };
-
-    const getAMorPM = time => {
-        return time >= 12 ? "PM" : "AM";
-    };
-
-    return `${formatTime(times[0])}:00 ${getAMorPM(times[0])} - ${formatTime(
-        times[1]
-    )}:00 ${getAMorPM(times[1])}`;
-};

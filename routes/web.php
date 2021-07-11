@@ -40,10 +40,11 @@ Route::middleware(['auth:sanctum'])->group(function() {
         });
 		Route::resource('products', ProductController::class);
 		Route::get('orders', [OrderController::class, 'index']);
+		Route::put('order/complete/{id}', [OrderController::class, 'completeOrder']);
 		Route::prefix('profile')->group(function () {
 			Route::get('/', [ProfileController::class, 'editProfile'])->name('profile');
-			Route::post('update', [ProfileInformationController::class, 'update'])->name('user-profile-information.update');
-			Route::put('password/update', [PasswordController::class, 'update'])->name('user-password.update');
+			Route::put('update', [UserController::class, 'updateDetails'])->name('user-profile-information.update');
+			Route::put('password/update', [UserController::class, 'updatePassword'])->name('user-password.update');
 			Route::name('profile.')->group(function () {
 				Route::post('avatar', [ProfileController::class, 'updateAvatar'])->name('avatar');
 				Route::delete('avatar', [ProfileController::class, 'removeOldAvatar'])->name('deleteavatar');
@@ -56,7 +57,7 @@ Route::middleware(['auth:sanctum'])->group(function() {
 Route::get('/admin/dashboard', function() {
 		if (Auth::user()->role !== "Trader" && Auth::user()->role !== "Admin")
 			return redirect("/login");
-		else return view('admin.dashboard');
+		else return view('admin.dashboard', ['page_title' => 'Dashboard']);
 	})
 	->name('dashboard')
 	->middleware(['auth', 'verified']);

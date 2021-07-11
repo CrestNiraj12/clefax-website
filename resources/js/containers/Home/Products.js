@@ -224,7 +224,7 @@ const Products = ({ products, categories }) => {
                                   </CSSTransition>
                               )
                           )
-                        : filteredProducts.map((product, index) => (
+                        : filteredProducts.slice(0, 8).map((product, index) => (
                               <CSSTransition
                                   in={!loading}
                                   key={index + Date.now()}

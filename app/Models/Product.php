@@ -58,4 +58,14 @@ class Product extends Model
     public function wishlists() {
         return $this->belongsToMany(Wishlist::class, 'wishlist_has_products');
     }
+
+    public function getImagesAttribute($value)
+    {
+        $products = explode(',', $value);
+        $productsArr = array_map(function ($p) {
+            $product = trim($p);
+            return str_contains($product, 'http') ? $product : "\storage\\$product";
+        }, $products);
+        return $productsArr;
+    }
 }

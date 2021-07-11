@@ -1,4 +1,4 @@
-@extends('adminlte::page')
+@extends('layouts.admin')
 
 @section('title', 'Dashboard')
 
@@ -7,13 +7,6 @@
 @stop
 
 @section('content')
-    @if(Session::has('success'))
-        <x-adminlte-alert class="alert-custom" id="alert" theme="success" title="Success" dismissable>
-            {{ Session::get('success') }}
-        </x-adminlte-alert>
-        {{session()->forget('success')}}
-    @endif
-
     <div>You are logged in!</div>
 @stop
 

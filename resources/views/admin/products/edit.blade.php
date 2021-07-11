@@ -17,7 +17,7 @@
             </div>
             <div class="form-group">
                 <label for="images">Image*</label>
-                <img src="{{ asset('storage/' . explode(",", $product->images)[0]) }}" id="ImagePreview" alt="images" style="cursor:pointer;display:block;margin-bottom:20px;max-width: 500px;height: 200px;object-fit:contain;" />
+                <img src="{{$product->images[0] }}" id="ImagePreview" alt="images" style="cursor:pointer;display:block;margin-bottom:20px;max-width: 500px;height: 200px;object-fit:contain;" />
                 <div class="input-group">
                     <div class="custom-file">
                         <input type="file" class="form-control custom-file-input" id="images" name="images">
@@ -39,7 +39,7 @@
             </div>
             <div class="form-group">
                 <label for="qty">Stock*</label>
-                <input type="number" min="0" class="form-control" id="qty" name="qty" value="{{ $product->qty }}" required>
+                <input type="number"  min="0" class="form-control" id="qty" name="qty" value="{{ $product->qty }}" required>
             </div>
             <div class="form-group">
                 <label for="unit">Unit*</label>
@@ -47,11 +47,11 @@
             </div>
             <div class="form-group">
                 <label for="price">Price*</label>
-                <input type="number" min="0" class="form-control" id="price" name="price" value="{{ $product->price }}" required>
+                <input type="number"  step=".01" min="0" class="form-control" id="price" name="price" value="{{ $product->price }}" required>
             </div>
             <div class="form-group">
                 <label for="discount">Discount (in percentage)*</label>
-                <input type="number" min="0" class="form-control" id="discount" name="discount" value="{{ $product->discount }}" required>
+                <input type="number"  step=".01" min="0" class="form-control" id="discount" name="discount" value="{{ $product->discount }}" required>
             </div>
             <div class="form-group">
                 <label for="max_order">Max Order quantity <small>(max: 20)</small>*</label>
@@ -71,11 +71,11 @@
             </div>
             <div class="form-group">
                 <label for="description">Description*</label>
-                <textarea class="form-control" id="description" name="description" required>{{ $product->description }}</textarea>
+                <textarea rows="5" class="form-control" id="description" name="description" required>{{ $product->description }}</textarea>
             </div>
             <div class="form-group">
                 <label for="allergy_information">Allergy Information*</label>
-                <textarea class="form-control" id="allergy_information" name="allergy_information">{{ $product->allergy_information }}</textarea>
+                <textarea rows="5" class="form-control" id="allergy_information" name="allergy_information">{{ $product->allergy_information }}</textarea>
             </div>
              <div class="form-group">
                 <label for="tags">Tags<small>(Separate by comma)</small></label>

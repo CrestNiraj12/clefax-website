@@ -6,6 +6,20 @@
     <h1>{{ $page_title }}</h1>
 @stop
 
+@if(Session::has('success'))
+    <x-adminlte-alert class="alert-custom" id="alert" theme="success" title="Success" dismissable>
+        {{ Session::get('success') }}
+    </x-adminlte-alert>
+    {{session()->forget('success')}}
+@endif
+
+@if(Session::has('error'))
+    <x-adminlte-alert class="alert-custom" id="alert" theme="danger" title="Error occurred!" dismissable>
+        {{ Session::get('error') }}
+    </x-adminlte-alert>
+    {{session()->forget('error')}}
+@endif
+
 @section('css')
     <link href="{{ asset('/css/custom.css') }}" rel="stylesheet" />
     <link href="{{ asset('/css/admin.css') }}" rel="stylesheet" />

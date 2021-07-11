@@ -241,11 +241,7 @@ const Wishlist = ({
                                                 <HStack spacing={10}>
                                                     {!smallerThan1024 && (
                                                         <Image
-                                                            src={
-                                                                images.split(
-                                                                    ","
-                                                                )[0]
-                                                            }
+                                                            src={images[0]}
                                                             alt={title}
                                                             w="100px"
                                                         />

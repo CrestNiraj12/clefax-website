@@ -204644,9 +204644,7 @@ var Main = function Main(_ref) {
         var formattedSlots = [];
         if (res.data.length > 0) res.data.map(function (s) {
           formattedSlots.push(_objectSpread(_objectSpread({}, s), {}, {
-            times: s.times.split(",").map(function (t) {
-              return Number(t.trim());
-            }),
+            times: s.times,
             days: s.days.split(",").map(function (t) {
               return Number(t.trim());
             })
@@ -206437,15 +206435,12 @@ var ProductCardColumn = function ProductCardColumn(_ref) {
   var _ref$product = _ref.product,
       id = _ref$product.id,
       name = _ref$product.name,
-      im = _ref$product.images,
+      images = _ref$product.images,
       reviews = _ref$product.reviews,
       price = _ref$product.price,
       discount = _ref$product.discount,
       _ref$hideRatings = _ref.hideRatings,
       hideRatings = _ref$hideRatings === void 0 ? false : _ref$hideRatings;
-  var images = im.split(",").map(function (i) {
-    return i.trim();
-  });
 
   var _useState = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(images[0]),
       _useState2 = _slicedToArray(_useState, 2),
@@ -206652,13 +206647,10 @@ var ProductCardRow = function ProductCardRow(_ref) {
   var _ref$product = _ref.product,
       id = _ref$product.id,
       name = _ref$product.name,
-      im = _ref$product.images,
+      images = _ref$product.images,
       reviews = _ref$product.reviews,
       price = _ref$product.price,
       discount = _ref$product.discount;
-  var images = im.split(",").map(function (i) {
-    return i.trim();
-  });
 
   var _useState = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(images[0]),
       _useState2 = _slicedToArray(_useState, 2),
@@ -208314,7 +208306,7 @@ var Cart = function Cart(_ref) {
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["HStack"], {
       spacing: 10
     }, !smallerThan768 && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Image"], {
-      src: images.split(",")[0],
+      src: images[0],
       alt: title,
       w: "100px"
     }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["VStack"], {
@@ -208691,9 +208683,9 @@ var Checkout = function Checkout(_ref) {
   var onApprove = function onApprove(data, actions) {
     actions.order.capture().then(function () {
       var values = formRef.current.values;
-      var slot = Object(_utilities__WEBPACK_IMPORTED_MODULE_10__["formatSlotTimes"])(slots.filter(function (s) {
+      var slot = slots.filter(function (s) {
         return s.id === Number(values.collection_id);
-      })[0].times);
+      })[0].times;
       Object(_utilities_data__WEBPACK_IMPORTED_MODULE_14__["handleOrder"])(_objectSpread(_objectSpread({}, values), {}, {
         date: new Date(values.date.getTime() - values.date.getTimezoneOffset() * 60000).toISOString().split("T")[0]
       }), total, slot, cart, setAuth, onSuccessPaypalPayment, onError, "paypal");
@@ -208858,9 +208850,7 @@ var Checkout = function Checkout(_ref) {
           currency: "GBP",
           product_data: {
             name: p.name,
-            images: p.images.split(",").map(function (i) {
-              return i.trim();
-            })
+            images: p.images
           },
           unit_amount: Number(Object(_utilities__WEBPACK_IMPORTED_MODULE_10__["getFinalPrice"])(p).toFixed(2)) * 100
         },
@@ -209063,7 +209053,7 @@ var Checkout = function Checkout(_ref) {
           key: index,
           value: id,
           disabled: Object(_utilities_validation__WEBPACK_IMPORTED_MODULE_4__["isValidTime"])(props.values["date"], times, days)
-        }, Object(_utilities__WEBPACK_IMPORTED_MODULE_10__["formatSlotTimes"])(times));
+        }, times);
       })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["FormErrorMessage"], null, form.errors.collection_id));
     }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Box"], {
       w: {
@@ -211848,7 +211838,7 @@ var Products = function Products(_ref) {
       classNames: "container-load",
       timeout: 300
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_components_ProductCardColumn__WEBPACK_IMPORTED_MODULE_9__["SkeletonCardColumn"], null));
-  }) : filteredProducts.map(function (product, index) {
+  }) : filteredProducts.slice(0, 8).map(function (product, index) {
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(react_transition_group__WEBPACK_IMPORTED_MODULE_5__["CSSTransition"], {
       "in": !loading,
       key: index + Date.now(),
@@ -212083,9 +212073,7 @@ var Invoice = function Invoice(_ref) {
     fontSize: "xl"
   }, "\xA3", order.total.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")))))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Box"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Text"], {
     mb: "10px"
-  }, "Collection Date and Time:", " ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("b", null, order.date, " [", slots && Object(_utilities__WEBPACK_IMPORTED_MODULE_7__["formatSlotTimes"])(order.collection_slot.times.split(",").map(function (t) {
-    return t.trim();
-  })), "]")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Text"], {
+  }, "Collection Date and Time:", " ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("b", null, order.date, " [", slots && order.collection_slot.times, "]")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Text"], {
     mb: "10px"
   }, "Pickup Location: 189 Spen Lane, Gomersal, West Yorkshire, BD19 4PJ"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Text"], null, "Contact No.: 1611236789")))));
 };
@@ -212946,9 +212934,9 @@ var PaymentRedirect = function PaymentRedirect(_ref) {
           sessionId: query.session_id
         }).then(function (res) {
           var values = JSON.parse(localStorage.getItem("values"));
-          var slot = Object(_utilities__WEBPACK_IMPORTED_MODULE_3__["formatSlotTimes"])(slots.filter(function (s) {
+          var slot = slots.filter(function (s) {
             return s.id === Number(values.collection_id);
-          })[0].times);
+          })[0].times;
           Object(_utilities_data__WEBPACK_IMPORTED_MODULE_4__["handleOrder"])(values, res.data.amount_total / 100, slot, cart, setAuth, onSuccess, onError, "stripe");
         })["catch"](function (err) {
           console.log(err.response);
@@ -213948,9 +213936,7 @@ var Product = function Product(_ref) {
       md: "row"
     }
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_components_ImageMagnifier__WEBPACK_IMPORTED_MODULE_9__["default"], {
-    images: product.images.split(",").map(function (i) {
-      return i.trim();
-    }),
+    images: product.images,
     title: product.name
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Box"], {
     w: {
@@ -216005,7 +215991,7 @@ var Wishlist = function Wishlist(_ref) {
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["HStack"], {
       spacing: 10
     }, !smallerThan1024 && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Image"], {
-      src: images.split(",")[0],
+      src: images[0],
       alt: title,
       w: "100px"
     }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["VStack"], {
@@ -216866,7 +216852,7 @@ var handleOrder = function handleOrder(_ref, total, slot, cart, setAuth, onSucce
 /*!*****************************************!*\
   !*** ./resources/js/utilities/index.js ***!
   \*****************************************/
-/*! exports provided: getFinalPrice, generateUrl, getIdFromUrl, searchQuery, apiClient, sendMail, getLoginRedirection, getAvgReviews, formatSlotTimes */
+/*! exports provided: getFinalPrice, generateUrl, getIdFromUrl, searchQuery, apiClient, sendMail, getLoginRedirection, getAvgReviews */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -216879,7 +216865,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "sendMail", function() { return sendMail; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getLoginRedirection", function() { return getLoginRedirection; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getAvgReviews", function() { return getAvgReviews; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "formatSlotTimes", function() { return formatSlotTimes; });
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
 
@@ -216923,17 +216908,6 @@ var getAvgReviews = function getAvgReviews(reviews) {
   }).reduce(function (r1, r2) {
     return r1 + r2;
   }) / reviews.length : 0;
-};
-var formatSlotTimes = function formatSlotTimes(times) {
-  var formatTime = function formatTime(time) {
-    if (time > 12) return (time - 12).toString().padStart(2, "0");else return time.toString().padStart(2, "0");
-  };
-
-  var getAMorPM = function getAMorPM(time) {
-    return time >= 12 ? "PM" : "AM";
-  };
-
-  return "".concat(formatTime(times[0]), ":00 ").concat(getAMorPM(times[0]), " - ").concat(formatTime(times[1]), ":00 ").concat(getAMorPM(times[1]));
 };
 
 /***/ }),
@@ -217140,7 +217114,7 @@ var isValidTime = function isValidTime(date, times, days) {
   if (!days.includes(date.getDay())) return true;
   var todayWith24hours = new Date();
   todayWith24hours.setDate(todayWith24hours.getDate() + 1);
-  var selected = date.setHours(times[0]);
+  var selected = date.setHours(times.substr(0, 2));
   return todayWith24hours >= selected;
 };
 var validateLogin = function validateLogin(values) {

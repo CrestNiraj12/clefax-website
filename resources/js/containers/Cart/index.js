@@ -340,11 +340,7 @@ const Cart = ({ crumbs, auth, products, cart, setCartProducts }) => {
                                                     <HStack spacing={10}>
                                                         {!smallerThan768 && (
                                                             <Image
-                                                                src={
-                                                                    images.split(
-                                                                        ","
-                                                                    )[0]
-                                                                }
+                                                                src={images[0]}
                                                                 alt={title}
                                                                 w="100px"
                                                             />

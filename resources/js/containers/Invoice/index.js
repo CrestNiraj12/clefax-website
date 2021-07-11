@@ -22,7 +22,7 @@ import { setCartProducts } from "../../actions";
 import Breadcrumb from "../../components/Breadcrumb";
 import qs from "query-string";
 import { useHistory } from "react-router-dom";
-import { apiClient, formatSlotTimes } from "../../utilities";
+import { apiClient } from "../../utilities";
 import { DEFAULT_TOAST } from "../../constants";
 
 const mapStateToProps = state => ({
@@ -222,13 +222,7 @@ const Invoice = ({ crumbs, setCartProducts, auth, slots }) => {
                                 Collection Date and Time:{" "}
                                 <b>
                                     {order.date} [
-                                    {slots &&
-                                        formatSlotTimes(
-                                            order.collection_slot.times
-                                                .split(",")
-                                                .map(t => t.trim())
-                                        )}
-                                    ]
+                                    {slots && order.collection_slot.times}]
                                 </b>
                             </Text>
                             <Text mb="10px">

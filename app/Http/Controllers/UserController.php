@@ -110,6 +110,34 @@ class UserController extends Controller
         return response()->json(['message' => 'User account activated successfully!', 'user' => $user], 200);
     }
 
+    public function updateDetails(Request $request) {
+        $user = User::where('id', auth()->user()->id)->update($request->except('_token', '_method'));
+        session()->put('success', "User details updated!");
+        return redirect("/admin/profile");
+    }
+
+    public function updatePassword(Request $request) {
+        $request->validate([
+            'password' => 'nullable',
+            'new_password' => 'nullable|confirmed|regex:/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/|different:password|required_with:password'
+        ]);
+
+        $old_password = $request->password;
+        $new_password = $request->new_password; 
+        $user = User::where([
+            'email' => auth()->user()->email, 
+            'password' => strtoupper(md5($old_password . "5USFGOJN2T3HW8" .  strtoupper(auth()->user()->email) . "USFGOJN2T3"))
+        ])->first();
+        if ($user != null) {
+            $user->password = strtoupper(md5($new_password . "5USFGOJN2T3HW8" .  strtoupper(auth()->user()->email) . "USFGOJN2T3"));
+            $user->save();
+            session()->put('success', "User password changed!");
+        } else {
+            session()->put('error', 'Invalid password was provided!');
+        }
+        return redirect("/admin/profile");
+    }
+
     public function update(Request $request) {
         $request->validate([
             'password' => 'nullable',

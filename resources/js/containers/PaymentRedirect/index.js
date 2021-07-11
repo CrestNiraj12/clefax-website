@@ -2,7 +2,7 @@ import React from "react";
 import { useEffect } from "react";
 import { connect } from "react-redux";
 import { setAuth, setCartProducts } from "../../actions";
-import { apiClient, formatSlotTimes } from "../../utilities";
+import { apiClient } from "../../utilities";
 import { handleOrder } from "../../utilities/data";
 import qs from "query-string";
 import { Flex, Spinner, useToast } from "@chakra-ui/react";
@@ -48,11 +48,9 @@ const PaymentRedirect = ({
                             const values = JSON.parse(
                                 localStorage.getItem("values")
                             );
-                            const slot = formatSlotTimes(
-                                slots.filter(
-                                    s => s.id === Number(values.collection_id)
-                                )[0].times
-                            );
+                            const slot = slots.filter(
+                                s => s.id === Number(values.collection_id)
+                            )[0].times;
                             handleOrder(
                                 values,
                                 res.data.amount_total / 100,

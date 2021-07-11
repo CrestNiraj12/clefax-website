@@ -38,12 +38,7 @@ import { Redirect, useHistory } from "react-router-dom";
 import { useEffect } from "react";
 import { DEFAULT_TOAST, TEMPLATE_BASIC, TEMPLATE_ORDER } from "../../constants";
 import { connect } from "react-redux";
-import {
-    apiClient,
-    formatSlotTimes,
-    getFinalPrice,
-    getLoginRedirection
-} from "../../utilities";
+import { apiClient, getFinalPrice, getLoginRedirection } from "../../utilities";
 import { setAuth, setCartProducts } from "../../actions";
 import { PayPalScriptProvider } from "@paypal/react-paypal-js";
 import { PaypalButtonsCustomized } from "../../components/PaypalButtonsCustomized";
@@ -147,10 +142,9 @@ const Checkout = ({
     const onApprove = (data, actions) => {
         actions.order.capture().then(() => {
             const values = formRef.current.values;
-            const slot = formatSlotTimes(
-                slots.filter(s => s.id === Number(values.collection_id))[0]
-                    .times
-            );
+            const slot = slots.filter(
+                s => s.id === Number(values.collection_id)
+            )[0].times;
 
             handleOrder(
                 {
@@ -333,7 +327,7 @@ const Checkout = ({
                     currency: "GBP",
                     product_data: {
                         name: p.name,
-                        images: p.images.split(",").map(i => i.trim())
+                        images: p.images
                     },
                     unit_amount: Number(getFinalPrice(p).toFixed(2)) * 100
                 },
@@ -627,9 +621,9 @@ const Checkout = ({
                                                                                 days
                                                                             )}
                                                                         >
-                                                                            {formatSlotTimes(
+                                                                            {
                                                                                 times
-                                                                            )}
+                                                                            }
                                                                         </option>
                                                                     )
                                                                 )}

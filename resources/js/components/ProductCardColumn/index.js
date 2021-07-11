@@ -18,10 +18,9 @@ import { CSSTransition } from "react-transition-group";
 import { generateUrl, getAvgReviews } from "../../utilities";
 
 const ProductCardColumn = ({
-    product: { id, name, images: im, reviews, price, discount },
+    product: { id, name, images, reviews, price, discount },
     hideRatings = false
 }) => {
-    const images = im.split(",").map(i => i.trim());
     const [src, setSrc] = useState(images[0]);
     const [imageLoaded, setImageLoaded] = useState(false);
 

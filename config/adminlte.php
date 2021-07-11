@@ -245,13 +245,13 @@ return [
         [
             'text' => 'Products',
             'url'  => 'admin/products',
-            'icon' => 'fas fa-fw fa-store-alt',
+            'icon' => 'fas fa-fw fa-apple-alt',
             'classes' => 'navitem'
         ],
         [
             'text' => 'Orders',
             'url'  => 'admin/orders',
-            'icon' => 'fas fa-fw fa-store-alt',
+            'icon' => 'fas fa-fw fa-shopping-cart',
             'classes' => 'navitem'
         ],
         /*[

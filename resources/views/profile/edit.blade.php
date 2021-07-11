@@ -17,13 +17,14 @@
                     </div>
                     <div class="card-body">
                         @if (session('success'))
-                        <div class="alert alert-success">{{ session('success') }}</div>
+                        <div class="alert alert-success alert-custom">{{ session('success') }}</div>
+                        {{session()->forget('success')}}
                         @endif
-
-                        @if ($errors->any())
-                        <div class="alert alert-danger" role="alert">
-                            {{ $errors->first() }}
-                        </div>
+                        @if(Session::has('error'))
+                            <x-adminlte-alert class="alert-custom" id="alert" theme="danger" title="Error occurred!" dismissable>
+                                {{ Session::get('error') }}
+                            </x-adminlte-alert>
+                            {{session()->forget('error')}}
                         @endif
 
                         @if(session('status') == 'two-factor-authentication-enabled')
@@ -80,7 +81,7 @@
                             @method('PUT')
                             <div class="mb-3">
                                 <label class="form-label">Full Name</label>
-                                <input type="text" name="name" class="form-control"
+                                <input type="text" name="fullname" class="form-control"
                                     value="{{ old('fullname') ?? auth()->user()->fullname }}" required autofocus
                                     autocomplete="name" />
                             </div>
@@ -100,7 +101,7 @@
                             <div class="mb-3">
                                 <label class="form-label">Date of birth</label>
                                 <input type="date" name="dob" class="form-control"
-                                    value="{{ old('dob') ?? auth()->user()->dob }}" autofocus />
+                                    value="{{ old('dob') ?? auth()->user()->dob->format('Y-m-d') }}" autofocus />
                             </div>
 
                             <div class="mb-3">
@@ -117,7 +118,7 @@
 
                             <div class="mb-3">
                                 <label class="form-label">Gender</label>
-                                <select class="form-control" id="types" name="category_id">
+                                <select class="form-control" id="types" name="gender">
                                    <option value="M" {{ auth()->user()->gender == "M" ? "selected" : "" }}>Male</option>
                                    <option value="F" {{ auth()->user()->gender == "F" ? "selected" : "" }}>Female</option>
                                    <option value="O" {{ auth()->user()->gender == "O" ? "selected" : "" }}>Others</option>
@@ -156,20 +157,20 @@
 
                             <div class="mb-3">
                                 <label class="form-label">{{ __('Current Password') }}</label>
-                                <input type="password" name="current_password" class="form-control" required
-                                    autocomplete="current-password" />
+                                <input type="password" name="password" class="form-control" required
+                                    autocomplete="password" />
                             </div>
 
                             <div class="mb-3">
                                 <label class="form-label">{{ __('New Password') }}</label>
-                                <input type="password" name="password" class="form-control" required
-                                    autocomplete="new-password" />
+                                <input type="password" name="new_password" class="form-control" required
+                                    autocomplete="new_password" />
                             </div>
 
                             <div class="mb-3">
                                 <label>{{ __('Confirm New Password') }}</label>
-                                <input type="password" name="password_confirmation" class="form-control" required
-                                    autocomplete="new-password" />
+                                <input type="password" name="new_password_confirmation" class="form-control" required
+                                    autocomplete="new_password" />
                             </div>
 
                             <div>
@@ -201,6 +202,13 @@
 @stop
 
 @section('js')
+    <script>
+        $(document).ready(function() {
+            $(".alert-custom").fadeTo(2000, 500).slideUp(500, function(){
+                $(".alert-custom").slideUp(500);
+            });
+        });
+    </script>
     <!-- Tabler Core -->
     <script src="{{ asset('dist/js/tabler.min.js') }}"></script>
 @stop

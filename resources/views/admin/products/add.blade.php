@@ -53,11 +53,11 @@
             </div>
             <div class="form-group">
                 <label for="price">Price*</label>
-                <input type="number" min="0" class="form-control" id="price" name="price" required>
+                <input type="number"  step=".01" min="0" class="form-control" id="price" name="price" required>
             </div>
             <div class="form-group">
                 <label for="discount">Discount (in percentage)*</label>
-                <input type="number" min="0" class="form-control" id="discount" name="discount" required>
+                <input type="number"  step=".01" min="0" class="form-control" id="discount" name="discount" required>
             </div>
             <div class="form-group">
                 <label for="max_order">Max Order quantity <small>(max: 20)</small>*</label>
@@ -77,11 +77,11 @@
             </div>
             <div class="form-group">
                 <label for="description">Description*</label>
-                <textarea class="form-control" id="description" name="description" required></textarea>
+                <textarea rows="5" class="form-control" id="description" name="description" required></textarea>
             </div>
             <div class="form-group">
                 <label for="allergy_information">Allergy Information</label>
-                <textarea class="form-control" id="allergy_information" name="allergy_information"></textarea>
+                <textarea rows="5" class="form-control" id="allergy_information" name="allergy_information"></textarea>
             </div>
              <div class="form-group">
                 <label for="tags">Tags<small>(Separate by comma)</small></label>

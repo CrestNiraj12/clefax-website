@@ -2,20 +2,6 @@
 
 @section('content')
 
-@if(Session::has('success'))
-    <x-adminlte-alert class="alert-custom" id="alert" theme="success" title="Success" dismissable>
-        {{ Session::get('success') }}
-    </x-adminlte-alert>
-    {{session()->forget('success')}}
-@endif
-
-@if(Session::has('error'))
-    <x-adminlte-alert class="alert-custom" id="alert" theme="danger" title="Error occurred!" dismissable>
-        {{ Session::get('error') }}
-    </x-adminlte-alert>
-    {{session()->forget('error')}}
-@endif
-
 <!-- Main content -->
 <section class="content">
 
@@ -65,8 +51,8 @@
                         <td class="py-3 px-6 text-center">
                             <img 
                                 class="w-10 h-10 rounded-full" 
-                                src="{{$shop['logo'] ? ("\storage\\" . $shop['logo']) : "https://api.proxeuse.com/avatars/api/?name=".urlencode($shop["name"])."&color=fff&background=".substr(md5($shop["name"]), 0, 6)."&size=300" }}" 
-                                alt="{{ $shop['logo'] }}" />
+                                src="{{ $shop['logo'] }}" 
+                                alt="{{ $shop['name'] }}" />
                         </td>
                         <td class="py-3 px-6 text-left">
                            {{ $shop["user"]["fullname"] }}
@@ -122,6 +108,9 @@
                 @endif
             </tbody>
         </table>
+        <div class="my-3 mx-3">
+            {!! $shops->links() !!}
+        </div>
     </div>
     <!-- /.card-body -->
     </div>

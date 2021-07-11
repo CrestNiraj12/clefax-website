@@ -50,6 +50,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $casts = [
+        'dob' => 'date',
         'email_verified_at' => 'datetime',
     ];
 

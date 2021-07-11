@@ -290,9 +290,7 @@ const Product = ({
                             direction={{ base: "column", md: "row" }}
                         >
                             <ImageMagnifier
-                                images={product.images
-                                    .split(",")
-                                    .map(i => i.trim())}
+                                images={product.images}
                                 title={product.name}
                             />
 

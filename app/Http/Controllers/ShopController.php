@@ -13,7 +13,7 @@ class ShopController extends Controller
 
     public function index()
     {
-        $shops = Shop::where('user_id', auth()->user()->id)->get();
+        $shops = Shop::where('user_id', auth()->user()->id)->paginate("10");
         return view("admin.shops.shops", ['page_title' => 'Shops', 'shops' => $shops]);
     }
 
