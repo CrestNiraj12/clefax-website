@@ -386,7 +386,7 @@ const Product = ({
                                 )}
                                 {(!auth.logged_in ||
                                     (auth.logged_in &&
-                                        auth.user.role !== "Trader")) && (
+                                        auth.user.role === "Customer")) && (
                                     <Stack
                                         direction={{
                                             base: "column",

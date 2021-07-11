@@ -49,6 +49,7 @@
                                     class="avatar avatar-xl"></span>
                             </div>
                             <div class="col-10">
+                                <p class="my-3 font-bold text-lg">{{ auth()->user()->role }}</p>
                                 <form enctype="multipart/form-data" action="{{ route('profile.avatar') }}"
                                     method="POST">
                                     @csrf

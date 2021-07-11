@@ -123,7 +123,7 @@ const Invoice = ({ crumbs, setCartProducts, auth, slots }) => {
                                 Order Date: <b>{date}</b>
                             </Text>
                             <Text color="darkgray">
-                                Email: <b>{auth.user.email}</b>
+                                Email: <b>{order.user.email}</b>
                             </Text>
                             <Text color="darkgray">
                                 Total:{" "}

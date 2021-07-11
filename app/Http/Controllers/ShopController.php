@@ -12,8 +12,12 @@ class ShopController extends Controller
     use UploadTrait;
 
     public function index()
-    {
-        $shops = Shop::where('user_id', auth()->user()->id)->paginate("10");
+    {   if (auth()->user()->role != "Admin" && auth()->user()->role == "Customer") 
+            return redirect()->back();
+        if (auth()->user()->role == "Admin")
+            $shops = Shop::paginate("10");
+        else if (auth()->user()->role == "Admin")
+            $shops = Shop::where('user_id', auth()->user()->id)->paginate("10");
         return view("admin.shops.shops", ['page_title' => 'Shops', 'shops' => $shops]);
     }
 
@@ -40,6 +44,7 @@ class ShopController extends Controller
     }
 
     public function store(Request $request) {
+        if (auth()->user()->role != "Trader") return redirect()->back();
         $this->addShop($request);
         session()->put('success', "Shop Added!");
         return redirect("/admin/shops");
@@ -62,13 +67,20 @@ class ShopController extends Controller
     }
 
     public function showEditForm($id) {
+        if (auth()->user()->role != "Trader") return redirect()->back();
         $shop = $this->show($id);
         return view('admin.shops.edit', ['page_title' => 'Edit Shop', 'shop' => $shop]);
+    }
+
+     public function showAddForm() {
+        if (auth()->user()->role != "Trader") return redirect()->back();
+        return view('admin.shops.add', ['page_title' => 'Add Shop']);
     }
 
 
     public function update(Request $request, $id)
     {
+        if (auth()->user()->role != "Trader") return redirect()->back();
         $imageName = null;
         if ($request->hasFile('logo')) {
             $request->validate(['logo' => 'image|mimes:jpeg,png,jpg,gif,svg']);

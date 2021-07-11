@@ -10,6 +10,10 @@ class OrderController extends Controller
 {
     public function index()
     {
+        if (auth()->user()->role != "Admin" && auth()->user()->role == "Customer") 
+            return redirect()->back();
+        if (auth()->user()->role == "Admin")  $orders = Order::with(['products']);
+        else if (auth()->user()->role == "Trader")
         $orders = Order::with(['products' => function ($query) {
            return $query->whereHas('shop', function ($shop) {
                return $shop->where('user_id', auth()->user()->id);
@@ -25,7 +29,7 @@ class OrderController extends Controller
 
     public function getOrderById($id) {
         $order = Order::where(['user_id' => 1, 'id' => $id])->first();
-        return response()->json($order->load('products.shop', 'collection_slot', 'payment'));
+        return response()->json($order->load('user', 'products.shop', 'collection_slot', 'payment'));
     }
 
     public function completeOrder($id) {

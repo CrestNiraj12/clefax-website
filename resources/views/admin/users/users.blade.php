@@ -10,9 +10,9 @@
     @if (auth()->user()->role == "Trader")
     <div class="card-header">
         <div class="card-tools">
-            <a href="/admin/shops/add" class="bg-grey-light hover:bg-grey text-grey-darkest font-bold py-2 px-4 rounded inline-flex items-baseline">
+            <a href="/admin/users/add" class="bg-grey-light hover:bg-grey text-grey-darkest font-bold py-2 px-4 rounded inline-flex items-baseline">
                 <i class="fas fa-plus mr-1"></i>
-                <span>Add Shop</span>
+                <span>Add User</span>
             </a>
         </div>
     </div>
@@ -22,80 +22,79 @@
             <thead>
                 <tr class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
                     <th class="py-3 px-6 text-left">
-                        Name
+                        Full Name
+                    </th>
+                    <th class="py-3 px-6 text-center">
+                        Avatar
                     </th>
                     <th class="py-3 px-6 text-left">
-                        Logo
+                        Email
                     </th>
                     <th class="py-3 px-6 text-left">
-                        Owner
+                        Role
                     </th>
                     <th class="py-3 px-6 text-left">
-                        Registration no.
+                        Phone
                     </th>
                     <th class="py-3 px-6 text-left">
-                        City
+                        Paypal
                     </th>
                     <th class="py-3 px-6 text-left">
-                        Street Address
+                        Stripe
                     </th>
                     <th class="py-3 px-6 text-center"></th>
                 </tr>
             </thead>
             <tbody class="text-gray-600 text-sm font-light">
-                @if (count($shops) > 0)
-                    @foreach ($shops as $shop)
-                    @include('admin.shops.modal.delete')
+                @if (count($users) > 0)
+                    @foreach ($users as $user)
+                    @include('admin.users.modal.delete')
                     <tr class="border-b border-gray-200 hover:bg-gray-100">
                         <td class="py-3 px-6 text-left">
-                            {{ $shop["name"] }}
+                            <p>{{ $user["fullname"] }}</p>
                         </td>
                         <td class="py-3 px-6 text-center">
                             <img 
                                 class="w-10 h-10 rounded-full" 
-                                src="{{ $shop['logo'] }}" 
-                                alt="{{ $shop['name'] }}" />
+                                src="{{ $user['avatar'] ? "/storage/".$user['avatar'] : 'https://api.proxeuse.com/avatars/api/?name='.urlencode($user->fullname).'&color=fff&background='.substr(md5($user->fullname), 0, 6).'&size=300' }}" 
+                                alt="{{ $user['fullname'] }}" />
                         </td>
                         <td class="py-3 px-6 text-left">
-                           {{ $shop["user"]["fullname"] }}
+                            <p>{{ $user["email"] }}</p>
                         </td>
                         <td class="py-3 px-6 text-left">
-                            {{ $shop["pan"] }}
+                           <p>{{ $user["role"] }}</p>
                         </td>
                         <td class="py-3 px-6 text-left">
-                            <p>{{ $shop["city"] }}</p>
+                            <p>{{ $user["phone"] }}</p>
                         </td>
                         <td class="py-3 px-6 text-left">
-                            <p>{{ $shop["street_no"] }}</p>
+                            <p>{{ $user["paypal_email"] ? $user["paypal_email"] : "-" }}</p>
+                        </td>
+                        <td class="py-3 px-6 text-left">
+                            <p>{{ $user["stripe_email"] ? $user["stripe_email"] : "-"  }}</p>
                         </td>
                         <td class="py-3 px-6 text-center">
-                            <div class="flex item-center justify-center">
-                                {{-- <div class="w-4 mr-2 transform hover:text-purple-500 hover:scale-110">
+                            <div class="flex item-center justify-center ">
+                                <a href="/admin/users/{{ $user['id'] }}/view" class="cursor-pointer w-4 mr-2 transform hover:text-blue-500 hover:scale-110">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                                     </svg>
-                                </div> --}}
-                                @if (auth()->user()->role == "Trader")
-                                <a href="/admin/shops/{{ $shop['id'] }}/edit" class="w-4 mr-2 transform hover:text-purple-500 cursor-pointer hover:scale-110">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-                                    </svg>
                                 </a>
-                                @endif
-
-                                <button class="w-4 mr-2 transform hover:text-red-500 cursor-pointer hover:scale-110 showDelBtn" type="submit">
+                                
+                                <button href="/admin/users/{{ $user['id'] }}/view" class="w-4 mr-2 transform hover:text-red-500 cursor-pointer hover:scale-110 showDelBtn" type="submit">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                                     </svg>
                                 </button>
                             </div>
-                            {{-- <a class="btn btn-info btn-sm" href="/admin/shops/{{ $shop['id'] }}/edit">
+                            {{-- <a class="btn btn-info btn-sm" href="/admin/users/{{ $user['id'] }}/edit">
                                 <i class="fas fa-pencil-alt">
                                 </i>
                                 Edit
                             </a>
-                            <form style="display:inline" method="POST" action="{{ route('shops.destroy', $shop->id) }}">
+                            <form style="display:inline" method="POST" action="{{ route('users.destroy', $user->id) }}">
                                 @method('DELETE')
                                 @csrf
                                 <button class="btn btn-danger btn-sm" type="submit">
@@ -108,12 +107,12 @@
                     </tr>
                     @endforeach
                 @else
-                <tr><td colspan="6">No shops found!</td></tr>
+                <tr><td colspan="6">No users found!</td></tr>
                 @endif
             </tbody>
         </table>
         <div class="my-3 mx-3">
-            {!! $shops->links() !!}
+            {!! $users->links() !!}
         </div>
     </div>
     <!-- /.card-body -->

@@ -212042,7 +212042,7 @@ var Invoice = function Invoice(_ref) {
     color: "darkgray"
   }, "Order Date: ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("b", null, date)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Text"], {
     color: "darkgray"
-  }, "Email: ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("b", null, auth.user.email)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Text"], {
+  }, "Email: ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("b", null, order.user.email)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Text"], {
     color: "darkgray"
   }, "Total:", " ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("b", null, "\xA3", order.total.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ","))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Text"], {
     color: "darkgray"
@@ -213998,7 +213998,7 @@ var Product = function Product(_ref) {
     color: "green.400",
     my: "20px",
     fontSize: "medium"
-  }, "Sale 30% Off Use Code : Neoo20"), (!auth.logged_in || auth.logged_in && auth.user.role !== "Trader") && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Stack"], {
+  }, "Sale 30% Off Use Code : Neoo20"), (!auth.logged_in || auth.logged_in && auth.user.role === "Customer") && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Stack"], {
     direction: {
       base: "column",
       sm: "row",

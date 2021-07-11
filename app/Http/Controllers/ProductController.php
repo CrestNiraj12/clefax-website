@@ -14,9 +14,14 @@ class ProductController extends Controller
 
     public function index()
     {
-        $productsWithShop = Product::with(['shop', 'category'])->get();
-        $products = $productsWithShop->where('shop.user_id', auth()->user()->id);
-        return view("admin.products.products", ['page_title' => 'Products', 'products' => $products->load('shop', 'category')->paginate("10")]);
+        if (auth()->user()->role != "Admin" && auth()->user()->role == "Customer") 
+            return redirect()->back();
+        if (auth()->user()->role == "Admin")  $products = Product::with(['shop', 'category']);
+        else if (auth()->user()->role == "Trader") {
+            $productsWithShop = Product::with(['shop', 'category'])->get();
+            $products = $productsWithShop->where('shop.user_id', auth()->user()->id)->load('shop', 'category');
+        }
+        return view("admin.products.products", ['page_title' => 'Products', 'products' => $products->paginate("10")]);
     }
 
     public function show($id) {
@@ -29,6 +34,7 @@ class ProductController extends Controller
     }
 
     public function store(Request $request) {
+        if (auth()->user()->role != "Trader") return redirect()->back();
         $request->validate([
             'name' => 'required|unique:products',
             'images' =>  'required',
@@ -54,6 +60,7 @@ class ProductController extends Controller
     }
 
     public function showEditForm(Request $request, $id) {
+        if (auth()->user()->role != "Trader") return redirect()->back();
         $product = $this->show($id);
         $categories = Category::all();
         $shops = Shop::where('user_id', auth()->user()->id)->get();
@@ -61,13 +68,20 @@ class ProductController extends Controller
     }
 
     public function showAddForm() {
+        if (auth()->user()->role != "Trader") return redirect()->back();
         $categories = Category::all();
         $shops = Shop::where('user_id', auth()->user()->id)->get();
         return view('admin.products.add', ['page_title' => 'Add Product', 'categories' => $categories, 'shops' => $shops]);
     }
 
+    public function showViewPage($id) {
+        $product = $this->show($id);
+        return view('admin.products.view', ['page_title' => 'View Product', 'product' => $product]);
+    }
+
     public function update(Request $request, $id)
     {
+        if (auth()->user()->role != "Trader") return redirect()->back();
         $imageName = null;
         if ($request->hasFile('logo')) {
             $request->validate(['logo' => 'image|mimes:jpeg,png,jpg,gif,svg']);

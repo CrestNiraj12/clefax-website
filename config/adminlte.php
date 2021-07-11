@@ -237,6 +237,18 @@ return [
             'classes' => 'navitem'
         ],
         [
+            'text' => 'Audit',
+            'url'  => 'admin/audit',
+            'icon' => 'fas fa-fw fa-paper-plane',
+            'classes' => 'navitem'
+        ],
+        [
+            'text' => 'Users',
+            'url'  => 'admin/users',
+            'icon' => 'fas fa-fw fa-users',
+            'classes' => 'navitem'
+        ],
+        [
             'text' => 'Shops',
             'url'  => 'admin/shops',
             'icon' => 'fas fa-fw fa-store-alt',
@@ -252,6 +264,12 @@ return [
             'text' => 'Orders',
             'url'  => 'admin/orders',
             'icon' => 'fas fa-fw fa-shopping-cart',
+            'classes' => 'navitem'
+        ],
+        [
+            'text' => 'Reports',
+            'url'  => 'admin/reports',
+            'icon' => 'fas fa-fw fa-exclamation-circle',
             'classes' => 'navitem'
         ],
         /*[

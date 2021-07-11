@@ -23,18 +23,25 @@
             </div>
             </div>
         </div>
-        <div class=" bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-            <form style="display:inline" method="POST" action="{{ route('products.destroy', $product->id) }}">
-                @method('DELETE')
-                @csrf
+        <form style="display:inline" method="POST" action="{{ route('products.destroy', $product->id) }}">
+            @method('DELETE')
+            @csrf
+            @if (auth()->user()->role == "Admin")
+            <div class="my-2 mx-5">
+                <label>Reason*</label>
+                <textarea rows="5" class="form-control" id="reason" name="reason" required></textarea>
+            </div>
+            @endif
+            <div class=" bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
                 <button type="submit" class="mt-3 w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm">
                     Delete
                 </button>
-            </form>
-            <button type="button" class="cancelDelBtn mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
-                Cancel
-            </button>
-        </div>
+                
+                <button type="button" class="cancelDelBtn mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+                    Cancel
+                </button>
+            </div>
+        </form>
         </div>
     </div>
 </div>

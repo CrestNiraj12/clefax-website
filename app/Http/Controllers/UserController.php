@@ -14,6 +14,12 @@ class UserController extends Controller
 {
     use UploadTrait;
 
+    public function index() {
+        if (auth()->user()->role != "Admin")  return redirect()->back();
+        $users = User::paginate(10);
+        return view('admin.users.users', ['page_title' => "Users", 'users' => $users]);
+    }
+
     public function login(Request $request) {      
         $user = User::where([
                 'email' => $request->email, 
@@ -116,6 +122,12 @@ class UserController extends Controller
         return redirect("/admin/profile");
     }
 
+    public function showViewPage($id) {
+        if (auth()->user()->role != "Admin") return redirect()->back();
+        $user = User::find($id);
+        return view('admin.users.view', ['page_title' => 'View User', 'user' => $user]);
+    }
+
     public function updatePassword(Request $request) {
         $request->validate([
             'password' => 'nullable',
@@ -163,7 +175,7 @@ class UserController extends Controller
         
         if ($request->hasFile('avatar')) {
             $request->validate(['avatar' => 'image|mimes:jpeg,png,jpg,gif,svg']);
-            $imageName = $this->imageUpload($request->avatar, 'users');
+            $imageName = $this->imageUpload($request->avatar, 'avatars');
         }
 
         $user = tap(User::where('id', auth()->user()->id))->update($request->except('avatar', 'password', 'new_password', 'new_password_confirmation') + (isset($imageName) ? ['avatar' => $imageName] : []))->first();

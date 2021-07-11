@@ -30,13 +30,14 @@ Route::post('/admin/logout', [UserController::class, "logoutUser"])->name('logou
 Route::middleware(['auth:sanctum'])->group(function() {
     Route::prefix('admin')->group(function () {
 		Route::prefix('shops')->group(function () {
-            Route::view('add', 'admin.shops.add', ['page_title' => 'Add Shop']);
+            Route::get('add', [ShopController::class, 'showAddForm']);
             Route::get('{id}/edit', [ShopController::class, 'showEditForm']);
         });
 		Route::resource('shops', ShopController::class);
 		Route::prefix('products')->group(function () {
             Route::get('add', [ProductController::class, 'showAddForm']);
             Route::get('{id}/edit', [ProductController::class, 'showEditForm']);
+			Route::get('{id}/view', [ProductController::class, 'showViewPage']);
         });
 		Route::resource('products', ProductController::class);
 		Route::get('orders', [OrderController::class, 'index']);
@@ -51,6 +52,8 @@ Route::middleware(['auth:sanctum'])->group(function() {
 				Route::delete('device/{id}', [ProfileController::class, 'removeDevice'])->name('deletedevice');
 			});
 	    });
+		Route::get('users', [UserController::class, 'index']);
+		Route::get('users/{id}/view', [UserController::class, 'showViewPage']);
 	});
 });
 
