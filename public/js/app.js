@@ -212631,12 +212631,9 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 var passwords = [{
   name: "password",
-  label: "Current Password"
-}, {
-  name: "new_password",
   label: "New Password"
 }, {
-  name: "new_password_confirmation",
+  name: "password_confirmation",
   label: "Confirm Password"
 }];
 
@@ -212650,8 +212647,7 @@ var PasswordReset = function PasswordReset() {
 
   var _useState = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])({
     password: false,
-    new_password: false,
-    new_password_confirmation: false
+    password_confirmation: false
   }),
       _useState2 = _slicedToArray(_useState, 2),
       show = _useState2[0],
@@ -212731,8 +212727,7 @@ var PasswordReset = function PasswordReset() {
     validate: _utilities_validation__WEBPACK_IMPORTED_MODULE_3__["validatePasswords"],
     initialValues: {
       password: "",
-      new_password: "",
-      new_password_confirmation: ""
+      password_confirmation: ""
     },
     onSubmit: function onSubmit(values, actions) {
       _utilities__WEBPACK_IMPORTED_MODULE_7__["apiClient"].get("/sanctum/csrf-cookie").then(function (res) {

@@ -27,12 +27,8 @@ import { DEFAULT_TOAST } from "../../constants";
 import qs from "query-string";
 
 const passwords = [
-    {
-        name: "password",
-        label: "Current Password"
-    },
-    { name: "new_password", label: "New Password" },
-    { name: "new_password_confirmation", label: "Confirm Password" }
+    { name: "password", label: "New Password" },
+    { name: "password_confirmation", label: "Confirm Password" }
 ];
 
 const PasswordReset = () => {
@@ -41,8 +37,7 @@ const PasswordReset = () => {
     const [isSmallerThan768] = useMediaQuery("(max-width: 768px)");
     const [show, setShow] = useState({
         password: false,
-        new_password: false,
-        new_password_confirmation: false
+        password_confirmation: false
     });
     const [token, setToken] = useState(null);
 
@@ -92,8 +87,7 @@ const PasswordReset = () => {
                                 validate={validatePasswords}
                                 initialValues={{
                                     password: "",
-                                    new_password: "",
-                                    new_password_confirmation: ""
+                                    password_confirmation: ""
                                 }}
                                 onSubmit={(values, actions) => {
                                     apiClient

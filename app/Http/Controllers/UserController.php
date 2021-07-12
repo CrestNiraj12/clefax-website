@@ -241,24 +241,18 @@ class UserController extends Controller
     public function resetPassword(Request $request) {
         $request->validate([
             'token' => 'required',
-            'password' => 'required',
-            'new_password' => 'nullable|confirmed|regex:/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/|different:password|required_with:password'
+            'password' => 'required|confirmed|regex:/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/'
         ]);
         $token = $request->token;
         $resetData = DB::table('password_resets')->where('token', $token);
         if (isset($resetData)) {
-            $old_password = $request->password;
-            $new_password = $request->new_password; 
+            $new_password = $request->password; 
             $email = $resetData->pluck('email');
             $user = User::where([
-                'email' => $email[0], 
-                'password' => strtoupper(md5($old_password . "5USFGOJN2T3HW8" .  strtoupper($email[0]) . "USFGOJN2T3"))
+                'email' => $email[0]
             ])->first();
-            if (isset($user)) {
-                $user->password = strtoupper(md5($new_password . "5USFGOJN2T3HW8" .  strtoupper($email[0]) . "USFGOJN2T3"));
-                $user->save();
-            } else 
-                return response()->json(['message' => 'Invalid password was provided!'], 401);
+            $user->password = strtoupper(md5($new_password . "5USFGOJN2T3HW8" .  strtoupper($email[0]) . "USFGOJN2T3"));
+            $user->save();
         } else return response()->json(['message' => 'Password reset token is expired!'], 403);
     }
 
