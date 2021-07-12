@@ -260,8 +260,7 @@ return [
             'text' => 'Categories',
             'url'  => 'admin/categories',
             'icon' => 'fas fa-fw  fa-list-alt',
-            'classes' => 'navitem',
-            'can' => 'admin'
+            'classes' => 'navitem'
         ],
         [
             'text' => 'Products',

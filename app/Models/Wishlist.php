@@ -20,4 +20,13 @@ class Wishlist extends Model
     public function products() {
         return $this->belongsToMany(Product::class, 'wishlist_has_products');
     }
+
+     // this is a recommended way to declare event handlers
+    public static function boot() {
+        parent::boot();
+
+        static::deleting(function($wishlist) { // before delete() method call this
+            $wishlist->products()->delete();
+        });
+    }
 }

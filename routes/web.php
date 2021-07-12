@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuditTableController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProductController;
@@ -43,6 +44,11 @@ Route::middleware(['auth:sanctum'])->group(function() {
 			Route::get('{id}/view', [ProductController::class, 'showViewPage']);
         });
 		Route::resource('products', ProductController::class);
+		Route::prefix('categories')->group(function () {
+            Route::get('add', [CategoryController::class, 'showAddForm']);
+            Route::get('{id}/edit', [CategoryController::class, 'showEditForm']);
+        });
+		Route::resource('categories', CategoryController::class);
 		Route::get('orders', [OrderController::class, 'index']);
 		Route::put('order/complete/{id}', [OrderController::class, 'completeOrder']);
 		Route::prefix('profile')->group(function () {
@@ -59,6 +65,7 @@ Route::middleware(['auth:sanctum'])->group(function() {
 		Route::get('users/add', [UserController::class, 'showAddForm']);
 		Route::post('users/add-user', [UserController::class, 'registerUser']);
 		Route::get('users/{id}/view', [UserController::class, 'showViewPage']);
+		Route::POST('users/{id}/delete', [UserController::class, 'destroy']);
 		Route::get('reports', [ReportController::class, 'index']);
 		Route::get('reports/{id}/view', [ReportController::class, 'showViewPage']);
 		Route::get('payments', [PaymentController::class, 'index']);

@@ -29,7 +29,7 @@ class UserController extends Controller
             ])->first();
         
         if ($user) {
-            if (($user->role == "Trader" || $user->role == "Admin") && !isset($user->email_verified_at)) return response()->json(['message' => 'Your account is not yet activated!'], 401);
+            if (($user->role == "Trader") && !isset($user->email_verified_at)) return response()->json(['message' => 'Your account is not yet activated!'], 401);
             if ($user->role != "Customer" && !isset($user->email_verified_at)) return response()->json(['message' => 'Your account is not yet activated!', 'user' => $user], 403);
             
             Auth::login($user);
@@ -260,5 +260,11 @@ class UserController extends Controller
             } else 
                 return response()->json(['message' => 'Invalid password was provided!'], 401);
         } else return response()->json(['message' => 'Password reset token is expired!'], 403);
+    }
+
+    public function destroy($id) {
+        User::where('id', $id)->delete();
+        session()->put('success', "User Deleted!");
+        return redirect("/admin/users");
     }
 }

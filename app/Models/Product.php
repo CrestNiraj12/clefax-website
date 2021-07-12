@@ -4,10 +4,15 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Product extends Model
 {
     use HasFactory;
+
+    use SoftDeletes;
+
+    protected $dates = ['deleted_at'];
     
     protected $fillable = [
         'name',
@@ -59,6 +64,10 @@ class Product extends Model
         return $this->belongsToMany(Wishlist::class, 'wishlist_has_products');
     }
 
+    public function carts() {
+        return $this->belongsToMany(Cart::class, 'cart_has_products');
+    }
+
     public function getImagesAttribute($value)
     {
         $products = explode(',', $value);
@@ -67,5 +76,16 @@ class Product extends Model
             return str_contains($product, 'http') ? $product : "\storage\\$product";
         }, $products);
         return $productsArr;
+    }
+
+    // this is a recommended way to declare event handlers
+    public static function boot() {
+        parent::boot();
+
+        static::deleting(function($product) { // before delete() method call this
+            $product->reports()->delete();
+            $product->reviews()->delete();
+            $product->orders()->delete();
+        });
     }
 }

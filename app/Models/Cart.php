@@ -21,5 +21,12 @@ class Cart extends Model
         return $this->belongsToMany(Product::class, 'cart_has_products');
     }
 
-  
+    // this is a recommended way to declare event handlers
+    public static function boot() {
+        parent::boot();
+
+        static::deleting(function($cart) { // before delete() method call this
+            $cart->products()->delete();
+        });
+    }
 }

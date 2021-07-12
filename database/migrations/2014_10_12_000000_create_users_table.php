@@ -26,6 +26,7 @@ class CreateUsersTable extends Migration
             $table->string('paypal_email')->nullable();
             $table->string('stripe_email')->nullable();
             $table->timestamp('email_verified_at')->nullable();
+            $table->timestamp('deleted_at')->nullable();
             $table->string('password');
             $table->unsignedBigInteger('sq_id');
             $table->string('sq_answer');

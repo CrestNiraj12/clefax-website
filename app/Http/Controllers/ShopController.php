@@ -92,7 +92,7 @@ class ShopController extends Controller
     }
 
     public function destroy($id) {
-        //Shop::where('id', $id)->delete();
+        Shop::where('id', $id)->delete();
         session()->put('success', "Shop Deleted!");
         return redirect("/admin/shops");
     }

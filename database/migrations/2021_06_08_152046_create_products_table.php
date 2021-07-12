@@ -29,6 +29,7 @@ class CreateProductsTable extends Migration
             $table->unsignedBigInteger('category_id');
             $table->foreign('shop_id')->references('id')->on('shops');
             $table->foreign('category_id')->references('id')->on('categories');
+            $table->timestamp('deleted_at')->nullable();
             $table->timestamps();
         });
     }
