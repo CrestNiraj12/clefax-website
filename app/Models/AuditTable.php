@@ -26,10 +26,13 @@ class AuditTable extends Model
         $arr = [];
         $valuesArr = array_filter(explode(",", $data));
         foreach($valuesArr as $s) {
-            $vArr = explode(":", $s);
-
+            if (str_contains($s, ':')) {
+                $vArr = explode(":", $s);           
+                $arr[$vArr[0]] = $vArr[1];
+            } else {
+                $arr[array_key_last($arr)] += $s;
+            }
            
-            $arr[$vArr[0]] = $vArr[1];
         }
         return $arr;
     }

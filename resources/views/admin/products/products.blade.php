@@ -63,7 +63,7 @@
                                 alt="{{ $product['name'] }}" />
                         </td>
                         <td class="py-3 px-6 text-left">
-                            <p>{{ $product["category"]["name"] }}</p>
+                            <p>{{ $product["category"] ? $product["category"]["name"] : "Null" }}</p>
                         </td>
                         <td class="py-3 px-6 text-left">
                            <p>@convertQty($product["qty"]) {{ $product["unit"] }}(s) </p>

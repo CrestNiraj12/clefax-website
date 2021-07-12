@@ -10,7 +10,7 @@ const ProductCardRowSmall = ({
             <Link href={generateUrl(id, name)}>
                 <Box h="80px" w="80px">
                     <Image
-                        src={images.split(",").map(i => i.trim())[0]}
+                        src={images[0]}
                         alt={name}
                         w="100%"
                         h="100%"

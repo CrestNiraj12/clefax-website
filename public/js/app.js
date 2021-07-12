@@ -206850,9 +206850,7 @@ var ProductCardRowSmall = function ProductCardRowSmall(_ref) {
     h: "80px",
     w: "80px"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Image"], {
-    src: images.split(",").map(function (i) {
-      return i.trim();
-    })[0],
+    src: images[0],
     alt: name,
     w: "100%",
     h: "100%",

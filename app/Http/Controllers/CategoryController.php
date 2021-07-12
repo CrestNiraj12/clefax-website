@@ -38,7 +38,6 @@ class CategoryController extends Controller
     }
 
     public function showAddForm() {
-        if (auth()->user()->role != "Admin") return redirect()->back();
         return view('admin.categories.add', ['page_title' => 'Add Category']);
     }
 

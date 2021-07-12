@@ -29,7 +29,6 @@ class UserController extends Controller
             ])->first();
         
         if ($user) {
-            if (($user->role == "Trader") && !isset($user->email_verified_at)) return response()->json(['message' => 'Your account is not yet activated!'], 401);
             if ($user->role != "Customer" && !isset($user->email_verified_at)) return response()->json(['message' => 'Your account is not yet activated!', 'user' => $user], 403);
             
             Auth::login($user);

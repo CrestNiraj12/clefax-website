@@ -102,7 +102,7 @@
                             <div class="mb-3">
                                 <label class="form-label">Date of birth</label>
                                 <input type="date" name="dob" class="form-control"
-                                    value="{{ old('dob') ?? auth()->user()->dob->format('Y-m-d') }}" autofocus />
+                                    value="{{ old('dob') ?? (is_null(auth()->user()->dob) ? auth()->user()->dob : auth()->user()->dob->format('Y-m-d')) }}" autofocus />
                             </div>
 
                             <div class="mb-3">
