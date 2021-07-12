@@ -199,7 +199,6 @@ const Main = ({
                     component={ForgotPassword}
                     exact
                 />
-                <Route path="/trader-signup" component={TraderSignup} exact />
                 <Route
                     path="/verify-email"
                     component={EmailVerificationRequest}

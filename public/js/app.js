@@ -204674,10 +204674,6 @@ var Main = function Main(_ref) {
     component: _containers_ForgotPassword__WEBPACK_IMPORTED_MODULE_14__["default"],
     exact: true
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_3__["Route"], {
-    path: "/trader-signup",
-    component: _containers_TraderSignup__WEBPACK_IMPORTED_MODULE_15___default.a,
-    exact: true
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_3__["Route"], {
     path: "/verify-email",
     component: _containers_EmailVerificationRequest__WEBPACK_IMPORTED_MODULE_19__["default"],
     exact: true
