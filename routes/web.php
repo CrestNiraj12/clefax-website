@@ -1,8 +1,11 @@
 <?php
 
+use App\Http\Controllers\AuditTableController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\ShopController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Auth;
@@ -53,7 +56,18 @@ Route::middleware(['auth:sanctum'])->group(function() {
 			});
 	    });
 		Route::get('users', [UserController::class, 'index']);
+		Route::get('users/add', [UserController::class, 'showAddForm']);
+		Route::post('users/add-user', [UserController::class, 'registerUser']);
 		Route::get('users/{id}/view', [UserController::class, 'showViewPage']);
+		Route::get('reports', [ReportController::class, 'index']);
+		Route::get('reports/{id}/view', [ReportController::class, 'showViewPage']);
+		Route::get('payments', [PaymentController::class, 'index']);
+		Route::get('payments/{id}/view', [PaymentController::class, 'showViewPage']);
+		Route::get('audit', [AuditTableController::class, 'index']);
+		Route::get('audit/{id}/view', [AuditTableController::class, 'showViewPage']);
+		Route::post('audit/request', [AuditTableController::class, 'storeRequest']);
+		Route::post('request/{id}/accept', [AuditTableController::class, 'acceptRequest']);
+		Route::post('request/{id}/reject', [AuditTableController::class, 'rejectRequest']);
 	});
 });
 

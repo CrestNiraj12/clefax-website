@@ -120,7 +120,7 @@
                     </tr>
                     @endforeach
                 @else
-                <tr><td colspan="6">No products found!</td></tr>
+                <tr class="brequest-b brequest-gray-200 hover:bg-gray-100"><td colspan="9" class="py-3 px-6 text-left">No products found!</td></tr>
                 @endif
             </tbody>
         </table>

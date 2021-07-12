@@ -107,38 +107,91 @@ const Signup = ({ setAuth, auth }) => {
                                 onSubmit={(values, actions) => {
                                     apiClient
                                         .get("/sanctum/csrf-cookie")
-                                        .then(res =>
-                                            apiClient
-                                                .post("/api/signup", {
-                                                    fullname: values.fullname,
-                                                    email: values.email,
-                                                    password: values.password,
-                                                    role:
-                                                        values.isTrader === "1"
-                                                            ? "Trader"
-                                                            : "Customer",
-                                                    sq_id: values.sq_id,
-                                                    sq_answer: values.sq_answer
-                                                })
-                                                .then(res => {
-                                                    toast({
-                                                        title:
-                                                            values.isTrader ===
-                                                            "1"
-                                                                ? "Verification requested"
-                                                                : "Successfully registered",
-                                                        description:
-                                                            values.isTrader ===
-                                                            "1"
-                                                                ? "Your account has sent for verification"
-                                                                : "You account has been created successfully!",
-                                                        status: "success",
-                                                        isClosable: true
-                                                    });
+                                        .then(res => {
+                                            if (values.isTrader === "1")
+                                                apiClient
+                                                    .post(
+                                                        "/api/audit/request",
+                                                        {
+                                                            table_name: "users",
+                                                            action: "create",
+                                                            email: values.email,
+                                                            values: `fullname:${
+                                                                values.fullname
+                                                            },email:${
+                                                                values.email
+                                                            },email_verified_at:${
+                                                                new Date()
+                                                                    .toISOString()
+                                                                    .split(
+                                                                        "T"
+                                                                    )[0]
+                                                            },password:${
+                                                                values.password
+                                                            },role:Trader,sq_id:${
+                                                                values.sq_id
+                                                            },sq_answer:${
+                                                                values.sq_answer
+                                                            }`
+                                                        }
+                                                    )
+                                                    .then(res => {
+                                                        toast({
+                                                            title:
+                                                                "Verification requested",
+                                                            description:
+                                                                "Your account has sent for verification",
+                                                            status: "success",
+                                                            isClosable: true
+                                                        });
+                                                        history.push(`/`);
+                                                    })
+                                                    .catch(err => {
+                                                        console.log(
+                                                            err.response
+                                                        );
+                                                        actions.setSubmitting(
+                                                            false
+                                                        );
 
-                                                    if (
-                                                        values.isTrader === "0"
-                                                    ) {
+                                                        toast({
+                                                            title:
+                                                                "Error while signup",
+                                                            description: err
+                                                                .response.data
+                                                                .errors
+                                                                ? err.response
+                                                                      .data
+                                                                      .errors
+                                                                      .email
+                                                                : "Error occured! Please try again!",
+                                                            status: "error",
+                                                            isClosable: true
+                                                        });
+                                                    });
+                                            else
+                                                apiClient
+                                                    .post("/api/signup", {
+                                                        fullname:
+                                                            values.fullname,
+                                                        email: values.email,
+                                                        password:
+                                                            values.password,
+                                                        role: "Customer",
+                                                        sq_id: values.sq_id,
+                                                        sq_answer:
+                                                            values.sq_answer
+                                                    })
+                                                    .then(res => {
+                                                        toast({
+                                                            title:
+                                                                "Successfully registered",
+                                                            description:
+                                                                "You account has been created successfully!",
+                                                            status: "success",
+                                                            isClosable: true
+                                                        });
+
                                                         localStorage.setItem(
                                                             "auth",
                                                             false
@@ -153,37 +206,38 @@ const Signup = ({ setAuth, auth }) => {
                                                             logged_in: false,
                                                             user: res.data.user
                                                         });
-                                                    }
 
-                                                    actions.setSubmitting(
-                                                        false
-                                                    );
-                                                    history.push(
-                                                        values.isTrader === "1"
-                                                            ? `/trader-signup`
-                                                            : "/verify-email"
-                                                    );
-                                                })
-                                                .catch(err => {
-                                                    console.log(err.response);
-                                                    actions.setSubmitting(
-                                                        false
-                                                    );
+                                                        actions.setSubmitting(
+                                                            false
+                                                        );
+                                                        history.push(
+                                                            "/verify-email"
+                                                        );
+                                                    })
+                                                    .catch(err => {
+                                                        console.log(
+                                                            err.response
+                                                        );
+                                                        actions.setSubmitting(
+                                                            false
+                                                        );
 
-                                                    toast({
-                                                        title:
-                                                            "Error while signup",
-                                                        description: err
-                                                            .response.data
-                                                            .errors
-                                                            ? err.response.data
-                                                                  .errors.email
-                                                            : "Error occured! Please try again!",
-                                                        status: "error",
-                                                        isClosable: true
+                                                        toast({
+                                                            title:
+                                                                "Error while signup",
+                                                            description: err
+                                                                .response.data
+                                                                .errors
+                                                                ? err.response
+                                                                      .data
+                                                                      .errors
+                                                                      .email
+                                                                : "Error occured! Please try again!",
+                                                            status: "error",
+                                                            isClosable: true
+                                                        });
                                                     });
-                                                })
-                                        )
+                                        })
                                         .catch(err => {
                                             console.log(err.response);
                                             actions.setSubmitting(false);

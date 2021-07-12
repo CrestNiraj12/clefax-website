@@ -28,6 +28,13 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        \Gate::define('admin', function ($user) {
+            if (auth()->user()->role == 'Admin') {
+                return true;
+            }
+            return false;
+        });
+
         Stripe::setApiKey(env('STRIPE_SERVER_KEY'));
         
         Blade::directive('convert', function ($money) {

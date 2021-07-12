@@ -204455,6 +204455,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _containers_Signup__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./containers/Signup */ "./resources/js/containers/Signup/index.js");
 /* harmony import */ var _containers_ForgotPassword__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./containers/ForgotPassword */ "./resources/js/containers/ForgotPassword/index.js");
 /* harmony import */ var _containers_TraderSignup__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./containers/TraderSignup */ "./resources/js/containers/TraderSignup/index.js");
+/* harmony import */ var _containers_TraderSignup__WEBPACK_IMPORTED_MODULE_15___default = /*#__PURE__*/__webpack_require__.n(_containers_TraderSignup__WEBPACK_IMPORTED_MODULE_15__);
 /* harmony import */ var _utilities__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./utilities */ "./resources/js/utilities/index.js");
 /* harmony import */ var _containers_PaymentRedirect__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./containers/PaymentRedirect */ "./resources/js/containers/PaymentRedirect/index.js");
 /* harmony import */ var _containers_EmailVerification__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ./containers/EmailVerification */ "./resources/js/containers/EmailVerification/index.js");
@@ -204674,7 +204675,7 @@ var Main = function Main(_ref) {
     exact: true
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_3__["Route"], {
     path: "/trader-signup",
-    component: _containers_TraderSignup__WEBPACK_IMPORTED_MODULE_15__["default"],
+    component: _containers_TraderSignup__WEBPACK_IMPORTED_MODULE_15___default.a,
     exact: true
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_3__["Route"], {
     path: "/verify-email",
@@ -214862,32 +214863,50 @@ var Signup = function Signup(_ref) {
     },
     onSubmit: function onSubmit(values, actions) {
       _utilities__WEBPACK_IMPORTED_MODULE_7__["apiClient"].get("/sanctum/csrf-cookie").then(function (res) {
-        return _utilities__WEBPACK_IMPORTED_MODULE_7__["apiClient"].post("/api/signup", {
+        if (values.isTrader === "1") _utilities__WEBPACK_IMPORTED_MODULE_7__["apiClient"].post("/api/audit/request", {
+          table_name: "users",
+          action: "create",
+          email: values.email,
+          values: "fullname:".concat(values.fullname, ",email:").concat(values.email, ",email_verified_at:").concat(new Date().toISOString().split("T")[0], ",password:").concat(values.password, ",role:Trader,sq_id:").concat(values.sq_id, ",sq_answer:").concat(values.sq_answer)
+        }).then(function (res) {
+          toast({
+            title: "Verification requested",
+            description: "Your account has sent for verification",
+            status: "success",
+            isClosable: true
+          });
+          history.push("/");
+        })["catch"](function (err) {
+          console.log(err.response);
+          actions.setSubmitting(false);
+          toast({
+            title: "Error while signup",
+            description: err.response.data.errors ? err.response.data.errors.email : "Error occured! Please try again!",
+            status: "error",
+            isClosable: true
+          });
+        });else _utilities__WEBPACK_IMPORTED_MODULE_7__["apiClient"].post("/api/signup", {
           fullname: values.fullname,
           email: values.email,
           password: values.password,
-          role: values.isTrader === "1" ? "Trader" : "Customer",
+          role: "Customer",
           sq_id: values.sq_id,
           sq_answer: values.sq_answer
         }).then(function (res) {
           toast({
-            title: values.isTrader === "1" ? "Verification requested" : "Successfully registered",
-            description: values.isTrader === "1" ? "Your account has sent for verification" : "You account has been created successfully!",
+            title: "Successfully registered",
+            description: "You account has been created successfully!",
             status: "success",
             isClosable: true
           });
-
-          if (values.isTrader === "0") {
-            localStorage.setItem("auth", false);
-            localStorage.setItem("user", JSON.stringify(res.data.user));
-            setAuth({
-              logged_in: false,
-              user: res.data.user
-            });
-          }
-
+          localStorage.setItem("auth", false);
+          localStorage.setItem("user", JSON.stringify(res.data.user));
+          setAuth({
+            logged_in: false,
+            user: res.data.user
+          });
           actions.setSubmitting(false);
-          history.push(values.isTrader === "1" ? "/trader-signup" : "/verify-email");
+          history.push("/verify-email");
         })["catch"](function (err) {
           console.log(err.response);
           actions.setSubmitting(false);
@@ -215115,387 +215134,544 @@ var Signup = function Signup(_ref) {
 /*!*******************************************************!*\
   !*** ./resources/js/containers/TraderSignup/index.js ***!
   \*******************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/*! no static exports found */
+/***/ (function(module, exports) {
 
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var chakra_ui_steps__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! chakra-ui-steps */ "./node_modules/chakra-ui-steps/dist/chakra-ui-steps.esm.js");
-/* harmony import */ var _chakra_ui_react__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @chakra-ui/react */ "./node_modules/@chakra-ui/react/dist/esm/index.js");
-/* harmony import */ var _images_logo_black_png__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../images/logo-black.png */ "./resources/images/logo-black.png");
-/* harmony import */ var _images_logo_black_png__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_images_logo_black_png__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var react_icons_ai__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-icons/ai */ "./node_modules/react-icons/ai/index.esm.js");
-/* harmony import */ var formik__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! formik */ "./node_modules/formik/dist/formik.esm.js");
-/* harmony import */ var _utilities_validation__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../utilities/validation */ "./resources/js/utilities/validation.js");
-/* harmony import */ var react_images_upload__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! react-images-upload */ "./node_modules/react-images-upload/compiled.js");
-/* harmony import */ var react_images_upload__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(react_images_upload__WEBPACK_IMPORTED_MODULE_7__);
-/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
-/* harmony import */ var _utilities__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../../utilities */ "./resources/js/utilities/index.js");
-/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../../constants */ "./resources/js/constants.js");
-function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
-
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
-
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
-
-function _iterableToArrayLimit(arr, i) { var _i = arr && (typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"]); if (_i == null) return; var _arr = []; var _n = true; var _d = false; var _s, _e; try { for (_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
-
-function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
-
-
-
-
-
-
-
-
-
-
-
-
-var shop_details = [{
-  name: "name",
-  label: "Shop Name"
-}, {
-  name: "street_no",
-  label: "Street"
-}, {
-  name: "city",
-  label: "Town / City"
-}, {
-  name: "PAN",
-  label: "Registration no."
-}];
-var payment_details = [{
-  name: "paypal_email",
-  label: "Paypal email"
-}, {
-  name: "stripe_email",
-  label: "Stripe email"
-}];
-
-var TraderSignup = function TraderSignup() {
-  var history = Object(react_router_dom__WEBPACK_IMPORTED_MODULE_8__["useHistory"])();
-  var toast = Object(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_2__["useToast"])(_constants__WEBPACK_IMPORTED_MODULE_10__["DEFAULT_TOAST"]);
-
-  var _useSteps = Object(chakra_ui_steps__WEBPACK_IMPORTED_MODULE_1__["useSteps"])({
-    initialStep: 0
-  }),
-      nextStep = _useSteps.nextStep,
-      activeStep = _useSteps.activeStep;
-
-  var _useState = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(null),
-      _useState2 = _slicedToArray(_useState, 2),
-      logo = _useState2[0],
-      setLogo = _useState2[1];
-
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_2__["Flex"], {
-    alignItems: {
-      base: "center",
-      md: "flex-start"
-    },
-    direction: "column"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_2__["Link"], {
-    href: "/",
-    _focus: {
-      boxShadow: "none"
-    },
-    outline: "none",
-    pos: {
-      base: "relative",
-      md: "absolute"
-    },
-    top: {
-      base: "0",
-      md: "-50px"
-    }
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_2__["Image"], {
-    src: _images_logo_black_png__WEBPACK_IMPORTED_MODULE_3___default.a,
-    w: "200px",
-    objectFit: "cover",
-    h: {
-      base: "20vh",
-      md: "auto"
-    }
-  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_2__["Flex"], {
-    w: "100%",
-    h: {
-      base: "auto",
-      md: "100vh"
-    },
-    justifyContent: "center",
-    alignItems: "center"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_2__["Box"], {
-    maxW: {
-      base: "md",
-      md: "xl"
-    },
-    w: "100%",
-    m: "20px",
-    borderWidth: "1px",
-    borderRadius: "lg",
-    overflow: "hidden",
-    mt: {
-      base: "50px !important",
-      md: "0 !important"
-    }
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_2__["Box"], {
-    p: {
-      base: "6",
-      md: "10"
-    },
-    w: "100%"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_2__["VStack"], {
-    width: "100%"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(chakra_ui_steps__WEBPACK_IMPORTED_MODULE_1__["Steps"], {
-    colorScheme: "red",
-    activeStep: activeStep
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(chakra_ui_steps__WEBPACK_IMPORTED_MODULE_1__["Step"], {
-    label: "Store",
-    icon: react_icons_ai__WEBPACK_IMPORTED_MODULE_4__["AiOutlineShop"]
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_5__["Formik"], {
-    validate: _utilities_validation__WEBPACK_IMPORTED_MODULE_6__["validateShop"],
-    initialValues: {
-      name: "",
-      street_no: "",
-      city: "",
-      PAN: "",
-      logo: null
-    },
-    onSubmit: function onSubmit(values, actions) {
-      var data = new FormData();
-
-      for (var key in values) {
-        data.append(key, values[key]);
-      }
-
-      data.append("logo", logo);
-      _utilities__WEBPACK_IMPORTED_MODULE_9__["apiClient"].get("/sanctum/csrf-cookie").then(function (res) {
-        return _utilities__WEBPACK_IMPORTED_MODULE_9__["apiClient"].post("/api/shop/create", data).then(function (res) {
-          toast({
-            title: "Success",
-            description: res.data.message,
-            status: "success"
-          });
-          actions.setSubmitting(false);
-          nextStep();
-        })["catch"](function (err) {
-          console.log(err.response);
-          actions.setSubmitting(false);
-          toast({
-            title: "Error while adding shop",
-            description: err.response.data.errors ? Object.values(err.response.data.errors)[0] : "Error occured! Please try again!",
-            status: "error"
-          });
-        });
-      })["catch"](function (err) {
-        toast({
-          title: "Error while adding shop",
-          description: "Error occured! Please try again!",
-          status: "error"
-        });
-      });
-    }
-  }, function (props) {
-    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_5__["Form"], {
-      style: {
-        width: "100%",
-        marginTop: "50px"
-      }
-    }, shop_details.map(function (_ref, index) {
-      var name = _ref.name,
-          label = _ref.label;
-      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_5__["Field"], {
-        name: name,
-        key: index
-      }, function (_ref2) {
-        var field = _ref2.field,
-            form = _ref2.form;
-        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_2__["FormControl"], {
-          isInvalid: form.errors[name] && form.touched[name],
-          mb: "10px !important",
-          className: "flex-form",
-          isRequired: true
-        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_2__["FormLabel"], null, label), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_2__["Box"], {
-          w: "100%"
-        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_2__["Input"], _extends({}, field, {
-          id: name,
-          size: "sm"
-        })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_2__["FormErrorMessage"], {
-          fontSize: "xs"
-        }, form.errors[name])));
-      });
-    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_5__["Field"], {
-      name: "logo"
-    }, function (_ref3) {
-      var field = _ref3.field,
-          form = _ref3.form;
-      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_2__["FormControl"], {
-        isInvalid: form.errors.logo && form.touched.logo,
-        mb: "10px !important",
-        className: "flex-form",
-        isRequired: true
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_2__["FormLabel"], null, "Logo"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_2__["Box"], {
-        w: "100%"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_images_upload__WEBPACK_IMPORTED_MODULE_7___default.a, {
-        withPreview: true,
-        withIcon: true,
-        singleImage: true,
-        buttonText: "Browse logo",
-        onChange: function onChange(files, urls) {
-          setLogo(files[0]);
-          form.setFieldValue("logo", files[0] ? files[0].type : null);
-        },
-        imgExtension: [".jpg", ".gif", ".png", ".gif"],
-        maxFileSize: 5242880
-      }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_2__["FormErrorMessage"], {
-        fontSize: "xs"
-      }, form.errors.logo)));
-    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_2__["Flex"], {
-      w: "100%",
-      flexDir: "column",
-      justifyContent: "center",
-      alignItems: "center"
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_2__["Button"], {
-      isLoading: props.isSubmitting,
-      type: "submit",
-      fontSize: "sm",
-      p: "0 40px !important",
-      mt: "10px !important",
-      color: "#fff",
-      bg: "secondary",
-      _hover: {
-        bg: "var(--chakra-colors-primary) !important"
-      }
-    }, "Continue"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_2__["Link"], {
-      href: "/",
-      fontSize: "xs",
-      mt: "10px",
-      color: "secondary",
-      textDecor: "underline",
-      _hover: {
-        color: "var(--chakra-colors-primary) !important",
-        textDecor: "underline !important"
-      }
-    }, "Skip for now")));
-  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(chakra_ui_steps__WEBPACK_IMPORTED_MODULE_1__["Step"], {
-    label: "Payment",
-    icon: react_icons_ai__WEBPACK_IMPORTED_MODULE_4__["AiOutlineDollarCircle"]
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_5__["Formik"], {
-    validate: _utilities_validation__WEBPACK_IMPORTED_MODULE_6__["validatePaymentEmails"],
-    initialValues: {
-      paypal_email: "",
-      stripe_email: ""
-    },
-    onSubmit: function onSubmit(values, actions) {
-      _utilities__WEBPACK_IMPORTED_MODULE_9__["apiClient"].get("/sanctum/csrf-cookie").then(function (res) {
-        return _utilities__WEBPACK_IMPORTED_MODULE_9__["apiClient"].post("/api/user/update", values).then(function (res) {
-          toast({
-            title: "Success",
-            description: "Shop has been created successfully!",
-            status: "success"
-          });
-          actions.setSubmitting(false);
-          nextStep();
-        })["catch"](function (err) {
-          console.log(err.response);
-          actions.setSubmitting(false);
-          toast({
-            title: "Error while adding payment details",
-            description: err.response.data.errors ? err.response.data.errors : "Error occured! Please try again!",
-            status: "error"
-          });
-        });
-      })["catch"](function (err) {
-        toast({
-          title: "Error while adding payment details",
-          description: "Error occured! Please try again!",
-          status: "error"
-        });
-      });
-    }
-  }, function (props) {
-    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_5__["Form"], {
-      style: {
-        width: "100%",
-        marginTop: "50px"
-      }
-    }, payment_details.map(function (_ref4, index) {
-      var name = _ref4.name,
-          label = _ref4.label;
-      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_5__["Field"], {
-        name: name,
-        key: index
-      }, function (_ref5) {
-        var field = _ref5.field,
-            form = _ref5.form;
-        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_2__["FormControl"], {
-          isInvalid: form.errors[name] && form.touched[name],
-          mb: "10px !important",
-          className: "flex-form",
-          isRequired: true
-        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_2__["FormLabel"], null, label), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_2__["Box"], {
-          w: "100%"
-        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_2__["Input"], _extends({}, field, {
-          id: name,
-          size: "sm"
-        })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_2__["FormErrorMessage"], {
-          fontSize: "xs"
-        }, form.errors[name])));
-      });
-    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_2__["Flex"], {
-      w: "100%",
-      justifyContent: "center",
-      mt: "50px !important"
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_2__["Button"], {
-      isLoading: props.isSubmitting,
-      type: "submit",
-      fontSize: "sm",
-      p: "0 40px !important",
-      color: "#fff",
-      bg: "secondary",
-      mt: "10px !important",
-      _hover: {
-        bg: "var(--chakra-colors-primary) !important"
-      }
-    }, "Continue")));
-  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(chakra_ui_steps__WEBPACK_IMPORTED_MODULE_1__["Step"], {
-    label: "Complete",
-    icon: react_icons_ai__WEBPACK_IMPORTED_MODULE_4__["AiOutlineLike"]
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_2__["VStack"], {
-    w: "100%"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_2__["Icon"], {
-    as: react_icons_ai__WEBPACK_IMPORTED_MODULE_4__["AiFillCheckCircle"],
-    color: "green.400",
-    mt: "50px",
-    fontSize: "60px"
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_2__["Heading"], {
-    as: "h4",
-    fontSize: "xl",
-    my: "30px !important"
-  }, "Your request has been sent!"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_2__["Button"], {
-    mt: "30px !important",
-    type: "submit",
-    fontSize: "sm",
-    p: "0 40px !important",
-    color: "#fff",
-    bg: "secondary",
-    _hover: {
-      bg: "var(--chakra-colors-primary) !important"
-    },
-    onClick: function onClick() {
-      return history.push("/");
-    }
-  }, "Go to home")))))))));
-};
-
-/* harmony default export */ __webpack_exports__["default"] = (TraderSignup);
+// import React, { useState } from "react";
+// import { Step, Steps, useSteps } from "chakra-ui-steps";
+// import {
+//     Flex,
+//     Image,
+//     Link,
+//     Box,
+//     VStack,
+//     FormLabel,
+//     FormControl,
+//     FormErrorMessage,
+//     Input,
+//     Button,
+//     Icon,
+//     Heading,
+//     useToast
+// } from "@chakra-ui/react";
+// import Logo from "../../../images/logo-black.png";
+// import {
+//     AiOutlineShop,
+//     AiOutlineDollarCircle,
+//     AiOutlineLike,
+//     AiFillCheckCircle
+// } from "react-icons/ai";
+// import { Formik, Form, Field } from "formik";
+// import {
+//     validatePaymentEmails,
+//     validateShop
+// } from "../../utilities/validation";
+// import ImageUploader from "react-images-upload";
+// import { useHistory } from "react-router-dom";
+// import { apiClient } from "../../utilities";
+// import { DEFAULT_TOAST } from "../../constants";
+// const shop_details = [
+//     { name: "name", label: "Shop Name" },
+//     { name: "street_no", label: "Street" },
+//     { name: "city", label: "Town / City" },
+//     { name: "PAN", label: "Registration no." }
+// ];
+// const payment_details = [
+//     { name: "paypal_email", label: "Paypal email" },
+//     { name: "stripe_email", label: "Stripe email" }
+// ];
+// const TraderSignup = () => {
+//     var history = useHistory();
+//     const toast = useToast(DEFAULT_TOAST);
+//     const { nextStep, activeStep } = useSteps({
+//         initialStep: 0
+//     });
+//     const [logo, setLogo] = useState(null);
+//     const [auditId, setAuditId] = useState(null);
+//     return (
+//         <Flex
+//             alignItems={{ base: "center", md: "flex-start" }}
+//             direction="column"
+//         >
+//             <Link
+//                 href="/"
+//                 _focus={{ boxShadow: "none" }}
+//                 outline="none"
+//                 pos={{ base: "relative", md: "absolute" }}
+//                 top={{ base: "0", md: "-50px" }}
+//             >
+//                 <Image
+//                     src={Logo}
+//                     w="200px"
+//                     objectFit="cover"
+//                     h={{ base: "20vh", md: "auto" }}
+//                 />
+//             </Link>
+//             <Flex
+//                 w="100%"
+//                 h={{ base: "auto", md: "100vh" }}
+//                 justifyContent="center"
+//                 alignItems="center"
+//             >
+//                 <Box
+//                     maxW={{ base: "md", md: "xl" }}
+//                     w="100%"
+//                     m="20px"
+//                     borderWidth="1px"
+//                     borderRadius="lg"
+//                     overflow="hidden"
+//                     mt={{ base: "50px !important", md: "0 !important" }}
+//                 >
+//                     <Box p={{ base: "6", md: "10" }} w="100%">
+//                         <VStack width="100%">
+//                             <Steps colorScheme="red" activeStep={activeStep}>
+//                                 <Step label="Store" icon={AiOutlineShop}>
+//                                     <Formik
+//                                         validate={validateShop}
+//                                         initialValues={{
+//                                             name: "",
+//                                             street_no: "",
+//                                             city: "",
+//                                             PAN: "",
+//                                             logo: null
+//                                         }}
+//                                         onSubmit={(values, actions) => {
+//                                             // const data = new FormData();
+//                                             // for (var key in values) {
+//                                             //     data.append(key, values[key]);
+//                                             // }
+//                                             // data.append("logo", logo);
+//                                             apiClient
+//                                                 .get("/sanctum/csrf-cookie")
+//                                                 .then(res =>
+//                                                     apiClient
+//                                                         .post(
+//                                                             "/api/audit/request",
+//                                                             {
+//                                                                 table_name:
+//                                                                     "shops",
+//                                                                 action:
+//                                                                     "create",
+//                                                                 values: `name:${values.name},street_no:${values.street_no},city:${values.city},PAN:${values.PAN},logo:${logo}`
+//                                                             }
+//                                                         )
+//                                                         .then(res => {
+//                                                             setAuditId(
+//                                                                 res.data
+//                                                                     .request_id
+//                                                             );
+//                                                             toast({
+//                                                                 title:
+//                                                                     "Success",
+//                                                                 description:
+//                                                                     res.data
+//                                                                         .message,
+//                                                                 status:
+//                                                                     "success"
+//                                                             });
+//                                                             actions.setSubmitting(
+//                                                                 false
+//                                                             );
+//                                                             nextStep();
+//                                                         })
+//                                                         .catch(err => {
+//                                                             console.log(
+//                                                                 err.response
+//                                                             );
+//                                                             actions.setSubmitting(
+//                                                                 false
+//                                                             );
+//                                                             toast({
+//                                                                 title:
+//                                                                     "Error while adding shop",
+//                                                                 description: err
+//                                                                     .response
+//                                                                     .data.errors
+//                                                                     ? Object.values(
+//                                                                           err
+//                                                                               .response
+//                                                                               .data
+//                                                                               .errors
+//                                                                       )[0]
+//                                                                     : "Error occured! Please try again!",
+//                                                                 status: "error"
+//                                                             });
+//                                                         })
+//                                                 )
+//                                                 .catch(err => {
+//                                                     toast({
+//                                                         title:
+//                                                             "Error while adding shop",
+//                                                         description:
+//                                                             "Error occured! Please try again!",
+//                                                         status: "error"
+//                                                     });
+//                                                 });
+//                                         }}
+//                                     >
+//                                         {props => (
+//                                             <Form
+//                                                 style={{
+//                                                     width: "100%",
+//                                                     marginTop: "50px"
+//                                                 }}
+//                                             >
+//                                                 {shop_details.map(
+//                                                     (
+//                                                         { name, label },
+//                                                         index
+//                                                     ) => (
+//                                                         <Field
+//                                                             name={name}
+//                                                             key={index}
+//                                                         >
+//                                                             {({
+//                                                                 field,
+//                                                                 form
+//                                                             }) => (
+//                                                                 <FormControl
+//                                                                     isInvalid={
+//                                                                         form
+//                                                                             .errors[
+//                                                                             name
+//                                                                         ] &&
+//                                                                         form
+//                                                                             .touched[
+//                                                                             name
+//                                                                         ]
+//                                                                     }
+//                                                                     mb="10px !important"
+//                                                                     className="flex-form"
+//                                                                     isRequired
+//                                                                 >
+//                                                                     <FormLabel>
+//                                                                         {label}
+//                                                                     </FormLabel>
+//                                                                     <Box w="100%">
+//                                                                         <Input
+//                                                                             {...field}
+//                                                                             id={
+//                                                                                 name
+//                                                                             }
+//                                                                             size="sm"
+//                                                                         />
+//                                                                         <FormErrorMessage fontSize="xs">
+//                                                                             {
+//                                                                                 form
+//                                                                                     .errors[
+//                                                                                     name
+//                                                                                 ]
+//                                                                             }
+//                                                                         </FormErrorMessage>
+//                                                                     </Box>
+//                                                                 </FormControl>
+//                                                             )}
+//                                                         </Field>
+//                                                     )
+//                                                 )}
+//                                                 <Field name="logo">
+//                                                     {({ field, form }) => (
+//                                                         <FormControl
+//                                                             isInvalid={
+//                                                                 form.errors
+//                                                                     .logo &&
+//                                                                 form.touched
+//                                                                     .logo
+//                                                             }
+//                                                             mb="10px !important"
+//                                                             className="flex-form"
+//                                                             isRequired
+//                                                         >
+//                                                             <FormLabel>
+//                                                                 Logo
+//                                                             </FormLabel>
+//                                                             <Box w="100%">
+//                                                                 <ImageUploader
+//                                                                     withPreview={
+//                                                                         true
+//                                                                     }
+//                                                                     withIcon={
+//                                                                         true
+//                                                                     }
+//                                                                     singleImage={
+//                                                                         true
+//                                                                     }
+//                                                                     buttonText="Browse logo"
+//                                                                     onChange={(
+//                                                                         files,
+//                                                                         urls
+//                                                                     ) => {
+//                                                                         setLogo(
+//                                                                             files[0]
+//                                                                         );
+//                                                                         form.setFieldValue(
+//                                                                             "logo",
+//                                                                             files[0]
+//                                                                                 ? files[0]
+//                                                                                       .type
+//                                                                                 : null
+//                                                                         );
+//                                                                     }}
+//                                                                     imgExtension={[
+//                                                                         ".jpg",
+//                                                                         ".gif",
+//                                                                         ".png",
+//                                                                         ".gif"
+//                                                                     ]}
+//                                                                     maxFileSize={
+//                                                                         5242880
+//                                                                     }
+//                                                                 />
+//                                                                 <FormErrorMessage fontSize="xs">
+//                                                                     {
+//                                                                         form
+//                                                                             .errors
+//                                                                             .logo
+//                                                                     }
+//                                                                 </FormErrorMessage>
+//                                                             </Box>
+//                                                         </FormControl>
+//                                                     )}
+//                                                 </Field>
+//                                                 <Flex
+//                                                     w="100%"
+//                                                     flexDir="column"
+//                                                     justifyContent="center"
+//                                                     alignItems="center"
+//                                                 >
+//                                                     <Button
+//                                                         isLoading={
+//                                                             props.isSubmitting
+//                                                         }
+//                                                         type="submit"
+//                                                         fontSize="sm"
+//                                                         p="0 40px !important"
+//                                                         mt="10px !important"
+//                                                         color="#fff"
+//                                                         bg="secondary"
+//                                                         _hover={{
+//                                                             bg:
+//                                                                 "var(--chakra-colors-primary) !important"
+//                                                         }}
+//                                                     >
+//                                                         Continue
+//                                                     </Button>
+//                                                     <Link
+//                                                         href="/"
+//                                                         fontSize="xs"
+//                                                         mt="10px"
+//                                                         color="secondary"
+//                                                         textDecor="underline"
+//                                                         _hover={{
+//                                                             color:
+//                                                                 "var(--chakra-colors-primary) !important",
+//                                                             textDecor:
+//                                                                 "underline !important"
+//                                                         }}
+//                                                     >
+//                                                         Skip for now
+//                                                     </Link>
+//                                                 </Flex>
+//                                             </Form>
+//                                         )}
+//                                     </Formik>
+//                                 </Step>
+//                                 <Step
+//                                     label="Payment"
+//                                     icon={AiOutlineDollarCircle}
+//                                 >
+//                                     <Formik
+//                                         validate={validatePaymentEmails}
+//                                         initialValues={{
+//                                             paypal_email: "",
+//                                             stripe_email: ""
+//                                         }}
+//                                         onSubmit={(values, actions) => {
+//                                             apiClient
+//                                                 .get("/sanctum/csrf-cookie")
+//                                                 .then(res =>
+//                                                     apiClient
+//                                                         .post(
+//                                                             `/api/audit/request/${auditId}`,
+//                                                             {
+//                                                                 values: `paypal_email:${values.paypal_email},stripe_email:${values.stripe_email}`
+//                                                             }
+//                                                         )
+//                                                         .then(res => {
+//                                                             toast({
+//                                                                 title:
+//                                                                     "Success",
+//                                                                 description:
+//                                                                     "Shop has been created successfully!",
+//                                                                 status:
+//                                                                     "success"
+//                                                             });
+//                                                             actions.setSubmitting(
+//                                                                 false
+//                                                             );
+//                                                             nextStep();
+//                                                         })
+//                                                         .catch(err => {
+//                                                             console.log(
+//                                                                 err.response
+//                                                             );
+//                                                             actions.setSubmitting(
+//                                                                 false
+//                                                             );
+//                                                             toast({
+//                                                                 title:
+//                                                                     "Error while adding payment details",
+//                                                                 description: err
+//                                                                     .response
+//                                                                     .data.errors
+//                                                                     ? err
+//                                                                           .response
+//                                                                           .data
+//                                                                           .errors
+//                                                                     : "Error occured! Please try again!",
+//                                                                 status: "error"
+//                                                             });
+//                                                         })
+//                                                 )
+//                                                 .catch(err => {
+//                                                     toast({
+//                                                         title:
+//                                                             "Error while adding payment details",
+//                                                         description:
+//                                                             "Error occured! Please try again!",
+//                                                         status: "error"
+//                                                     });
+//                                                 });
+//                                         }}
+//                                     >
+//                                         {props => (
+//                                             <Form
+//                                                 style={{
+//                                                     width: "100%",
+//                                                     marginTop: "50px"
+//                                                 }}
+//                                             >
+//                                                 {payment_details.map(
+//                                                     (
+//                                                         { name, label },
+//                                                         index
+//                                                     ) => (
+//                                                         <Field
+//                                                             name={name}
+//                                                             key={index}
+//                                                         >
+//                                                             {({
+//                                                                 field,
+//                                                                 form
+//                                                             }) => (
+//                                                                 <FormControl
+//                                                                     isInvalid={
+//                                                                         form
+//                                                                             .errors[
+//                                                                             name
+//                                                                         ] &&
+//                                                                         form
+//                                                                             .touched[
+//                                                                             name
+//                                                                         ]
+//                                                                     }
+//                                                                     mb="10px !important"
+//                                                                     className="flex-form"
+//                                                                     isRequired
+//                                                                 >
+//                                                                     <FormLabel>
+//                                                                         {label}
+//                                                                     </FormLabel>
+//                                                                     <Box w="100%">
+//                                                                         <Input
+//                                                                             {...field}
+//                                                                             id={
+//                                                                                 name
+//                                                                             }
+//                                                                             size="sm"
+//                                                                         />
+//                                                                         <FormErrorMessage fontSize="xs">
+//                                                                             {
+//                                                                                 form
+//                                                                                     .errors[
+//                                                                                     name
+//                                                                                 ]
+//                                                                             }
+//                                                                         </FormErrorMessage>
+//                                                                     </Box>
+//                                                                 </FormControl>
+//                                                             )}
+//                                                         </Field>
+//                                                     )
+//                                                 )}
+//                                                 <Flex
+//                                                     w="100%"
+//                                                     justifyContent="center"
+//                                                     mt="50px !important"
+//                                                 >
+//                                                     <Button
+//                                                         isLoading={
+//                                                             props.isSubmitting
+//                                                         }
+//                                                         type="submit"
+//                                                         fontSize="sm"
+//                                                         p="0 40px !important"
+//                                                         color="#fff"
+//                                                         bg="secondary"
+//                                                         mt="10px !important"
+//                                                         _hover={{
+//                                                             bg:
+//                                                                 "var(--chakra-colors-primary) !important"
+//                                                         }}
+//                                                     >
+//                                                         Continue
+//                                                     </Button>
+//                                                 </Flex>
+//                                             </Form>
+//                                         )}
+//                                     </Formik>
+//                                 </Step>
+//                                 <Step label="Complete" icon={AiOutlineLike}>
+//                                     <VStack w="100%">
+//                                         <Icon
+//                                             as={AiFillCheckCircle}
+//                                             color="green.400"
+//                                             mt="50px"
+//                                             fontSize="60px"
+//                                         />
+//                                         <Heading
+//                                             as="h4"
+//                                             fontSize="xl"
+//                                             my="30px !important"
+//                                         >
+//                                             Your request has been sent!
+//                                         </Heading>
+//                                         <Button
+//                                             mt="30px !important"
+//                                             type="submit"
+//                                             fontSize="sm"
+//                                             p="0 40px !important"
+//                                             color="#fff"
+//                                             bg="secondary"
+//                                             _hover={{
+//                                                 bg:
+//                                                     "var(--chakra-colors-primary) !important"
+//                                             }}
+//                                             onClick={() => history.push("/")}
+//                                         >
+//                                             Go to home
+//                                         </Button>
+//                                     </VStack>
+//                                 </Step>
+//                             </Steps>
+//                         </VStack>
+//                     </Box>
+//                 </Box>
+//             </Flex>
+//         </Flex>
+//     );
+// };
+// export default TraderSignup;
 
 /***/ }),
 

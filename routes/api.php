@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\CartController;
+use App\Http\Controllers\AuditTableController;
 use App\Http\Controllers\CartHasProductController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CollectionSlotController;
@@ -13,7 +13,6 @@ use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\SecurityQuestionController;
 use App\Http\Controllers\ShopController;
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\WishlistController;
 use App\Http\Controllers\WishlistHasProductController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -46,6 +45,8 @@ Route::get('/shops/{id}', [ShopController::class, "getShop"]);
 Route::get('/user/verify/{id}', [UserController::class, 'verifyEmail']);
 Route::post('/forgot-password', [UserController::class, 'forgotPassword']);
 Route::put('/reset-password', [UserController::class, 'resetPassword']);
+Route::post('/audit/request', [AuditTableController::class, 'storeSignupRequest']);
+// Route::put('/audit/request/{id}', [AuditTableController::class, 'update']);
 
 Route::middleware(['auth:sanctum'])->group(function() {
     Route::post('/report/create', [ReportController::class, 'store']);

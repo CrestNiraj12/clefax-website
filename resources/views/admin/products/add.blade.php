@@ -14,9 +14,11 @@
         </div>
     @endif
     <!-- form start -->
-    <form method="POST" enctype="multipart/form-data" action="{{ route('products.store') }}">
+    <form method="POST" enctype="multipart/form-data" action="/admin/audit/request">
         @csrf
         <div class="card-body">
+            <input type="hidden" class="form-control" id="table_name" name="table_name" value="products">
+            <input type="hidden" class="form-control" id="action" name="action" value="create">
             <div class="form-group">
                 <label for="name">Name*</label>
                 <input type="text" class="form-control" id="name" name="name" required>

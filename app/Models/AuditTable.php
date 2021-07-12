@@ -12,6 +12,25 @@ class AuditTable extends Model
     protected $fillable = [
         'table_name',
         'action',
-        'values'
+        'values',
+        'status',
+        'reason',
+        'user_id'
     ];
+
+    public function user() {
+        return $this->belongsTo(User::class);
+    }
+
+    public function getValuesAttribute($data) {
+        $arr = [];
+        $valuesArr = array_filter(explode(",", $data));
+        foreach($valuesArr as $s) {
+            $vArr = explode(":", $s);
+
+           
+            $arr[$vArr[0]] = $vArr[1];
+        }
+        return $arr;
+    }
 }

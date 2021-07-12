@@ -240,19 +240,28 @@ return [
             'text' => 'Audit',
             'url'  => 'admin/audit',
             'icon' => 'fas fa-fw fa-paper-plane',
-            'classes' => 'navitem'
+            'classes' => 'navitem',
+            'can' => 'admin'
         ],
         [
             'text' => 'Users',
             'url'  => 'admin/users',
             'icon' => 'fas fa-fw fa-users',
-            'classes' => 'navitem'
+            'classes' => 'navitem',
+            'can' => 'admin'
         ],
         [
             'text' => 'Shops',
             'url'  => 'admin/shops',
             'icon' => 'fas fa-fw fa-store-alt',
             'classes' => 'navitem'
+        ],
+        [
+            'text' => 'Categories',
+            'url'  => 'admin/categories',
+            'icon' => 'fas fa-fw  fa-list-alt',
+            'classes' => 'navitem',
+            'can' => 'admin'
         ],
         [
             'text' => 'Products',
@@ -267,10 +276,18 @@ return [
             'classes' => 'navitem'
         ],
         [
+            'text' => 'Payments',
+            'url'  => 'admin/payments',
+            'icon' => 'fas fa-fw fa-credit-card',
+            'classes' => 'navitem',
+            'can' => 'admin'
+        ],
+        [
             'text' => 'Reports',
             'url'  => 'admin/reports',
             'icon' => 'fas fa-fw fa-exclamation-circle',
-            'classes' => 'navitem'
+            'classes' => 'navitem',
+            'can' => 'admin'
         ],
         /*[
             'text'        => 'pages',

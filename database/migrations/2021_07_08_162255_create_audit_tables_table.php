@@ -15,9 +15,13 @@ class CreateAuditTablesTable extends Migration
     {
         Schema::create('audit_tables', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('user_id')->nullable();
             $table->string('table_name');
             $table->string('action');
             $table->longText('values');
+            $table->string('status')->default(0);
+            $table->longText('reason')->nullable();
+            $table->foreign('user_id')->references('id')->on('users');
             $table->timestamps();
         });
     }

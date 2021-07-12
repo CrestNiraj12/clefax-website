@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Http\Traits\UploadTrait;
+use App\Models\SecurityQuestion;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
@@ -27,9 +29,9 @@ class UserController extends Controller
             ])->first();
         
         if ($user) {
-            if (($user->role == "Trader" || $user->role == "Admin") && !isset($user->email_verified_at)) return response()->json(['message' => 'Please login from your admin panel login!'], 401);
+            if (($user->role == "Trader" || $user->role == "Admin") && !isset($user->email_verified_at)) return response()->json(['message' => 'Your account is not yet activated!'], 401);
             if ($user->role != "Customer" && !isset($user->email_verified_at)) return response()->json(['message' => 'Your account is not yet activated!', 'user' => $user], 403);
-
+            
             Auth::login($user);
             
             return response()->json(['message' => 'Login successful!', 'user' => auth()->user()], 200);
@@ -38,31 +40,31 @@ class UserController extends Controller
         }
     }
 
-    public function loginUser(Request $request) {      
-        $user = User::where([
-                'email' => $request->email, 
-                'password' => strtoupper(md5($request->password . "5USFGOJN2T3HW8" .  strtoupper($request->email) . "USFGOJN2T3"))
-            ])->first();
+    // public function loginUser(Request $request) {      
+    //     $user = User::where([
+    //             'email' => $request->email, 
+    //             'password' => strtoupper(md5($request->password . "5USFGOJN2T3HW8" .  strtoupper($request->email) . "USFGOJN2T3"))
+    //         ])->first();
         
-        if ($user) {
-            if ($user->role == "Customer") {
-                session()->put('error', "Invalid email or password!");
-                return redirect()->back()->withInput();
-            }
-            if (($user->role == "Trader" || $user->role == "Admin") && !isset($user->email_verified_at)) {
-                session()->put('error', 'Your account has not been yet activated!');
-                return redirect()->back()->withInput();
-            }
+    //     if ($user) {
+    //         if ($user->role == "Customer") {
+    //             session()->put('error', "Invalid email or password!");
+    //             return redirect()->back()->withInput();
+    //         }
+    //         if (($user->role == "Trader" || $user->role == "Admin") && !isset($user->email_verified_at)) {
+    //             session()->put('error', 'Your account has not been yet activated!');
+    //             return redirect()->back()->withInput();
+    //         }
 
-            Auth::login($user);
+    //         Auth::login($user);
 
-            session()->put('success', "Successfully logged in!");
-            return redirect('/admin/dashboard');
-        } else {
-            session()->put('error', "Invalid email or password!");
-            return redirect()->back()->withInput();
-        }
-    }
+    //         session()->put('success', "Successfully logged in!");
+    //         return redirect('/admin/dashboard');
+    //     } else {
+    //         session()->put('error', "Invalid email or password!");
+    //         return redirect()->back()->withInput();
+    //     }
+    // }
 
     protected function guard()
     {
@@ -77,6 +79,45 @@ class UserController extends Controller
             'user' => $user,
             'message' => 'Registration Successful!'
         ], 200);
+    }
+
+    public function registerUser(Request $request)
+    {   
+        $this->validator($request->all())->validate();
+        if ($request->hasFile('avatar')) {
+            $imageName = $this->imageUpload($request->avatar, 'avatars');
+            $user = User::create($request->except('avatar') + ['avatar' => $imageName, 'user_id' => auth()->user()->id]);
+        } else $user = User::create($request->all());
+        
+
+        $data = [
+          'date' => date("Y-m-d"),
+          'name' => $user->fullname,
+          'subject' => "Your request was accepted!",
+          'email' => $user->email,
+          'content' => "<p>Yay! Your $user->role account has been created!<br/><br/>
+          <p>
+          <span style='color: #e03e2d;'>Website Credentials:</span><br/>
+          Email: $user->email<br/>
+          Password: $request->password<br/>
+          Url: <a href='http://localhost:3000/login'>http://localhost:3000/login</a><br/><br/>
+          *<span style='color: #e03e2d;'>Note: Please login to dashboard and change your password!</span><br/>
+          </p>
+          <p>
+          <span style='color: #e03e2d;'>Oracle Apex Application Credentials:</span><br />
+          Email: $user->email<br/>
+          Password: $request->password<br/>
+          Url: <a href='http://localhost:8081/ords'>http://localhost:8081/ords</a><br/>
+          </p>"
+        ];
+
+        Mail::send('mail', $data, function($message) use ($data) {
+            $message->to($data['email'], $data['name'])->subject($data['subject']);
+            $message->from('clefaxeshop@gmail.com', 'Clefax E-shop');
+        });
+
+        session()->put('success', "Successfully added user!");
+        return redirect("/admin/users");
     }
     /**
      * Get a validator for an incoming registration request.
@@ -104,6 +145,12 @@ class UserController extends Controller
     public function logoutUser() {
         Auth::logout();
         return redirect('/logout');
+    }
+
+    public function showAddForm() {
+        $questions = SecurityQuestion::all();
+        if (auth()->user()->role != "Admin") return redirect()->back();
+        return view('admin.users.add', ['page_title' => 'Add User', 'questions' => $questions]);
     }
 
     public function verifyEmail($id) {

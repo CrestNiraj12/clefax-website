@@ -9,6 +9,18 @@ use Illuminate\Http\Request;
 
 class PaymentController extends Controller
 {
+    public function index() {
+        if (auth()->user()->role != "Admin")  redirect()->back();
+        $payments = Payment::paginate(10);
+        return view('admin.payments.payments', ['page_title' => 'Payments', 'payments' => $payments]);
+    }
+
+    public function showViewPage($id) {
+        if (auth()->user()->role != "Admin") redirect()->back();
+        $payment = Payment::find($id);
+        return view('admin.payments.view', ['page_title' => 'Payment View', 'payment' => $payment]);
+    }
+    
     public function store(Request $request) {
         $request->validate([
             'method' => 'required',

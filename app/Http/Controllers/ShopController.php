@@ -12,11 +12,11 @@ class ShopController extends Controller
     use UploadTrait;
 
     public function index()
-    {   if (auth()->user()->role != "Admin" && auth()->user()->role == "Customer") 
+    {   if (auth()->user()->role != "Admin" && auth()->user()->role != "Trader") 
             return redirect()->back();
         if (auth()->user()->role == "Admin")
             $shops = Shop::paginate("10");
-        else if (auth()->user()->role == "Admin")
+        else if (auth()->user()->role == "Trader")
             $shops = Shop::where('user_id', auth()->user()->id)->paginate("10");
         return view("admin.shops.shops", ['page_title' => 'Shops', 'shops' => $shops]);
     }
