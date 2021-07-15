@@ -27,8 +27,12 @@ class OrderController extends Controller
         return response()->json($orders);
     }
 
-    public function getOrderById($id) {
-        $order = Order::where(['user_id' => auth()->user()->id, 'id' => $id])->first();
+    public function getOrderById(Request $request, $id) {
+        $request->validate([
+            'user_id' => "nullable"
+        ]);
+
+        $order = Order::where(['user_id' => (isset($request->user_id) ? $request->user_id : auth()->user()->id), 'id' => $id])->first();
         return response()->json($order->load('user', 'products.shop', 'collection_slot', 'payment'));
     }
 

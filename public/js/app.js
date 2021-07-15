@@ -211974,24 +211974,29 @@ var Invoice = function Invoice(_ref) {
       return;
     }
 
-    _utilities__WEBPACK_IMPORTED_MODULE_7__["apiClient"].get("/sanctum/csrf-cookie").then(function (res) {
-      _utilities__WEBPACK_IMPORTED_MODULE_7__["apiClient"].get("/api/orders/".concat(query.oid)).then(function (res) {
-        setLoading(false);
-        setOrder(res.data);
-        console.log(res.data);
-      })["catch"](function (err) {
-        setLoading(false);
-        console.log(err);
-        toast({
-          title: "Error occurred!",
-          description: "Error retrieving order details!",
-          status: "error"
+    if (localStorage.getItem("user")) {
+      var user = JSON.parse(localStorage.getItem("user"));
+      _utilities__WEBPACK_IMPORTED_MODULE_7__["apiClient"].get("/sanctum/csrf-cookie").then(function (res) {
+        _utilities__WEBPACK_IMPORTED_MODULE_7__["apiClient"].post("/api/orders/".concat(query.oid), {
+          user_id: user.role === "Admin" || user.role === "Trader" ? query.user_id : null
+        }).then(function (res) {
+          setLoading(false);
+          setOrder(res.data);
+          console.log(res.data);
+        })["catch"](function (err) {
+          setLoading(false);
+          console.log(err.response);
+          toast({
+            title: "Error occurred!",
+            description: "Error retrieving order details!",
+            status: "error"
+          });
+          history.goBack();
         });
-        history.goBack();
+      })["catch"](function (err) {
+        return console.log(err);
       });
-    })["catch"](function (err) {
-      return console.log(err);
-    });
+    }
   }, []);
   Object(react__WEBPACK_IMPORTED_MODULE_1__["useEffect"])(function () {
     setCartProducts([]);

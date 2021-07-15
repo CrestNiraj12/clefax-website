@@ -48,28 +48,37 @@ const Invoice = ({ crumbs, setCartProducts, auth, slots }) => {
             history.push("/");
             return;
         }
-        apiClient
-            .get("/sanctum/csrf-cookie")
-            .then(res => {
-                apiClient
-                    .get(`/api/orders/${query.oid}`)
-                    .then(res => {
-                        setLoading(false);
-                        setOrder(res.data);
-                        console.log(res.data);
-                    })
-                    .catch(err => {
-                        setLoading(false);
-                        console.log(err);
-                        toast({
-                            title: "Error occurred!",
-                            description: "Error retrieving order details!",
-                            status: "error"
+
+        if (localStorage.getItem("user")) {
+            const user = JSON.parse(localStorage.getItem("user"));
+            apiClient
+                .get("/sanctum/csrf-cookie")
+                .then(res => {
+                    apiClient
+                        .post(`/api/orders/${query.oid}`, {
+                            user_id:
+                                user.role === "Admin" || user.role === "Trader"
+                                    ? query.user_id
+                                    : null
+                        })
+                        .then(res => {
+                            setLoading(false);
+                            setOrder(res.data);
+                            console.log(res.data);
+                        })
+                        .catch(err => {
+                            setLoading(false);
+                            console.log(err.response);
+                            toast({
+                                title: "Error occurred!",
+                                description: "Error retrieving order details!",
+                                status: "error"
+                            });
+                            history.goBack();
                         });
-                        history.goBack();
-                    });
-            })
-            .catch(err => console.log(err));
+                })
+                .catch(err => console.log(err));
+        }
     }, []);
 
     useEffect(() => {

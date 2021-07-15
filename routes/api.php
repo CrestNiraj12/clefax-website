@@ -68,7 +68,7 @@ Route::middleware(['auth:sanctum'])->group(function() {
     Route::get('/slots', [CollectionSlotController::class, 'getSlots']);
     Route::post('/user', [UserController::class, 'update']);
     Route::get('/orders', [OrderController::class, 'getOrders']);
-    Route::get('/orders/{id}', [OrderController::class, 'getOrderById']);
+    Route::post('/orders/{id}', [OrderController::class, 'getOrderById']);
     Route::post('/order', [OrderHasProductsController::class, 'store']);
     Route::post('/payment', [PaymentController::class, 'store']);
     Route::post('/stripe/pay', [PaymentController::class, 'stripePaymentProcess']);
