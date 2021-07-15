@@ -8,7 +8,7 @@
 
 @section('content')
     <div class="mb-10">You are logged in!</div>
-    <a target="_blank" class="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded" href="http://localhost:8081/ords">Generate Report</a>
+    <a target="_blank" class="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded" href="http://localhost:8081/ords/clefax-eshop/r/clefax-e-shop-trader/login">Generate Report</a>
 @stop
 
 @section('css')
