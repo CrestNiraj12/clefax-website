@@ -208080,14 +208080,7 @@ var Cart = function Cart(_ref) {
     setLoading(false);
   }, [cart, products]);
   Object(react__WEBPACK_IMPORTED_MODULE_2__["useEffect"])(function () {
-    if (!localStorage.getItem("user")) {
-      toast({
-        title: "Login required",
-        description: "Please login to continue",
-        status: "info"
-      });
-      history.push(Object(_utilities__WEBPACK_IMPORTED_MODULE_9__["getLoginRedirection"])());
-    } else if (localStorage.getItem("user") && JSON.parse(localStorage.getItem("user")).role !== "Customer") {
+    if (localStorage.getItem("user") && JSON.parse(localStorage.getItem("user")).role !== "Customer") {
       toast({
         title: "Permission not granted",
         description: "You are not allowed to proceed to the page",
@@ -208950,6 +208943,7 @@ var Checkout = function Checkout(_ref) {
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["FormLabel"], {
         htmlFor: "email"
       }, "Email Address"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Input"], _extends({
+        disabled: true,
         variant: "flushed"
       }, field, {
         id: "email"
@@ -217009,7 +217003,7 @@ var handleOrder = function handleOrder(_ref, total, slot, cart, setAuth, onSucce
         onError(err);
       });
     })["catch"](function (err) {
-      return console.log(err);
+      return console.log(err.response);
     });
   })["catch"](function (err) {
     return console.log(err.response);

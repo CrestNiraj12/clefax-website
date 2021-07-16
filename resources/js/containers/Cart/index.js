@@ -82,14 +82,7 @@ const Cart = ({ crumbs, auth, products, cart, setCartProducts }) => {
     }, [cart, products]);
 
     useEffect(() => {
-        if (!localStorage.getItem("user")) {
-            toast({
-                title: "Login required",
-                description: "Please login to continue",
-                status: "info"
-            });
-            history.push(getLoginRedirection());
-        } else if (
+        if (
             localStorage.getItem("user") &&
             JSON.parse(localStorage.getItem("user")).role !== "Customer"
         ) {

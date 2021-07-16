@@ -446,6 +446,7 @@ const Checkout = ({
                                                         Email Address
                                                     </FormLabel>
                                                     <Input
+                                                        disabled
                                                         variant="flushed"
                                                         {...field}
                                                         id="email"

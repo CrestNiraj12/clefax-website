@@ -273,7 +273,7 @@ export const handleOrder = (
                             onError(err);
                         });
                 })
-                .catch(err => console.log(err))
+                .catch(err => console.log(err.response))
         )
         .catch(err => console.log(err.response));
 };
