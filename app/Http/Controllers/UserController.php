@@ -25,7 +25,7 @@ class UserController extends Controller
     public function login(Request $request) {      
         $user = User::where([
                 'email' => $request->email, 
-                'password' => strtoupper(md5($request->password . "5USFGOJN2T3HW8" .  strtoupper($request->email) . "USFGOJN2T3"))
+                'password' => $request->password //strtoupper(md5($request->password . "5USFGOJN2T3HW8" .  strtoupper($request->email) . "USFGOJN2T3"))
             ])->first();
         
         if ($user) {

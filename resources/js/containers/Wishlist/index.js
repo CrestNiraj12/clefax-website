@@ -154,15 +154,6 @@ const Wishlist = ({
         });
     };
 
-    const logicError = () => {
-        toast({
-            title: "Error",
-            description:
-                "Maximum product qty limit exceeded in the cart i.e, 20!",
-            status: "error"
-        });
-    };
-
     const maxOrderExceedError = (max_order, unit) => {
         toast({
             title: "Error",
@@ -375,7 +366,6 @@ const Wishlist = ({
                                                             ordered_qty,
                                                             onSuccess,
                                                             onError,
-                                                            logicError,
                                                             setCartProducts,
                                                             cart,
                                                             maxOrderExceedError

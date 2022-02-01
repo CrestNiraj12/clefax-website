@@ -24,9 +24,7 @@ class OrderHasProductsController extends Controller
         $qtys = array_map(function ($e) {
             return $e["qty"];
         }, $products);
-        if (array_sum($qtys) > 20) {
-            return response()->json(['message' => "Maximum product qty limit exceeded for the order i.e, 20!"], 401);
-        }
+        
         $errors = [];
         foreach ($products as $p) {
             $product = Product::where("id", $p["product_id"])->first();

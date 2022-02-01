@@ -137,15 +137,6 @@ const Cart = ({ crumbs, auth, products, cart, setCartProducts }) => {
                 .map(p => p.ordered_qty)
                 .reduce((a, b) => a + b, 0) +
             updatedProducts.map(p => p.qty).reduce((a, b) => a + b, 0);
-        if (totalProducts > 20) {
-            toast({
-                title: "Error occurred",
-                description:
-                    "Maximum product qty limit exceeded in the cart i.e, 20!",
-                status: "error"
-            });
-            return;
-        }
         const updates = [];
         updatedProducts.forEach(p => {
             const fp = cartProducts.filter(cp => cp.id === p.id)[0];
@@ -563,7 +554,7 @@ const CartQtyInput = ({
         step: 1,
         defaultValue: orderedQty,
         min: 1,
-        max: maxQty > 20 ? 20 : maxQty
+        max: maxQty
     });
 
     useEffect(() => {

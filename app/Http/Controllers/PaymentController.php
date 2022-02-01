@@ -37,7 +37,6 @@ class PaymentController extends Controller
     public function stripePaymentProcess(Request $request) {
         try {
             $products = $request->products;
-            $redirect_domain = env('APP_URL');
             $products = [
                 'payment_method_types' => ['card'],
                 'line_items' => $products,

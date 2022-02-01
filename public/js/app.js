@@ -208138,16 +208138,6 @@ var Cart = function Cart(_ref) {
     }).reduce(function (a, b) {
       return a + b;
     }, 0);
-
-    if (totalProducts > 20) {
-      toast({
-        title: "Error occurred",
-        description: "Maximum product qty limit exceeded in the cart i.e, 20!",
-        status: "error"
-      });
-      return;
-    }
-
     var updates = [];
     updatedProducts.forEach(function (p) {
       var fp = cartProducts.filter(function (cp) {
@@ -208407,7 +208397,7 @@ var CartQtyInput = function CartQtyInput(_ref3) {
     step: 1,
     defaultValue: orderedQty,
     min: 1,
-    max: maxQty > 20 ? 20 : maxQty
+    max: maxQty
   }),
       valueAsNumber = _useNumberInput.valueAsNumber,
       getInputProps = _useNumberInput.getInputProps,
@@ -214031,7 +214021,7 @@ var Product = function Product(_ref) {
     w: "100%",
     disabled: !product.qty,
     onClick: function onClick() {
-      return Object(_utilities_data__WEBPACK_IMPORTED_MODULE_18__["addToCart"])(product, auth, valueAsNumber, onSuccess, onError, logicError, setCartProducts, cart, maxOrderExceedError);
+      return Object(_utilities_data__WEBPACK_IMPORTED_MODULE_18__["addToCart"])(product, auth, valueAsNumber, onSuccess, onError, setCartProducts, cart, maxOrderExceedError);
     }
   }, "Add To Cart")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_0__["Button"], {
     bgColor: "secondary",
@@ -216079,14 +216069,6 @@ var Wishlist = function Wishlist(_ref) {
     });
   };
 
-  var logicError = function logicError() {
-    toast({
-      title: "Error",
-      description: "Maximum product qty limit exceeded in the cart i.e, 20!",
-      status: "error"
-    });
-  };
-
   var maxOrderExceedError = function maxOrderExceedError(max_order, unit) {
     toast({
       title: "Error",
@@ -216206,7 +216188,7 @@ var Wishlist = function Wishlist(_ref) {
           max_order: max_order,
           unit: unit,
           qty: qty
-        }, auth, ordered_qty, onSuccess, onError, logicError, setCartProducts, cart, maxOrderExceedError);
+        }, auth, ordered_qty, onSuccess, onError, setCartProducts, cart, maxOrderExceedError);
       }
     }, "Add to Cart")));
   }))))) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_chakra_ui_react__WEBPACK_IMPORTED_MODULE_1__["Box"], {
@@ -216844,7 +216826,7 @@ var loadCart = function loadCart(setProducts, onError) {
     onError(err);
   });else setProducts();
 };
-var addToCart = function addToCart(product, auth, valueAsNumber, onSuccess, onError, logicError, setCartProducts, cart, maxOrderExceedError) {
+var addToCart = function addToCart(product, auth, valueAsNumber, onSuccess, onError, setCartProducts, cart, maxOrderExceedError) {
   if (product) {
     var max_order = product.qty > product.max_order ? product.max_order : product.qty;
     var includes = cart.map(function (c) {
@@ -216895,11 +216877,6 @@ var addToCart = function addToCart(product, auth, valueAsNumber, onSuccess, onEr
       }).reduce(function (a, b) {
         return a + b;
       }, 0) : 0;
-
-      if (totalQty + valueAsNumber > 20) {
-        logicError();
-        return;
-      }
 
       if (cart.length > 0) {
         if (cart.map(function (p) {

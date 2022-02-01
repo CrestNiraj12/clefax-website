@@ -450,7 +450,6 @@ const Product = ({
                                                         valueAsNumber,
                                                         onSuccess,
                                                         onError,
-                                                        logicError,
                                                         setCartProducts,
                                                         cart,
                                                         maxOrderExceedError

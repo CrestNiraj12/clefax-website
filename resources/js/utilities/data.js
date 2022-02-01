@@ -50,7 +50,6 @@ export const addToCart = (
     valueAsNumber,
     onSuccess,
     onError,
-    logicError,
     setCartProducts,
     cart,
     maxOrderExceedError
@@ -123,10 +122,6 @@ export const addToCart = (
             const totalQty = cart
                 ? cart.map(p => p.qty).reduce((a, b) => a + b, 0)
                 : 0;
-            if (totalQty + valueAsNumber > 20) {
-                logicError();
-                return;
-            }
             if (cart.length > 0) {
                 if (cart.map(p => p.product_id).includes(product.id)) {
                     const storedProduct = cart.filter(
